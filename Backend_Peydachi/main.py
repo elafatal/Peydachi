@@ -1,4 +1,7 @@
 from fastapi import FastAPI
+from database import models
+from database.database import Base, engine
+from authentication import authentication_route
 
 
 app = FastAPI(
@@ -6,7 +9,10 @@ app = FastAPI(
     version="0.0.1",
     debug=True
 )
+app.include_router(authentication_route.router)
 
+
+Base.metadata.create_all(engine)
 
 
 @app.get("/")
