@@ -51,3 +51,8 @@ async def ban_user(user_id: ID_BODY, db: DB_DEPENDENCY):
 @router.put('/unban_user', status_code=200)
 async def unban_user(user_id: ID_BODY, db: DB_DEPENDENCY):
     return await user_functions.unban_user(user_id=user_id, db=db)
+
+
+@router.post('/search_in_banned_users', status_code=200)
+async def search_in_banned_user(user_name: NAME_BODY, db: DB_DEPENDENCY):
+    return await user_functions.search_in_banned_users(user_name=user_name, db=db)

@@ -1,6 +1,6 @@
 from database.models import User, StoreComment, ProductComment, StoreRating, ProductRating
 from sqlalchemy.orm import Session
-from sqlalchemy import delete
+from sqlalchemy import delete, and_
 from hash.hash import Hash
 from errors.user_errors import USER_NOT_FOUND_ERROR
 from schemas.user_schemas import UserModel, UserUpdateModel
@@ -190,6 +190,15 @@ async def search_user_by_username(user_name: str, db: Session):
 
 async def get_all_banned_users(db: Session):
     users = db.query(User).filter(User.is_banned == True).all()
+
+    if not users:
+        raise NO_USER_FOUND_ERROR
+
+    return users
+
+
+async def search_in_banned_users(user_name: str, db: Session):
+    users = db.query(User).filter(and_(User.is_banned == True, User.username.match(user_name)))
 
     if not users:
         raise NO_USER_FOUND_ERROR
