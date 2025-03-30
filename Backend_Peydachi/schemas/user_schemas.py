@@ -22,6 +22,13 @@ class UserDisplay(BaseSchema):
     is_banned: bool
 
 
+class UserUpdateModel(BaseSchema):
+    username: str | None = None
+    password: str | None = None
+    phone_number: str | None = None
+    email: EmailStr | None = None
+
+
 class UserAuth(BaseSchema):
     id: int
     username: str
