@@ -2,14 +2,14 @@ from typing import Annotated
 from fastapi import APIRouter, Body
 from schemas.user_schemas import UserDisplay, UserModel
 from functions import super_admin_functions
-# from functions.user_functions import delete_user
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.access_dependencies import ROUTER_SUPER_ADMIN_DEPENDENCY
 
 
 router = APIRouter(
     prefix='/super_admin',
-    tags=['Super Admin']
+    tags=['Super Admin'],
+    dependencies=[ROUTER_SUPER_ADMIN_DEPENDENCY]
 )
 
 
