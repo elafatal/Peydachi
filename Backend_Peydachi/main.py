@@ -6,12 +6,14 @@ from routers.super_admin_routers import super_admin
 from routers.general_routers import (
     user,
     region,
-    city
+    city,
+    reports
 )
 from routers.admin_routers import (
     admin_user,
     admin_region,
-    admin_city
+    admin_city,
+    admin_reports
 )
 
 
@@ -20,14 +22,16 @@ app = FastAPI(
     version="0.0.1",
     debug=True
 )
-app.include_router(authentication_route.router)
-app.include_router(super_admin.router)
-app.include_router(admin_user.router)
-app.include_router(admin_region.router)
-app.include_router(admin_city.router)
 app.include_router(user.router)
 app.include_router(region.router)
 app.include_router(city.router)
+app.include_router(reports.router)
+app.include_router(admin_user.router)
+app.include_router(admin_region.router)
+app.include_router(admin_city.router)
+app.include_router(admin_reports.router)
+app.include_router(super_admin.router)
+app.include_router(authentication_route.router)
 
 
 Base.metadata.create_all(engine)
