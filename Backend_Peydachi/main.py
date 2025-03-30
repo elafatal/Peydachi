@@ -3,19 +3,22 @@ from database import models
 from database.database import Base, engine
 from authentication import authentication_route
 from routers.super_admin_routers import super_admin, admin
+from routers.seller_routers import seller_store
 from routers.general_routers import (
     user,
     region,
     city,
     reports,
-    comment_report
+    comment_report,
+    store
 )
 from routers.admin_routers import (
     admin_user,
     admin_region,
     admin_city,
     admin_reports,
-    admin_comment_report
+    admin_comment_report,
+    admin_store
 )
 
 
@@ -29,13 +32,16 @@ app.include_router(region.router)
 app.include_router(city.router)
 app.include_router(reports.router)
 app.include_router(comment_report.router)
+app.include_router(store.router)
+app.include_router(seller_store.router)
 app.include_router(admin_user.router)
 app.include_router(admin_region.router)
 app.include_router(admin_city.router)
 app.include_router(admin_reports.router)
+app.include_router(admin_comment_report.router)
+app.include_router(admin_store.router)
 app.include_router(super_admin.router)
 app.include_router(admin.router)
-app.include_router(admin_comment_report.router)
 app.include_router(authentication_route.router)
 
 

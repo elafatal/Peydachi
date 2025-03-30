@@ -38,7 +38,7 @@ class City(ID, Base):
 class Store(ID, Base):
     __tablename__ = "store"
     name = Column(String(150), nullable=False)
-    owner_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    owner_id = Column(Integer, ForeignKey("user.id"), nullable=True)
     contact_info = Column(JSON, nullable=True)
     description = Column(String(500), nullable=True)
     location_longitude = Column(String, nullable=True)
@@ -46,7 +46,8 @@ class Store(ID, Base):
     average_rating = Column(Float, nullable=True)
     average_product_rating = Column(Float, nullable=True)
     date_added = Column(DateTime, nullable=False)
-    city_id = Column(Integer, ForeignKey("city.id"), nullable=False)
+    is_banned = Column(Boolean, default=False)
+    city_id = Column(Integer, ForeignKey("city.id"), nullable=True)
 
 
 # Product Class =============================================================================================

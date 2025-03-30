@@ -82,3 +82,6 @@ SMS_SERVER_ERROR = HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERR
 
 USER_VERIFICATION_CODE_EXPIRED_ERROR = HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                                      detail='User Verification Code Expired.')
+
+USER_IS_ALREADY_SELLER_ERROR = HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                                             detail="User is already a seller")
