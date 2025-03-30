@@ -142,5 +142,5 @@ class CommentReport(ID, Base):
     comment_id = Column(Integer, ForeignKey("store_comment.id"), nullable=False)
     text = Column(String, nullable=False)
     is_reviewed = Column(Boolean, default=False)
-    is_store = Column(Boolean, default=False)
+    is_store = Column(Boolean, default=False) # True: It's store comment , False: It's product comment
     date_added = Column(DateTime, nullable=False)

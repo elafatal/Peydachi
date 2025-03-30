@@ -2,7 +2,6 @@ from database.models import User, StoreComment, ProductComment, StoreRating, Pro
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
 from hash.hash import Hash
-from errors.user_errors import USER_NOT_FOUND_ERROR
 from schemas.user_schemas import UserModel, UserUpdateModel
 from errors.user_errors import (
     USER_NOT_FOUND_ERROR,
@@ -10,11 +9,7 @@ from errors.user_errors import (
     EMAIL_DUPLICATE_ERROR,
     PHONE_NUMBER_DUPLICATE_ERROR,
     NO_USER_FOUND_ERROR,
-    DONT_HAVE_ACCESS_ADMIN_ERROR,
-    USER_PHONE_VERIFICATION_CODE_ERROR,
-    USER_HAS_NO_PHONE_NUMBER_ERROR,
-    SMS_SERVER_ERROR,
-    USER_VERIFICATION_CODE_EXPIRED_ERROR
+    DONT_HAVE_ACCESS_ADMIN_ERROR
 )
 from functions.general_functions import (
     check_username_duplicate,

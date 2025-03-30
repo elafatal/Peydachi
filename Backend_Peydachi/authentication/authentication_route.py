@@ -2,7 +2,10 @@ from fastapi import APIRouter
 from dependencies.dependencies import AUTHENTICATION_DEPENDENCY, DB_DEPENDENCY, TOKEN_DEPENDENCY
 from authentication import access
 
-router = APIRouter(tags=['Authentication'])
+router = APIRouter(
+    prefix='/authentication',
+    tags=['Authentication']
+)
 
 
 @router.post('/token')

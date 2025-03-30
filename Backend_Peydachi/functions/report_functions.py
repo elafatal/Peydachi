@@ -2,7 +2,7 @@ import datetime
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 from database.models import Report
-from errors.report_errors import REPORT_NOT_FOUND_ERROR, NO_REPORT_FOUND_ERROR
+from errors.report_errors import REPORT_NOT_FOUND_ERROR, NO_REPORT_FOUND_ERROR, REPORT_ALREADY_REVIEWED_ERROR
 
 
 async def send_report(text: str, db: Session):
@@ -79,6 +79,9 @@ async def review_report(report_id: int, db: Session):
     report = db.query(Report).filter(Report.id == report_id).first()
     if not report:
         raise REPORT_NOT_FOUND_ERROR
+
+    if report.is_reviewed:
+        return REPORT_ALREADY_REVIEWED_ERROR
 
     report.is_reviewed = True
     db.commit()
