@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from database import models
 from database.database import Base, engine
 from authentication import authentication_route
+from routers.super_admin_routers import super_admin
 
 
 app = FastAPI(
@@ -10,6 +11,7 @@ app = FastAPI(
     debug=True
 )
 app.include_router(authentication_route.router)
+app.include_router(super_admin.router)
 
 
 Base.metadata.create_all(engine)
