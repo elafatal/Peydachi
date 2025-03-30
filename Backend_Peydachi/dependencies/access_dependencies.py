@@ -11,5 +11,6 @@ SUPER_ADMIN_DEPENDENCY = Annotated[UserAuth, Depends(get_current_super_admin)]
 
 
 ROUTER_USER_DEPENDENCY = Depends(get_current_user)
+ROUTER_SELLER_DEPENDENCY = Depends(get_current_seller)
 ROUTER_ADMIN_DEPENDENCY = Depends(get_current_admin)
 ROUTER_SUPER_ADMIN_DEPENDENCY = Depends(get_current_super_admin)
