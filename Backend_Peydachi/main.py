@@ -3,8 +3,8 @@ from database import models
 from database.database import Base, engine
 from authentication import authentication_route
 from routers.super_admin_routers import super_admin
-from routers.general_routers import user
-from routers.admin_routers import admin_user
+from routers.general_routers import user, region
+from routers.admin_routers import admin_user, admin_region
 
 
 app = FastAPI(
@@ -15,7 +15,9 @@ app = FastAPI(
 app.include_router(authentication_route.router)
 app.include_router(super_admin.router)
 app.include_router(admin_user.router)
+app.include_router(admin_region.router)
 app.include_router(user.router)
+app.include_router(region.router)
 
 
 Base.metadata.create_all(engine)

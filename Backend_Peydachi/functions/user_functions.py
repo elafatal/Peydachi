@@ -198,7 +198,7 @@ async def get_all_banned_users(db: Session):
 
 
 async def search_in_banned_users(user_name: str, db: Session):
-    users = db.query(User).filter(and_(User.is_banned == True, User.username.match(user_name)))
+    users = db.query(User).filter(and_(User.is_banned == True, User.username.match(user_name))).all
 
     if not users:
         raise NO_USER_FOUND_ERROR

@@ -7,7 +7,7 @@ from schemas.user_schemas import UserDisplay
 
 
 router = APIRouter(
-    prefix='/admin_user',
+    prefix='/admin/user',
     tags=['Admin User'],
     dependencies=[ROUTER_ADMIN_DEPENDENCY]
 )
@@ -53,6 +53,6 @@ async def unban_user(user_id: ID_BODY, db: DB_DEPENDENCY):
     return await user_functions.unban_user(user_id=user_id, db=db)
 
 
-@router.post('/search_in_banned_users', status_code=200)
+@router.post('/search_in_banned_users', status_code=200, response_model=list[UserDisplay])
 async def search_in_banned_user(user_name: NAME_BODY, db: DB_DEPENDENCY):
     return await user_functions.search_in_banned_users(user_name=user_name, db=db)

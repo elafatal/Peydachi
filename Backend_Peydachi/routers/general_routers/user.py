@@ -2,7 +2,6 @@ from fastapi import APIRouter
 from functions import user_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.access_dependencies import USER_DEPENDENCY
-from dependencies.body_dependencies import NAME_BODY
 from schemas.user_schemas import UserDisplay, UserModel, UserUpdateModel
 
 
