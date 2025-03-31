@@ -2,7 +2,6 @@ from database.models import StoreRating, Store, ProductRating, Product
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
 from schemas.store_rating_schemas import AddStoreRatingModel
-from errors.store_rating_errors import NO_STORE_RATING_FOUND_ERROR, STORE_RATING_NOT_FOUND_ERROR
 from errors.store_errors import STORE_NOT_FOUND_ERROR
 from statistics import mean
 

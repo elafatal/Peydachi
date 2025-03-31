@@ -15,7 +15,8 @@ from routers.general_routers import (
     product,
     category,
     notification,
-    store_rating
+    store_rating,
+    product_rating
 )
 from routers.admin_routers import (
     admin_user,
@@ -27,7 +28,8 @@ from routers.admin_routers import (
     admin_product,
     admin_category,
     admin_notification,
-    admin_store_rating
+    admin_store_rating,
+    admin_product_rating
 )
 
 
@@ -46,6 +48,7 @@ app.include_router(product.router)
 app.include_router(category.router)
 app.include_router(notification.router)
 app.include_router(store_rating.router)
+app.include_router(product_rating.router)
 app.include_router(seller_store.router)
 app.include_router(seller_product.router)
 app.include_router(admin_user.router)
@@ -58,6 +61,7 @@ app.include_router(admin_product.router)
 app.include_router(admin_category.router)
 app.include_router(admin_notification.router)
 app.include_router(admin_store_rating.router)
+app.include_router(admin_product_rating.router)
 app.include_router(super_admin.router)
 app.include_router(admin.router)
 app.include_router(authentication_route.router)
