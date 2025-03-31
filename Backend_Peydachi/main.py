@@ -12,7 +12,8 @@ from routers.general_routers import (
     reports,
     comment_report,
     store,
-    product
+    product,
+    category
 )
 from routers.admin_routers import (
     admin_user,
@@ -21,7 +22,8 @@ from routers.admin_routers import (
     admin_reports,
     admin_comment_report,
     admin_store,
-    admin_product
+    admin_product,
+    admin_category
 )
 
 
@@ -37,6 +39,7 @@ app.include_router(reports.router)
 app.include_router(comment_report.router)
 app.include_router(store.router)
 app.include_router(product.router)
+app.include_router(category.router)
 app.include_router(seller_store.router)
 app.include_router(seller_product.router)
 app.include_router(admin_user.router)
@@ -46,6 +49,7 @@ app.include_router(admin_reports.router)
 app.include_router(admin_comment_report.router)
 app.include_router(admin_store.router)
 app.include_router(admin_product.router)
+app.include_router(admin_category.router)
 app.include_router(super_admin.router)
 app.include_router(admin.router)
 app.include_router(authentication_route.router)
