@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from functions import store_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
-from dependencies.access_dependencies import ROUTER_SELLER_DEPENDENCY, SELLER_DEPENDENCY
+from dependencies.access_dependencies import SELLER_DEPENDENCY
 from schemas.store_schema import StoreModel, StoreDisplay
 
 

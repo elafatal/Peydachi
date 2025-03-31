@@ -2,7 +2,6 @@ import datetime
 from database.models import User, Store, StoreCategory, StoreComment, StoreRating, ProductComment, ProductRating, Product
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
-from hash.hash import Hash
 from functions.general_functions import check_store_name_duplicate
 from schemas.store_schema import StoreModel
 from errors.store_errors import (
@@ -93,12 +92,14 @@ async def delete_store(user_id: int, db: Session):
     product_comments = delete(ProductComment).where(ProductComment.product_id.in_(product_ids))
     store_ratings = delete(StoreRating).where(StoreRating.store_id == store.id)
     store_comments = delete(StoreComment).where(StoreComment.store_id == store.id)
+    store_category = delete(StoreCategory).where(StoreCategory.store_id == store.id)
 
     db.execute(products)
     db.execute(store_ratings)
     db.execute(store_comments)
     db.execute(product_ratings)
     db.execute(product_comments)
+    db.execute(store_category)
 
     db.delete(store)
     db.commit()

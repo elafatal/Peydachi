@@ -1,0 +1,48 @@
+from fastapi import APIRouter, UploadFile
+from functions import product_functions
+from dependencies.dependencies import DB_DEPENDENCY
+from dependencies.body_dependencies import NAME_BODY, ID_BODY
+from dependencies.access_dependencies import SELLER_DEPENDENCY
+from schemas.product_schemas import ProductModel, ProductDisplay, UpdateProductModel
+
+
+router = APIRouter(
+    prefix='/seller/product',
+    tags=['Seller Product'],
+)
+
+
+@router.post('/add_product', status_code=201, response_model=ProductDisplay)
+async def add_product(product: ProductModel, pic: UploadFile | None, db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
+    return await product_functions.add_product(product=product, pic=pic, db=db, owner_id=seller.id)
+
+
+@router.put('/update_product', status_code=200, response_model=ProductDisplay)
+async def update_product(product_info: UpdateProductModel, db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
+    return await product_functions.update_product(product_info=product_info, db=db, owner_id=seller.id)
+
+
+@router.put('/add_product_pic', status_code=200, response_model=ProductDisplay)
+async def add_product_pic(product_id: ID_BODY, pic: UploadFile, db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
+    return await product_functions.add_product_pic(product_id=product_id, pic=pic, db=db, owner_id=seller.id)
+
+
+@router.put('/remove_product_pic', status_code=200, response_model=ProductDisplay)
+async def remove_product_pic(product_id: ID_BODY, db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
+    return await product_functions.remove_product_pic(product_id=product_id, db=db, owner_id=seller.id)
+
+
+@router.delete('/delete_product', status_code=200)
+async def delete_product(product_id: ID_BODY, db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
+    return await product_functions.delete_product(product_id=product_id, db=db, owner_id=seller.id)
+
+
+@router.put('/update_product_quantity', status_code=200, response_model=ProductDisplay)
+async def update_product_quantity(product_id: ID_BODY, quantity: ID_BODY, db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
+    return await product_functions.update_product_quantity(product_id=product_id, quantity=quantity, db=db, owner_id=seller.id)
+
+
+@router.get('/get_self_products', status_code=200, response_model=list[ProductDisplay])
+async def get_self_products(db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
+    return await product_functions.get_self_products(user_id=seller.id, db=db)
+
