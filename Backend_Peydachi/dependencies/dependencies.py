@@ -22,7 +22,7 @@ REDIS_DEPENDENCY = Annotated[Redis, Depends(get_redis)]
 # SMS_DEPENDENCY = Annotated[Client, Depends(get_sms_service)]
 
 # Authentication dependencies
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='authentication/token')
 TOKEN_DEPENDENCY = Annotated[str, Depends(oauth2_scheme)]
 AUTHENTICATION_DEPENDENCY = Annotated[OAuth2PasswordRequestForm, Depends()]
 
