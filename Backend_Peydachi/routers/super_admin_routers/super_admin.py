@@ -8,8 +8,7 @@ from dependencies.access_dependencies import ROUTER_SUPER_ADMIN_DEPENDENCY
 
 router = APIRouter(
     prefix='/super_admin',
-    tags=['Super Admin'],
-    dependencies=[ROUTER_SUPER_ADMIN_DEPENDENCY]
+    tags=['Super Admin']
 )
 
 
