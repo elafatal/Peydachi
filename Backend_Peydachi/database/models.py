@@ -145,3 +145,21 @@ class CommentReport(ID, Base):
     is_reviewed = Column(Boolean, default=False)
     is_store = Column(Boolean, default=False) # True: It's store comment , False: It's product comment
     date_added = Column(DateTime, nullable=False)
+
+
+# Add Store Request Class =================================================================================
+class AddStoreRequest(ID, Base):
+    __tablename__ = "add_store_request"
+    store_name = Column(String(150), nullable=False)
+    phone_number = Column(String(20), nullable=False)
+    region_id = Column(Integer, ForeignKey("region.id"))
+    city_id = Column(Integer, ForeignKey("city.id"))
+    date_added = Column(DateTime, nullable=False)
+    description = Column(String(600), nullable=True)
+
+
+# Deleted Picture Class ===================================================================================
+class DeletedPics(Base, ID):
+    __tablename__ = 'deleted_pics'
+    name = Column(String, nullable=False)
+    is_reviewed = Column(Boolean, default=False)

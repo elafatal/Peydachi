@@ -31,7 +31,7 @@ async def search_region_by_name(region_name: str, db: Session):
 
 
 async def add_region(name: str, db: Session):
-    check_name = db.query(Region).filter(Region.region_name == name).first()
+    check_name = db.query(Region).filter(Region.name == name).first()
     if check_name:
         raise REGION_ALREADY_EXISTS
 

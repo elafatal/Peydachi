@@ -5,7 +5,6 @@ from typing import Annotated
 from sqlalchemy.orm import Session
 from database.redis_db import get_redis
 from database.database import get_db
-# from sms_service.sms_service import get_sms_service
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 
