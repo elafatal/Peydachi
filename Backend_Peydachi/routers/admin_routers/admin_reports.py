@@ -23,7 +23,7 @@ async def get_reports_to_review(db: DB_DEPENDENCY):
     return await report_functions.get_reports_to_review(db=db)
 
 
-@router.get('get_all_reports', status_code=200, response_model=list[ReportDisplay])
+@router.get('/get_all_reports', status_code=200, response_model=list[ReportDisplay])
 async def get_all_reports(db: DB_DEPENDENCY):
     return await report_functions.get_all_reports(db=db)
 
