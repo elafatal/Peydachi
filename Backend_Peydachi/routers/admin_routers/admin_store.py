@@ -23,7 +23,7 @@ async def add_owner_to_store(store_id: ID_BODY, user_id: ID_BODY, db: DB_DEPENDE
     return await store_functions.add_owner_to_store(store_id=store_id, user_id=user_id, db=db)
 
 
-@router.delete('/delete_store', status_code=200, response_model=StoreDisplay)
+@router.delete('/delete_store', status_code=200)
 async def delete_store_admin(store_id: ID_BODY, db: DB_DEPENDENCY):
     return await store_functions.delete_store_admin(store_id=store_id, db=db)
 
