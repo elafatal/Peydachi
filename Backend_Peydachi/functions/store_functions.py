@@ -44,6 +44,7 @@ async def add_owner_to_store(user_id: int, store_id: int, db: Session):
         raise USER_NOT_FOUND_ERROR
 
     store.owner_id = user_id
+    user.is_seller = True
     db.commit()
 
     return store
