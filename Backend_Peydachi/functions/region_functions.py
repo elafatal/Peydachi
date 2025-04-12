@@ -64,7 +64,7 @@ async def update_region(region_id: int, name: str, db: Session):
     if not region:
         raise REGION_NOT_FOUND_ERROR
 
-    region.region_name = name
+    region.name = name
     db.commit()
 
     return region
