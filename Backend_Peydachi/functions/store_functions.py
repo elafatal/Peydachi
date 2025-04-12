@@ -17,14 +17,14 @@ async def create_store(request: StoreModel, db: Session):
     if check_store_name_duplicate(request.name, db):
         raise STORE_ALREADY_EXISTS_ERROR
 
-    user = db.query(User).filter(User.id == request.owner_id).first()
-    if not user or not user.is_seller:
-        raise USER_NOT_SELLER_ERROR
+    if request.owner_id:
+        user = db.query(User).filter(User.id == request.owner_id).first()
+        if not user or not user.is_seller:
+            raise USER_NOT_SELLER_ERROR
 
-
-    existing_store = db.query(Store).filter(Store.owner_id == user.id).first()
-    if existing_store:
-        raise USER_ALREADY_HAS_STORE
+        existing_store = db.query(Store).filter(Store.owner_id == user.id).first()
+        if existing_store:
+            raise USER_ALREADY_HAS_STORE
 
     store = Store(
         name=request.name,
