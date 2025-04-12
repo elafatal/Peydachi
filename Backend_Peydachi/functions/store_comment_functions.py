@@ -76,11 +76,9 @@ async def search_store_comments(store_id: int, search: str, db: Session):
 
 
 async def delete_all_comments_of_store(store_id: int, db: Session):
-    store_comments = db.query(StoreComment).filter(StoreComment.store_id == store_id).all()
-    if not store_comments:
-        raise NO_STORE_COMMENT_FOUND_ERROR
+    delete_store_comments = delete(StoreComment).where(StoreComment.store_id == store_id)
 
-    db.delete(store_comments)
+    db.execute(delete_store_comments)
     db.commit()
 
     return 'Store comments deleted'
