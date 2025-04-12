@@ -8,7 +8,8 @@ from errors.user_errors import (
     INVALID_PASSWORD_ERROR,
     REFRESH_TOKEN_DEMAND_ERROR,
     TOKEN_EXPIRED_ERROR,
-    INVALID_TOKEN_ERROR
+    INVALID_TOKEN_ERROR,
+    USER_IS_BANNED_ERROR
 )
 from dependencies.dependencies import DB_DEPENDENCY, TOKEN_DEPENDENCY, AUTHENTICATION_DEPENDENCY
 from datetime import datetime, timedelta
@@ -68,6 +69,9 @@ async def get_current_user(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
 
     user = await get_user_by_username(username, db)
 
+    if user.is_banned:
+        raise USER_IS_BANNED_ERROR
+
     return user
 
 
@@ -90,6 +94,9 @@ async def get_current_seller(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
 
     if not user.is_seller:
         raise PROTECTED_ERROR
+
+    if user.is_banned:
+        raise USER_IS_BANNED_ERROR
 
     return user
 
@@ -114,6 +121,9 @@ async def get_current_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
     if not user.is_admin:
         raise PROTECTED_ERROR
 
+    if user.is_banned:
+        raise USER_IS_BANNED_ERROR
+
     return user
 
 
@@ -136,6 +146,9 @@ async def get_current_super_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
 
     if not user.is_super_admin:
         raise PROTECTED_ERROR
+
+    if user.is_banned:
+        raise USER_IS_BANNED_ERROR
 
     return user
 
