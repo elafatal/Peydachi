@@ -10,12 +10,16 @@ from errors.store_errors import (
     STORE_ALREADY_EXISTS_ERROR,
     STORE_ACCESS_ERROR
 )
-from errors.user_errors import USER_NOT_FOUND_ERROR
+from errors.user_errors import USER_NOT_FOUND_ERROR, USER_NOT_SELLER_ERROR
 
 
 async def create_store(request: StoreModel, db: Session):
     if check_store_name_duplicate(request.name, db):
         raise STORE_ALREADY_EXISTS_ERROR
+
+    user = db.query(User).filter(User.id == request.owner_id).first()
+    if not user or not user.is_seller:
+        raise USER_NOT_SELLER_ERROR
 
     store = Store(
         name=request.name,
@@ -212,3 +216,15 @@ async def search_in_banned_stores(name: str, db: Session):
         raise NO_STORE_FOUND_ERROR
 
     return stores
+
+
+async def promote_user_to_seller(user_id: int, db: Session):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise USER_NOT_FOUND_ERROR
+
+    user.is_seller = True
+
+    db.commit()
+
+    return f"User {user.username} is now a seller"

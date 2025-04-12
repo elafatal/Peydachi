@@ -41,3 +41,8 @@ async def unban_store(store_id: ID_BODY, db: DB_DEPENDENCY):
 @router.get('/get_all_banned_stores', status_code=200, response_model=list[StoreDisplay])
 async def get_all_banned_stores(db: DB_DEPENDENCY):
     return await store_functions.get_all_banned_stores(db=db)
+
+
+@router.put('/promote_user_to_seller', status_code=200)
+async def promote_user_to_seller(user_id: ID_BODY, db: DB_DEPENDENCY):
+    return await store_functions.promote_user_to_seller(user_id=user_id, db=db)
