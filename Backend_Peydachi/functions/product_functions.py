@@ -1,15 +1,42 @@
 import datetime
 from fastapi import UploadFile, File
-from database.models import Product, Store, ProductComment, ProductRating
+from database.models import Product, Store, ProductComment, ProductRating, DeletedPics
 from sqlalchemy.orm import Session
+from urllib.parse import quote
 from sqlalchemy import delete, and_
 from schemas.product_schemas import ProductModel, UpdateProductModel, ProductSearchModels
 from string import ascii_letters
 import random
-from errors.product_errors import NO_PRODUCT_FOUND_ERROR, PRODUCT_NOT_FOUND_ERROR, PRODUCT_ACCESS_ERROR
+from errors.product_errors import (
+    NO_PRODUCT_FOUND_ERROR,
+    PRODUCT_NOT_FOUND_ERROR,
+    PRODUCT_ACCESS_ERROR,
+    UPLOAD_PICTURE_ERROR,
+    UPLOAD_PICTURE_INTERNAL_ERROR,
+    PRIDUCT_HAS_NO_PICTURE_ERROR
+)
 from errors.store_errors import STORE_NOT_FOUND_ERROR
+import boto3
+from botocore.exceptions import NoCredentialsError
+from dotenv import load_dotenv
+import os
+import io
 
 
+load_dotenv()
+
+LIARA_ENDPOINT = os.getenv("LIARA_ENDPOINT")
+LIARA_ACCESS_KEY = os.getenv("LIARA_ACCESS_KEY")
+LIARA_SECRET_KEY = os.getenv("LIARA_SECRET_KEY")
+LIARA_BUCKET_NAME = os.getenv("LIARA_BUCKET_NAME")
+
+
+s3 = boto3.client(
+    "s3",
+    endpoint_url=LIARA_ENDPOINT,
+    aws_access_key_id=LIARA_ACCESS_KEY,
+    aws_secret_access_key=LIARA_SECRET_KEY,
+)
 
 
 async def add_product(product: ProductModel, owner_id: int, pic: UploadFile | None, db: Session):
@@ -32,9 +59,25 @@ async def add_product(product: ProductModel, owner_id: int, pic: UploadFile | No
     if pic:
         rand_str = ''.join(random.choice(ascii_letters) for _ in range(6))
         new_name = f'_{rand_str}.'.join(pic.filename.rsplit('.', 1))
-        path_file = f'pictures/{new_name}'
+        pic.filename = new_name
 
-        new_product.pic_url = path_file
+        try:
+            file_content = await pic.read()
+            s3.upload_fileobj(io.BytesIO(file_content), LIARA_BUCKET_NAME, pic.filename)
+
+            filename_encoded = quote(new_name)
+            pic_url = f"https://{LIARA_BUCKET_NAME}.{LIARA_ENDPOINT.replace('https://', '')}/{filename_encoded}"
+
+        except NoCredentialsError:
+            raise UPLOAD_PICTURE_ERROR
+
+        except Exception:
+            raise UPLOAD_PICTURE_INTERNAL_ERROR
+
+
+
+        new_product.pic_url = pic_url
+        new_product.pic_name = new_name
 
 
     db.commit()
@@ -79,9 +122,32 @@ async def add_product_pic(product_id: int, pic: UploadFile, owner_id: int, db: S
 
     rand_str = ''.join(random.choice(ascii_letters) for _ in range(6))
     new_name = f'_{rand_str}.'.join(pic.filename.rsplit('.', 1))
-    path_file = f'pictures/{new_name}'
+    pic.filename = new_name
 
-    product.pic_url = path_file
+    try:
+        file_content = await pic.read()
+        s3.upload_fileobj(io.BytesIO(file_content), LIARA_BUCKET_NAME, pic.filename)
+
+        filename_encoded = quote(new_name)
+        pic_url = f"https://{LIARA_BUCKET_NAME}.{LIARA_ENDPOINT.replace('https://', '')}/{filename_encoded}"
+
+        product.pic_url = pic_url
+    except NoCredentialsError:
+        raise UPLOAD_PICTURE_ERROR
+    except Exception:
+        raise UPLOAD_PICTURE_INTERNAL_ERROR
+
+
+    if product.pic_name:
+        old_pic_name = product.pic_name
+
+        deletes_pic = DeletedPics(
+            name=old_pic_name
+        )
+
+        db.add(deletes_pic)
+
+    product.pic_name = new_name
 
     db.commit()
     db.refresh(product)
@@ -101,10 +167,18 @@ async def remove_product_pic(product_id: int, owner_id: int, db: Session):
     if product.store_id != store.id:
         raise PRODUCT_ACCESS_ERROR
 
+    if not product.pic_url:
+        raise PRIDUCT_HAS_NO_PICTURE_ERROR
+
+    delete_pic = DeletedPics(
+        name=product.pic_name
+    )
+    db.add(delete_pic)
+
     product.pic_url = None
+    product.pic_name = None
 
     db.commit()
-    db.refresh(product)
 
     return product
 
@@ -127,6 +201,12 @@ async def delete_product(product_id: int, owner_id: int, db: Session):
 
     db.execute(product_comments)
     db.execute(product_ratings)
+
+    if product.pic_name:
+        delete_pic = DeletedPics(
+            name=product.pic_name
+        )
+        db.add(delete_pic)
 
     db.delete(product)
     db.commit()

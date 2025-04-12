@@ -57,6 +57,7 @@ class Product(ID, Base):
     name = Column(String(150), nullable=False)
     description = Column(String(500), nullable=True)
     pic_url = Column(String(500), nullable=True)
+    pic_name = Column(String, nullable=True)
     average_rating = Column(Float, nullable=True)
     date_added = Column(DateTime, nullable=False)
     quantity = Column(Integer, nullable=False)
