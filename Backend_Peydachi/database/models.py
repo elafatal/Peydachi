@@ -68,6 +68,7 @@ class StoreComment(ID, Base):
     __tablename__ = "store_comment"
     store_id = Column(Integer, ForeignKey("store.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    user_name = Column(String(150), nullable=False)
     text = Column(String(500), nullable=False)
     date_added = Column(DateTime, nullable=False)
 
@@ -77,6 +78,7 @@ class ProductComment(ID, Base):
     __tablename__ = "product_comment"
     product_id = Column(Integer, ForeignKey("product.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    user_name = Column(String(150), nullable=False)
     text = Column(String(500), nullable=False)
     date_added = Column(DateTime, nullable=False)
 

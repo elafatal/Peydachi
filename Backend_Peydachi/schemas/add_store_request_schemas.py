@@ -10,6 +10,6 @@ class AddAddStoreRequestModel(BaseSchema):
     description: str | None = None
 
 
-class AddStoreRequestDisplay(BaseSchema):
+class AddStoreRequestDisplay(AddAddStoreRequestModel):
     id: int
     date_added: datetime.datetime
