@@ -151,6 +151,12 @@ async def ban_store(store_id: int, db: Session):
         raise STORE_NOT_FOUND_ERROR
 
     store.is_banned = True
+
+    user = db.query(User).filter(User.id == store.owner_id).first()
+    if not user:
+        raise USER_NOT_FOUND_ERROR
+
+    user.is_banned == True
     db.commit()
 
     return store
@@ -162,6 +168,13 @@ async def unban_store(store_id: int, db: Session):
         raise STORE_NOT_FOUND_ERROR
 
     store.is_banned = False
+
+    user = db.query(User).filter(User.id == store.owner_id).first()
+    if not user:
+        raise USER_NOT_FOUND_ERROR
+
+    user.is_banned == False
+
     db.commit()
 
     return store
