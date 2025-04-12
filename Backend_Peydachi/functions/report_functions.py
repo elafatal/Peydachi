@@ -90,8 +90,8 @@ async def review_report(report_id: int, db: Session):
     return report
 
 
-async def remove_report(request_id: int, db: Session):
-    report = db.query(Report).filter(Report.id == request_id).first()
+async def remove_report(report_id: int, db: Session):
+    report = db.query(Report).filter(Report.id == report_id).first()
     if not report:
         raise REPORT_NOT_FOUND_ERROR
 

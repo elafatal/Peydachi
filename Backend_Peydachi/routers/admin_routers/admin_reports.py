@@ -35,7 +35,7 @@ async def search_reports(report_text: NAME_BODY, db: DB_DEPENDENCY):
 
 @router.post('/search_reviewed_reports', status_code=200, response_model=list[ReportDisplay])
 async def search_reviewed_reports(report_text: NAME_BODY, db: DB_DEPENDENCY):
-    return await report_functions.search_in_reviewed_reports(report_text=report_text, db=db)
+    return await report_functions.search_reviewed_reports(report_text=report_text, db=db)
 
 
 @router.post('/search_not_reviewed_reports', status_code=200, response_model=list[ReportDisplay])
@@ -55,4 +55,4 @@ async def review_report(report_id: ID_BODY, db: DB_DEPENDENCY):
 
 @router.delete('/delete_report', status_code=200)
 async def delete_report(report_id: ID_BODY, db: DB_DEPENDENCY):
-    return await report_functions.delete_report(report_id=report_id, db=db)
+    return await report_functions.remove_report(report_id=report_id, db=db)
