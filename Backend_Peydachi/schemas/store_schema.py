@@ -8,7 +8,7 @@ class StoreModel(BaseSchema):
     description: str | None = None
     location_longitude: str | None = None
     location_latitude: str | None = None
-    city_id: int | None = None
+    city_id: int
 
 
 class StoreDisplay(StoreModel):
