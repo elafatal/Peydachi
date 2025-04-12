@@ -156,6 +156,7 @@ class AddStoreRequest(ID, Base):
     city_id = Column(Integer, ForeignKey("city.id"))
     date_added = Column(DateTime, nullable=False)
     description = Column(String(600), nullable=True)
+    is_reviewed = Column(Boolean, default=False)
 
 
 # Deleted Picture Class ===================================================================================
