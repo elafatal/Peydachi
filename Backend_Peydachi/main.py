@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from database import models
 from database.database import Base, engine
-from fastapi.staticfiles import StaticFiles
 from authentication import authentication_route
 from routers.super_admin_routers import super_admin, admin, deleted_pics
 from routers.seller_routers import seller_store, seller_product
@@ -79,9 +78,6 @@ app.include_router(admin.router)
 app.include_router(deleted_pics.router)
 app.include_router(authentication_route.router)
 
-
-
-app.mount('/files', StaticFiles(directory='pictures'), name='files')
 
 
 
