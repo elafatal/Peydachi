@@ -42,7 +42,7 @@ async def search_city_in_region(city_name: str, region_id: int, db: Session):
 
 
 async def add_city(info: CityModel, db: Session):
-    check_name = db.query(City).filter(and_(City.city_name == info.name, City.region_id == info.region_id)).first()
+    check_name = db.query(City).filter(and_(City.name == info.name, City.region_id == info.region_id)).first()
     if check_name:
         raise CITY_ALREADY_EXISTS_ERROR
 
