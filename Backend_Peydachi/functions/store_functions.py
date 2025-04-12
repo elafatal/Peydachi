@@ -21,6 +21,11 @@ async def create_store(request: StoreModel, db: Session):
     if not user or not user.is_seller:
         raise USER_NOT_SELLER_ERROR
 
+
+    existing_store = db.query(Store).filter(Store.owner_id == user.id).first()
+    if existing_store:
+        raise
+
     store = Store(
         name=request.name,
         description=request.description if request.description else None,

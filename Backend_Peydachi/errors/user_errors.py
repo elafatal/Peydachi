@@ -84,8 +84,12 @@ USER_VERIFICATION_CODE_EXPIRED_ERROR = HTTPException(status_code=status.HTTP_404
                                                      detail='User Verification Code Expired.')
 
 USER_IS_ALREADY_SELLER_ERROR = HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                                             detail="User is already a seller")
+                                             detail="User is already a seller.")
 
 
 USER_NOT_SELLER_ERROR = HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                                      detail='Owner not found or not accessible')
+                                      detail='Owner not found or not accessible.')
+
+
+USER_ALREADY_HAS_STORE = HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                                       detail='This user already owns a store.')
