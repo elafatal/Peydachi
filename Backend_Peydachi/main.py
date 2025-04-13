@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from database import models
 from database.database import Base, engine
 from authentication import authentication_route
+from fastapi.middleware.cors import CORSMiddleware
 from routers.super_admin_routers import super_admin, admin, deleted_pics
 from routers.seller_routers import seller_store, seller_product
 from routers.general_routers import (
@@ -37,6 +38,14 @@ from routers.admin_routers import (
     admin_product_comment
 )
 
+
+
+origins = [
+    "http://localhost:*",
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:8000"
+]
 
 app = FastAPI(
     title="Peydachi",
@@ -78,6 +87,15 @@ app.include_router(admin.router)
 app.include_router(deleted_pics.router)
 app.include_router(authentication_route.router)
 
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Reflect the allowed origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 
 
