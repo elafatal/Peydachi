@@ -16,3 +16,11 @@ class StoreDisplay(StoreModel):
     average_rating: float | None = None
     average_product_rating: float | None = None
     is_banned: bool | None = None
+
+
+class UpdateStoreModel(BaseSchema):
+    name: str | None = None
+    contact_info: dict | None = None
+    description: str | None = None
+    location_longitude: str | None = None
+    location_latitude: str | None = None

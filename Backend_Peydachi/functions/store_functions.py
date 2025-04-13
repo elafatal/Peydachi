@@ -3,7 +3,7 @@ from database.models import User, Store, StoreCategory, StoreComment, StoreRatin
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
 from functions.general_functions import check_store_name_duplicate
-from schemas.store_schema import StoreModel
+from schemas.store_schema import StoreModel, UpdateStoreModel
 from errors.store_errors import (
     NO_STORE_FOUND_ERROR,
     STORE_NOT_FOUND_ERROR,
@@ -60,14 +60,11 @@ async def add_owner_to_store(user_id: int, store_id: int, db: Session):
     return store
 
 
-async def update_store_info(user_id: int, request: StoreModel, db: Session):
-    store = db.query(Store).filter(Store.id == request.id).first()
+async def update_store_info(user_id: int, request: UpdateStoreModel, db: Session):
+    store = db.query(Store).filter(Store.owner_id == user_id).first()
     if not store:
         raise NO_STORE_FOUND_ERROR
 
-
-    if user_id != store.owner_id:
-        raise STORE_ACCESS_ERROR
 
     store.name = request.name if request.name else store.name
     store.description = request.description if request.description else store.description

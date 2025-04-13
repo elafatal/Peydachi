@@ -39,19 +39,18 @@ s3 = boto3.client(
 )
 
 
-async def add_product(product: ProductModel, owner_id: int, pic: UploadFile | None, db: Session):
+async def add_product(owner_id: int, db: Session, name: str, description: str | None, quantity: int | None, pic: UploadFile | None = None):
     store = db.query(Store).filter(Store.owner_id == owner_id).first()
     if not store:
         raise STORE_NOT_FOUND_ERROR
 
-
     new_product = Product(
-        store_id = product.store_id,
-        name=product.name,
-        description=product.description if product.description else None,
+        store_id=store.id,
+        name=name,
+        description=description if description else None,
         city_id=store.city_id,
         date_added=datetime.datetime.now(),
-        quantity=product.quantity if product.quantity else None
+        quantity=quantity if quantity else None
     )
 
     db.add(new_product)
@@ -74,11 +73,8 @@ async def add_product(product: ProductModel, owner_id: int, pic: UploadFile | No
         except Exception:
             raise UPLOAD_PICTURE_INTERNAL_ERROR
 
-
-
         new_product.pic_url = pic_url
         new_product.pic_name = new_name
-
 
     db.commit()
     db.refresh(new_product)
