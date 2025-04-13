@@ -1,3 +1,4 @@
+import datetime
 from schemas.base_schemas import BaseSchema
 
 
@@ -6,12 +7,10 @@ class SendNotificationModel(BaseSchema):
     text: str
 
 
-class NotificationDisplay(BaseSchema):
+class NotificationDisplay(SendNotificationModel):
     id: int
-    text: str
-    date_added: str
+    date_added: datetime.datetime
     has_seen: bool
-    user_id: int
 
 
 class AdminNotificationDisplay(NotificationDisplay):
