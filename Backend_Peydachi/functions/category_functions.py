@@ -140,9 +140,16 @@ async def get_all_categories_of_store(store_id: int, db: Session):
     if not store:
         raise STORE_NOT_FOUND_ERROR
 
-    categories = db.query(StoreCategory).filter(StoreCategory.store_id == store_id).all()
+    category_ids_tuple = db.query(StoreCategory.category_id).filter(StoreCategory.store_id == store_id).all()
+
+    category_ids = []
+    for category_id in category_ids_tuple:
+        category_ids.append(category_id[0])
+
+    categories = db.query(Category).filter(Category.id.in_(category_ids))
     if not categories:
         raise NO_CATEGORY_FOUND_ERROR
+
 
     return categories
 
