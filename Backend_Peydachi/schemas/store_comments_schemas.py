@@ -1,3 +1,4 @@
+import datetime
 from schemas.base_schemas import BaseSchema
 
 
@@ -9,5 +10,5 @@ class AddStoreCommentModel(BaseSchema):
 class StoreCommentDisplay(AddStoreCommentModel):
     id: int
     user_id: int
-    username: str
-    date_added: str
+    user_name: str
+    date_added: datetime.datetime

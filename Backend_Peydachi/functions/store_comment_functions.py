@@ -16,12 +16,15 @@ async def add_store_comment(store_comment: AddStoreCommentModel, user_id: int, d
         raise USER_NOT_FOUND_ERROR
 
     new_store_comment = StoreComment(
-        user_id=store_comment.user_id,
+        user_id=user_id,
         store_id=store_comment.store_id,
         user_name=user.username,
         text=store_comment.text,
         date_added=datetime.datetime.now(),
     )
+
+    db.add(new_store_comment)
+    db.commit()
 
     return new_store_comment
 
