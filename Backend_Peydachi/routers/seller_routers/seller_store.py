@@ -3,8 +3,7 @@ from functions import store_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
 from dependencies.access_dependencies import SELLER_DEPENDENCY
-from schemas.store_schema import StoreModel, StoreDisplay
-
+from schemas.store_schema import StoreModel, StoreDisplay, UpdateStoreModel
 
 router = APIRouter(
     prefix='/seller/store',
@@ -13,11 +12,11 @@ router = APIRouter(
 
 
 @router.put('/update_store_info', status_code=200, response_model=StoreDisplay)
-async def update_store_info(request: StoreModel, db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
+async def update_store_info(request: UpdateStoreModel, db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
     return await store_functions.update_store_info(user_id=seller.id, request=request, db=db)
 
 
-@router.post('/get_self_store', status_code=200, response_model=StoreDisplay)
+@router.get('/get_self_store', status_code=200, response_model=StoreDisplay)
 async def get_self_store(db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
     return await store_functions.get_self_store(user_id=seller.id, db=db)
 
