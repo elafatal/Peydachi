@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter, UploadFile, Form
 from functions import product_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
@@ -11,10 +11,9 @@ router = APIRouter(
     tags=['Seller Product'],
 )
 
-
 @router.post('/add_product', status_code=201, response_model=ProductDisplay)
-async def add_product(product: ProductModel, pic: UploadFile | None, db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
-    return await product_functions.add_product(product=product, pic=pic, db=db, owner_id=seller.id)
+async def add_product(db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY, name: str = Form(...), description: str = Form(None),  quantity: int = Form(None),  pic: UploadFile | None = None):
+    return await product_functions.add_product(name=name, db=db, owner_id=seller.id, description=description, quantity=quantity, pic=pic)
 
 
 @router.put('/update_product', status_code=200, response_model=ProductDisplay)
