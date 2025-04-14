@@ -1,19 +1,22 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AboutUs from './Component/About us/AboutUs';
+import Signin from './Component/SignUp-SignIn/SignIn/SignIn';
+import Login from './Component/SignUp-SignIn/Login';
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
-    <>
-      
-        <a className='font-iran'>
-         للام الاغ عزیر حالت چطوذه
-        </a>
-        
-    </>
+    <Router>
+    <div >
+      <Routes>
+        <Route path="/aboutUs" element={<AboutUs/>} />
+        <Route path="/Login" element={<Login/>} />
+
+      </Routes>
+    </div>
+  </Router>
   )
 }
 
