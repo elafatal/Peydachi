@@ -24,6 +24,9 @@ async def add_product_comment(product_comment: AddProductCommentModel, user_id: 
         date_added=datetime.datetime.now(),
     )
 
+    db.add(new_product_comment)
+    db.commit()
+
     return new_product_comment
 
 

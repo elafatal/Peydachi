@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 @router.post('/add_product_comment', status_code=201, response_model=ProductCommentDisplay)
-async def add_product_comment(product_comment: AddProductCommentModel, user=USER_DEPENDENCY, db=DB_DEPENDENCY):
+async def add_product_comment(product_comment: AddProductCommentModel, user: USER_DEPENDENCY, db: DB_DEPENDENCY):
     return await product_comment_functions.add_product_comment(product_comment=product_comment, db=db, user_id=user.id)
 
 
