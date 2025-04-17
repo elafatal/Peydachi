@@ -1,16 +1,87 @@
 import React, { useState } from 'react';
 import { motion } from "framer-motion";
+import axios from 'axios';
+import Swal from "sweetalert2"; 
+import { useNavigate } from 'react-router-dom';
+
+
 const SignUp= ({showComponent,setshowComponent}) => {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  const [phone_number, setphone_number] = useState('');
   const [password, setPassword] = useState('');
+  const [password2, setPassword2] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ username, password, rememberMe });
+    // console.log({ username, phone_number, password, rememberMe });
+    if (password == password2) {
+      try {
+        const response = await axios.post(
+          'http://127.0.0.1:8000/user/create_user',
+          { username: username, password: password, phone_number: phone_number },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          }
+        );
+        console.log(response);
+    
+        if (response.status === 201) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "ثبت نام شما انجام شد",
+            showConfirmButton: false,
+            timer: 1500,
+            toast: true,
+            customClass: {
+              popup: 'w-2 h-15 text-sm flex items-center justify-center',
+              title: 'text-xs',
+              content: 'text-xs',
+              icon: 'text-xs mb-2',
+            },
+          });
+          navigate('/', { replace: true });
+        }
+      } catch (error) {
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "دوباره امتحان کنید",
+          showConfirmButton: false,
+          timer: 1500,
+          toast: true,
+          customClass: {
+            popup: 'w-2 h-15 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
+      }
+    }else{
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "پسورد تایید نشد",
+        showConfirmButton: false,
+        timer: 1500,
+        toast: true,
+        customClass: {
+          popup: 'w-2 h-15 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
+    }
+
   };
+
 
   return (
     
@@ -25,6 +96,7 @@ const SignUp= ({showComponent,setshowComponent}) => {
       <h1 className="text-3xl font-bold mb-8 text-gray-800">ثبت‌نام</h1>
       
       <form onSubmit={handleSubmit}>
+        {/* username */}
         <div className="mb-4">
           <div className="relative">
             <input 
@@ -39,21 +111,21 @@ const SignUp= ({showComponent,setshowComponent}) => {
             <i className="fas fa-envelope absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"></i>
           </div>
         </div>
-        {/* email */}
+        {/* phone_number */}
         <div className="mb-6">
           <div className="relative">
             <input 
-              type="email"
-              id="email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              id="phone_number" 
+              value={phone_number}
+              onChange={(e) => setphone_number(e.target.value)}
               className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-              placeholder="ایمیل"
+              placeholder="شماره موبایل"
             />
             <i className="fas fa-envelope absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"></i>
           </div>
         </div>
-        {/* پسورد */}
+        {/* paasword */}
         <div className="mb-6">
           <div className="relative">
             <input 
@@ -75,9 +147,9 @@ const SignUp= ({showComponent,setshowComponent}) => {
           <div className="relative">
             <input 
               type={showPassword ? "text" : "password"}
-              id="password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="password2" 
+              value={password2}
+              onChange={(e) => setPassword2(e.target.value)}
               className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
               placeholder="تایید پسورد"
               required
@@ -109,7 +181,7 @@ const SignUp= ({showComponent,setshowComponent}) => {
       
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
-          حساب کاربری دارید؟ <p href="#" className="inline text-blue-500 hover:underline cursor-pointer" onClick={() => setshowComponent("Signin")}>ورود</p>
+          حساب کاربری دارید؟ <a href="#" className="inline text-blue-500 hover:underline cursor-pointer" onClick={() => setshowComponent("Signin")}>ورود</a>
         </p>
       </div>
       

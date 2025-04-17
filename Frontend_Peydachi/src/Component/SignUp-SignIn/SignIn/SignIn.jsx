@@ -1,16 +1,60 @@
 import React, { useState } from 'react';
  import "./SignIn.css";
+ import Swal from "sweetalert2";  
+ import Cookies from 'js-cookie';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 const SignIn= ({showComponent,setshowComponent}) => {
-  const [email, setEmail] = useState('');
+  const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  
+  const handleSubmit =async (e) => {
     e.preventDefault();
-    console.log({ email, password, rememberMe });
+    try{
+      const response = await axios.post('http://127.0.0.1:8000/authentication/token', 
+        { username: username, password: password }, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      if (response.status === 200) {
+        Cookies.set('auth_token', response.data.access_token, { expires: 3, secure: true, sameSite: 'Strict' });
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "خوش آمدید",
+          showConfirmButton: false,
+          timer: 1500,
+          toast: true,
+          customClass: {
+            popup: 'w-2 h-15 text-sm flex items-center justify-center', // Use flex to center text vertically and horizontally
+            title: 'text-xs', // Set smaller title text
+            content: 'text-xs', // Smaller content text
+            icon : 'text-xs mb-2'
+          }
+      });
+      }
+    }
+    catch(error){
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "نام کاربری یا رمز عبور اشتباه است",
+        showConfirmButton: false,
+        timer: 1500,
+        toast: true,
+        customClass: {
+          popup: 'w-2 h-15 text-sm flex items-center justify-center', // Use flex to center text vertically and horizontally
+          title: 'text-xs', // Set smaller title text
+          content: 'text-xs', // Smaller content text
+          icon : 'text-xs mb-2'
+        }
+    });
+    }
   };
 
   return (
@@ -30,11 +74,11 @@ const SignIn= ({showComponent,setshowComponent}) => {
           <div className="relative">
             <input 
               type="text" 
-              id="email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username" 
+              value={username}
+              onChange={(e) => setusername(e.target.value)}
               className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-              placeholder="ایمیل"
+              placeholder="نام کاربری"
               required
             />
             <i className="fas fa-envelope absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"></i>
@@ -80,7 +124,7 @@ const SignIn= ({showComponent,setshowComponent}) => {
       
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
-          حساب کاربری ندارید؟ <p className="inline text-blue-500 hover:underline cursor-pointer" onClick={() => setshowComponent("Signup")}>ثبت‌نام</p>
+          حساب کاربری ندارید؟ <a className="inline text-blue-500 hover:underline cursor-pointer" onClick={() => setshowComponent("Signup")}>ثبت‌نام</a>
         </p>
       </div>
       
