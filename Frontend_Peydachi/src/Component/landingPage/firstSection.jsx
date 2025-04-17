@@ -136,10 +136,10 @@ const FirstSection = () => {
                     )}
                   </div>
                   <button
-                    className="w-full bg-blue-600 text-white py-4 rounded-lg hover:bg-blue-700 cursor-pointer"
+                    className="w-1/2 bg-blue-600 text-xl text-white py-3 rounded-lg hover:bg-blue-700 cursor-pointer m-auto"
                     onClick={handleSearch}
                   >
-                    Search Nearby
+                    جستجو
                   </button>
                 </div>
               </div>

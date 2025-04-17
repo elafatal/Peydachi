@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import FirstSection from './firstSection';
+import MenuBar from '../Navbar/Navbar';
+import Navbar from './navbar';
+import Footer from './footer/footer';
 
 
 const LandingPage = () => {
@@ -49,22 +52,9 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white" dir='ltr'>
       {/* Header */}
-      <header className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100" dir='rtl'>
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <i className="fa-solid fa-location-crosshairs text-blue-600 text-2xl"></i>
-            <span className="text-2xl font-bold text-gray-800">پیداچی</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="text-gray-600 hover:text-gray-800 px-4 py-2 cursor-pointer whitespace-nowrap !rounded-button">
-              ورود/ثبت نام
-            </button>
-            <button className="bg-blue-600 text-white px-6 py-2 hover:bg-blue-700 cursor-pointer whitespace-nowrap !rounded-button">
-              نوتیف
-            </button>
-          </div>
-        </div>
-      </header>
+     <Navbar/>
+
+      {/* <MenuBar/> */}
 
    {/* Hero Section */}
    <FirstSection/>
@@ -126,60 +116,7 @@ const LandingPage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-16">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div>
-              <div className="flex items-center gap-2 mb-6">
-                <i className="fa-solid fa-location-crosshairs text-white text-2xl"></i>
-                <span className="text-xl font-bold text-white">FindNearby</span>
-              </div>
-              <p className="text-sm">
-                Making local shopping smarter and more convenient for everyone.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Company</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-white cursor-pointer">About Us</a></li>
-                <li><a href="#" className="hover:text-white cursor-pointer">Careers</a></li>
-                <li><a href="#" className="hover:text-white cursor-pointer">Press</a></li>
-                <li><a href="#" className="hover:text-white cursor-pointer">Blog</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Support</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-white cursor-pointer">Help Center</a></li>
-                <li><a href="#" className="hover:text-white cursor-pointer">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white cursor-pointer">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white cursor-pointer">Terms of Service</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Connect</h3>
-              <div className="flex gap-4">
-                <a href="#" className="text-gray-400 hover:text-white cursor-pointer">
-                  <i className="fab fa-twitter text-xl"></i>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white cursor-pointer">
-                  <i className="fab fa-facebook text-xl"></i>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white cursor-pointer">
-                  <i className="fab fa-instagram text-xl"></i>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white cursor-pointer">
-                  <i className="fab fa-linkedin text-xl"></i>
-                </a>
-              </div>
-
-              </div>
-          </div>
-          <div className="border-t border-gray-800 mt-12 pt-8 text-sm text-center">
-            © 2025 FindNearby. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer/>
     </div>
   );
 };
