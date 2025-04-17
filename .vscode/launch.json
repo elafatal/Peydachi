@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "compounds": [
+      {
+        "name": "Start FastAPI + React",
+        "configurations": ["FastAPI Server", "React App"]
+      }
+    ],
+    "configurations": [
+      {
+        "name": "FastAPI Server",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/Backend_Peydachi/main.py", 
+        "console": "integratedTerminal",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/Backend_Peydachi"
+        },
+        "cwd": "${workspaceFolder}/Backend_Peydachi"
+      },
+      {
+        "name": "React App",
+        "type": "node",
+        "request": "launch",
+        "runtimeExecutable": "npm",
+        "runtimeArgs": ["run", "dev"],
+        "cwd": "${workspaceFolder}/Frontend_Peydachi",
+        "console": "integratedTerminal"
+      }
+    ]
+  }
+  
