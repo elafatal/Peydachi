@@ -52,7 +52,7 @@ const Navbar = ()=>{
         transition={{ duration: 1 }} className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100" dir='rtl'>
         <div  className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <TbMapPinSearch className=" text-blue-600 text-4xl absolute top-[30%] right-[11.5%]"/>
+              <TbMapPinSearch className=" text-blue-600 text-4xl absolute top-[25%] right-[11.5%]"/>
               <TbMapSearch className="z-10 text-blue-600 text-6xl  opacity-10 "/>
              
               <span className="text-3xl font-bold text-gray-800">پیداچی</span>

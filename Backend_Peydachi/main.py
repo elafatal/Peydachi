@@ -47,11 +47,20 @@ origins = [
     "http://127.0.0.1:8000"
 ]
 
+
 app = FastAPI(
     title="Peydachi",
     version="0.0.1",
     debug=True
 )
+app.add_middleware( 
+    CORSMiddleware, 
+    allow_origins=origins,  # Reflect the allowed origins 
+    allow_credentials=True, 
+    allow_methods=["*"],  # Allows all methods 
+    allow_headers=["*"],  # Allows all headers
+)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  # Reflect the allowed origins
