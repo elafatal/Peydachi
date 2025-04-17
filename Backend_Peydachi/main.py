@@ -61,6 +61,13 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Reflect the allowed origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 app.include_router(user.router)
 app.include_router(region.router)
 app.include_router(city.router)
@@ -98,13 +105,6 @@ app.include_router(authentication_route.router)
 
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,  # Reflect the allowed origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
-)
 
 
 
@@ -121,13 +121,13 @@ async def peydachi():
 if __name__ == "__main__":
     import uvicorn
     try:
-        uvicorn.run(app, host="127.0.0.1", port=8000, reload=True, log_level="debug")
+        uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True, log_level="debug")
 
     except Exception as first_error:
         print(f"Primary host failed: {first_error}")
 
         try:
-            uvicorn.run(app, host="127.0.0.1", port=5000, reload=True, log_level="debug")
+            uvicorn.run("main:app", host="127.0.0.1", port=5000, reload=True, log_level="debug")
 
         except Exception as fallback_error:
             print(f"Fallback host also failed: {fallback_error}")
