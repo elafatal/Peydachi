@@ -3,6 +3,10 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AboutUs from './Component/About us/AboutUs';
 import Login from './Component/SignUp-SignIn/Login';
+import LandingPage from './Component/landingPage/LandingPage';
+import L2 from './Component/landingPage/l2';
+import L3 from './Component/landingPage/l3';
+import Footer from './Component/footer/footer';
 function App() {
 
 
@@ -10,8 +14,12 @@ function App() {
     <Router>
     <div >
       <Routes>
+      {/* <Route path="/Land2" element={<L2/> } />
+      <Route path="/Land3" element={<L3/> } /> */}
+      <Route path="/LandingPage" element={<LandingPage/> } />
         <Route path="/aboutUs" element={<AboutUs/>} />
         <Route path="/Login" element={<Login/>} />
+        <Route path="/footer" element={<Footer/> } />
 
       </Routes>
     </div>

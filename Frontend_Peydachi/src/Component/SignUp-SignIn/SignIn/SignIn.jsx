@@ -31,12 +31,13 @@ const SignIn= ({showComponent,setshowComponent}) => {
           timer: 1500,
           toast: true,
           customClass: {
-            popup: 'w-2 h-15 text-sm flex items-center justify-center', // Use flex to center text vertically and horizontally
-            title: 'text-xs', // Set smaller title text
-            content: 'text-xs', // Smaller content text
+            popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+            title: 'text-xs', 
+            content: 'text-xs',
             icon : 'text-xs mb-2'
           }
       });
+      navigate('/', { replace: true });
       }
     }
     catch(error){
@@ -48,9 +49,9 @@ const SignIn= ({showComponent,setshowComponent}) => {
         timer: 1500,
         toast: true,
         customClass: {
-          popup: 'w-2 h-15 text-sm flex items-center justify-center', // Use flex to center text vertically and horizontally
-          title: 'text-xs', // Set smaller title text
-          content: 'text-xs', // Smaller content text
+          popup: 'w-2 h-15 text-sm flex items-center justify-center',
+          title: 'text-xs', 
+          content: 'text-xs', 
           icon : 'text-xs mb-2'
         }
     });
