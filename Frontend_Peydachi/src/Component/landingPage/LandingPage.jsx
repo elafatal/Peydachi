@@ -54,8 +54,6 @@ const LandingPage = () => {
       {/* Header */}
      <Navbar/>
 
-      {/* <MenuBar/> */}
-
    {/* Hero Section */}
    <FirstSection/>
 

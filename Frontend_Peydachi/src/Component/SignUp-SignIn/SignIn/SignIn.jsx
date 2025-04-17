@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
- import "./SignIn.css";
  import Swal from "sweetalert2";  
  import Cookies from 'js-cookie';
 import { motion } from "framer-motion";
@@ -37,6 +36,8 @@ const SignIn= ({showComponent,setshowComponent}) => {
             icon : 'text-xs mb-2'
           }
       });
+      console.log(Cookies.get('auth_token'));
+      
       navigate('/', { replace: true });
       }
     }

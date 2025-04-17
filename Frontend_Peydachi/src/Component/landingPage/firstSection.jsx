@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaLocationCrosshairs } from "react-icons/fa6";
-
+import Cookies from 'js-cookie';
 const FirstSection = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState('');
@@ -42,6 +42,11 @@ const FirstSection = () => {
   
   const handleSearch = () => {
     console.log({ city, location, searchQuery });
+    if (Cookies.get('auth_token') != 'undefined') {
+      console.log(Cookies.get('auth_token'));
+    }
+
+    
   };
 
   return (
@@ -136,7 +141,7 @@ const FirstSection = () => {
                     )}
                   </div>
                   <button
-                    className="w-1/2 bg-blue-600 text-xl text-white py-3 rounded-lg hover:bg-blue-700 cursor-pointer m-auto"
+                    className="w-1/2 bg-blue-600 text-xl text-white py-3 rounded-lg hover:bg-blue-700 cursor-pointer m-auto transition-colors duration-300"
                     onClick={handleSearch}
                   >
                     جستجو
