@@ -1,14 +1,62 @@
-import React, { useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaAllergies, FaSearch } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
-import { FaLocationCrosshairs } from "react-icons/fa6";
+import { motion } from "framer-motion";
 import Cookies from 'js-cookie';
+import axios from 'axios';
+
 const FirstSection = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState('');
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
   const [city, setcity] = useState('');
   const [showLocationDropdown2, setShowLocationDropdown2] = useState(false);
+  const [regions, setRegions] = useState([]);
+  const [allCities, setAllCities] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  // const [activeSearch, setActiveSearch] = useState([]);
+  // const [words, setWords] = useState([]);
+  // باید بین اپشن های سرچ جستجو کنم
+
+  useEffect(() => {
+    const handleRegions = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/region/get_all_regions', {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        setRegions(response.data);
+        console.log(response);
+        
+      } catch (error) {
+        console.log(error);
+        
+      } 
+    };
+
+    handleRegions();
+  }, []);
+
+  useEffect(() => {
+    const handleAllCities = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/city/get_all_cities', {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        setAllCities(response.data);
+        console.log(response);
+        
+      } catch (error) {
+        console.log(error);
+        
+      } 
+    };
+
+    handleAllCities();
+  }, []);
 
   const popularLocations = [
     'New York, USA',
@@ -30,8 +78,22 @@ const FirstSection = () => {
     'Sydney, Australia'
   ];
 
-  const handleLocationSelect = (loc) => {
-    setLocation(loc);
+  const handleLocationSelect = async(loc) => {
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/city/get_cities_of_region', { region_id : loc.id}, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      setAllCities(response.data);
+      console.log(response);
+      
+      
+    } catch (error) {
+      console.log(error);
+      
+    } 
+    setLocation(loc.name);
     setShowLocationDropdown(false);
   };
   
@@ -50,7 +112,7 @@ const FirstSection = () => {
   };
 
   return (
-    <div className="pt-12 relative lg:pt-10">
+    <div className=" relative ">
       {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -65,14 +127,27 @@ const FirstSection = () => {
           <div className="flex flex-col lg:flex-row items-center gap-12 h-full justify-center">
             {/*  Text & Title */}
             <div className="w-full lg:w-1/2 flex flex-col text-center">
-              <h1 className="text-4xl font-bold text-gray-900 mb-3">
+             <motion.div initial={{ x: "7rem", opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{
+                  duration: 2,
+                  type: "spring",
+                }}>
+                   <h1 className="text-4xl font-bold text-gray-900 mb-3">
                 محصول نزدیک خود را در چند ثانیه <span className="text-blue-600">پیدا</span> کنید
               </h1>
               <p className="text-l text-gray-600 mb-6">
                 با در دسترس بودن محصول در زمان واقعی، در زمان صرفه جویی کنید و هوشمندتر خرید کنید
               </p>
+                </motion.div>
+             
               {/* Search Component */}
-              <div className="bg-white p-6 rounded-xl shadow-xl max-w-3xl">
+              <motion.div  initial={{ x: "-7rem", opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{
+                  duration: 2,
+                  type: "spring",
+                }} className="bg-white p-6 rounded-xl shadow-xl max-w-3xl">
                 <div className="flex flex-col gap-4">
                   {/* product input */}
                   <div className="relative">
@@ -91,6 +166,7 @@ const FirstSection = () => {
                     <input
                       type="text"
                       placeholder="استان"
+
                       className="w-full px-12 py-3 border border-gray-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
@@ -99,13 +175,13 @@ const FirstSection = () => {
                     {showLocationDropdown && (
                       <div className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                         <div className="p-2 max-h-44 overflow-y-scroll">
-                          {popularLocations.map((loc) => (
+                          {regions.map((loc) => (
                             <button
-                              key={loc}
+                              key={loc.id}
                               className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap "
                               onClick={() => handleLocationSelect(loc)}
                             >
-                              {loc}
+                              {loc.name}
                             </button>
                           ))}
                         </div>
@@ -127,13 +203,13 @@ const FirstSection = () => {
                     {showLocationDropdown2 && (
                       <div className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                         <div className="p-2 max-h-44 overflow-y-scroll">
-                          {popularLocations.map((loc2) => (
+                          {allCities.map((loc2) => (
                             <button
-                              key={loc2}
+                              key={loc2.id}
                               className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap"
-                              onClick={() => handleLocationSelect2(loc2)}
+                              onClick={() => handleLocationSelect2(loc2.name)}
                             >
-                              {loc2}
+                              {loc2.name}
                             </button>
                           ))}
                         </div>
@@ -147,7 +223,7 @@ const FirstSection = () => {
                     جستجو
                   </button>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>

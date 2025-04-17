@@ -6,7 +6,7 @@ import Login from './Component/SignUp-SignIn/Login';
 import LandingPage from './Component/landingPage/LandingPage';
 import L2 from './Component/landingPage/l2';
 import L3 from './Component/landingPage/l3';
-import Footer from './Component/landingPage/footer/footer';
+import Footer from './Component/landingPage/footer';
 import MenuBar from './Component/Navbar/Navbar';
 function App() {
 

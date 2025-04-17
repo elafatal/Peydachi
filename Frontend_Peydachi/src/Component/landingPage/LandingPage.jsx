@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import FirstSection from './firstSection';
 import MenuBar from '../Navbar/Navbar';
 import Navbar from './navbar';
-import Footer from './footer/footer';
+import Footer from './footer';
+import HowItWorks from './secondSection';
 
 
 const LandingPage = () => {
  
+  
 
   const features = [
     {
@@ -30,56 +32,22 @@ const LandingPage = () => {
       description: 'Get the best route to your desired store'
     }
   ];
-
-  const steps = [
-    {
-      icon: 'fa-solid fa-search',
-      title: 'Search Product',
-      description: 'Enter the product you want to find'
-    },
-    {
-      icon: 'fa-solid fa-map-pin',
-      title: 'Set Location',
-      description: 'Choose your location or use current position'
-    },
-    {
-      icon: 'fa-solid fa-store',
-      title: 'Find Stores',
-      description: 'Discover nearest stores with your product'
-    }
-  ];
-
+ 
   return (
     <div className="min-h-screen bg-white" dir='ltr'>
       {/* Header */}
-     <Navbar/>
+      <Navbar/>
 
-   {/* Hero Section */}
-   <FirstSection/>
+      {/* Hero Section */}
+      <FirstSection/>
+
 
       {/* How It Works Section */}
-      <div className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-16">
-            How It Works
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {steps.map((step, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center">
-                  <i className={`${step.icon} text-2xl text-blue-600`}></i>
-                </div>
-                <h3 className="text-xl font-semibold mb-4">{step.title}</h3>
-                <p className="text-gray-600">{step.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <HowItWorks/>
 
 
       {/* Features Section */}
-      <div className="py-24">
+      <div className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-16">
             Why Choose FindNearby
