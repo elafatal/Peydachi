@@ -26,6 +26,3 @@ async def delete_store(db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
     return await store_functions.delete_store(user_id=seller.id, db=db)
 
 
-@router.post('/search_in_banned_stores', status_code=200, response_model=list[StoreDisplay])
-async def search_in_banned_stores(name: NAME_BODY, db: DB_DEPENDENCY, seller: SELLER_DEPENDENCY):
-    return await store_functions.search_in_banned_stores(name=name, db=db)
