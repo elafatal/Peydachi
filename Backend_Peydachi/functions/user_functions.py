@@ -214,3 +214,12 @@ async def promote_user_to_seller(user_id: int, db: Session):
     db.commit()
 
     return user
+
+
+async def is_username_available(username: str, db: Session):
+    user = db.query(User).filter(User.username == username).first()
+
+    if user:
+        return False
+    else:
+        return True

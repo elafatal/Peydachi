@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from functions import user_functions
 from dependencies.dependencies import DB_DEPENDENCY
+from dependencies.body_dependencies import NAME_BODY
 from dependencies.access_dependencies import USER_DEPENDENCY
 from schemas.user_schemas import UserDisplay, UserModel, UserUpdateModel
 
@@ -29,5 +30,10 @@ async def update_user(request: UserUpdateModel, db: DB_DEPENDENCY, user: USER_DE
 @router.delete('/delete_user', status_code=200)
 async def delete_user_self(db: DB_DEPENDENCY, user: USER_DEPENDENCY):
     return await user_functions.delete_user(user_id=user.id, db=db)
+
+
+@router.post('/is_username_available', status_code=200)
+async def is_username_available(username: NAME_BODY, db: DB_DEPENDENCY):
+    return await user_functions.is_username_available(username=username, db=db)
 
 
