@@ -8,6 +8,7 @@ import L2 from './Component/landingPage/l2';
 import L3 from './Component/landingPage/l3';
 import Footer from './Component/landingPage/footer';
 import MenuBar from './Component/Navbar/Navbar';
+import ErrorPage from './Component/Error/Error';
 function App() {
 
 
@@ -22,7 +23,7 @@ function App() {
         <Route path="/Login" element={<Login/>} />
         <Route path="/footer" element={<Footer/> } />
         <Route path="/m" element={<MenuBar/> } />
-
+        <Route path="*" element={<ErrorPage/>} />
 
       </Routes>
     </div>
