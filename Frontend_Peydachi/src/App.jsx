@@ -9,6 +9,7 @@ import L3 from './Component/landingPage/l3';
 import Footer from './Component/landingPage/footer';
 import MenuBar from './Component/Navbar/Navbar';
 import ErrorPage from './Component/Error/Error';
+import UserInfo from './Component/UserInfo/UserInfo';
 function App() {
 
 
@@ -21,6 +22,7 @@ function App() {
       <Route path="/" element={<LandingPage/> } />
         <Route path="/aboutUs" element={<AboutUs/>} />
         <Route path="/Login" element={<Login/>} />
+        <Route path="/userInfo" element={<UserInfo/>} />
         <Route path="/footer" element={<Footer/> } />
         <Route path="/m" element={<MenuBar/> } />
         <Route path="*" element={<ErrorPage/>} />
