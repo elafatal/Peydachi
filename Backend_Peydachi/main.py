@@ -19,7 +19,8 @@ from routers.general_routers import (
     product_rating,
     add_store_request,
     store_comment,
-    product_comment
+    product_comment,
+    city_center
 )
 from routers.admin_routers import (
     admin_user,
@@ -35,7 +36,8 @@ from routers.admin_routers import (
     admin_product_rating,
     admin_add_store_request,
     admin_store_comment,
-    admin_product_comment
+    admin_product_comment,
+    admin_city_center
 )
 
 
@@ -74,6 +76,7 @@ app.include_router(store_comment.router)
 app.include_router(product_rating.router)
 app.include_router(product_comment.router)
 app.include_router(add_store_request.router)
+app.include_router(city_center.router)
 app.include_router(seller_store.router)
 app.include_router(seller_product.router)
 app.include_router(admin_user.router)
@@ -90,6 +93,7 @@ app.include_router(admin_store_comment.router)
 app.include_router(admin_product_rating.router)
 app.include_router(admin_product_comment.router)
 app.include_router(admin_add_store_request.router)
+app.include_router(admin_city_center.router)
 app.include_router(super_admin.router)
 app.include_router(admin.router)
 app.include_router(deleted_pics.router)

@@ -167,3 +167,11 @@ class DeletedPics(Base, ID):
     __tablename__ = 'deleted_pics'
     name = Column(String, nullable=False)
     is_reviewed = Column(Boolean, default=False)
+
+
+# City Center Class =======================================================================================
+class CityCenter(ID, Base):
+    __tablename__ = "city_center"
+    city_id = Column(Integer, ForeignKey("city.id"), nullable=False)
+    longitude = Column(String, nullable=False)
+    latitude = Column(String, nullable=False)
