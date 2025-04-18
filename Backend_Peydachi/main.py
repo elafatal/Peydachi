@@ -60,14 +60,6 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods 
     allow_headers=["*"],  # Allows all headers
 )
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,  # Reflect the allowed origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
-)
 app.include_router(user.router)
 app.include_router(region.router)
 app.include_router(city.router)

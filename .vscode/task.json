@@ -1,0 +1,32 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Run Backend",
+        "type": "shell",
+        "command": "${workspaceFolder}/Backend_Peydachi/.venv/bin/activate && uvicorn main:app --reload",
+        "windows": {
+          "command": "${workspaceFolder}/Backend_Peydachi/.venv/Scripts/activate.bat && uvicorn main:app --reload"
+        },
+        "options": {
+          "cwd": "${workspaceFolder}/Backend_Peydachi"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Run Frontend",
+        "type": "shell",
+        "command": "npm run dev",
+        "options": {
+          "cwd": "${workspaceFolder}/Frontend_Peydachi"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Start Both",
+        "dependsOn": ["Run Backend", "Run Frontend"],
+        "dependsOrder": "parallel"
+      }
+    ]
+  }
+  
