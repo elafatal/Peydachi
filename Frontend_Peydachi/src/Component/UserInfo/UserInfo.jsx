@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { data } from 'react-router-dom';
 const UserInfo = () => {
  
   const [userInfo, setUserInfo] = useState({});
@@ -49,20 +50,37 @@ const UserInfo = () => {
     getUserInfo();
   }, []);
 
-  
-  // Simulate username availability check
+
   useEffect(() => {
-    if (formData.username.length > 0) {
+    const usernameChecking = async () => {
+      try {
+        if (userInfo.username) {
+            const response = await axios.post('http://127.0.0.1:8000/user/is_username_available', {
+                username: userInfo.username
+              }, {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              });
+              setUsernameAvailable(response.data);
+              setIsCheckingUsername(false);
+              console.log(response);
+          }
+      } catch (error) {
+        if (error.response?.status === 422) {
+          console.error('خطا در اعتبارسنجی نام کاربری:', error.response.data);
+        } else {
+          console.error('خطای دیگر:', error);
+        }
+        setIsCheckingUsername(false);
+      }
+    };
+  
+    if (formData.username) {
       const timer = setTimeout(() => {
         setIsCheckingUsername(true);
-        setTimeout(() => {
-          // Mock API call to check username availability
-          const isAvailable = !['admin', 'user', 'test'].includes(formData.username.toLowerCase());
-          setUsernameAvailable(isAvailable);
-          setIsCheckingUsername(false);
-        }, 800);
+        usernameChecking();
       }, 500);
-
       return () => clearTimeout(timer);
     } else {
       setUsernameAvailable(null);
