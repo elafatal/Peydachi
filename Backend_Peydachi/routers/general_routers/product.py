@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from functions import product_functions
 from dependencies.dependencies import DB_DEPENDENCY
-from dependencies.access_dependencies import USER_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
 from schemas.product_schemas import ProductDisplay, ProductSearchModels
 

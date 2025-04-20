@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from functions import city_center_functions
 from dependencies.dependencies import DB_DEPENDENCY
-from dependencies.body_dependencies import NAME_BODY, ID_BODY
+from dependencies.body_dependencies import ID_BODY
 from schemas.city_center_schemas import CityCenterDisplay
 
 

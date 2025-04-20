@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from functions import store_rating_functions
 from dependencies.dependencies import DB_DEPENDENCY
-from dependencies.body_dependencies import NAME_BODY, ID_BODY
+from dependencies.body_dependencies import ID_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
 
 

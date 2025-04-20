@@ -2,7 +2,6 @@ from fastapi import APIRouter
 from functions import store_rating_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.access_dependencies import USER_DEPENDENCY
-from dependencies.body_dependencies import NAME_BODY, ID_BODY
 from schemas.store_rating_schemas import AddStoreRatingModel, StoreRatingDisplayModel
 
 

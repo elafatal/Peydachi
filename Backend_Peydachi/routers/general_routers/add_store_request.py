@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from functions import add_store_request_functions
 from dependencies.dependencies import DB_DEPENDENCY
-from dependencies.body_dependencies import NAME_BODY, ID_BODY
 from schemas.add_store_request_schemas import AddStoreRequestDisplay
 
 

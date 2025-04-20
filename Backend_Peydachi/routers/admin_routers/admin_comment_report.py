@@ -3,7 +3,7 @@ from functions import comment_report_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
-from schemas.comment_report_schemas import AddCommentReportModel, CommentReportDisplay
+from schemas.comment_report_schemas import CommentReportDisplay
 
 
 router = APIRouter(
@@ -15,7 +15,7 @@ router = APIRouter(
 
 @router.post('/get_comment_report_by_id', status_code=200, response_model=CommentReportDisplay)
 async def get_comment_report_by_id(comment_report_id: ID_BODY, db: DB_DEPENDENCY):
-    return await comment_report_functions.get_comment_report_by_id(comment_report_id=comment_report_id, db=db)
+    return await comment_report_functions.get_comment_report_by_id(report_id=comment_report_id, db=db)
 
 
 @router.get('/get_all_comment_reports', status_code=200, response_model=list[CommentReportDisplay])

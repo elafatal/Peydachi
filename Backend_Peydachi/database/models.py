@@ -1,5 +1,5 @@
 from database.database import Base
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Float, CheckConstraint, JSON
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Float, JSON
 
 
 # ID Class ==============================================================================================

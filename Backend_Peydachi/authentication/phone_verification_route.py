@@ -1,6 +1,4 @@
 from fastapi import APIRouter
-from sqlalchemy.util import await_only
-
 from dependencies.dependencies import REDIS_DEPENDENCY, DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY
 from authentication import phone_verification_functions

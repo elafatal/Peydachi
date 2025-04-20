@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 from schemas.deleted_pics_schemas import DeletedPicsDisplay
-from sqlalchemy.orm import Session
 from functions import deleted_picture_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, UploadFile, Form
 from functions import product_functions
 from dependencies.dependencies import DB_DEPENDENCY
-from dependencies.body_dependencies import NAME_BODY, ID_BODY
+from dependencies.body_dependencies import ID_BODY
 from dependencies.access_dependencies import SELLER_DEPENDENCY
-from schemas.product_schemas import ProductModel, ProductDisplay, UpdateProductModel
+from schemas.product_schemas import ProductDisplay, UpdateProductModel
 
 
 router = APIRouter(

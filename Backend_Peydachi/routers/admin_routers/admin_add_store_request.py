@@ -3,7 +3,7 @@ from functions import add_store_request_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY, NAME_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
-from schemas.add_store_request_schemas import AddStoreRequestDisplay, AddAddStoreRequestModel
+from schemas.add_store_request_schemas import AddStoreRequestDisplay
 
 
 router = APIRouter(
