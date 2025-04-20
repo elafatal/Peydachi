@@ -28,6 +28,15 @@ async def get_user_by_username(username: str, db: Session):
     return user
 
 
+async def get_user_by_phone_number(phone_number: str, db: Session):
+    user = db.query(User).filter(User.phone_number == phone_number).first()
+
+    if not user:
+        raise USER_NOT_FOUND_ERROR
+
+    return user
+
+
 async def get_all_users(db: Session):
     users = db.query(User).all()
 

@@ -29,7 +29,7 @@ ACCESS_TOKEN_EXPIRE_DAYS = 3
 REFRESH_TOKEN_EXPIRE_DAYS = 30
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None, refresh: bool | None = False):
+def create_token(data: dict, expires_delta: timedelta | None = None, refresh: bool | None = False):
     to_encode = data.copy()
 
     if not refresh:
@@ -161,8 +161,8 @@ def login(request: AUTHENTICATION_DEPENDENCY, db: DB_DEPENDENCY):
     if not Hash.verify(user.password, request.password):
         raise INVALID_PASSWORD_ERROR
 
-    access_token = create_access_token(data={'sub': user.username})
-    refresh_token = create_access_token(data={'sub': user.username}, refresh=True)
+    access_token = create_token(data={'sub': user.username})
+    refresh_token = create_token(data={'sub': user.username}, refresh=True)
 
     return {
         'access_token': access_token,
@@ -194,7 +194,7 @@ def get_new_access_token(token: TOKEN_DEPENDENCY):
             raise TOKEN_EXPIRED_ERROR
 
 
-        new_access_token = create_access_token(data={'sub': username})
+        new_access_token = create_token(data={'sub': username})
 
         return JSONResponse(content={
             'access_token': new_access_token,
