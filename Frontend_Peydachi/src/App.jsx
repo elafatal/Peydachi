@@ -8,24 +8,33 @@ import Footer from './Component/landingPage/footer';
 import MenuBar from './Component/Navbar/Navbar';
 import ErrorPage from './Component/Error/Error';
 import UserInfo from './Component/UserInfo/UserInfo';
+import { AuthProvider } from './Component/AuthContext/AuthContext'; // مسیر درست
+import PrivateRoute from './Component/PrivateRoute';
+import UnauthorizedPage from './Component/Error/UnauthorizedPage';
 function App() {
 
 
   return (
-    <Router>
-    <div >
-      <Routes>
-      <Route path="/" element={<LandingPage/> } />
-        <Route path="/aboutUs" element={<AboutUs/>} />
-        <Route path="/Login" element={<Login/>} />
-        <Route path="/userInfo" element={<UserInfo/>} />
-        <Route path="/footer" element={<Footer/> } />
-        <Route path="/m" element={<MenuBar/> } />
-        <Route path="*" element={<ErrorPage/>} />
+    <AuthProvider>
+      <Router>
+        <div>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/aboutUs" element={<AboutUs />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/footer" element={<Footer />} />
+            <Route path="/m" element={<MenuBar />} />
+            <Route path="*" element={<ErrorPage />} />
 
-      </Routes>
-    </div>
-  </Router>
+            {/* مسیرهای محافظت شده */}
+            <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
+              <Route path="/userInfo" element={<UserInfo />} />
+            </Route>
+
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   )
 }
 

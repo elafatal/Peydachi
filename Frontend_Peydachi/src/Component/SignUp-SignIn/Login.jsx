@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import SignUp from './SignUp/SignUp';
 import SignIn from './SignIn/SignIn';
 const Login= () => {
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [showComponent, setshowComponent] = useState("Signup");
+  const [showComponent, setshowComponent] = useState("Signin");
 
   const handleSubmit = (e) => {
+ 
     e.preventDefault();
     console.log({ email, password, rememberMe });
   };
@@ -18,7 +22,7 @@ const Login= () => {
   const renderContent = () => {
     switch (showComponent) {
         case "Signin":
-            return(<SignIn  showComponent={showComponent} setshowComponent={setshowComponent}/>)
+            return(<SignIn  showComponent={showComponent} setshowComponent={setshowComponent} from={from}/>)
             break;
         case "Signup":
             return(<SignUp showComponent={showComponent} setshowComponent={setshowComponent}/>)

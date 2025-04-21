@@ -4,7 +4,9 @@ import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-const SignIn= ({showComponent,setshowComponent}) => {
+import { useAuth } from '../../AuthContext/AuthContext';
+const SignIn= ({showComponent,setshowComponent, from }) => {
+  const { login } = useAuth()
   const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -22,6 +24,19 @@ const SignIn= ({showComponent,setshowComponent}) => {
       });
       if (response.status === 200) {
         Cookies.set('auth_token', response.data.access_token, { expires: 3, secure: true, sameSite: 'Strict' });
+
+        const userData = {
+          userID: response.data.userID,
+          username: response.data.username,
+          role: response.data.is_super_admin
+            ? 'superadmin'
+            : response.data.is_admin
+            ? 'admin'
+            : response.data.is_seller
+            ? 'seller'
+            : 'user',
+        };
+       login(userData);
         Swal.fire({
           position: "top-end",
           icon: "success",
@@ -38,7 +53,7 @@ const SignIn= ({showComponent,setshowComponent}) => {
       });
       console.log(Cookies.get('auth_token'));
       
-      navigate('/', { replace: true });
+      navigate(from, { replace: true });
       }
     }
     catch(error){
@@ -130,11 +145,7 @@ const SignIn= ({showComponent,setshowComponent}) => {
         </p>
       </div>
       
-      {/* <div className="mt-8 text-center">
-        <p className="text-xs text-gray-500">
-          By signing up, you agree to PeydaChi's <a href="#" className="text-blue-500 hover:underline cursor-pointer">Terms of Service</a> and <a href="#" className="text-blue-500 hover:underline cursor-pointer">Privacy Policy</a>
-        </p>
-      </div> */}
+     
     </div>
   </motion.div>
   );

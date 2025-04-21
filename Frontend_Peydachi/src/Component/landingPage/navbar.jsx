@@ -6,8 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { TbMapPinSearch } from "react-icons/tb";
 import { TbMapSearch } from "react-icons/tb";
+import { useAuth } from '../AuthContext/AuthContext';
 import Cookies from 'js-cookie';
 const Navbar = ()=>{
+  const { logout } = useAuth();
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -27,6 +29,7 @@ const Navbar = ()=>{
 
     const handleLogOut = () => {
       Cookies.remove('auth_token');  
+      logout();
       Swal.fire({
                 position: "top-end",
                 icon: "success",
