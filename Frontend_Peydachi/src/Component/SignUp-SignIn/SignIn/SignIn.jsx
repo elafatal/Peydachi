@@ -17,12 +17,7 @@ const SignIn= ({showComponent,setshowComponent, from }) => {
   const handleSubmit =async (e) => {
     e.preventDefault();
     try{
-      // const response = await axiosInstance.post('http://127.0.0.1:8000/authentication/token', 
-      //   { username: username, password: password }, {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data'
-      //   }
-      // });
+
       const response = await axiosInstance.post('/authentication/token', 
         { username, password }, 
         {
@@ -32,8 +27,14 @@ const SignIn= ({showComponent,setshowComponent, from }) => {
         }
       );
       if (response.status === 200) {
-        Cookies.set('auth_token', response.data.access_token, { expires: 3, secure: true, sameSite: 'Strict' });
-        Cookies.set('refresh_token', response.data.refresh_token, { expires: 3, secure: true, sameSite: 'Strict' });
+        if (rememberMe) {
+          Cookies.set('auth_token', response.data.access_token, { expires: 3, secure: true, sameSite: 'Strict' });
+          Cookies.set('refresh_token', response.data.refresh_token, { expires: 3, secure: true, sameSite: 'Strict' });
+        } else {
+          Cookies.set('auth_token', response.data.access_token, { secure: true, sameSite: 'Strict' });
+          Cookies.set('refresh_token', response.data.refresh_token, { secure: true, sameSite: 'Strict' });
+        }
+
 
         const userData = {
           userID: response.data.userID,

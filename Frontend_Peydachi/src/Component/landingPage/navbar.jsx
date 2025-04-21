@@ -28,7 +28,8 @@ const Navbar = ()=>{
     }
 
     const handleLogOut = () => {
-      Cookies.remove('auth_token');  
+      Cookies.remove('auth_token'); 
+      Cookies.remove('refresh_token'); 
       logout();
       Swal.fire({
                 position: "top-end",
