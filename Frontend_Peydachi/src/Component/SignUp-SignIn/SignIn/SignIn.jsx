@@ -3,7 +3,8 @@ import React, { useState } from 'react';
  import Cookies from 'js-cookie';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
+import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../AuthContext/AuthContext';
 const SignIn= ({showComponent,setshowComponent, from }) => {
   const { login } = useAuth()
@@ -16,14 +17,23 @@ const SignIn= ({showComponent,setshowComponent, from }) => {
   const handleSubmit =async (e) => {
     e.preventDefault();
     try{
-      const response = await axios.post('http://127.0.0.1:8000/authentication/token', 
-        { username: username, password: password }, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      // const response = await axiosInstance.post('http://127.0.0.1:8000/authentication/token', 
+      //   { username: username, password: password }, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data'
+      //   }
+      // });
+      const response = await axiosInstance.post('/authentication/token', 
+        { username, password }, 
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }
         }
-      });
+      );
       if (response.status === 200) {
         Cookies.set('auth_token', response.data.access_token, { expires: 3, secure: true, sameSite: 'Strict' });
+        Cookies.set('refresh_token', response.data.refresh_token, { expires: 3, secure: true, sameSite: 'Strict' });
 
         const userData = {
           userID: response.data.userID,

@@ -4,6 +4,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import axiosInstance from '../axiosInstance';
 
 const FirstSection = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,8 +22,9 @@ const FirstSection = () => {
   useEffect(() => {
     const handleRegions = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/region/get_all_regions', {
+        const response = await axiosInstance.get('/region/get_all_regions', {
           headers: {
+            Authorization: null,
             'Content-Type': 'multipart/form-data'
           }
         });
@@ -41,8 +43,9 @@ const FirstSection = () => {
   useEffect(() => {
     const handleAllCities = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/city/get_all_cities', {
+        const response = await axiosInstance.get('/city/get_all_cities', {
           headers: {
+            Authorization: null,
             'Content-Type': 'multipart/form-data'
           }
         });
@@ -58,30 +61,13 @@ const FirstSection = () => {
     handleAllCities();
   }, []);
 
-  const popularLocations = [
-    'New York, USA',
-    'London, UK',
-    'Tokyo, Japan',
-    'Paris, France',
-    'New York, USA',
-    'London, UK',
-    'Tokyo, Japan',
-    'Paris, France',
-    'New York, USA',
-    'London, UK',
-    'Tokyo, Japan',
-    'Paris, France',
-    'New York, USA',
-    'London, UK',
-    'Tokyo, Japan',
-    'Paris, France',
-    'Sydney, Australia'
-  ];
+  
 
   const handleLocationSelect = async(loc) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/city/get_cities_of_region', { region_id : loc.id}, {
+      const response = await axiosInstance.post('/city/get_cities_of_region', { region_id : loc.id}, {
         headers: {
+          Authorization: null,
           'Content-Type': 'application/json'
         }
       });

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { MdDelete } from "react-icons/md";
+import axiosInstance from '../axiosInstance'; // مسیر درست
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 import { FaRegEdit } from "react-icons/fa";
@@ -32,14 +32,13 @@ const UserInfo = () => {
   useEffect(() => {
     const getUserInfo = async () => {
       try {
-        const authToken = Cookies.get('auth_token');
+       
         if (!authToken) {
           console.log("No auth token found");
           return;
         }
-        const response = await axios.get('http://127.0.0.1:8000/userget_self_user_info', {
+        const response = await axiosInstance.get('/userget_self_user_info', {
           headers: {
-            'Authorization': `Bearer ${authToken}`,
              'Accept': 'application/json'
             // 'Content-Type': 'multipart/form-data'
           }
@@ -75,9 +74,8 @@ const UserInfo = () => {
           console.log("No auth token found");
           return;
         }
-        const response = await axios.get('http://127.0.0.1:8000/seller/store/get_self_store', {
+        const response = await axiosInstance.get('/seller/store/get_self_store', {
           headers: {
-            'Authorization': `Bearer ${authToken}`,
              'Accept': 'application/json'
             // 'Content-Type': 'multipart/form-data'
           }
@@ -86,7 +84,6 @@ const UserInfo = () => {
             setStoreInfo(prev => ({
               ...prev,
             }));
-            // setNameInfo(response.data.username)
             setStoreInfo(response.data)
             console.log(response);
             
@@ -106,10 +103,11 @@ const UserInfo = () => {
       try {
         if (userInfo.username) { 
           if (userInfo.username != nameInfo) {
-            const response = await axios.post('http://127.0.0.1:8000/user/is_username_available', {
+            const response = await axiosInstance.post('/user/is_username_available', {
               username: formData.username  
             }, {
               headers: {
+                Authorization: null,
                 'Content-Type': 'application/json'
               }
             });
@@ -179,15 +177,11 @@ const UserInfo = () => {
     e.preventDefault();
     try {
         if (validateForm()) {
-            const authToken = Cookies.get('auth_token');
-           
-            const response = await axios.put('http://127.0.0.1:8000/user/update_user', 
-                userInfo , {
-            headers: {
-                'Authorization': `Bearer ${authToken}`,
-                 'Content-Type': 'application/json'
-            }
-            });
+            const response = await axiosInstance.put('/user/update_user', userInfo, {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
             if (response.status === 200) {
               Swal.fire({
                 position: "top-end",
@@ -242,24 +236,17 @@ const UserInfo = () => {
   //   console.log(response);
     
   // }
-  const DeleteSelfStore = async () => {
-    const authToken = Cookies.get('auth_token');
-    
+  const DeleteSelfStore = async () => {    
     try {
-      await axios.delete('http://127.0.0.1:8000/seller/store/delete_store', {
+      await axiosInstance.delete('/seller/store/delete_store', {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json'
         }
       });
-      
-      // Handle success
       console.log('Store deleted successfully');
     } catch (error) {
       if (error.response?.status === 401) {
-        // Handle unauthorized error
         console.error('Authentication failed. Please login again.');
-        // Implement logout logic here
       } else {
         console.log('An error occurred:', error.message);
       }
