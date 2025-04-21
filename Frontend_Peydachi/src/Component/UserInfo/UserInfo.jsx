@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { data } from 'react-router-dom';
+import { MdDelete } from "react-icons/md";
+import { RiDeleteBin6Line } from "react-icons/ri";
+
+import { FaRegEdit } from "react-icons/fa";
+import Swal from "sweetalert2";  
 const UserInfo = () => {
  
   const [userInfo, setUserInfo] = useState({});
+  const [nameInfo, setNameInfo] = useState();
   const [errors, setErrors] = useState({});
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
@@ -17,17 +22,26 @@ const UserInfo = () => {
     is_admin : false,
     is_seller: false,
   });
+  const [storeInfo , setStoreInfo] = useState(
+    {
+      name : ''
+    }
+  )
 
 
   useEffect(() => {
     const getUserInfo = async () => {
       try {
         const authToken = Cookies.get('auth_token');
-        
+        if (!authToken) {
+          console.log("No auth token found");
+          return;
+        }
         const response = await axios.get('http://127.0.0.1:8000/userget_self_user_info', {
           headers: {
             'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'multipart/form-data'
+             'Accept': 'application/json'
+            // 'Content-Type': 'multipart/form-data'
           }
         });
         if (response.data) {
@@ -39,6 +53,9 @@ const UserInfo = () => {
               is_seller:response.data.is_seller,
               is_admin : response.data.is_admin
             }));
+            setNameInfo(response.data.username)
+            console.log(response);
+            
           }
         
         
@@ -50,22 +67,58 @@ const UserInfo = () => {
     getUserInfo();
   }, []);
 
+  useEffect(() => {
+    const getStoreInfo = async () => {
+      try {
+        const authToken = Cookies.get('auth_token');
+        if (!authToken) {
+          console.log("No auth token found");
+          return;
+        }
+        const response = await axios.get('http://127.0.0.1:8000/seller/store/get_self_store', {
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+             'Accept': 'application/json'
+            // 'Content-Type': 'multipart/form-data'
+          }
+        });
+        if (response.data) {
+            setStoreInfo(prev => ({
+              ...prev,
+            }));
+            // setNameInfo(response.data.username)
+            setStoreInfo(response.data)
+            console.log(response);
+            
+          }
+        
+        
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    
+    getStoreInfo();
+  }, []);
 
   useEffect(() => {
     const usernameChecking = async () => {
       try {
-        if (userInfo.username) {
+        if (userInfo.username) { 
+          if (userInfo.username != nameInfo) {
             const response = await axios.post('http://127.0.0.1:8000/user/is_username_available', {
-                username: userInfo.username
-              }, {
-                headers: {
-                  'Content-Type': 'application/json'
-                }
-              });
-              setUsernameAvailable(response.data);
-              setIsCheckingUsername(false);
-              console.log(response);
+              username: formData.username  
+            }, {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+    
+            setUsernameAvailable(response.data);
+            setIsCheckingUsername(false);
           }
+         
+        }
       } catch (error) {
         if (error.response?.status === 422) {
           console.error('خطا در اعتبارسنجی نام کاربری:', error.response.data);
@@ -76,7 +129,8 @@ const UserInfo = () => {
       }
     };
   
-    if (formData.username) {
+  
+    if (formData.username.length > 0) {
       const timer = setTimeout(() => {
         setIsCheckingUsername(true);
         usernameChecking();
@@ -85,17 +139,17 @@ const UserInfo = () => {
     } else {
       setUsernameAvailable(null);
     }
-  }, [formData.username]);
+  }, [formData.username]); 
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    console.log(formData);
     
   if (name !='Confirmpassword') {
     setUserInfo(prev => ({ ...prev, [name]: value }));
   }
-  
+
     // Clear error when user types
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
@@ -103,22 +157,19 @@ const UserInfo = () => {
   };
 
 
-
   const validateForm = () => {
     const newErrors = {};
 
     if (formData.password.trim() && !formData.Confirmpassword.trim()) newErrors.Confirmpassword = 'پسورد جدید را تایید کنید';
     if (formData.Confirmpassword.trim() && formData.Confirmpassword != formData.password) newErrors.Confirmpassword = 'پسورد تایید شده با پسورد اولیه یکسان نیست';
-    if (!formData.username.trim()) newErrors.username = 'Username is required';
-    else if (!usernameAvailable) newErrors.username = 'Username is not available';
+    
+ 
 
-    // if (!formData.phone_number.trim()) newErrors.phone_number = 'Phone number is required';
     else if (!/^\d{11}$/.test(formData.phone_number.replace(/\D/g, '')) && formData.phone_number.trim()) {
       newErrors.phone_number = 'Please enter a valid 10-digit phone number';
     }
 
-    // if (!formData.province) newErrors.province = 'Province is required';
-    // if (!formData.city.trim()) newErrors.city = 'City is required';
+
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -137,14 +188,41 @@ const UserInfo = () => {
                  'Content-Type': 'application/json'
             }
             });
-            
-            console.log( 'fuuuck:' , userInfo);
-            console.log(response);
-            
-            // alert('Profile completed successfully!');
+            if (response.status === 200) {
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "به روزرسانی انجام شد",
+                showConfirmButton: false,
+                timer: 1500,
+                toast: true,
+                customClass: {
+                  popup: 'w-3 h-15 text-xs flex items-center justify-center',
+                  title: 'text-xs', 
+                  content: 'text-xs', 
+                  icon : 'text-xs mb-2'
+                }
+            });
+            }
           }
 
       } catch (error) {
+        if (error.status === 406) {
+         Swal.fire({
+                 position: "top-end",
+                 icon: "error",
+                 title: " شماره قبلا ثبت‌نام شده‌است",
+                 showConfirmButton: false,
+                 timer: 1500,
+                 toast: true,
+                 customClass: {
+                   popup: 'w-3 h-15 text-xs flex items-center justify-center',
+                   title: 'text-xs', 
+                   content: 'text-xs', 
+                   icon : 'text-xs mb-2'
+                 }
+             });
+        }
         console.log('Error response:', error.response);
         console.log('Error details:', error.response?.data);
       }
@@ -152,7 +230,41 @@ const UserInfo = () => {
   };
 
 
-  
+  // const DeleteSelfStore=async()=>{
+  //   const authToken = Cookies.get('auth_token');
+  //   const response = await axios.delete('http://127.0.0.1:8000/seller/store/delete_store', 
+  //     userInfo , {
+  //     headers: {
+  //         'Authorization': `Bearer ${authToken}`,
+  //         'Content-Type': 'application/json'
+  //     } 
+  // });
+  //   console.log(response);
+    
+  // }
+  const DeleteSelfStore = async () => {
+    const authToken = Cookies.get('auth_token');
+    
+    try {
+      await axios.delete('http://127.0.0.1:8000/seller/store/delete_store', {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      // Handle success
+      console.log('Store deleted successfully');
+    } catch (error) {
+      if (error.response?.status === 401) {
+        // Handle unauthorized error
+        console.error('Authentication failed. Please login again.');
+        // Implement logout logic here
+      } else {
+        console.log('An error occurred:', error.message);
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12" >
@@ -284,21 +396,23 @@ const UserInfo = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 text-sm"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-700 text-sm"
                   />
                   <p className="mt-1 text-xs text-gray-500">Email address from your sign up</p>
                 </div>
               </div>
                 {/* Store Information Section */}
-                <div className="pt-6  flex flex-col justify-between ">
+                { formData.is_seller ? ( <div className="pt-6  flex flex-col justify-between ">
                                 <h2 className="text-xl font-semibold text-gray-800 mb-6 border-b border-gray-200">اطلاعات فروشگاه</h2>
                                 <div className='flex justify-between '>
-                                <p className="text-md text-gray-800">اطلاعات فروشگاه</p>
-                                <p className="text-md text-gray-800">اطلاعات فروشگاه</p>
-                                <p className="text-md text-gray-800">اطلاعات فروشگاه</p>
+                                <p className="text-lg text-gray-800">{storeInfo.name} فروشگاه</p>
+                                <div className='flex gap-3'>
+                                <FaRegEdit className="text-xl text-gray-800"/>
+                                <RiDeleteBin6Line onClick={DeleteSelfStore} className="text-xl text-red-600"/></div>
                                 </div>
                                
-                </div>
+                </div>) : (<></>) }
+               
 
             </div>
 
