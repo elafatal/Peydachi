@@ -1,42 +1,49 @@
 import React, { useState } from "react";
-import { IoSearch } from "react-icons/io5";
+import { TbReportAnalytics } from "react-icons/tb";
+import { AiOutlineAppstoreAdd } from "react-icons/ai";
 import { FaMapLocationDot } from "react-icons/fa6";
-import { MdShoppingBag } from "react-icons/md";
+import { RiProductHuntLine } from "react-icons/ri";
+import { FaProductHunt } from "react-icons/fa";
+import { FaStore } from "react-icons/fa";
 
 const Features = () => {
     const features = [
         {
-          icon: 'fa-solid fa-magnifying-glass',
-          title: 'Smart Search',
-          description: 'Find any product instantly with our intelligent search system'
+          icon: FaStore,
+          title: 'جستجوی فروشگاه',
+          description: ' به دنبال فروشگاه خاصی میگردید؟'
         },
         {
-          icon: 'fa-solid fa-location-dot',
-          title: 'Real-time Location',
-          description: 'Get accurate results based on your current location'
+          icon: RiProductHuntLine,
+          title: ' جستجوی محصول',
+          description: 'مشخصات محصول خاصی را میخواهید؟'
         },
         {
-          icon: 'fa-solid fa-clock',
-          title: 'Live Availability',
-          description: 'Check real-time stock availability at nearby stores'
+          icon: AiOutlineAppstoreAdd,
+          title: 'اضافه کردن فروشگاه',
+          description: 'فروشگاه خود را در پیداچی اضافه کنید'
         },
         {
-          icon: 'fa-solid fa-route',
-          title: 'Route Planning',
-          description: 'Get the best route to your desired store'
+          icon: TbReportAnalytics,
+          title: 'گزارش‌ها',
+          description: 'فعالیت‌های حساب خود را بررسی کنید'
         }
       ];
   return (
-    <div className="py-20 bg-gray-50 border-t-2 border-gray-100">
+    <div className="py-20 bg-gray-50 border-t-2 border-gray-100" dir="rtl">
     <div className="max-w-7xl mx-auto px-6">
-      <h2 className="text-3xl font-bold text-center text-gray-900 mb-16">
-        Why Choose FindNearby
+      <h2 className="text-3xl font-bold text-center text-gray-900 mb-14">
+        خدمات متفرقه 
+        <h4 className="text-sm font-bold text-center text-gray-700 mb-10">  
+          (بدون نیاز به لوکیشن)
+      </h4>
       </h2>
+     
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {features.map((feature, index) => (
           <div key={index} className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-              <i className={`${feature.icon} text-xl text-blue-600`}></i>
+              <feature.icon className='text-2xl text-blue-600'/>
             </div>
             <h3 className="text-xl font-semibold mb-4">{feature.title}</h3>
             <p className="text-gray-600">{feature.description}</p>

@@ -12,6 +12,7 @@ import { AuthProvider } from './Component/AuthContext/AuthContext';
 import PrivateRoute from './Component/PrivateRoute';
 import UnauthorizedPage from './Component/Error/UnauthorizedPage';
 import AdminPage from './Component/Admin/Admin';
+import SearchStore from './Component/otherServices/Store/SearchStore/SearchStore';
 function App() {
 
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
             <Route path="/userInfo" element={<UserInfo />} />
             <Route path="/Admin" element={<AdminPage/>} />
+            <Route path="/test" element={<SearchStore/>} />
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />
