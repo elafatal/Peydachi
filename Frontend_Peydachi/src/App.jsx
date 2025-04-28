@@ -8,10 +8,10 @@ import Footer from './Component/landingPage/footer';
 import MenuBar from './Component/Navbar/Navbar';
 import ErrorPage from './Component/Error/Error';
 import UserInfo from './Component/UserInfo/UserInfo';
-import { AuthProvider } from './Component/AuthContext/AuthContext'; // مسیر درست
+import { AuthProvider } from './Component/AuthContext/AuthContext';
 import PrivateRoute from './Component/PrivateRoute';
 import UnauthorizedPage from './Component/Error/UnauthorizedPage';
-import Admin from './Component/Admin/Admin';
+import AdminPage from './Component/Admin/Admin';
 function App() {
 
 
@@ -27,7 +27,7 @@ function App() {
             <Route path="/m" element={<MenuBar />} />
             <Route path="*" element={<ErrorPage />} />
             <Route path="/userInfo" element={<UserInfo />} />
-            <Route path="/Admin" element={<Admin/>} />
+            <Route path="/Admin" element={<AdminPage/>} />
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />
