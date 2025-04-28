@@ -14,11 +14,8 @@ const FirstSection = () => {
   const [showLocationDropdown2, setShowLocationDropdown2] = useState(false);
   const [regions, setRegions] = useState([]);
   const [allCities, setAllCities] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  // const [activeSearch, setActiveSearch] = useState([]);
-  // const [words, setWords] = useState([]);
-  // باید بین اپشن های سرچ جستجو کنم
-
+  const [filteredCities, setFilteredCities] = useState([]);
+  const [filteredRegions, setFilteredRegions] = useState([]);
   useEffect(() => {
     const handleRegions = async () => {
       try {
@@ -96,7 +93,24 @@ const FirstSection = () => {
 
     
   };
+  const handleRegionsInput =(e)=>{
+    setLocation(e.target.value);
+    setFilteredRegions(regions.filter((w) => w.name.includes(e.target.value)).slice(0, 8));
+  }
 
+  const HandleRegionsItems=()=>{
+    setShowLocationDropdown(true)
+    setFilteredRegions(regions)
+  }
+  const handleCityInput =(e)=>{
+    setcity(e.target.value);
+    setFilteredCities(allCities.filter((w) => w.name.includes(e.target.value)).slice(0, 8));
+  }
+
+  const HandleCityItems=()=>{
+    setShowLocationDropdown2(true)
+    setFilteredCities(allCities)
+  }
   return (
     <div className=" relative ">
       {/* Background image */}
@@ -155,13 +169,13 @@ const FirstSection = () => {
 
                       className="w-full px-12 py-3 border border-gray-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      onFocus={() => setShowLocationDropdown(true)}
+                      onChange={(e) =>handleRegionsInput(e)}
+                      onFocus={() => HandleRegionsItems()}
                     />
                     {showLocationDropdown && (
                       <div className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                         <div className="p-2 max-h-44 overflow-y-scroll">
-                          {regions.map((loc) => (
+                          {filteredRegions.map((loc) => (
                             <button
                               key={loc.id}
                               className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap "
@@ -183,13 +197,13 @@ const FirstSection = () => {
                       placeholder="شهر"
                       className="w-full px-12 py-3 border border-gray-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       value={city}
-                      onChange={(e) => setcity(e.target.value)}
-                      onFocus={() => setShowLocationDropdown2(true)}
+                      onChange={(e) =>handleCityInput(e)}
+                      onFocus={() => HandleCityItems()}
                     />
                     {showLocationDropdown2 && (
                       <div className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                         <div className="p-2 max-h-44 overflow-y-scroll">
-                          {allCities.map((loc2) => (
+                          {filteredCities.map((loc2) => (
                             <button
                               key={loc2.id}
                               className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap"
