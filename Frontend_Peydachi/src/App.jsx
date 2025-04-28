@@ -11,6 +11,7 @@ import UserInfo from './Component/UserInfo/UserInfo';
 import { AuthProvider } from './Component/AuthContext/AuthContext'; // مسیر درست
 import PrivateRoute from './Component/PrivateRoute';
 import UnauthorizedPage from './Component/Error/UnauthorizedPage';
+import Admin from './Component/Admin/Admin';
 function App() {
 
 
@@ -25,11 +26,12 @@ function App() {
             <Route path="/footer" element={<Footer />} />
             <Route path="/m" element={<MenuBar />} />
             <Route path="*" element={<ErrorPage />} />
-
+            <Route path="/userInfo" element={<UserInfo />} />
+            <Route path="/Admin" element={<Admin/>} />
             {/* مسیرهای محافظت شده */}
-            <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
+            {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />
-            </Route>
+            </Route> */}
 
           </Routes>
         </div>

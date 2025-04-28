@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../AuthContext/AuthContext';
-const SignIn= ({showComponent,setshowComponent, from }) => {
+const SignIn= ({showComponent,setshowComponent }) => {
   const { login } = useAuth()
   const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
@@ -64,7 +64,7 @@ const SignIn= ({showComponent,setshowComponent, from }) => {
       });
       console.log(Cookies.get('auth_token'));
       
-      navigate(from, { replace: true });
+      navigate({ replace: true });
       }
     }
     catch(error){
