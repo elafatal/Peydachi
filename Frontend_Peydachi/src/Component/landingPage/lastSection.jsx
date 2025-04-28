@@ -5,8 +5,9 @@ import { FaMapLocationDot } from "react-icons/fa6";
 import { RiProductHuntLine } from "react-icons/ri";
 import { FaProductHunt } from "react-icons/fa";
 import { FaStore } from "react-icons/fa";
-
+import { useNavigate } from 'react-router-dom';
 const Features = () => {
+    const navigate = useNavigate();
     const features = [
         {
           icon: FaStore,
@@ -29,19 +30,38 @@ const Features = () => {
           description: 'فعالیت‌های حساب خود را بررسی کنید'
         }
       ];
+
+const handleLink =(Link)=>{
+  console.log(Link);
+  
+  switch (Link) {
+      case  0 :
+        navigate('/SearchStore')
+        break;
+      case 1 :
+        navigate('/SearchProduct')
+      case 2 :
+        navigate('/AddStoreRequest')
+      case 3 :
+        navigate('/UserCommentReport')
+        break;
+    default:
+      break;
+  }
+}
   return (
-    <div className="py-20 bg-gray-50 border-t-2 border-gray-100" dir="rtl">
+    <div className="py-16 bg-gray-50 border-t-2 border-gray-100" dir="rtl">
     <div className="max-w-7xl mx-auto px-6">
-      <h2 className="text-3xl font-bold text-center text-gray-900 mb-14">
+      <h2 className="text-3xl font-bold text-center text-gray-900 mb-16">
         خدمات متفرقه 
-        <h4 className="text-sm font-bold text-center text-gray-700 mb-10">  
+        <h4 className="text-sm font-bold text-center text-gray-700 mb-16">  
           (بدون نیاز به لوکیشن)
       </h4>
       </h2>
      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {features.map((feature, index) => (
-          <div key={index} className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <div key={index} className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow" onClick={()=>handleLink(index)}>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
               <feature.icon className='text-2xl text-blue-600'/>
             </div>

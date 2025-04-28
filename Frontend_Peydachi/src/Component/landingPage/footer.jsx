@@ -2,12 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaGithub } from "react-icons/fa";
 
-
- 
 export function Footer() {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
- const handleNavigate=(link)=>{
+const handleNavigate=(link)=>{
   console.log(link);
   
 switch (link) {
