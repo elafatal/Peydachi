@@ -64,7 +64,7 @@ const SignIn= ({showComponent,setshowComponent }) => {
       });
       console.log(Cookies.get('auth_token'));
       
-      navigate({ replace: true });
+      navigate('/', { replace: true });
       }
     }
     catch(error){
