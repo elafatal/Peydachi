@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../../axiosInstance';
+import Swal from "sweetalert2";  
 import { 
   FaPhone, FaChevronDown, FaCalendarAlt, 
   FaTimes, FaStore, FaExclamationCircle, FaSpinner 
@@ -27,33 +29,57 @@ const AddStore = () => {
     { id: 5, name: 'South America' },
     { id: 6, name: 'Australia' }
   ]);
+  useEffect(() => {
+    const handleRegions = async () => {
+      try {
+        const response = await axiosInstance.get('/region/get_all_regions', {
+          headers: {
+            Authorization: null,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        setRegions(response.data);
+        console.log(response);
+        
+      } catch (error) {
+        console.log(error);
+        
+      } 
+    };
+
+    handleRegions();
+  }, []);
   const [cities, setCities] = useState([
-    { id: 1, name: 'New York', regionId: 1 },
-    { id: 2, name: 'Los Angeles', regionId: 1 },
-    { id: 3, name: 'Chicago', regionId: 1 },
-    { id: 4, name: 'London', regionId: 2 },
-    { id: 5, name: 'Paris', regionId: 2 },
-    { id: 6, name: 'Berlin', regionId: 2 },
-    { id: 7, name: 'Tokyo', regionId: 3 },
-    { id: 8, name: 'Beijing', regionId: 3 },
-    { id: 9, name: 'Seoul', regionId: 3 },
-    { id: 10, name: 'Cairo', regionId: 4 },
-    { id: 11, name: 'Lagos', regionId: 4 },
-    { id: 12, name: 'Nairobi', regionId: 4 },
-    { id: 13, name: 'São Paulo', regionId: 5 },
-    { id: 14, name: 'Buenos Aires', regionId: 5 },
-    { id: 15, name: 'Lima', regionId: 5 },
-    { id: 16, name: 'Sydney', regionId: 6 },
-    { id: 17, name: 'Melbourne', regionId: 6 },
-    { id: 18, name: 'Brisbane', regionId: 6 }
+    { id: 1, name: 'New York', region_id: 1 },
+
   ]);
-  
+  useEffect(() => {
+    const handleAllCities = async () => {
+      try {
+        const response = await axiosInstance.get('/city/get_all_cities', {
+          headers: {
+            Authorization: null,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        setCities(response.data);
+        console.log(response);
+        
+      } catch (error) {
+        console.log(error);
+        
+      } 
+    };
+
+    handleAllCities();
+  }, []);
+
   const [filteredCities, setFilteredCities] = useState([]);
 
   useEffect(() => {
     if (formData.region_id > 0) {
       setFilteredCities(
-        cities.filter(city => city.regionId === Number(formData.region_id))
+        cities.filter(city => city.region_id === Number(formData.region_id))
       );
     } else {
       setFilteredCities([]);
@@ -85,11 +111,45 @@ const AddStore = () => {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =(e) => {
     e.preventDefault();
     if (!validate()) return;
     setIsSubmitting(true);
-    setTimeout(() => {
+    setTimeout(async() => {
+        try {
+            const response = await axiosInstance.post('/add_store_request/send_add_store_request', 
+                formData, 
+                {
+                  headers: {
+                    Authorization: null,
+                    'Content-Type': 'application/json',
+                  }
+                }
+              );
+            if (response.status === 201) {
+                    Swal.fire({
+                          position: "top-end",
+                          icon: "success",
+                          title: "درخواست ارسال شد ",
+                          text: "در انتظار تایید ادمین...",
+                          showConfirmButton: false,
+                          timer: 1500,
+                          toast: true,
+                          customClass: {
+                            popup: 'w-2 h-25 text-sm flex items-center justify-center', 
+                            title: 'text-xs', 
+                            content: 'text-xs',
+                            icon : 'text-xs mb-2'
+                          }
+                      });
+            }  
+           handleReset()
+            console.log(response);
+            
+          } catch (error) {
+            console.log(error);
+            
+          } 
       console.log('Submitted', formData);
       setIsSubmitting(false);
     }, 1500);
@@ -239,15 +299,8 @@ const AddStore = () => {
               />
             </div>
           </div>
-          <div className="flex justify-between items-center pt-4">
-            <button
-              type="button"
-              onClick={handleReset}
-              className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 inline-flex items-center"
-            >
-              <FaTimes className="ml-2 " />
-              پاک کردن فرم
-            </button>
+          <div className="flex sm:flex-row justify-between flex-col gap-2 items-center pt-4">
+     
             <button
               type="submit"
               disabled={isSubmitting}
@@ -264,6 +317,14 @@ const AddStore = () => {
                   ثبت درخواست
                 </>
               )}
+            </button>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 inline-flex items-center"
+            >
+              <FaTimes className="ml-2 " />
+              پاک کردن فرم
             </button>
           </div>
         </form>

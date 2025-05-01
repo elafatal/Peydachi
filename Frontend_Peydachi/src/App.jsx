@@ -30,7 +30,7 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
             <Route path="/userInfo" element={<UserInfo />} />
             <Route path="/Admin" element={<AdminPage/>} />
-            <Route path="/test" element={<AddStore/>} />
+            <Route path="/AddStoreRequest" element={<AddStore/>} />
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />
