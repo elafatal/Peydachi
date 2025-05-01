@@ -3,9 +3,7 @@ from functions import product_comment_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
-from schemas.product_comment_schemas import ProductCommentDisplay
-
-
+from schemas.product_comment_schemas import ProductCommentDisplay, FullProductCommentDisplay
 
 router = APIRouter(
     prefix='/admin/product_comment',
@@ -27,3 +25,13 @@ async def delete_all_comments_of_product(product_id: ID_BODY, db: DB_DEPENDENCY)
 @router.post('/search_product_comments', status_code=200, response_model=list[ProductCommentDisplay])
 async def search_product_comments(product_id: ID_BODY, search: NAME_BODY, db: DB_DEPENDENCY):
     return await product_comment_functions.search_product_comments(product_id=product_id, search=search, db=db)
+
+
+@router.post('/get_user_product_comments', status_code=200, response_model=list[ProductCommentDisplay])
+async def get_user_product_comments(user_id: ID_BODY, db: DB_DEPENDENCY):
+    return await product_comment_functions.get_user_product_comments(user_id=user_id, db=db)
+
+
+@router.post('/get_user_full_product_comments', status_code=200, response_model=list[FullProductCommentDisplay])
+async def get_user_full_product_comments(user_id: ID_BODY, db: DB_DEPENDENCY):
+    return await product_comment_functions.get_user_full_product_comments(user_id=user_id, db=db)

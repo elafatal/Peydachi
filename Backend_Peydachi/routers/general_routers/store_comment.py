@@ -3,7 +3,7 @@ from functions import store_comment_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.access_dependencies import USER_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY
-from schemas.store_comments_schemas import AddStoreCommentModel, StoreCommentDisplay
+from schemas.store_comments_schemas import AddStoreCommentModel, StoreCommentDisplay, FullStoreCommentDisplay
 
 
 router = APIRouter(
@@ -32,3 +32,11 @@ async def user_delete_store_comment(store_comment_id: ID_BODY, db: DB_DEPENDENCY
     return await store_comment_functions.user_delete_store_comment(store_comment_id=store_comment_id, user_id=user.id, db=db)
 
 
+@router.get('/get_user_store_comments', status_code=200, response_model=list[StoreCommentDisplay])
+async def get_user_store_comments(user: USER_DEPENDENCY, db: DB_DEPENDENCY):
+    return await store_comment_functions.get_user_store_comments(user_id=user.id, db=db)
+
+
+@router.get('/get_self_full_store_comments', status_code=200, response_model=list[FullStoreCommentDisplay])
+async def get_self_full_store_comments(db: DB_DEPENDENCY, user: USER_DEPENDENCY):
+    return await store_comment_functions.get_user_full_store_comments(user_id=user.id, db=db)

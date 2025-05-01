@@ -3,7 +3,7 @@ from functions import store_comment_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
-from schemas.store_comments_schemas import StoreCommentDisplay
+from schemas.store_comments_schemas import StoreCommentDisplay, FullStoreCommentDisplay
 
 
 
@@ -27,3 +27,13 @@ async def delete_all_comments_of_store(store_id: ID_BODY, db: DB_DEPENDENCY):
 @router.post('/search_store_comments', status_code=200, response_model=list[StoreCommentDisplay])
 async def search_store_comments(store_id: ID_BODY, search: NAME_BODY, db: DB_DEPENDENCY):
     return await store_comment_functions.search_store_comments(store_id=store_id, search=search, db=db)
+
+
+@router.post('/get_user_store_comments', status_code=200, response_model=list[StoreCommentDisplay])
+async def get_user_store_comments(user_id: ID_BODY, db: DB_DEPENDENCY):
+    return await store_comment_functions.get_user_store_comments(user_id=user_id, db=db)
+
+
+@router.post('/get_user_full_store_comments', status_code=200, response_model=list[FullStoreCommentDisplay])
+async def get_user_full_store_comments(user_id: ID_BODY, db: DB_DEPENDENCY):
+    return await store_comment_functions.get_user_full_store_comments(user_id=user_id, db=db)
