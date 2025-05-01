@@ -14,6 +14,7 @@ import UnauthorizedPage from './Component/Error/UnauthorizedPage';
 import AdminPage from './Component/Admin/Admin';
 import SearchStore from './Component/otherServices/Store/SearchStore/SearchStore';
 import AddStore from './Component/otherServices/Store/AddStoreRequest/AddStoreRequest';
+import UserComment from './Component/otherServices/UserComments/UserComment';
 function App() {
 
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/userInfo" element={<UserInfo />} />
             <Route path="/Admin" element={<AdminPage/>} />
             <Route path="/AddStoreRequest" element={<AddStore/>} />
+            <Route path="/test" element={<UserComment/>} />
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />
