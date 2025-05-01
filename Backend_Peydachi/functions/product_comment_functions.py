@@ -1,5 +1,5 @@
 import datetime
-from database.models import ProductComment, User
+from database.models import ProductComment, User, Product, Store
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
 from schemas.product_comment_schemas import AddProductCommentModel
@@ -86,3 +86,38 @@ async def delete_all_comments_of_product(product_id: int, db: Session):
     db.commit()
 
     return 'Product comments deleted'
+
+
+async def get_user_product_comments(user_id: int, db: Session):
+    product_comments = db.query(ProductComment).filter(ProductComment.user_id == user_id).order_by(ProductComment.date_added.desc()).all()
+
+    if not product_comments:
+        raise NO_PRODUCT_COMMENT_FOUND_ERROR
+
+    return product_comments
+
+
+async def get_user_full_product_comments(user_id: int, db: Session):
+    product_comments = db.query(ProductComment).filter(ProductComment.user_id == user_id).order_by(ProductComment.date_added.desc()).all()
+
+    if not product_comments:
+        raise NO_PRODUCT_COMMENT_FOUND_ERROR
+
+
+    full_product_comments = []
+    for comment in product_comments:
+        product = db.query(Product).filter(Product.id == comment.product_id).first()
+        store = db.query(Store).filter(Store.id == product.store_id).first()
+
+        full_product_comment = {
+            'product_comment': comment,
+            'product': product,
+            'store': store
+        }
+
+        full_product_comments.append(full_product_comment)
+
+
+    return full_product_comments
+
+

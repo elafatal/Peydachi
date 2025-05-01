@@ -1,5 +1,5 @@
 import datetime
-from database.models import StoreComment, User
+from database.models import StoreComment, User, Store
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
 from schemas.store_comments_schemas import AddStoreCommentModel
@@ -86,3 +86,31 @@ async def delete_all_comments_of_store(store_id: int, db: Session):
 
     return 'Store comments deleted'
 
+
+async def get_user_store_comments(user_id: int, db: Session):
+    store_comments = db.query(StoreComment).filter(StoreComment.user_id == user_id).order_by(StoreComment.date_added.desc()).all()
+    if not store_comments:
+        raise NO_STORE_COMMENT_FOUND_ERROR
+
+    return store_comments
+
+
+async def get_user_full_store_comments(user_id: int, db: Session):
+    store_comments = db.query(StoreComment).filter(StoreComment.user_id == user_id).order_by(StoreComment.date_added.desc()).all()
+    if not store_comments:
+        raise NO_STORE_COMMENT_FOUND_ERROR
+
+
+    full_store_comments = []
+
+    for store_comment in store_comments:
+        store = db.query(Store).filter(Store.id == store_comment.store_id).first()
+
+        full_store_comment = {
+            'store_comment': store_comment,
+            'store': store
+        }
+
+        full_store_comments.append(full_store_comment)
+
+    return full_store_comments
