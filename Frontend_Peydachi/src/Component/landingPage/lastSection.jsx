@@ -40,8 +40,10 @@ const handleLink =(Link)=>{
         break;
       case 1 :
         navigate('/SearchProduct')
+        break;
       case 2 :
         navigate('/AddStoreRequest')
+        break;
       case 3 :
         navigate('/UserCommentReport')
         break;
