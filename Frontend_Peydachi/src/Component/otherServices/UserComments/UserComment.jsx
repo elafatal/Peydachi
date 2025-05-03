@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../axiosInstance';
 import { FaRegCommentDots, FaRegStar } from 'react-icons/fa';
 import CommentCard from './CommentCard';
-import SkeletonCard from '../../SkeletionLoading/SkeletionCards';
+import SkeletonCard from '../../SkeletionLoading/SelfCommentsCards';
 import { IoChevronBackCircle } from "react-icons/io5";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
