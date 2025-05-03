@@ -7,12 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../AuthContext/AuthContext';
 const SignIn= ({showComponent,setshowComponent }) => {
+  const navigate = useNavigate();
   const { login } = useAuth()
   const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const navigate = useNavigate();
+  
   
   const handleSubmit =async (e) => {
     e.preventDefault();

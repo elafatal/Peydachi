@@ -32,7 +32,7 @@ function App() {
             <Route path="/userInfo" element={<UserInfo />} />
             <Route path="/Admin" element={<AdminPage/>} />
             <Route path="/AddStoreRequest" element={<AddStore/>} />
-            <Route path="/test" element={<UserComment/>} />
+            <Route path="/UserCommentReport" element={<UserComment/>} />
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />
