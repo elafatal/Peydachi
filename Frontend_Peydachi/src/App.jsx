@@ -9,7 +9,6 @@ import MenuBar from './Component/Navbar/Navbar';
 import ErrorPage from './Component/Error/Error';
 import UserInfo from './Component/UserInfo/UserInfo';
 import { AuthProvider } from './Component/AuthContext/AuthContext';
-import PrivateRoute from './Component/PrivateRoute';
 import UnauthorizedPage from './Component/Error/UnauthorizedPage';
 import AdminPage from './Component/Admin/Admin';
 import SearchStore from './Component/otherServices/Store/SearchStore/SearchStore';
@@ -33,7 +32,8 @@ function App() {
             <Route path="/Admin" element={<AdminPage/>} />
             <Route path="/AddStoreRequest" element={<AddStore/>} />
             <Route path="/UserCommentReport" element={<UserComment/>} />
-            <Route path="/test" element={<SearchStore/>} />
+            <Route path="/SearchStore" element={<SearchStore/>} />
+            {/* <Route path="/test" element={<SearchStore/>} /> */}
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />

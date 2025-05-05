@@ -2,7 +2,37 @@ import React, { useEffect, useState } from 'react';
 import { FaStar, FaRegThumbsUp, FaRegCommentDots, FaRegStar } from 'react-icons/fa';
 import axiosInstance from '../../axiosInstance';
 import { MdDelete } from "react-icons/md";
-const CommentCard = ({ item, isStore }) => { 
+const ConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="font-iran fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-2xl shadow-xl max-w-sm w-full">
+        <h2 className="text-lg font-bold text-gray-800 mb-4">حذف کامنت</h2>
+        <p className="text-gray-600 mb-6">آیا مطمئنی می‌خوای این کامنت رو حذف کنی؟ این عمل قابل بازگشت نیست.</p>
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 text-sm rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200"
+          >
+            لغو
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700"
+          >
+            حذف
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CommentCard = ({ item, isStore, onDelete }) => {
+
+  const [showConfirm, setShowConfirm] = useState(false);
+
     function timeAgo(dateAdded) {
         const now = new Date();
         const addedDate = new Date(dateAdded);
@@ -24,46 +54,31 @@ const CommentCard = ({ item, isStore }) => {
         if (months < 12) return `${months} ماه قبل`;
         return `${years} سال${years > 1 ? 's' : ''} ago`;
       }
-
-      const handleDeleteSelfComment = async (id) => {
-        if (!isStore) {
-            try {
-                const response = await axiosInstance.delete(
-                    '/product_comment/user_delete_product_comment',
-                    {
-                        data: { product_comment_id: id }, // Pass data like this
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
-    
-                if (response.status === 200) {
-                    console.log("product comment delete");
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        } else if (isStore) {
-            try {
-                const response = await axiosInstance.delete(
-                    '/store_comment/user_delete_store_comment',
-                    {
-                        data: { store_comment_id: id }, // Pass data like this
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
-    
-                if (response.status === 200) {
-                    console.log("store comment delete");
-                }
-            } catch (error) {
-                console.error(error);
-            }
+      const handleDeleteConfirmed = async (id) => {
+        try {
+          const url = isStore
+            ? '/store_comment/user_delete_store_comment'
+            : '/product_comment/user_delete_product_comment';
+      
+          const key = isStore ? 'store_comment_id' : 'product_comment_id';
+      
+          const response = await axiosInstance.delete(url, {
+            data: { [key]: id },
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+      
+          if (response.status === 200) {
+            console.log("comment deleted");
+            if (onDelete) onDelete();
+          }
+          
+        } catch (error) {
+          console.error(error);
         }
-    };
+      };
+      
     
 
     const renderStars = (rating) => (
@@ -76,7 +91,7 @@ const CommentCard = ({ item, isStore }) => {
           ))}
         </div>
       )
-      return(<div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition" dir='rtl'>
+      return(<div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md shadow-blue-200 transition" dir='rtl'>
         <div className="flex gap-2 mb-4">
           <img
             src={isStore ? item.storeImage : item.productImage}
@@ -105,7 +120,20 @@ const CommentCard = ({ item, isStore }) => {
             {item.likes} */}
           </div>
           <div className="flex space-x-2 text-sm">
-            <button onClick={()=>handleDeleteSelfComment(item.id)} className="text-red-600 text-2xl "><MdDelete /></button>
+          <button
+            onClick={() => setShowConfirm(true)}
+            className="text-red-600 text-2xl"
+          >
+            <MdDelete />
+          </button>
+          <ConfirmModal
+            isOpen={showConfirm}
+            onCancel={() => setShowConfirm(false)}
+            onConfirm={() => {
+              handleDeleteConfirmed(item.id);
+              setShowConfirm(false);
+            }}
+          />
           </div>
         </div>
       </div>)

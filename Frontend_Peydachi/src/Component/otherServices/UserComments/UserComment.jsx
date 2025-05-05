@@ -5,7 +5,10 @@ import CommentCard from './CommentCard';
 import SkeletonCard from '../../SkeletionLoading/SelfCommentsCards';
 import { IoChevronBackCircle } from "react-icons/io5";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import UnauthorizedPage from '../../Error/UnauthorizedPage';
 const UserComment = () => {
   const navigate = useNavigate();
   const [loadingStores, setLoadingStores] = useState(true);
@@ -14,6 +17,22 @@ const UserComment = () => {
   const [storeComments, setStoreComments] = useState([]);
   const [productComments, setProductComments] = useState([]);
   const [showAll, setShowAll] = useState(false);
+ const authToken = Cookies.get('auth_token');
+ const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1, // فاصله زمانی بین انیمیشن هر آیتم
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, height: 0 },
+  visible: { opacity: 1, height: 'auto' },
+  exit: { opacity: 0, height: 0, marginBottom: 0 },
+};
 
   useEffect(() => {
     const fetchStoreComments = async () => {
@@ -81,9 +100,16 @@ const backHome =()=>{
     setActiveTab(tab);
     setShowAll(false); // Reset when switching tabs
   };
-
+  const handleDeleteComment = (id) => {
+    if (activeTab === 'stores') {
+      setStoreComments((prev) => prev.filter((comment) => comment.id !== id));
+    } else {
+      setProductComments((prev) => prev.filter((comment) => comment.id !== id));
+    }
+  };
+  
   return (
-    <div className="min-h-screen bg-gray-50">
+    !authToken ? (<UnauthorizedPage/>) : (<div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl text-center font-bold text-gray-800 my-6">نظرات من</h1>
 
@@ -121,9 +147,36 @@ const backHome =()=>{
         <SkeletonCard cards={showAll ? activeData.length : 2} />
       </>
     ) :displayedData.length > 0 ? (
-            displayedData.map((item) => (
-              <CommentCard key={item.id} item={item} isStore={activeTab === 'stores'} />
-            ))
+      <>
+      {/* دو کامنت اول بدون انیمیشن */}
+      {activeData.slice(0, 2).map((item) => (
+        <CommentCard key={item.id} item={item} isStore={activeTab === 'stores'} onDelete={() => handleDeleteComment(item.id)} />
+
+      ))}
+    
+      {/* بقیه کامنت‌ها فقط وقتی نمایش بیشتر فعاله */}
+      <AnimatePresence>
+        {showAll && (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-6"
+            
+          >
+            {activeData.slice(2).map((item) => (
+              <motion.div key={item.id} variants={itemVariants}>
+                <CommentCard item={item} isStore={activeTab === 'stores'} />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+    
+
+            
+
           ) : (
             <div className="text-center py-12">
               {activeTab === 'stores' ? (
@@ -159,7 +212,8 @@ const backHome =()=>{
 
         </div>
       </div>
-    </div>
+    </div>)
+    
   );
 };
 

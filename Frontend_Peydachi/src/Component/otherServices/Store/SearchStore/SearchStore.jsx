@@ -7,8 +7,8 @@ import {  FaGlobeAmericas, FaPhone, FaEnvelope } from 'react-icons/fa';
 import axiosInstance from '../../../axiosInstance';
 import StoresCard from '../../../SkeletionLoading/StoresCards'
 import { motion, AnimatePresence } from 'framer-motion';
-import SearchResults from './SearchResults'; // adjust the path if needed
-import StoreDetail from './StoreDetail'; // مسیر را مطابق ساختار پروژه تنظیم کن
+import SearchResults from './SearchResults'; 
+import StoreDetail from './StoreDetail'; 
 
 const SearchStore = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -221,7 +221,7 @@ const renderStars = (rating) => {
                                             allCities={allCities}
                                             handleItemClick={handleItemClick}
                                             clearSearch={clearSearch}
-                                            onKeywordClick={handleKeywordClick} // ✅ اضافه شده
+                                            onKeywordClick={handleKeywordClick} 
                                             />
 
                                             }
