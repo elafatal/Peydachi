@@ -91,7 +91,7 @@ const CommentCard = ({ item, isStore, onDelete }) => {
           ))}
         </div>
       )
-      return(<div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md shadow-blue-200 transition" dir='rtl'>
+      return(<div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md shadow-gray-200 transition" dir='rtl'>
         <div className="flex gap-2 mb-4">
           <img
             src={isStore ? item.storeImage : item.productImage}

@@ -23,7 +23,7 @@ const UserComment = () => {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1, // فاصله زمانی بین انیمیشن هر آیتم
+      staggerChildren: 0.1, 
     },
   },
 };
@@ -109,9 +109,9 @@ const backHome =()=>{
   };
   
   return (
-    !authToken ? (<UnauthorizedPage/>) : (<div className="min-h-screen bg-gray-50">
+    !authToken ? (<UnauthorizedPage/>) : (<div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="text-3xl text-center font-bold text-gray-800 my-6">نظرات من</h1>
+        <h1 className="text-3xl text-center font-bold text-blue-800 my-6">نظرات من</h1>
 
         <div className="flex justify-between border-b border-gray-200 mb-6">
           <div className="div">
@@ -142,19 +142,18 @@ const backHome =()=>{
 
         <div className="space-y-6">
               {(loadingStores && activeTab === 'stores') || (loadingProducts && activeTab === 'products') ? (
-      // Render 2–3 skeletons
+      
       <>
         <SkeletonCard cards={showAll ? activeData.length : 2} />
       </>
     ) :displayedData.length > 0 ? (
       <>
-      {/* دو کامنت اول بدون انیمیشن */}
+     
       {activeData.slice(0, 2).map((item) => (
         <CommentCard key={item.id} item={item} isStore={activeTab === 'stores'} onDelete={() => handleDeleteComment(item.id)} />
 
       ))}
     
-      {/* بقیه کامنت‌ها فقط وقتی نمایش بیشتر فعاله */}
       <AnimatePresence>
         {showAll && (
           <motion.div

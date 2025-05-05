@@ -3,6 +3,8 @@ import {
   FaSearch, FaTimes, FaCity, FaChevronDown, FaChevronUp,
   FaStar, FaStarHalfAlt, FaRegStar, FaMapMarkerAlt, FaArrowLeft
 } from 'react-icons/fa';
+import { FaLocationDot } from "react-icons/fa6";
+
 import {  FaGlobeAmericas, FaPhone, FaEnvelope } from 'react-icons/fa';
 import axiosInstance from '../../../axiosInstance';
 import StoresCard from '../../../SkeletionLoading/StoresCards'
@@ -70,7 +72,7 @@ const SearchStore = () => {
     debounce(async (query, city) => {
       setIsLoading(true);
       setError(null);
-      setSearchResults([]); // Clear old results immediately
+      setSearchResults([]); 
       try {
         let response;
         if (query && city) {
@@ -140,74 +142,65 @@ const SearchStore = () => {
   };
 
 
-const renderStars = (rating) => {
-    const safeRating = typeof rating === 'number' ? rating : 0;
-    const fullStars = Math.floor(safeRating);
-    const hasHalfStar = safeRating % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-  
-    return (
-      <div className="flex items-center">
-        {[...Array(fullStars)].map((_, i) => <FaStar key={`full-${i}`} className="text-yellow-400" />)}
-        {hasHalfStar && <FaStarHalfAlt className="text-yellow-400" />}
-        {[...Array(emptyStars)].map((_, i) => <FaRegStar key={`empty-${i}`} className="text-yellow-400" />)}
-        <span className="ml-1 text-gray-600">{safeRating.toFixed(1)}</span>
-      </div>
-    );
-  };
+
   
 
   return (
-    <div className="min-h-screen bg-gray-50" dir='ltr'>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white" dir='ltr'>
       <div className="container mx-auto px-4 py-8">
         <header className="mb-8 w-10/12 mx-auto">
-          {/* <h1 className="text-3xl font-bold text-gray-800 mb-6"></h1> */}
-          <div className="flex flex-col md:flex-row gap-4 mt-6">
+          
+          <div className="flex justify-between" dir='rtl'>
+            <h1 className="sm:text-2xl sm:font-bold sm:text-blue-600 sm:mt-3 sm:block hidden">جستجو در فروشگاه‌ها</h1>
+            <div className="relative">
+                <input dir='rtl' className="w-full md:w-auto bg-white px-6 py-4 rounded-4xl shadow-md flex items-center justify-between cursor-pointer hover:bg-gray-50"
+                  placeholder="شهر فروشگاه(اختیاری)"
+                  value={City}
+                onClick={() => setShowCityDropdown(!showCityDropdown)}
+                onChange={(e) =>handleCityInput(e)}
+                onFocus={() => HandleCityItems()}/>
+            <AnimatePresence>
+            {showCityDropdown && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className="absolute z-10 mt-2 w-full bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto origin-top"
+              >
+                  {filteredCities.map(city => (
+                    <div
+                      key={city.id}
+                      className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleCitySelect(city)}
+                    >
+                      <div className="font-medium text-gray-800">{city.name}</div>
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+              </div>
+            
+          </div>
+          <div className="flex flex-col md:flex-row gap-4 mt-6 w-11/12 m-auto">
             <div  dir='rtl' className="relative flex-1">
               <div className="flex items-center bg-white rounded-4xl shadow-md overflow-hidden">
-                <div className="pr-5 text-gray-500"><FaSearch className='text-xl' /></div>
+                <div className="pr-5 text-gray-500"><FaSearch className='text-xl text-blue-500' /></div>
                 <input type="text" className="w-full py-4 px-4 text-gray-700 focus:outline-none border-none text-lg" placeholder="جستجو در فروشگاه‌ها" value={searchQuery} onChange={handleSearchChange} />
                 {searchQuery && <button className="px-4 text-gray-500 hover:text-gray-700" onClick={() => setSearchQuery('')}><FaTimes /></button>}
               </div>
             </div>
-            <div className="relative">
-              <input dir='rtl' className="w-full md:w-auto bg-white px-6 py-4 rounded-4xl shadow-md flex items-center justify-between cursor-pointer hover:bg-gray-50"
-                placeholder="شهر فروشگاه(اختیاری)"
-                value={City}
-               onClick={() => setShowCityDropdown(!showCityDropdown)}
-               onChange={(e) =>handleCityInput(e)}
-               onFocus={() => HandleCityItems()}/>
-          <AnimatePresence>
-  {showCityDropdown && (
-    <motion.div
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: "auto" }}
-      exit={{ opacity: 0, height: 0 }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="absolute z-10 mt-2 w-full bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto origin-top"
-    >
-      {filteredCities.map(city => (
-        <div
-          key={city.id}
-          className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
-          onClick={() => handleCitySelect(city)}
-        >
-          <div className="font-medium text-gray-800">{city.name}</div>
-        </div>
-      ))}
-    </motion.div>
-  )}
-</AnimatePresence>
-
-            </div>
+           
             {(searchQuery || selectedCity) && (
-              <button className="bg-gray-200 hover:bg-gray-300 transition-all duration-300 text-gray-900 px-5 py-3 rounded-full" onClick={clearSearch}>
-                Clear All
+              <button className="bg-blue-200 hover:bg-blue-300 transition-all duration-300 text-gray-900 px-5 py-3 rounded-full" onClick={clearSearch}>
+                پاک کردن جستجو
               </button>
             )}
           </div>
         </header>
-        <main className='w-11/12 mx-auto'>
+        <main className='w-10/12 mx-auto'>
           {showDetail ?  <StoreDetail
                         selectedItem={selectedItem}
                         filteredCities={filteredCities}

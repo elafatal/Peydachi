@@ -1,6 +1,5 @@
 import React from 'react';
 import { FaMapMarkerAlt } from 'react-icons/fa';
-import StoresCard from '../../../SkeletionLoading/StoresCards';
 import { IoBanSharp } from "react-icons/io5";
 const SearchResults = ({
     isLoading,
@@ -29,18 +28,25 @@ const SearchResults = ({
     );
   };
 
-  if (isLoading) return <StoresCard />;
+  if (isLoading) return <>  <div className="flex items-center justify-center h-1/2">
+                              <div className="flex space-x-2">
+                                <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                                <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce" />
+                              </div>
+                            </div>
+                        </>;
   if (error) return <div className="text-red-500 text-center py-6">{error}</div>;
   if ((searchQuery || selectedCity) && searchResults.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <div className="text-gray-500 text-xl mb-2">نتیجه‌ای یافت نشد</div>
-        <p className="text-gray-500 mb-4">Try adjusting your search or explore popular options below</p>
+        <p className="text-gray-500 test-xs mb-4">حداقل یکی از کلمات را کامل بنویسید</p>
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-button"
+          className="bg-blue-500 hover:bg-blue-600 transition-all duration-300 text-white px-6 py-2 rounded-full"
           onClick={clearSearch}
         >
-          Clear Search
+         سرچ مجدد
         </button>
       </div>
     );
@@ -48,13 +54,13 @@ const SearchResults = ({
 
   if (!searchQuery && !selectedCity) {
     return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <div className="text-gray-700 text-xl mb-4">Start searching to discover stores</div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+      <div className="flex flex-col items-center justify-center py-12" >
+        <div className="text-gray-500 text-lg mb-3 text-center">میتوانید برای جستجو از کلمات پیشنهادی استفاده کنید  </div>
+        <div className="flex flex-wrap justify-center gap-2 mt-1">
         {['داروخانه', 'سوپر مارکت', 'رستوران'].map((suggestion) => (
   <button
     key={suggestion}
-    className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-button"
+    className="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors cursor-pointer  whitespace-nowrap"
     onClick={() => onKeywordClick(suggestion)} 
   >
     {suggestion}
@@ -67,12 +73,13 @@ const SearchResults = ({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" > 
       {searchResults.map((item) => (
         <div
           key={item.id}
           className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg"
           onClick={() => handleItemClick(item)}
+          dir='rtl'
         >
           <div className="h-48 bg-gray-200">
             <img
@@ -84,13 +91,13 @@ const SearchResults = ({
           <div className="p-4">
             <div className="flex gap-1">
             <h3 className="text-xl font-semibold text-gray-800 mb-1">{item.name}</h3>
-            {!item.is_banned ?  <p className='text-xs text-red-500 mb-1'>مسدود شده</p>: ''}
+            {item.is_banned ?  <p className='text-xs text-red-500 mb-1'>مسدود شده</p>: ''}
             </div>
             
             {renderStars(item.average_rating)}
             <p className="text-gray-600 mt-2 line-clamp-2">{item.description}</p>
             <div className="mt-3 flex items-center text-gray-500">
-              <FaMapMarkerAlt className="ml-1" />
+              <FaMapMarkerAlt className="ml-1 text-blue-500" />
               <span>{allCities.find((city) => city.id === item.city_id)?.name || 'Unknown'}</span>
             </div>
           </div>
