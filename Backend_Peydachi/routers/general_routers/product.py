@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 from functions import product_functions
-from dependencies.dependencies import DB_DEPENDENCY
+from dependencies.dependencies import DB_DEPENDENCY, REDIS_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
-from schemas.product_schemas import ProductDisplay, ProductSearchModels
+from schemas.product_schemas import ProductDisplay, ProductSearchModels, SearchNearProductDisplay
 
 
 router = APIRouter(
@@ -56,6 +56,6 @@ async def search_all_available_products_of_city(city_id: ID_BODY, name: NAME_BOD
     return await product_functions.search_all_available_products_of_city(city_id=city_id, name=name, db=db)
 
 
-@router.post('/search_near_products', status_code=200, response_model=list[ProductDisplay])
-async def search_near_products(search: ProductSearchModels, db: DB_DEPENDENCY):
-    return await product_functions.search_near_products(search=search, db=db)
+@router.post('/search_near_products', status_code=200, response_model=list[SearchNearProductDisplay])
+async def search_near_products(search: ProductSearchModels, redis_db: REDIS_DEPENDENCY,db: DB_DEPENDENCY):
+    return await product_functions.search_near_products(search=search, redis_db=redis_db, db=db)

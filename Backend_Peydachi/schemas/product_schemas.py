@@ -1,5 +1,6 @@
 import datetime
 from schemas.base_schemas import BaseSchema
+from schemas.store_schema import StoreDisplay
 
 
 class ProductModel(BaseSchema):
@@ -30,3 +31,10 @@ class ProductSearchModels(BaseSchema):
     city_id: int
     location_latitude: str
     location_longitude: str
+    range_km: float | None = None
+
+
+class SearchNearProductDisplay(BaseSchema):
+    store: StoreDisplay
+    product: ProductDisplay
+    distance: float | None
