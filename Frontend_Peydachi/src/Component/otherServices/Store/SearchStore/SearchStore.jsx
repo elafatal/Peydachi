@@ -4,7 +4,7 @@ import {
   FaStar, FaStarHalfAlt, FaRegStar, FaMapMarkerAlt, FaArrowLeft
 } from 'react-icons/fa';
 import { FaLocationDot } from "react-icons/fa6";
-
+import { useNavigate } from 'react-router-dom';
 import {  FaGlobeAmericas, FaPhone, FaEnvelope } from 'react-icons/fa';
 import axiosInstance from '../../../axiosInstance';
 import StoresCard from '../../../SkeletionLoading/StoresCards'
@@ -13,6 +13,7 @@ import SearchResults from './SearchResults';
 import StoreDetail from './StoreDetail'; 
 
 const SearchStore = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -201,11 +202,8 @@ const SearchStore = () => {
           </div>
         </header>
         <main className='w-10/12 mx-auto'>
-          {showDetail ?  <StoreDetail
-                        selectedItem={selectedItem}
-                        filteredCities={filteredCities}
-                        handleBackToResults={handleBackToResults}
-                        /> :            <SearchResults
+          {showDetail ?  navigate('/test', { replace: true })
+                                         : <SearchResults
                                             isLoading={isLoading}
                                             error={error}
                                             searchQuery={searchQuery}
@@ -216,7 +214,6 @@ const SearchStore = () => {
                                             clearSearch={clearSearch}
                                             onKeywordClick={handleKeywordClick} 
                                             />
-
                                             }
         </main>
       </div>
