@@ -14,7 +14,7 @@ import AdminPage from './Component/Admin/Admin';
 import SearchStore from './Component/otherServices/Store/SearchStore/SearchStore';
 import AddStore from './Component/otherServices/Store/AddStoreRequest/AddStoreRequest';
 import UserComment from './Component/otherServices/UserComments/UserComment';
-import ProductOfStore from './Component/Store/Store';
+import Store from './Component/Store/Store';
 function App() {
 
 
@@ -34,7 +34,9 @@ function App() {
             <Route path="/AddStoreRequest" element={<AddStore/>} />
             <Route path="/UserCommentReport" element={<UserComment/>} />
             <Route path="/SearchStore" element={<SearchStore/>} />
-            <Route path="/test" element={<ProductOfStore/>} />
+            <Route path="/StoreDetail/:id" element={<Store />} />
+
+            {/* <Route path="/test" element={<Store/>} /> */}
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />

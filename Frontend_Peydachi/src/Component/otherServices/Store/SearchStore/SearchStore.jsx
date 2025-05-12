@@ -3,14 +3,11 @@ import {
   FaSearch, FaTimes, FaCity, FaChevronDown, FaChevronUp,
   FaStar, FaStarHalfAlt, FaRegStar, FaMapMarkerAlt, FaArrowLeft
 } from 'react-icons/fa';
-import { FaLocationDot } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
-import {  FaGlobeAmericas, FaPhone, FaEnvelope } from 'react-icons/fa';
 import axiosInstance from '../../../axiosInstance';
-import StoresCard from '../../../SkeletionLoading/StoresCards'
 import { motion, AnimatePresence } from 'framer-motion';
 import SearchResults from './SearchResults'; 
-import StoreDetail from './StoreDetail'; 
+
 
 const SearchStore = () => {
   const navigate = useNavigate();
@@ -25,7 +22,12 @@ const SearchStore = () => {
   const [showCityDropdown, setShowCityDropdown] = useState(false);
    const [allCities, setAllCities] = useState([]);
    const [filteredCities, setFilteredCities] = useState([]);
-
+   useEffect(() => {
+    if (showDetail && selectedItem) {
+      navigate(`/storeDetail/${selectedItem.id}`);
+    }
+  }, [showDetail, selectedItem]);
+  
    const handleCityInput =(e)=>{
     setSelectedCity(e.target.value);
     setFilteredCities(allCities.filter((w) => w.name.includes(e.target.value)).slice(0, 8));
@@ -201,21 +203,20 @@ const SearchStore = () => {
             )}
           </div>
         </header>
-        <main className='w-10/12 mx-auto'>
-          {showDetail ?  navigate('/test', { replace: true })
-                                         : <SearchResults
-                                            isLoading={isLoading}
-                                            error={error}
-                                            searchQuery={searchQuery}
-                                            selectedCity={selectedCity}
-                                            searchResults={searchResults}
-                                            allCities={allCities}
-                                            handleItemClick={handleItemClick}
-                                            clearSearch={clearSearch}
-                                            onKeywordClick={handleKeywordClick} 
-                                            />
-                                            }
-        </main>
+       <main className='w-10/12 mx-auto'>
+  <SearchResults
+    isLoading={isLoading}
+    error={error}
+    searchQuery={searchQuery}
+    selectedCity={selectedCity}
+    searchResults={searchResults}
+    allCities={allCities}
+    handleItemClick={handleItemClick}
+    clearSearch={clearSearch}
+    onKeywordClick={handleKeywordClick}
+  />
+</main>
+
       </div>
     </div>
   );
