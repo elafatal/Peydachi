@@ -5,6 +5,14 @@ from errors.city_errors import NO_CITY_FOUND_ERROR, CITY_NOT_FOUND_ERROR, CITY_A
 from schemas.city_schemas import CityModel, CityUpdateModel
 
 
+async def get_city_by_id(cit_id: int, db: Session):
+    city = db.query(City).filter(City.id == cit_id).first()
+
+    if not city:
+        raise CITY_NOT_FOUND_ERROR
+
+    return city
+
 async def get_all_cities(db: Session):
     cities = db.query(City).all()
 
