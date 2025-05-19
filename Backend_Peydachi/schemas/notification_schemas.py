@@ -4,6 +4,7 @@ from schemas.base_schemas import BaseSchema
 
 class SendNotificationModel(BaseSchema):
     user_id: int
+    title: str
     text: str
 
 

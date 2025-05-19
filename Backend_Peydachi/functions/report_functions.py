@@ -2,12 +2,14 @@ import datetime
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 from database.models import Report
+from schemas.report_schemas import AddReportModel
 from errors.report_errors import REPORT_NOT_FOUND_ERROR, NO_REPORT_FOUND_ERROR, REPORT_ALREADY_REVIEWED_ERROR
 
 
-async def send_report(text: str, db: Session):
+async def send_report(request: AddReportModel, db: Session):
     report = Report(
-        text=text,
+        title=request.title,
+        text=request.text,
         date_added=datetime.datetime.now(),
     )
 
