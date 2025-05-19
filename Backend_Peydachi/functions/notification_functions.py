@@ -1,7 +1,7 @@
 import datetime
 from database.models import Notification
 from sqlalchemy.orm import Session
-from sqlalchemy import delete, and_
+from sqlalchemy import delete, and_, or_
 from errors.notifications_errors import (
     NOTIFICATION_NOT_FOUND_ERROR,
     NO_NOTIFICATION_FOUND_ERROR,
@@ -113,7 +113,7 @@ async def get_all_user_seen_notifications(user_id: int, db: Session):
 
 
 async def search_notifications(search: str, db: Session):
-    notifs = db.query(Notification).filter(Notification.text.contains(search)).order_by(Notification.date_added.desc()).all()
+    notifs = db.query(Notification).filter(or_(Notification.text.contains(search), Notification.title.contains(search))).order_by(Notification.date_added.desc()).all()
     if not notifs:
         raise NO_NOTIFICATION_FOUND_ERROR
 
@@ -121,7 +121,7 @@ async def search_notifications(search: str, db: Session):
 
 
 async def search_unseen_notifications(search: str, db: Session):
-    notifs = db.query(Notification).filter(and_(Notification.text.contains(search), Notification.has_seen == False)).order_by(Notification.date_added.desc()).all()
+    notifs = db.query(Notification).filter(and_(or_(Notification.text.contains(search), Notification.title.contains(search)), Notification.has_seen == False)).order_by(Notification.date_added.desc()).all()
     if not notifs:
         raise NO_NOTIFICATION_FOUND_ERROR
 
@@ -129,15 +129,7 @@ async def search_unseen_notifications(search: str, db: Session):
 
 
 async def search_seen_notifications(search: str, db: Session):
-    notifs = db.query(Notification).filter(and_(Notification.text.contains(search), Notification.has_seen == True)).order_by(Notification.date_added.desc()).all()
-    if not notifs:
-        raise NO_NOTIFICATION_FOUND_ERROR
-
-    return notifs
-
-
-async def search_self_notifications(search: str, user_id: int, db: Session):
-    notifs = db.query(Notification).filter(and_(Notification.text.contains(search), Notification.user_id == user_id)).order_by(Notification.date_added.desc()).all()
+    notifs = db.query(Notification).filter(and_(or_(Notification.text.contains(search), Notification.title.contains(search)), Notification.has_seen == True)).order_by(Notification.date_added.desc()).all()
     if not notifs:
         raise NO_NOTIFICATION_FOUND_ERROR
 
@@ -145,7 +137,7 @@ async def search_self_notifications(search: str, user_id: int, db: Session):
 
 
 async def search_user_notifications(user_id: int, search: str, db: Session):
-    notifs = db.query(Notification).filter(and_(Notification.text.contains(search), Notification.user_id == user_id)).order_by(Notification.date_added.desc()).all()
+    notifs = db.query(Notification).filter(and_(or_(Notification.text.contains(search), Notification.title.contains(search)), Notification.user_id == user_id)).order_by(Notification.date_added.desc()).all()
     if not notifs:
         raise NO_NOTIFICATION_FOUND_ERROR
 

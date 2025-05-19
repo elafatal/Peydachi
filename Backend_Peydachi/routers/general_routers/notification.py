@@ -33,5 +33,5 @@ async def get_notification_by_id(notification_id: ID_BODY, db: DB_DEPENDENCY):
 
 
 @router.post('/search_self_notifications', status_code=200, response_model=list[NotificationDisplay])
-async def search_self_notifications(name: NAME_BODY, db: DB_DEPENDENCY, user: USER_DEPENDENCY):
-    return await notification_functions.search_self_notifications(name=name, db=db, user_id=user.id)
+async def search_self_notifications(search: NAME_BODY, db: DB_DEPENDENCY, user: USER_DEPENDENCY):
+    return await notification_functions.search_user_notifications(search=search, db=db, user_id=user.id)
