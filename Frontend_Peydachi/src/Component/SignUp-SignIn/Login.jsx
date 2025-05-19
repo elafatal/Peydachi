@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
 // import { useLocation } from 'react-router-dom';
-import logo from '../../../public/logo.jpg'
+import loginLogo from '../../../public/loginLogo.jpg'
 import SignUp from './SignUp/SignUp';
 import SignIn from './SignIn/SignIn';
 const Login= () => {
@@ -44,7 +44,7 @@ const Login= () => {
         {/* Left side */}
         <div className="hidden md:block w-1/2 p-6 relative">
           <img
-            src={logo} 
+            src={loginLogo} 
             alt="Person searching for products"
             className="w-full h-full object-cover object-top"
           />

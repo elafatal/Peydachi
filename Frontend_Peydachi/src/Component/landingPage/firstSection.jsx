@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import axiosInstance from '../axiosInstance';
-
+import backgroundImage from '../../../public/backgroundImage.jpg' 
 const FirstSection = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState('');
@@ -84,8 +84,8 @@ const FirstSection = () => {
 
   const handleCloseOptions =(target)=>{
   if (target === 'region') {
-    setShowLocationDropdown(prev => !prev);     // باز <-> بسته
-  if (!showLocationDropdown) setFilteredRegions(regions); // بارِ نخست
+    setShowLocationDropdown(prev => !prev);    
+  if (!showLocationDropdown) setFilteredRegions(regions); 
     
   }else if(target === 'city'){
     setShowLocationDropdown2(!showLocationDropdown2)
@@ -112,27 +112,18 @@ const FirstSection = () => {
     setFilteredRegions(regions.filter((w) => w.name.includes(e.target.value)).slice(0, 8));
   }
 
-  const HandleRegionsItems=()=>{
-    setShowLocationDropdown(true)
-    setFilteredRegions(regions)
-  }
   const handleCityInput =(e)=>{
     setcity(e.target.value);
     setFilteredCities(allCities.filter((w) => w.name.includes(e.target.value)).slice(0, 8));
   }
 
-  const HandleCityItems=()=>{
-    setShowLocationDropdown2(!showLocationDropdown2)
-    setFilteredCities(allCities)
-  }
- // بعد از سایر توابع‌تان تعریف کنید
 
-// برای استان
+
 const handleRegionKeyDown = (e) => {
   if (e.key === 'Enter') {
     e.preventDefault();
     if (filteredRegions.length > 0) {
-      handleLocationSelect(filteredRegions[0]);   // انتخاب اوّلین استان
+      handleLocationSelect(filteredRegions[0]);  
     } else {
       setShowLocationDropdown(false);
     }
@@ -141,12 +132,12 @@ const handleRegionKeyDown = (e) => {
   }
 };
 
-// برای شهر
+
 const handleCityKeyDown = (e) => {
   if (e.key === 'Enter') {
     e.preventDefault();
     if (filteredCities.length > 0) {
-      handleLocationSelect2(filteredCities[0]);   // انتخاب اوّلین شهر
+      handleLocationSelect2(filteredCities[0]);  
     } else {
       setShowLocationDropdown2(false);
     }
@@ -161,7 +152,7 @@ const handleCityKeyDown = (e) => {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url('https://public.readdy.ai/ai/img_res/5353bf8ba762d5ae3f88348ce1474221.jpg')`,
+          backgroundImage: `url(${backgroundImage})`,
         }}
       ></div>
 

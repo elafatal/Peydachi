@@ -89,13 +89,13 @@ setShowCityDropdown(!matched);
       timeoutId = setTimeout(() => func(...args), delay);
     };
   };
-// زیر سایر هندلرها
+
 const handleCityKeyDown = (e) => {
   if (e.key === 'ArrowDown') {
     e.preventDefault();
     if (!showCityDropdown) setShowCityDropdown(true);
     setCityIndex((prev) =>
-      prev < filteredCities.length - 1 ? prev + 1 : 0   // حلقه شود
+      prev < filteredCities.length - 1 ? prev + 1 : 0 
     );
   } else if (e.key === 'ArrowUp') {
     e.preventDefault();
