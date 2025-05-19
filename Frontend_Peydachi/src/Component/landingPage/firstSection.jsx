@@ -16,6 +16,8 @@ const FirstSection = () => {
   const [allCities, setAllCities] = useState([]);
   const [filteredCities, setFilteredCities] = useState([]);
   const [filteredRegions, setFilteredRegions] = useState([]);
+  const [t,setT]=useState(0)
+  const [c,setC]=useState(0)
   useEffect(() => {
     const handleRegions = async () => {
       try {
@@ -79,9 +81,21 @@ const FirstSection = () => {
     setLocation(loc.name);
     setShowLocationDropdown(false);
   };
-  
+
+  const handleCloseOptions =(target)=>{
+  if (target === 'region') {
+    setShowLocationDropdown(prev => !prev);     // باز <-> بسته
+  if (!showLocationDropdown) setFilteredRegions(regions); // بارِ نخست
+    
+  }else if(target === 'city'){
+    setShowLocationDropdown2(!showLocationDropdown2)
+    if (!showLocationDropdown2) setFilteredCities(allCities)
+  }
+
+  }
+
   const handleLocationSelect2 = (loc2) => {
-    setcity(loc2);
+    setcity(loc2.name);
     setShowLocationDropdown2(false);
   };
   
@@ -108,9 +122,39 @@ const FirstSection = () => {
   }
 
   const HandleCityItems=()=>{
-    setShowLocationDropdown2(true)
+    setShowLocationDropdown2(!showLocationDropdown2)
     setFilteredCities(allCities)
   }
+ // بعد از سایر توابع‌تان تعریف کنید
+
+// برای استان
+const handleRegionKeyDown = (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    if (filteredRegions.length > 0) {
+      handleLocationSelect(filteredRegions[0]);   // انتخاب اوّلین استان
+    } else {
+      setShowLocationDropdown(false);
+    }
+  } else if (e.key === 'Escape') {
+    setShowLocationDropdown(false);
+  }
+};
+
+// برای شهر
+const handleCityKeyDown = (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    if (filteredCities.length > 0) {
+      handleLocationSelect2(filteredCities[0]);   // انتخاب اوّلین شهر
+    } else {
+      setShowLocationDropdown2(false);
+    }
+  } else if (e.key === 'Escape') {
+    setShowLocationDropdown2(false);
+  }
+};
+
   return (
     <div className=" relative ">
       {/* Background image */}
@@ -169,8 +213,10 @@ const FirstSection = () => {
 
                       className="w-full px-12 py-3 border border-gray-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       value={location}
+                      onClick={()=>handleCloseOptions('region')}
                       onChange={(e) =>handleRegionsInput(e)}
-                      onFocus={() => HandleRegionsItems()}
+                      onFocus={() => setFilteredRegions(regions)}
+                      onKeyDown={handleRegionKeyDown} 
                     />
                     {showLocationDropdown && (
                       <div className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
@@ -197,8 +243,10 @@ const FirstSection = () => {
                       placeholder="شهر"
                       className="w-full px-12 py-3 border border-gray-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       value={city}
+                      onClick={()=>handleCloseOptions('city')}
                       onChange={(e) =>handleCityInput(e)}
-                      onFocus={() => HandleCityItems()}
+                      onFocus={() => setFilteredCities(allCities)}
+                      onKeyDown={handleCityKeyDown}
                     />
                     {showLocationDropdown2 && (
                       <div className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
@@ -207,7 +255,7 @@ const FirstSection = () => {
                             <button
                               key={loc2.id}
                               className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap"
-                              onClick={() => handleLocationSelect2(loc2.name)}
+                              onClick={() => handleLocationSelect2(loc2)}
                             >
                               {loc2.name}
                             </button>

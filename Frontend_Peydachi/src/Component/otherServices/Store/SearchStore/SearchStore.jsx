@@ -22,20 +22,39 @@ const SearchStore = () => {
   const [showCityDropdown, setShowCityDropdown] = useState(false);
    const [allCities, setAllCities] = useState([]);
    const [filteredCities, setFilteredCities] = useState([]);
+  const [cityIndex, setCityIndex] = useState(-1);        // -1 یعنی هیچ‌کدام هایلایت نیست
+
    useEffect(() => {
     if (showDetail && selectedItem) {
       navigate(`/storeDetail/${selectedItem.id}`);
     }
   }, [showDetail, selectedItem]);
   
-   const handleCityInput =(e)=>{
-    setSelectedCity(e.target.value);
-    setFilteredCities(allCities.filter((w) => w.name.includes(e.target.value)).slice(0, 8));
-    setCity(e.target.value)
-    setShowDetail(false)
-    console.log(selectedCity);
+  //  const handleCityInput =(e)=>{
+  //   setSelectedCity(e.target.value);
+  //   setFilteredCities(allCities.filter((w) => w.name.includes(e.target.value)).slice(0, 8));
+  //   setCity(e.target.value)
+  //   setShowDetail(false)
+  //   console.log(selectedCity);
     
-  }
+  // }
+
+const handleCityInput = (e) => {
+  const value = e.target.value;
+  setCity(value);                 // متن خود اینپوت
+  setShowDetail(false);
+  setFilteredCities(allCities.filter((w) => w.name.toLowerCase().includes(value.toLowerCase())).slice(0, 8));
+  
+  setCityIndex(-1);
+  // اگر دقیقاً شهرى با همین نام داریم، آن را انتخاب کن
+  const matched = allCities.find(c => c.name === value.trim());
+setSelectedCity(
+  matched ? { city_id: matched.id, name: matched.name } : null
+);
+setShowCityDropdown(!matched);
+ 
+};
+
   const HandleCityItems=()=>{
     setFilteredCities(allCities)
   }
@@ -70,9 +89,34 @@ const SearchStore = () => {
       timeoutId = setTimeout(() => func(...args), delay);
     };
   };
+// زیر سایر هندلرها
+const handleCityKeyDown = (e) => {
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (!showCityDropdown) setShowCityDropdown(true);
+    setCityIndex((prev) =>
+      prev < filteredCities.length - 1 ? prev + 1 : 0   // حلقه شود
+    );
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (!showCityDropdown) setShowCityDropdown(true);
+    setCityIndex((prev) =>
+      prev > 0 ? prev - 1 : filteredCities.length - 1
+    );
+  } else if (e.key === 'Enter') {
+    if (showCityDropdown && cityIndex >= 0) {
+      e.preventDefault();
+      handleCitySelect(filteredCities[cityIndex]);
+    }
+  } else if (e.key === 'Escape') {
+    setShowCityDropdown(false);
+  }
+};
+
 
   const performSearch = useCallback(
     debounce(async (query, city) => {
+      console.log(searchQuery);
       setIsLoading(true);
       setError(null);
       setSearchResults([]); 
@@ -156,12 +200,13 @@ const SearchStore = () => {
           <div className="flex justify-between" dir='rtl'>
             <h1 className="sm:text-2xl sm:font-bold sm:text-blue-600 sm:mt-3 sm:block hidden">جستجو در فروشگاه‌ها</h1>
             <div className="relative">
-                <input dir='rtl' className="w-full md:w-auto bg-white px-6 py-4 rounded-4xl shadow-md flex items-center justify-between cursor-pointer hover:bg-gray-50"
+                <input dir='rtl' className="scrollIntoView w-full md:w-auto bg-white px-6 py-4 rounded-4xl shadow-md flex items-center justify-between cursor-pointer hover:bg-gray-50"
                   placeholder="شهر فروشگاه(اختیاری)"
                   value={City}
                 onClick={() => setShowCityDropdown(!showCityDropdown)}
                 onChange={(e) =>handleCityInput(e)}
-                onFocus={() => HandleCityItems()}/>
+                onFocus={() => HandleCityItems()}
+                onKeyDown={handleCityKeyDown}/>
             <AnimatePresence>
             {showCityDropdown && (
               <motion.div
@@ -171,15 +216,18 @@ const SearchStore = () => {
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="absolute z-10 mt-2 w-full bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto origin-top"
               >
-                  {filteredCities.map(city => (
-                    <div
-                      key={city.id}
-                      className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => handleCitySelect(city)}
-                    >
-                      <div className="font-medium text-gray-800">{city.name}</div>
-                    </div>
-                  ))}
+                 {filteredCities.map((city, idx) => (
+                  <div
+                    key={city.id}
+                    className={`px-4 py-3 cursor-pointer ${
+                      idx === cityIndex ? 'bg-blue-50' : 'hover:bg-gray-100'
+                    }`}
+                    onClick={() => handleCitySelect(city)}
+                  >
+                    {city.name}
+                  </div>
+                ))}
+
                 </motion.div>
               )}
             </AnimatePresence>
@@ -191,7 +239,7 @@ const SearchStore = () => {
             <div  dir='rtl' className="relative flex-1">
               <div className="flex items-center bg-white rounded-4xl shadow-md overflow-hidden">
                 <div className="pr-5 text-gray-500"><FaSearch className='text-xl text-blue-500' /></div>
-                <input type="text" className="w-full py-4 px-4 text-gray-700 focus:outline-none border-none text-lg" placeholder="جستجو در فروشگاه‌ها" value={searchQuery} onChange={handleSearchChange} />
+                <input id='search_store' type="text" className="w-full py-4 px-4 text-gray-700 focus:outline-none border-none text-lg" placeholder="جستجو در فروشگاه‌ها" value={searchQuery} onChange={handleSearchChange} />
                 {searchQuery && <button className="px-4 text-gray-500 hover:text-gray-700" onClick={() => setSearchQuery('')}><FaTimes /></button>}
               </div>
             </div>

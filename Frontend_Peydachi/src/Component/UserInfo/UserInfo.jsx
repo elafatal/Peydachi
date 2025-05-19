@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useAuth } from '../AuthContext/AuthContext';
@@ -8,6 +8,7 @@ import { FaRegEdit } from "react-icons/fa";
 import Swal from "sweetalert2";  
 import UnauthorizedPage from '../Error/UnauthorizedPage';
 const UserInfo = () => {
+  const navigate = useNavigate();
   const { role } = useAuth(); 
   const [userInfo, setUserInfo] = useState({});
   const [nameInfo, setNameInfo] = useState();
@@ -202,7 +203,9 @@ const UserInfo = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+const handleGoHome =()=>{
+  navigate('/', { replace: true });
+}
   const handleSubmit = async(e) => {
     e.preventDefault();
     try {
@@ -441,6 +444,7 @@ const UserInfo = () => {
       >
 تایید اطلاعات             </button>
       <button 
+       onClick={handleGoHome}
         type="button"
         className="mt-3 text-sm text-gray-600 hover:text-gray-800"
       >
@@ -450,9 +454,8 @@ const UserInfo = () => {
 </div>
 
 {/* Footer */}
-<div className="mt-8 text-center text-xs text-gray-500">
+<div className="mt-3 text-center text-xs text-gray-500">
   <p>مشکلی پیش آمده؟ <a href="#" className="text-blue-600 hover:text-blue-800">تماس با پشتیبانی</a></p>
-  <p className="mt-2">پیداچی © 2025 - چیزی که میخواهید در نزدیک‌ترین جا</p>
 </div>
 </div> : <UnauthorizedPage/>}
     </div>

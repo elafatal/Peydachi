@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
 // import { useLocation } from 'react-router-dom';
+import logo from '../../../public/logo.jpg'
 import SignUp from './SignUp/SignUp';
 import SignIn from './SignIn/SignIn';
 const Login= () => {
@@ -43,7 +44,7 @@ const Login= () => {
         {/* Left side */}
         <div className="hidden md:block w-1/2 p-6 relative">
           <img
-            src="https://readdy.ai/api/search-image?query=A%20young%20person%20sitting%20comfortably%20in%20a%20modern%20chair%20with%20a%20laptop%2C%20wearing%20blue%20casual%20clothes.%20The%20scene%20is%20surrounded%20by%20lush%20green%20plants%20in%20decorative%20pots.%20The%20background%20is%20clean%20and%20minimal%20with%20soft%20lighting%2C%20creating%20a%20cozy%20atmosphere%20for%20online%20shopping%20or%20browsing.%20Digital%20illustration%20style%20with%20soft%20shadows%20and%20depth.&width=600&height=800&seq=1234&orientation=portrait"
+            src={logo} 
             alt="Person searching for products"
             className="w-full h-full object-cover object-top"
           />

@@ -56,9 +56,8 @@ const Navbar = ()=>{
         transition={{ duration: 1 }} className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100" dir='rtl'>
         <div  className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <TbMapPinSearch className=" text-blue-600 text-4xl absolute top-[25%] right-[11.5%]"/>
-              <TbMapSearch className="z-10 text-blue-600 text-6xl  opacity-10 "/>
              
+              <TbMapSearch className="z-10 text-blue-600 text-6xl "/>
               <span className="text-3xl font-bold text-gray-800">پیداچی</span>
             </div>
             <div className="sm:hidden">
@@ -71,7 +70,7 @@ const Navbar = ()=>{
             <nav className={`sm:flex ${isMenuOpen ? 'block fixed inset-x-0 top-full left-0 w-4/5 m-auto sm:w-auto sm:relative sm:bg-transparent bg-white shadow-lg' : 'hidden'} mt-3 rounded-lg p-6 sm:p-0 z-10`}>
               <ul className="flex flex-col items-center sm:flex-row sm:space-x-4 gap-4">
                   {!token ? 
-                  ( <li onClick={()=>handleLinks('login')} className="relative w-full text-center text-gray-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-900 hover:text-gray-800 hover:rounded-xl  px-2 py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300 sm:transition-all  sm:after:content-[''] sm:after:absolute sm:after:block sm:after:w-0 after:h-0.5 sm:after:bg-blue-600 sm:after:transition-all sm:after:duration-300 sm:after:left-1/2 sm:after:bottom-0 sm:hover:after:w-full sm:hover:after:left-0">
+                  ( <li id="r0-1" onClick={()=>handleLinks('login')} className="relative w-full text-center text-gray-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-900 hover:text-gray-800 hover:rounded-xl  px-2 py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300 sm:transition-all  sm:after:content-[''] sm:after:absolute sm:after:block sm:after:w-0 after:h-0.5 sm:after:bg-blue-600 sm:after:transition-all sm:after:duration-300 sm:after:left-1/2 sm:after:bottom-0 sm:hover:after:w-full sm:hover:after:left-0">
                   ورود/ثبت‌نام  
                   </li>):
                 ( <>

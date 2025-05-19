@@ -16,7 +16,6 @@ const StoreDetail = ({ selectedItem, filteredCities, handleBackToResults }) => {
   
   if (!selectedItem) return null;
   const GoToProductOfStore =(id)=>{
-    
       navigate('/ProductOfStore', {
         state: {
            Store_id:id

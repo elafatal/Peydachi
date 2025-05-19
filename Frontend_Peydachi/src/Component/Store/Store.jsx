@@ -7,15 +7,22 @@ import { formatDistanceToNow } from 'date-fns';
 import faIR from 'date-fns/locale/fa-IR'; // ✅ این مسیر درسته
 
 const Store = () => {
-  const { id } = useParams(); // آیدی فروشگاه از URL
+  const { id } = useParams(); 
   const [store, setStore] = useState(null);
   const [products2,setProducts2]=useState(null)
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-     const navigate = useNavigate();
+  const [offset , setOffset]= useState(1)
+  const navigate = useNavigate();
     
+  const handleSetOffset =()=>{
+    const i=offset+1;
+    setOffset(offset+1)
+    console.log(offset);
+    
+  }
     
      const formatRelativeDate = (dateString) => {
       return formatDistanceToNow(new Date(dateString), {
@@ -146,7 +153,7 @@ const Store = () => {
       </div>
     );
   };
-  if (loading) return <>  <div className="bg-gray-50 flex items-center justify-center h-1/2">
+  if (loading) return <>  <div className="bg-gray-50 flex items-center justify-center h-screen">
   <div className="flex space-x-2">
     <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
     <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
@@ -309,7 +316,7 @@ const Store = () => {
         </div>
   
         <div className="mt-12 flex justify-center">
-          <button className="flex items-center bg-white border border-blue-300 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-button transition duration-200 font-medium whitespace-nowrap cursor-pointer">
+          <button onClick={handleSetOffset} className="flex items-center bg-white border border-blue-300 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-button transition duration-200 font-medium whitespace-nowrap cursor-pointer">
             Load More Products <FaChevronDown className="ml-2" />
           </button>
         </div>

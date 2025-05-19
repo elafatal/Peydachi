@@ -10,21 +10,25 @@ const Features = () => {
     const navigate = useNavigate();
     const features = [
         {
+          id:1,
           icon: FaStore,
           title: 'جستجوی فروشگاه',
           description: ' به دنبال فروشگاه خاصی میگردید؟'
         },
         {
+          id:2,
           icon: RiProductHuntLine,
           title: ' جستجوی محصول',
           description: 'مشخصات محصول خاصی را میخواهید؟'
         },
         {
+          id:3,
           icon: AiOutlineAppstoreAdd,
           title: 'اضافه کردن فروشگاه',
           description: 'فروشگاه خود را در پیداچی اضافه کنید'
         },
         {
+          id:4,
           icon: TbReportAnalytics,
           title: 'گزارش‌ها',
           description: 'فعالیت‌های حساب خود را بررسی کنید'
