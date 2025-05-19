@@ -11,6 +11,10 @@ router = APIRouter(
 )
 
 
+@router.post('/get_city_by_id', status_code=200, response_model=CityDisplay)
+async def get_city_by_id(city_id: ID_BODY, db: DB_DEPENDENCY):
+    return await city_functions.get_city_by_id(cit_id=city_id, db=db)
+
 @router.get('/get_all_cities', status_code=200, response_model=list[CityDisplay])
 async def get_all_cities(db: DB_DEPENDENCY):
     return await city_functions.get_all_cities(db=db)
