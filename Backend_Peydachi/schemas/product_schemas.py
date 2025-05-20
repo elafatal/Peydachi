@@ -38,3 +38,11 @@ class SearchNearProductDisplay(BaseSchema):
     store: StoreDisplay
     product: ProductDisplay
     distance: float | None
+
+
+class FullSearchStoreProductModel(BaseSchema):
+    search_text: str | None
+    store_id: int
+    show_limit: int | None = 10
+    page: int | None = 1
+    order: str | None = None        # newest, oldest, favorite
