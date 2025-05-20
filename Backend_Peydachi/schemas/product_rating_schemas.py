@@ -13,3 +13,12 @@ class ProductRatingDisplayModel(BaseSchema):
     user_id: int
     rating: int
     store_id: int
+
+
+class ProductRatingDistributionModel(BaseSchema):
+    rating: int
+    count: int
+
+
+class ProductRatingDistributionDisplay(BaseSchema):
+    product_rating_distribution: list[ProductRatingDistributionModel]

@@ -1,13 +1,15 @@
 import datetime
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 from database.models import Report
+from schemas.report_schemas import AddReportModel
 from errors.report_errors import REPORT_NOT_FOUND_ERROR, NO_REPORT_FOUND_ERROR, REPORT_ALREADY_REVIEWED_ERROR
 
 
-async def send_report(text: str, db: Session):
+async def send_report(request: AddReportModel, db: Session):
     report = Report(
-        text=text,
+        title=request.title,
+        text=request.text,
         date_added=datetime.datetime.now(),
     )
 
@@ -43,7 +45,7 @@ async def get_all_reports(db: Session):
 
 
 async def search_reports(report_text: str, db: Session):
-    reports = db.query(Report).filter(Report.text.contains(report_text)).all()
+    reports = db.query(Report).filter(or_(Report.text.contains(report_text), Report.title.contains(report_text))).all()
     if not reports:
         raise NO_REPORT_FOUND_ERROR
 
@@ -51,7 +53,7 @@ async def search_reports(report_text: str, db: Session):
 
 
 async def search_reviewed_reports(report_text: str, db: Session):
-    reports = db.query(Report).filter(and_(Report.text.contains(report_text), Report.is_reviewed == True)).all()
+    reports = db.query(Report).filter(and_(or_(Report.text.contains(report_text), Report.title.contains(report_text)), Report.is_reviewed == True)).all()
     if not reports:
         raise NO_REPORT_FOUND_ERROR
 
@@ -59,7 +61,7 @@ async def search_reviewed_reports(report_text: str, db: Session):
 
 
 async def search_not_reviewed_reports(report_text: str, db: Session):
-    reports = db.query(Report).filter(and_(Report.text.contains(report_text), Report.is_reviewed == False)).all()
+    reports = db.query(Report).filter(and_(or_(Report.text.contains(report_text), Report.title.contains(report_text)), Report.is_reviewed == False)).all()
     if not reports:
         raise NO_REPORT_FOUND_ERROR
 

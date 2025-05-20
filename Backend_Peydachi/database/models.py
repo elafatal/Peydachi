@@ -126,6 +126,7 @@ class StoreRating(ID, Base):
 class Notification(ID, Base):
     __tablename__ = "notification"
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    title = Column(String(200), nullable=False)
     text = Column(String(500), nullable=False)
     admin_id = Column(Integer, ForeignKey("user.id"), nullable=True)
     has_seen = Column(Boolean, default=False)
@@ -135,6 +136,7 @@ class Notification(ID, Base):
 # Report Class ============================================================================================
 class Report(ID, Base):
     __tablename__ = "report"
+    title = Column(String(200), nullable=False)
     text = Column(String, nullable=False)
     is_reviewed = Column(Boolean, default=False)
     date_added = Column(DateTime, nullable=False)

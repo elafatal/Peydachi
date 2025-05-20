@@ -1,7 +1,7 @@
 import datetime
 from database.models import Notification
 from sqlalchemy.orm import Session
-from sqlalchemy import delete, and_
+from sqlalchemy import delete, and_, or_, update
 from errors.notifications_errors import (
     NOTIFICATION_NOT_FOUND_ERROR,
     NO_NOTIFICATION_FOUND_ERROR,
@@ -14,6 +14,7 @@ async def admin_send_notification(notif_info: SendNotificationModel, admin_id: i
     notif = Notification(
         user_id=notif_info.user_id,
         admin_id=admin_id,
+        title=notif_info.title,
         text=notif_info.text,
         date_added=datetime.datetime.now(),
     )
@@ -112,7 +113,7 @@ async def get_all_user_seen_notifications(user_id: int, db: Session):
 
 
 async def search_notifications(search: str, db: Session):
-    notifs = db.query(Notification).filter(Notification.text.contains(search)).order_by(Notification.date_added.desc()).all()
+    notifs = db.query(Notification).filter(or_(Notification.text.contains(search), Notification.title.contains(search))).order_by(Notification.date_added.desc()).all()
     if not notifs:
         raise NO_NOTIFICATION_FOUND_ERROR
 
@@ -120,7 +121,7 @@ async def search_notifications(search: str, db: Session):
 
 
 async def search_unseen_notifications(search: str, db: Session):
-    notifs = db.query(Notification).filter(and_(Notification.text.contains(search), Notification.has_seen == False)).order_by(Notification.date_added.desc()).all()
+    notifs = db.query(Notification).filter(and_(or_(Notification.text.contains(search), Notification.title.contains(search)), Notification.has_seen == False)).order_by(Notification.date_added.desc()).all()
     if not notifs:
         raise NO_NOTIFICATION_FOUND_ERROR
 
@@ -128,15 +129,7 @@ async def search_unseen_notifications(search: str, db: Session):
 
 
 async def search_seen_notifications(search: str, db: Session):
-    notifs = db.query(Notification).filter(and_(Notification.text.contains(search), Notification.has_seen == True)).order_by(Notification.date_added.desc()).all()
-    if not notifs:
-        raise NO_NOTIFICATION_FOUND_ERROR
-
-    return notifs
-
-
-async def search_self_notifications(search: str, user_id: int, db: Session):
-    notifs = db.query(Notification).filter(and_(Notification.text.contains(search), Notification.user_id == user_id)).order_by(Notification.date_added.desc()).all()
+    notifs = db.query(Notification).filter(and_(or_(Notification.text.contains(search), Notification.title.contains(search)), Notification.has_seen == True)).order_by(Notification.date_added.desc()).all()
     if not notifs:
         raise NO_NOTIFICATION_FOUND_ERROR
 
@@ -144,7 +137,7 @@ async def search_self_notifications(search: str, user_id: int, db: Session):
 
 
 async def search_user_notifications(user_id: int, search: str, db: Session):
-    notifs = db.query(Notification).filter(and_(Notification.text.contains(search), Notification.user_id == user_id)).order_by(Notification.date_added.desc()).all()
+    notifs = db.query(Notification).filter(and_(or_(Notification.text.contains(search), Notification.title.contains(search)), Notification.user_id == user_id)).order_by(Notification.date_added.desc()).all()
     if not notifs:
         raise NO_NOTIFICATION_FOUND_ERROR
 
@@ -182,3 +175,25 @@ async def delete_all_seen_notifications(db: Session):
     db.commit()
 
     return 'Notifications deleted'
+
+
+async def get_notif_count_and_first_three_notifs(user_id: int, db: Session):
+    notifs = db.query(Notification).filter(and_(Notification.user_id == user_id, Notification.has_seen == False)).order_by(Notification.date_added.desc()).limit(3).all()
+
+    unseen_notif_count = db.query(Notification).filter(and_(Notification.user_id == user_id, Notification.has_seen == False)).count()
+
+    display_notif = {
+        'notif_count': unseen_notif_count,
+        'first_three_notifs': notifs
+    }
+
+
+    return display_notif
+
+
+async def mark_all_notifs_as_seen(user_id: int, db: Session):
+    seen_all_notifs = (update(Notification).where(and_(Notification.user_id == user_id, Notification.has_seen == False)).values(has_seen = True).execution_options(synchronize_session='fetch'))
+
+    db.execute(seen_all_notifs)
+
+    return 'All notifications marked as seen'
