@@ -64,3 +64,19 @@ async def reset_all_ratings_of_store(store_id: int, db: Session):
     db.commit()
 
     return f'All ratings of store {store.name} reset'
+
+
+async def get_store_rating_distribution(store_id: int, db: Session):
+    store_rating_distribution = []
+
+    for i in range(1, 6):
+        product_rating_count = db.query(StoreRating).filter(and_(StoreRating.store_id == store_id, StoreRating.rating == i)).count()
+
+        distribution = {
+            'rating': i,
+            'count': product_rating_count
+        }
+
+        store_rating_distribution.append(distribution)
+
+    return store_rating_distribution

@@ -87,7 +87,7 @@ async def get_product_rating_distribution(product_id: int, db: Session):
     product_rating_distribution = []
 
     for i in range(1, 6):
-        product_rating_count = db.query(ProductRating).filter(ProductRating.product_id == product_id, ProductRating.rating == i).count()
+        product_rating_count = db.query(ProductRating).filter(and_(ProductRating.product_id == product_id, ProductRating.rating == i)).count()
 
         distribution = {
             'rating': i,
