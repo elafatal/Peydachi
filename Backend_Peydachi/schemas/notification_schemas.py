@@ -16,3 +16,8 @@ class NotificationDisplay(SendNotificationModel):
 
 class AdminNotificationDisplay(NotificationDisplay):
     admin_id: int
+
+
+class NotifCountShortDisplay(BaseSchema):
+    notif_count: int
+    first_three_notifs: list[NotificationDisplay]

@@ -1,7 +1,7 @@
 import datetime
 from database.models import Notification
 from sqlalchemy.orm import Session
-from sqlalchemy import delete, and_, or_
+from sqlalchemy import delete, and_, or_, update
 from errors.notifications_errors import (
     NOTIFICATION_NOT_FOUND_ERROR,
     NO_NOTIFICATION_FOUND_ERROR,
@@ -175,3 +175,25 @@ async def delete_all_seen_notifications(db: Session):
     db.commit()
 
     return 'Notifications deleted'
+
+
+async def get_notif_count_and_first_three_notifs(user_id: int, db: Session):
+    notifs = db.query(Notification).filter(and_(Notification.user_id == user_id, Notification.has_seen == False)).order_by(Notification.date_added.desc()).limit(3).all()
+
+    unseen_notif_count = db.query(Notification).filter(and_(Notification.user_id == user_id, Notification.has_seen == False)).count()
+
+    display_notif = {
+        'notif_count': unseen_notif_count,
+        'first_three_notifs': notifs
+    }
+
+
+    return display_notif
+
+
+async def mark_all_notifs_as_seen(user_id: int, db: Session):
+    seen_all_notifs = (update(Notification).where(and_(Notification.user_id == user_id, Notification.has_seen == False)).values(has_seen = True).execution_options(synchronize_session='fetch'))
+
+    db.execute(seen_all_notifs)
+
+    return 'All notifications marked as seen'

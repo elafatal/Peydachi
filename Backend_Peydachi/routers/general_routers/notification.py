@@ -3,7 +3,7 @@ from functions import notification_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.access_dependencies import USER_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
-from schemas.notification_schemas import NotificationDisplay
+from schemas.notification_schemas import NotificationDisplay, NotifCountShortDisplay
 
 
 router = APIRouter(
@@ -35,3 +35,13 @@ async def get_notification_by_id(notification_id: ID_BODY, db: DB_DEPENDENCY):
 @router.post('/search_self_notifications', status_code=200, response_model=list[NotificationDisplay])
 async def search_self_notifications(search: NAME_BODY, db: DB_DEPENDENCY, user: USER_DEPENDENCY):
     return await notification_functions.search_user_notifications(search=search, db=db, user_id=user.id)
+
+
+@router.get('/get_notif_count_and_first_three_notifs', status_code=200, response_model=NotifCountShortDisplay)
+async def get_notif_count_and_first_three_notifs(db: DB_DEPENDENCY, user: USER_DEPENDENCY):
+    return await notification_functions.get_notif_count_and_first_three_notifs(user_id=user.id, db=db)
+
+
+@router.put('/mark_all_notifs_as_seen', status_code=200)
+async def mark_all_notifs_as_seen(db: DB_DEPENDENCY, user: USER_DEPENDENCY):
+    return await notification_functions.mark_all_notifs_as_seen(user_id=user.id, db=db)
