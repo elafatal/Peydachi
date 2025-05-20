@@ -15,6 +15,8 @@ import SearchStore from './Component/otherServices/Store/SearchStore/SearchStore
 import AddStore from './Component/otherServices/Store/AddStoreRequest/AddStoreRequest';
 import UserComment from './Component/otherServices/UserComments/UserComment';
 import Store from './Component/Store/Store';
+import MainSearch from './Component/MainSearch/Search';
+import SearchProduct from './Component/otherServices/Product/SearchProduct';
 function App() {
 
 
@@ -35,8 +37,8 @@ function App() {
             <Route path="/UserCommentReport" element={<UserComment/>} />
             <Route path="/SearchStore" element={<SearchStore/>} />
             <Route path="/StoreDetail/:id" element={<Store />} />
-
-            {/* <Route path="/test" element={<Store/>} /> */}
+            <Route path="/test" element={<MainSearch/>} />
+            <Route path="/test2" element={<SearchProduct/>} />
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />
