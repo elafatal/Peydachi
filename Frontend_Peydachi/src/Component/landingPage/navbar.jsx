@@ -8,17 +8,19 @@ import { TbMapPinSearch } from "react-icons/tb";
 import { TbMapSearch } from "react-icons/tb";
 import { useAuth } from '../AuthContext/AuthContext';
 import Cookies from 'js-cookie';
+import Notifications from "./Notification";
 const Navbar = ()=>{
   const { logout } = useAuth();
+   const { role } = useAuth(); 
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
     const [token, setToken] = useState(Cookies.get('auth_token'));
-
+  const [isNotif,setIsNotif]=useState(false)
     useEffect(() => {
       const interval = setInterval(() => {
         setToken(Cookies.get('auth_token'));
-      }, 1000); // Check every second
+      }, 1000);
 
       return () => clearInterval(interval);
     }, []);
@@ -48,6 +50,8 @@ const Navbar = ()=>{
       console.log(Cookies.get('auth_token'));
       
   };
+
+
 
     return(
         <motion.div 
@@ -85,9 +89,10 @@ const Navbar = ()=>{
                   <li onClick={()=>handleLinks('sendRequest')} className="relative w-full text-center text-gray-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-900 hover:text-gray-800 hover:rounded-xl px-2 py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300 sm:transition-all  sm:after:content-[''] sm:after:absolute sm:after:block sm:after:w-0 after:h-0.5 sm:after:bg-blue-600 sm:after:transition-all sm:after:duration-300 sm:after:left-1/2 sm:after:bottom-0 sm:hover:after:w-full sm:hover:after:left-0">
                     ثبت درخواست
                   </li>
-                  <li className="relative w-full text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
-                    <IoIosNotificationsOutline className="text-3xl m-auto"/>
-                  </li>
+                  {role ? <li className="relative w-full text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
+                    <Notifications/>
+                  </li> : null }
+                  
               </ul>
             </nav>
             </div>

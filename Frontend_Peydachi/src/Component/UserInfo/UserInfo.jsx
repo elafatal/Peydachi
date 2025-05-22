@@ -68,37 +68,6 @@ const UserInfo = () => {
     getUserInfo();
   }, []);
 
-  // useEffect(() => {
-  //   const getStoreInfo = async () => {
-  //     try {
-  //       const authToken = Cookies.get('auth_token');
-  //       if (!authToken) {
-  //         console.log("No auth token found");
-  //         return;
-  //       }
-  //       const response = await axiosInstance.get('/seller/store/get_self_store', {
-  //         headers: {
-  //            'Accept': 'application/json'
-  //           // 'Content-Type': 'multipart/form-data'
-  //         }
-  //       });
-  //       if (response.data) {
-  //           setStoreInfo(prev => ({
-  //             ...prev,
-  //           }));
-  //           setStoreInfo(response.data)
-  //           console.log(response);
-            
-  //         }
-        
-        
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-    
-  //   getStoreInfo();
-  // }, []);
 
   useEffect(() => {
     const getStoreInfo = async () => {

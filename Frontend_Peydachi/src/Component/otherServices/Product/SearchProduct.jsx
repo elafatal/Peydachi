@@ -35,7 +35,7 @@ import {
   FaStarHalfAlt
 } from 'react-icons/fa';
 import { IoArrowBackCircleOutline } from "react-icons/io5";
-
+import axiosInstance from '../../axiosInstance';
 
 /* ---------- component ---------- */
 const SearchProduct = () => {
@@ -44,22 +44,43 @@ const SearchProduct = () => {
   const [selectedCity, setSelectedCity]         = useState(null);
   const [showAvailableOnly, setShowAvailableOnly] = useState(false);
   const [products, setProducts]                 = useState([]);
-  const [cities, setCities]                     = useState([]);
   const [loading, setLoading]                   = useState(false);
   const [selectedProduct, setSelectedProduct]   = useState(null);
   const [isModalOpen, setIsModalOpen]           = useState(false);
   const [comments, setComments]                 = useState([]);
   const chartRef                                = useRef(null);
+  const [allCities, setAllCities] = useState([]);
 
-  /* ----- mock city data ----- */
+
+  /* get all cities */
   useEffect(() => {
-    setCities([
-      { id: 1, name: 'New York' },
-      { id: 2, name: 'Los Angeles' },
-      { id: 3, name: 'Chicago' },
-      { id: 4, name: 'Houston' },
-      { id: 5, name: 'Phoenix' }
-    ]);
+    const handleAllCities = async () => {
+      try {
+        const response = await axiosInstance.get('/city/get_all_cities', {
+          headers: {
+            Authorization: null,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        setAllCities(response.data);
+        console.log(response);
+      } catch (error) {
+        console.log(error); 
+      } 
+    };
+    handleAllCities();
+  }, []);
+
+
+  /* ----- close dropdown on outside click ----- */
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (cityBoxRef.current && !cityBoxRef.current.contains(e.target)) {
+        setCityDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   /* ----- mock product data ----- */
@@ -219,7 +240,7 @@ const SearchProduct = () => {
     return stars;
   };
 
-  const getCityName = (id) => cities.find(c=>c.id===id)?.name ?? 'Unknown';
+  const getCityName = (id) => allCities.find(c=>c.id===id)?.name ?? 'Unknown';
 
   const formatDate = (iso) => new Date(iso).toLocaleDateString(
     'en-US',{ year:'numeric',month:'long',day:'numeric' }
@@ -242,17 +263,18 @@ const SearchProduct = () => {
           />
           <div className="relative z-10 py-12 px-6 md:px-12 text-center md:text-left md:flex md:items-center">
             <div className="md:w-1/2 mb-8 md:mb-0">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Find Products Near You
+              <h2 className="text-3xl md:text-3.5xl font-bold text-white mb-4 text-right" dir='rtl'>
+              محصولات نزدیک خود را بیابید
               </h2>
-              <p className="text-blue-100 text-lg mb-6">
-                Search for products across multiple stores and find the best deals in your city.
+              <p className="text-blue-100 text-lg mb-6 text-right" dir='rtl'>
+              جستجو در این بخش برای بهبود قابلیت تصمیم گیری‌ست.  <br/> 
+                برای خرید آسان، موقعیت مکانی را وارد کنید.
               </p>
               <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
                 <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors !rounded-button whitespace-nowrap cursor-pointer">
                   <FaMapMarkerAlt className="inline mr-2" /> جستجو با لوکیشن
                 </button>
-                <button className="bg-transparent text-white border border-white px-6 py-0 rounded-lg font-medium hover:bg-white/10 transition-colors !rounded-button whitespace-nowrap cursor-pointer">
+                <button className="bg-transparent text-white border border-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors !rounded-button whitespace-nowrap cursor-pointer">
                  بازگشت به خانه
                 </button>
               </div>
@@ -275,7 +297,7 @@ const SearchProduct = () => {
             {/* title */}
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Discover Products Near You
+                جستجو و بررسی محصول
               </h2>
               <p className="text-gray-600">Search across thousands of products from local stores</p>
             </div>
@@ -318,7 +340,7 @@ const SearchProduct = () => {
                     className="block w-full pl-10 pr-10 py-3 bg-white/80 backdrop-blur border-2 border-blue-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent appearance-none text-base transition-all duration-300"
                   >
                     <option value="">All Cities</option>
-                    {cities.map(c => (
+                    {allCities.map(c => (
                       <option key={c.id} value={c.id}>{c.name}</option>
                     ))}
                   </select>
@@ -432,10 +454,10 @@ const SearchProduct = () => {
                       {renderStars(p.average_rating)}
                       <span className="ml-2 text-sm text-gray-500">({p.average_rating.toFixed(1)})</span>
                     </div>
-                    <div className="text-sm text-gray-500">
+                    {/* <div className="text-sm text-gray-500">
                       <FaMapMarkerAlt className="text-blue-500 mr-1 inline" />
                       {getCityName(p.city_id)}
-                    </div>
+                    </div> */}
                   </div>
                   <div className="flex items-center justify-between">
                     <div className={`text-sm font-medium ${p.quantity>0?'text-green-600':'text-red-500'}`}>
@@ -449,9 +471,10 @@ const SearchProduct = () => {
                         </span>
                       )}
                     </div>
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-lg transition-colors opacity-0 group-hover:opacity-100 !rounded-button whitespace-nowrap cursor-pointer">
-                      View Details
-                    </button>
+                    <div className="text-sm text-gray-500">
+                      <FaMapMarkerAlt className="text-blue-500 mr-1 inline" />
+                      {getCityName(p.city_id)}
+                    </div>
                   </div>
                 </div>
               </div>
