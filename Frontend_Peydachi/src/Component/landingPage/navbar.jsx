@@ -8,7 +8,7 @@ import { TbMapPinSearch } from "react-icons/tb";
 import { TbMapSearch } from "react-icons/tb";
 import { useAuth } from '../AuthContext/AuthContext';
 import Cookies from 'js-cookie';
-import Notifications from "./Notification";
+import Notifications from "../Notification/Notification";
 const Navbar = ()=>{
   const { logout } = useAuth();
    const { role } = useAuth(); 
