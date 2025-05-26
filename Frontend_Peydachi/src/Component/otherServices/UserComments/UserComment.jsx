@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import UnauthorizedPage from '../../Error/UnauthorizedPage';
+import Navbar from '../../landingPage/navbar';
 const UserComment = () => {
   const navigate = useNavigate();
   const [loadingStores, setLoadingStores] = useState(true);
@@ -111,7 +112,7 @@ const backHome =()=>{
   return (
     !authToken ? (<UnauthorizedPage/>) : (<div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="text-3xl text-center font-bold text-blue-800 my-6">نظرات من</h1>
+        <h1 className="text-3xl text-start font-bold text-blue-800 my-6">نظرات من</h1>
 
         <div className="flex justify-between border-b border-gray-200 mb-6">
           <div className="div">

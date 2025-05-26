@@ -148,7 +148,6 @@ const handleCityKeyDown = (e) => {
 
   return (
     <div className=" relative ">
-      {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{

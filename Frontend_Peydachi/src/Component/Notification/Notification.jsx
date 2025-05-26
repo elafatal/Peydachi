@@ -30,25 +30,6 @@ const Notifications=()=>{
         GetAllNotif();
       }, []);
 
-
-      // useEffect(() => {
-      //   const GetUnreadNotif = async () => {
-      //     try {
-      //       const response = await axiosInstance.post('/notification/get_all_self_unread_notifications', {
-      //         headers: {
-      //           'Content-Type': 'multipart/form-data'
-      //         }
-      //       });
-      //       setUnreadNotif(response.data);
-      //       setisUnreadNotif(true)
-      //       console.log(response.data);
-      //     } catch (error) {
-      //       console.log(error); 
-      //     } 
-      //   };
-      //   GetUnreadNotif();
-      // }, []);
-
       const goToNotifPage =()=>{
         navigate('/', { replace: true });
       }

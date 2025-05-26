@@ -16,7 +16,6 @@ const Navbar = ()=>{
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
     const [token, setToken] = useState(Cookies.get('auth_token'));
-  const [isNotif,setIsNotif]=useState(false)
     useEffect(() => {
       const interval = setInterval(() => {
         setToken(Cookies.get('auth_token'));
@@ -57,12 +56,12 @@ const Navbar = ()=>{
         <motion.div 
         initial={{ y: -100, opacity: 0 }} 
         animate={{ y: 0, opacity: 1 }} 
-        transition={{ duration: 1 }} className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100" dir='rtl'>
+        transition={{ duration: 1 }} className="fixed w-full z-50 bg-white backdrop-blur-sm border-b border-gray-100" dir='rtl'>
         <div  className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div className="flex items-center gap-2">
              
               <TbMapSearch className="z-10 text-blue-600 text-6xl "/>
-              <span className="text-3xl font-bold text-gray-800">پیداچی</span>
+              <a href="/" className="text-3xl font-bold text-gray-800">پیداچی</a>
             </div>
             <div className="sm:hidden">
               {isMenuOpen ? (

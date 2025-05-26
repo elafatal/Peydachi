@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
 import { formatDistanceToNow } from 'date-fns';
-import faIR from 'date-fns/locale/fa-IR'; // ✅ این مسیر درسته
+import faIR from 'date-fns/locale/fa-IR';
 
 const Store = () => {
   const { id } = useParams(); 

@@ -8,109 +8,87 @@ import {
     FaTrashAlt,
     FaBell,
     FaCheckDouble,
-    FaBellSlash,
+    FaSearch,
     FaTimes,
-    FaChartPie,
-    FaCheckCircle,
-    FaComment,
-    FaUpload
   } from 'react-icons/fa';
+  import { FaRegFaceRollingEyes } from "react-icons/fa6";
   import { IoArrowBackCircleOutline } from "react-icons/io5";
   import axiosInstance from '../axiosInstance';
   import { BiMessageRoundedCheck } from "react-icons/bi";
+  import { formatDistanceToNow } from 'date-fns';
+  import faIR from 'date-fns/locale/fa-IR';
 const AllNotifPage= () => {
     const navigate = useNavigate();
-  // Sample notification data
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      sender: 'Team Project',
-      content: 'Alex commented on your project proposal: "Great work on the analysis section! I think we should expand on the market research findings."',
-      time: '10 minutes ago',
-      read: false,
-      type: 'mention',
-      priority: 'high'
-    },
-    {
-      id: 2,
-      sender: 'System',
-      content: 'Your account security was enhanced. We\'ve added two-factor authentication to your login process.',
-      time: '1 hour ago',
-      read: false,
-      type: 'system',
-      priority: 'medium'
-    },
-    {
-      id: 3,
-      sender: 'Calendar',
-      content: 'Reminder: You have a meeting with the design team tomorrow at 10:00 AM.',
-      time: '3 hours ago',
-      read: true,
-      type: 'reminder',
-      priority: 'high'
-    },
-    {
-      id: 4,
-      sender: 'Sarah Miller',
-      content: 'I\'ve shared the updated document with you. Please review it when you have a chance and let me know your thoughts.',
-      time: 'Yesterday',
-      read: true,
-      type: 'mention',
-      priority: 'medium'
-    },
-    {
-      id: 5,
-      sender: 'Task Manager',
-      content: 'Task "Finalize Q2 Report" is due in 2 days. 3 of 5 items are completed.',
-      time: 'Yesterday',
-      read: true,
-      type: 'task',
-      priority: 'low'
+  const [notifications, setNotifications] = useState([]);
+  const [unredNotifications,setUnreadNotifications]=useState([])
+  const [selectedNotification, setSelectedNotification] = useState(null);
+      const [notificationsCache, setNotificationsCache] = useState({
+        all: null,
+        unread: null,
+      });
+      const [searchQuery, setSearchQuery] = useState('');
+      const filteredNotifications = notifications.filter(notification =>
+        notification.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        notification.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      
+
+  const [showModal, setShowModal] = useState(false);
+
+const [activeFilter, setActiveFilter] = useState('unread');
+
+useEffect(() => {
+  const fetchNotifications = async () => {
+    if (notificationsCache[activeFilter]) {
+      setNotifications(notificationsCache[activeFilter]);
+      return;
     }
-  ]);
-  const [data,setData]=useState([])
-      useEffect(() => {
-        const GetUnreadNotif = async () => {
-          try {
-            const response = await axiosInstance.post('/notification/get_all_self_unread_notifications', {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            });
-            setData(response.data);
-            console.log(response.data);
-          } catch (error) {
-            console.log(error); 
-          } 
-        };
-        GetUnreadNotif();
-      }, []);
+
+    let endpoint = '/notification/get_all_self_notifications';
+    if (activeFilter === 'unread') {
+      endpoint = '/notification/get_all_self_unread_notifications';
+    }
+
+    try {
+      const response = await axiosInstance.post(endpoint, {
+        headers: { 'text-Type': 'multipart/form-data' }
+      });
+      setNotifications(response.data);
+      setNotificationsCache((prev) => ({
+        ...prev,
+        [activeFilter]: response.data,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchNotifications();
+}, [activeFilter]);
+
 
   // State for expanded notification
   const [expandedId, setExpandedId] = useState(null);
-  
-  // State for active filter
-  const [activeFilter, setActiveFilter] = useState('all');
+
   
   // State for settings panel
   const [showSettings, setShowSettings] = useState(false);
   
   // State for notification stats
   const [showStats, setShowStats] = useState(true);
-  
-  // Settings state
-  const [settings, setSettings] = useState({
-    pushNotifications: true,
-    emailNotifications: false,
-    soundAlerts: true,
-    quietHours: false
-  });
 
-  // Toggle notification read status
-  const toggleReadStatus = () => {
+  // date added
+   const formatRelativeDate = (dateString) => {
+      return formatDistanceToNow(new Date(dateString), {
+        addSuffix: true,
+        locale: faIR,
+      });
+    };
+  // Toggle notification has_seen status
+  const togglehas_seenStatus = (id, e) => {
     e.stopPropagation();
-    setNotifications(notifications.map(notification => 
-      notification.id === id ? { ...notification, read: !notification.read } : notification
+    setNotifications(notifications.map(notification =>
+      notification.id === id ? { ...notification, has_seen: !notification.has_seen } : notification
     ));
   };
 
@@ -124,74 +102,46 @@ const AllNotifPage= () => {
     setNotifications(notifications.filter(notification => notification.id !== id));
   };
 
-  // Archive notification
-  const archiveNotification = () => {
-    e.stopPropagation();
-    // In a real app, we would move this to an archive collection
-    setNotifications(notifications.filter(notification => notification.id !== id));
-  };
 
-  // Toggle settings
-  const toggleSettings = () => {
-    setShowSettings(!showSettings);
-  };
 
-  // Filter notifications
-  const filteredNotifications = notifications.filter(notification => {
-    if (activeFilter === 'all') return true;
-    if (activeFilter === 'unread') return !notification.read;
-    if (activeFilter === 'mentions') return notification.type === 'mention';
-    if (activeFilter === 'high') return notification.priority === 'high';
-    return true;
-  });
-
-  // Calculate notification stats
   const notificationStats = {
-    total: notifications.length,
-    unread: notifications.filter(n => !n.read).length,
-    mentions: notifications.filter(n => n.type === 'mention').length,
-    highPriority: notifications.filter(n => n.priority === 'high').length
+    total: notificationsCache.all ? notificationsCache.all.length : 0,
+    unhas_seen: notificationsCache.unread ? notificationsCache.unread.length : 0
   };
-
-  // Mark all as read
+  
+  // Mark all as has_seen
   const markAllAsRead = () => {
-    setNotifications(notifications.map(notification => ({ ...notification, read: true })));
+    setNotifications(notifications.map(notification => ({ ...notification, has_seen: true })));
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 font-sans flex flex-col" dir='ltr'>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-900 flex flex-col" dir='rtl'>
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-10">
+      <header className="bg-white shadow-sm sticky top-0 z-10 ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4 border-b border-gray-100">
+          {/* <div className="flex justify-between items-center py-4 border-b border-gray-100">
             <div className="flex items-center">
-              <h1 className="text-2xl font-semibold text-blue-600">Notifications</h1>
-              <span className="ml-3 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                {notificationStats.unread} unread
-              </span>
+              <h1 className="text-2xl font-semibold text-blue-600">اعلان‌ها</h1>
+          
             </div>
             <div className="flex items-center space-x-1">
-              <button 
-                onClick={markAllAsRead}
-                className="text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
-              >
-                Mark all as read
-              </button>
               <button 
                 onClick={goHome}
                 className="text-blue-600 hover:text-blue-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
                 aria-label="Notification settings"
               >
+                بازگشت
                 <IoArrowBackCircleOutline className='text-3xl inline' />
               </button>
             </div>
-          </div>
+          </div> */}
           
           {/* Filter tabs */}
-          <div className="flex space-x-1 py-2">
-            {['all', 'unread', 'mentions', 'high'].map((filter) => (
+          <div className="flex justify-between  py-2">
+            <div className="flex space-x-4">
+            {['all', 'unread'].map((filter) => (
+            <div className="relative" key={filter}>
               <button
-                key={filter}
                 onClick={() => setActiveFilter(filter)}
                 className={`px-4 py-2 rounded-full text-sm font-medium cursor-pointer transition-colors !rounded-button whitespace-nowrap ${
                   activeFilter === filter
@@ -199,91 +149,120 @@ const AllNotifPage= () => {
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                {filter === 'high' ? 'High Priority' : filter.charAt(0).toUpperCase() + filter.slice(1)}
-                {filter === 'unread' && notificationStats.unread > 0 && (
-                  <span className="ml-1 text-xs bg-blue-200 text-blue-800 px-1.5 rounded-full">
-                    {notificationStats.unread}
-                  </span>
-                )}
+                {filter === 'all' ? 'همه' : 'خوانده نشده'}
               </button>
-            ))}
+              
+              {filter === 'all' && notificationStats.total > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
+                <span className="text-[8px] pt-1">{filter === 'all'  && notificationStats.total}</span>
+              </span>
+              )}
+              {filter === 'unread' && notificationStats.unhas_seen > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
+               <span className="text-[8px] pt-1">{filter === 'unread' && notificationStats.unhas_seen}</span> 
+              </span>
+              )}
+         
+             
+            </div>
+        ))}
+            </div>
+            <button className="text-xs px-3 py-3 bg-white text-blue-700 border-2 border-blue-700 rounded hover:bg-blue-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+             <FaCheckDouble className='ml-1 inline' />
+             خواندن همه‌ی اعلان‌ها
+            </button>
+
           </div>
         </div>
       </header>
+        <div className="flex flex-col md:flex-row gap-4 mt-6 w-11/12 m-auto">
+            <div  dir='rtl' className="relative flex-1">
+              <div className="flex items-center bg-white rounded-4xl shadow-md overflow-hidden w-5/6 m-auto">
+                <div className="pr-5 text-gray-500"><FaSearch className='text-xl text-blue-500' /></div>
+                <input value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} id='search_store' type="text" className="w-full py-4 px-4 text-gray-700 focus:outline-none border-none text-lg" placeholder="جستجو در اعلان‌ها"  />
+                {searchQuery && (
+                  <button
+                    className="px-4 text-gray-500 hover:text-gray-700"
+                    onClick={() => setSearchQuery('')}
+                  >
+                    <FaTimes />
+                  </button>
+                )}
 
-      {/* Main content */}
+                {/* {searchQuery && <button className="px-4 text-gray-500 hover:text-gray-700" onClick={() => setSearchQuery('')}><FaTimes /></button>} */}
+              </div>
+            </div>
+            
+           
+          </div>
+      {/* Main text */}
       <main className="flex-grow flex max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
-        <div className="w-full flex gap-6">
-          {/* Left column - Notifications */}
+        <div className="w-full flex gap-5">
+          {/* right column - Notifications */}
           <div className="flex-grow">
             {filteredNotifications.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-4 w-full">
                 {filteredNotifications.map((notification) => (
-                  <div 
+                  <div dir='rtl'
                     key={notification.id}
                     className={`bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-200 ${
                       expandedId === notification.id ? 'ring-2 ring-blue-300' : 'hover:shadow-md'
-                    } ${!notification.read ? 'border-l-4 border-blue-500' : ''}`}
+                    } ${!notification.has_seen ? 'border-r-4 border-blue-500' : ''}`}
                   >
                     <div 
                       className="p-4 cursor-pointer flex items-start group"
-                      onClick={() => setExpandedId(expandedId === notification.id ? null : notification.id)}
+                      onClick={() => {
+                        setExpandedId(expandedId === notification.id ? null : notification.id);
+                        setSelectedNotification(notification); 
+                        if (window.innerWidth < 1024) {
+                          setShowModal(true); 
+                        }
+                      }}
                     >
                       {/* Icon based on notification type */}
-                      <div className={`mr-4 flex-shrink-0 rounded-full p-2 ${
+                      <div className={`ml-4 flex-shrink-0 rounded-full p-2 ${
                         notification.type === 'mention' ? 'bg-blue-100 text-blue-600' :
                         notification.type === 'system' ? 'bg-purple-100 text-purple-600' :
                         notification.type === 'reminder' ? 'bg-yellow-100 text-yellow-600' :
-                        'bg-green-100 text-green-600'
+                        'bg-blue-100 text-blue-600'
                       }`}>
                        <BiMessageRoundedCheck/>
                       </div>
                       
-                      {/* Content */}
+                      {/* text */}
                       <div className="flex-1">
                         <div className="flex justify-between items-start">
-                          <h3 className={`font-medium ${!notification.read ? 'text-gray-900' : 'text-gray-700'}`}>
-                            {notification.sender}
-                            {notification.priority === 'high' && (
-                              <span className="ml-2 text-xs bg-red-100 text-red-800 px-1.5 py-0.5 rounded">
-                                High Priority
-                              </span>
-                            )}
+                          <h3 className={`font-medium ${!notification.has_seen ? 'text-gray-900' : 'text-gray-700'}`}>
+                            {notification.title}
+                            
                           </h3>
                           <span className="text-xs text-gray-500 ml-2 flex items-center">
-                          <FaClock className='mr-1 inline'/>
-                            {notification.time}
+                          <FaClock className='ml-1 inline'/>
+                          {formatRelativeDate(notification.date_added)}
                           </span>
                         </div>
-                        <p className={`mt-1 text-sm ${!notification.read ? 'text-gray-800' : 'text-gray-600'}`}>
-                          {expandedId === notification.id 
-                            ? notification.content 
-                            : notification.content.length > 100 
-                              ? `${notification.content.substring(0, 100)}...` 
-                              : notification.content}
-                        </p>
-                        
+                        <p className={`mt-1 text-sm ${!notification.has_seen ? 'text-gray-800' : 'text-gray-600'}`}>
+                        {notification.text.length > 100 
+                          ? `${notification.text.substring(0, 100)}...` 
+                          : notification.text}
+                      </p>
+
                         {/* Action buttons - only show on expanded or hover */}
                         <div className={`mt-3 flex space-x-2 ${expandedId === notification.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}>
                           <button 
-                            onClick={(e) => toggleReadStatus(notification.id, e)}
-                            className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
+                            onClick={(e) => togglehas_seenStatus(notification.id, e)}
+                            className="text-xs px-2 py-1.5 rounded bg-gray-100 text-green-700 hover:bg-green-200 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
                           >
-                            {notification.read ? 'Mark as unread' : 'Mark as read'}
-                          </button>
-                          <button 
-                            onClick={(e) => archiveNotification(notification.id, e)}
-                            className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
-                          >
-                             <FaArchive className='mr-1 inline' />
-                            Archive
+                            {notification.has_seen ? 'خوانده شده ' : 'خواندن '}
+                            <FaRegFaceRollingEyes className='inline text-md'/>
                           </button>
                           <button 
                             onClick={(e) => deleteNotification(notification.id, e)}
                             className="text-xs px-2 py-1 rounded bg-gray-100 text-red-600 hover:bg-red-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
                           >
-                            <FaTrashAlt className='mr-1 inline'/>
-                            Delete
+                            <FaTrashAlt className='ml-1 inline'/>
+                            حذف
                           </button>
                         </div>
                       </div>
@@ -304,62 +283,37 @@ const AllNotifPage= () => {
             )}
           </div>
           
-          {/* Right column - Stats and Quick Actions */}
-          <div className="w-80 hidden lg:block">
-            {showStats && (
-              <div className="bg-white rounded-lg shadow-sm p-5 mb-6">
-                <h3 className="text-lg font-medium text-gray-800 mb-4">Notification Summary</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Total</span>
-                    <span className="font-medium">{notificationStats.total}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Unread</span>
-                    <span className="font-medium text-blue-600">{notificationStats.unread}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Mentions</span>
-                    <span className="font-medium">{notificationStats.mentions}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">High Priority</span>
-                    <span className="font-medium text-red-600">{notificationStats.highPriority}</span>
-                  </div>
-                </div>
-                <div className="mt-6 pt-4 border-t border-gray-100">
-                 
-                  <div className="grid grid-cols-1 gap-2">
-                    <button className="text-xs px-3 py-3 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
-                    <FaCheckDouble className='mr-1 inline' />
-                      Mark all read
-                    </button>
-                    
-              
-                  </div>
+          {/* left column - Stats and Quick Actions */}
+          <div className="w-1/3 hidden lg:block sticky">
+            {showStats && selectedNotification && (
+            <div className="bg-white rounded-lg shadow-sm p-5 mb-6">
+              <h3 className="text-lg font-medium text-gray-800 mb-4">
+                {selectedNotification.title}
+              </h3>
+              <p className="text-gray-700 text-sm whitespace-pre-line leading-relaxed">
+                {selectedNotification.text}
+              </p>
+              <div className="mt-6 pt-4 border-t border-gray-100">         
+                <div className="grid grid-cols-1 gap-2">
+                  <button className="text-xs px-3 py-3 bg-white text-green-700 border-2 border-green-700 rounded hover:bg-green-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+                   <FaCheckDouble className='ml-1 inline' />
+                   خواندن
+                  </button>
+                            
+                      
                 </div>
               </div>
-            )}
-            
-            <div className="bg-white rounded-lg shadow-sm p-5">
-              <h3 className="text-lg font-medium text-gray-800 mb-4">Recent Activity</h3>
-              <div className="space-y-3">
-               
-               
-                
-                 
-              </div>
-              <button className="w-full mt-4 text-sm text-blue-600 hover:text-blue-800 cursor-pointer !rounded-button whitespace-nowrap">
-                View all activity
-              </button>
-            </div>
+          </div>
+          
+        )}
+           
           </div>
         </div>
       </main>
 
      
       {/* Mobile floating action button for settings */}
-      <div className="lg:hidden fixed bottom-6 right-6 flex flex-col space-y-3">
+      {/* <div className="lg:hidden fixed bottom-6 right-6 flex flex-col space-y-3">
         <button 
           onClick={() => setShowStats(!showStats)}
           className="bg-white text-blue-600 p-4 rounded-full shadow-lg hover:bg-blue-50 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
@@ -368,11 +322,11 @@ const AllNotifPage= () => {
          
         </button>
        
-      </div>
+      </div> */}
 
   
       {/* Mobile stats panel */}
-    {showStats && (
+    {/* {showStats && (
         <div className="lg:hidden fixed bottom-24 right-6 bg-white rounded-lg shadow-lg p-4 w-64 ">
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-sm font-medium text-gray-800">Notification Stats</h3>
@@ -389,21 +343,32 @@ const AllNotifPage= () => {
               <div className="text-xs text-gray-600">Total</div>
             </div>
             <div className="bg-blue-50 p-2 rounded">
-              <div className="text-lg font-semibold text-blue-600">{notificationStats.unread}</div>
-              <div className="text-xs text-gray-600">Unread</div>
+              <div className="text-lg font-semibold text-blue-600">{notificationStats.unhas_seen}</div>
+              <div className="text-xs text-gray-600">Unread </div>
             </div>
-            <div className="bg-blue-50 p-2 rounded">
-              <div className="text-lg font-semibold text-blue-600">{notificationStats.mentions}</div>
-              <div className="text-xs text-gray-600">Mentions</div>
-            </div>
-            <div className="bg-red-50 p-2 rounded">
-              <div className="text-lg font-semibold text-red-600">{notificationStats.highPriority}</div>
-              <div className="text-xs text-gray-600">High Priority</div>
-            </div>
+           
           </div>
         </div>
-      )} 
-    
+      )}  */}
+    {showModal && selectedNotification && (
+      <div className="font-iran fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-auto p-5">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">{selectedNotification.title}</h3>
+            <button
+              onClick={() => setShowModal(false)}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              ✕
+            </button>
+          </div>
+          <p className="text-gray-700 text-sm whitespace-pre-line leading-relaxed">
+            {selectedNotification.text}
+          </p>
+        </div>
+      </div>
+    )}
+
     </div>
   );
 };

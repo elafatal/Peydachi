@@ -18,6 +18,7 @@ import Store from './Component/Store/Store';
 import MainSearch from './Component/MainSearch/Search';
 import SearchProduct from './Component/otherServices/Product/SearchProduct';
 import AllNotifPage from './Component/Notification/AllNotifPage';
+import Navbar from './Component/landingPage/navbar';
 function App() {
 
 
@@ -25,6 +26,8 @@ function App() {
     <AuthProvider>
       <Router>
         <div>
+          <Navbar/>
+          <div className="pt-[5rem]">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/aboutUs" element={<AboutUs />} />
@@ -47,6 +50,8 @@ function App() {
             </Route> */}
 
           </Routes>
+          </div>     
+           <Footer/>
         </div>
       </Router>
     </AuthProvider>
