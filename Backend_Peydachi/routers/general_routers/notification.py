@@ -45,3 +45,8 @@ async def get_notif_count_and_first_three_notifs(db: DB_DEPENDENCY, user: USER_D
 @router.put('/mark_all_notifs_as_seen', status_code=200)
 async def mark_all_notifs_as_seen(db: DB_DEPENDENCY, user: USER_DEPENDENCY):
     return await notification_functions.mark_all_notifs_as_seen(user_id=user.id, db=db)
+
+
+@router.delete('/user_delete_self_notif', status_code=200)
+async def user_delete_self_notif(notif_id: int, db: DB_DEPENDENCY, user: USER_DEPENDENCY):
+    return await notification_functions.user_delete_self_notif(notif_id=notif_id, db=db, user_id=user.id)

@@ -197,3 +197,18 @@ async def mark_all_notifs_as_seen(user_id: int, db: Session):
     db.execute(seen_all_notifs)
 
     return 'All notifications marked as seen'
+
+
+async def user_delete_self_notif(notif_id: int, user_id: int, db: Session):
+    notif = db.query(Notification).filter(Notification.id == notif_id).first()
+
+    if not notif:
+        raise NOTIFICATION_NOT_FOUND_ERROR
+
+    if user_id != notif.user_id:
+        raise NOTIFICATION_ACCESS_ERROR
+
+    db.delete(notif)
+    db.commit()
+
+    return 'Notification Deleted Successfully.'
