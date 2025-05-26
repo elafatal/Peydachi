@@ -19,7 +19,7 @@ const Features = () => {
           id:2,
           icon: RiProductHuntLine,
           title: ' جستجوی محصول',
-          description: 'مشخصات محصول خاصی را میخواهید؟'
+          description: 'با بررسی کالاها بهتر تصمیم بگیرید'
         },
         {
           id:3,

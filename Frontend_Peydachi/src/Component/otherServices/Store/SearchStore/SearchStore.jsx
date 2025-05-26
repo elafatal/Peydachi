@@ -22,7 +22,7 @@ const SearchStore = () => {
   const [showCityDropdown, setShowCityDropdown] = useState(false);
    const [allCities, setAllCities] = useState([]);
    const [filteredCities, setFilteredCities] = useState([]);
-  const [cityIndex, setCityIndex] = useState(-1);        // -1 یعنی هیچ‌کدام هایلایت نیست
+  const [cityIndex, setCityIndex] = useState(-1);       
 
    useEffect(() => {
     if (showDetail && selectedItem) {
