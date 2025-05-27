@@ -59,7 +59,8 @@ const Notifications=()=>{
     
       const handleTitleClick = (notif) => {
         setSelectedNotification(notif);
-        navigate('/AllNotification', { replace: true });
+        navigate(`/AllNotification?id=${notif.id}`);
+
       };
       return (
         <div className="relative w-fit m-auto">
@@ -86,7 +87,10 @@ const Notifications=()=>{
                 <div
                   key={n.id}
                   className={`px-4 py-3 cursor-pointer hover:bg-gray-100 transition-all duration-300`}
-                  onClick={() => handleTitleClick(n)}
+                  onClick={() => {
+                    handleTitleClick(n);
+                    setShowDropdown(false);
+                }}
                 >
                   {n.title}
                 </div>
@@ -94,6 +98,15 @@ const Notifications=()=>{
               {unreadNotif.first_three_notifs.length === 0 && (
                 <div className="text-gray-500 text-sm">اعلان جدیدی ندارید</div>
               )}
+               <div
+                  className={`px-4 py-3 text-gray-800 cursor-pointer border-t border-gray-100 hover:bg-gray-100 transition-all duration-300`}
+                  onClick={() => {
+                    navigate('/AllNotification', { replace: true });
+                    setShowDropdown(false);
+                }}
+                >
+                  مشاهده‌ی همه‌ی اعلان‌ها
+                </div>
             </motion.div>
           )}
         </AnimatePresence>

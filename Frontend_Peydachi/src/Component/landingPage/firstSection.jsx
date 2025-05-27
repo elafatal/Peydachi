@@ -157,8 +157,8 @@ const handleCityKeyDown = (e) => {
 
       {/* Overlay with content */}
       <div className="relative bg-gradient-to-r from-white/90 to-white/50" dir="rtl">
-        <div className="max-w-8xl mx-auto px-6 lg:py-0">
-          <div className="flex flex-col lg:flex-row items-center gap-12 h-full justify-center">
+        <div className="max-w-8xl mx-auto px-6 lg:py-30">
+          <div className="flex flex-col lg:flex-row items-center justify-center">
             {/*  Text & Title */}
             <div className="w-full lg:w-1/2 flex flex-col text-center">
              <motion.div initial={{ x: "7rem", opacity: 0 }}

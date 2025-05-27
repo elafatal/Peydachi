@@ -12,7 +12,7 @@ const ErrorPage = () => {
         <>
         
             <main>
-        <section class=" relative w-screen  flex justify-center items-center h-screen ">
+        <section class=" relative max-w-screen  flex justify-center items-center h-screen ">
             <div class="mx-auto  px-4 sm:px-6 lg:px-8 relative">
 
                 <div class=" w-full mx-auto h-auto text-center mb-7">

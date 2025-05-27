@@ -75,24 +75,11 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// تابع logout حرفه‌ای با SweetAlert
-// function forceLogout() {
-//   Cookies.remove('auth_token');
-//   Cookies.remove('refresh_token');
 
-//   Swal.fire({
-//     title: 'اتمام دسترسی',
-//     text: 'مدت زمان دسترسی شما تمام شده، لطفاً دوباره وارد شوید.',
-//     icon: 'warning',
-//     confirmButtonText: 'باشه',
-//     confirmButtonColor: '#3085d6',
-//     timer: 3000,
-//     timerProgressBar: true,
-//     toast: false,
-//     position: 'center'
-//   }).then(() => {
-//     window.location.href = "/login";
-//   });
-// }
+function forceLogout() {
+  Cookies.remove('auth_token');
+  Cookies.remove('refresh_token');
+  window.location.href = "/login";
+}
 
 export default axiosInstance;

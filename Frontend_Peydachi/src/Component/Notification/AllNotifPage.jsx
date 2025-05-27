@@ -11,14 +11,19 @@ import {
     FaSearch,
     FaTimes,
   } from 'react-icons/fa';
+  import { useLocation } from 'react-router-dom';
   import { FaRegFaceRollingEyes } from "react-icons/fa6";
   import { IoArrowBackCircleOutline } from "react-icons/io5";
   import axiosInstance from '../axiosInstance';
   import { BiMessageRoundedCheck } from "react-icons/bi";
   import { formatDistanceToNow } from 'date-fns';
   import faIR from 'date-fns/locale/fa-IR';
+  import Swal from "sweetalert2";  
 const AllNotifPage= () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const notifId = searchParams.get('id');
   const [notifications, setNotifications] = useState([]);
   const [unredNotifications,setUnreadNotifications]=useState([])
   const [selectedNotification, setSelectedNotification] = useState(null);
@@ -35,8 +40,21 @@ const AllNotifPage= () => {
 
   const [showModal, setShowModal] = useState(false);
 
-const [activeFilter, setActiveFilter] = useState('unread');
-
+  const [activeFilter, setActiveFilter] = useState('unread');
+  useEffect(() => {
+    const getNotifById =async()=>{
+      if (notifId) {
+        try {
+          const response = await axiosInstance.post('/notification/get_notification_by_id', { notification_id: Number(notifId) });
+setSelectedNotification(response.data)
+          console.log(response.data);
+        } catch (error) {
+          console.log(error); 
+        } 
+      }
+    }
+    getNotifById();
+  }, [notifId]);
 useEffect(() => {
   const fetchNotifications = async () => {
     if (notificationsCache[activeFilter]) {
@@ -70,31 +88,89 @@ useEffect(() => {
   // State for expanded notification
   const [expandedId, setExpandedId] = useState(null);
 
-  
-  // State for settings panel
-  const [showSettings, setShowSettings] = useState(false);
-  
-  // State for notification stats
+
   const [showStats, setShowStats] = useState(true);
 
-  // date added
    const formatRelativeDate = (dateString) => {
       return formatDistanceToNow(new Date(dateString), {
         addSuffix: true,
         locale: faIR,
       });
     };
-  // Toggle notification has_seen status
-  const togglehas_seenStatus = (id, e) => {
-    e.stopPropagation();
-    setNotifications(notifications.map(notification =>
-      notification.id === id ? { ...notification, has_seen: !notification.has_seen } : notification
-    ));
-  };
 
-  const goHome=()=>{
-    navigate('/', { replace: true });
-  }
+
+    const toggleReadStatus = async (id, e) => {
+      e.stopPropagation();
+      if (activeFilter === 'unread') {
+        setNotifications((prevNotifications) =>
+          prevNotifications.filter((notification) => notification.id !== id)
+        );
+      } else {
+        setNotifications((prevNotifications) =>
+          prevNotifications.map((notification) =>
+            notification.id === id
+              ? { ...notification, has_seen: true }
+              : notification
+          )
+        );
+      }  
+      try {
+        const response=await axiosInstance.post('/notification/review_notification', {
+          notification_id: id,
+        });
+        console.log(`Notification ${id} marked as read on server.`);
+    
+        
+        setNotificationsCache((prevCache) => ({
+          ...prevCache,
+          unread: prevCache.unread
+            ? prevCache.unread.filter((n) => n.id !== id)
+            : null,
+          all: prevCache.all
+            ? prevCache.all.map((n) =>
+                n.id === id ? { ...n, has_seen: true } : n
+              )
+            : null,
+        }));
+        if (response.status === 200) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: " انجام شد",
+            showConfirmButton: false,
+            timer: 1500,
+            toast: true,
+            customClass: {
+              popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+              title: 'text-xs', 
+              content: 'text-xs',
+              icon : 'text-xs mb-2'
+            }
+        });
+        }else{
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "اعلان از قبل مشاهده شده است",
+            showConfirmButton: false,
+            timer: 1500,
+            toast: true,
+            customClass: {
+              popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+              title: 'text-xs', 
+              content: 'text-xs',
+              icon : 'text-xs mb-2'
+            }
+        });
+        }
+               
+      } catch (error) {
+        console.error('Error marking notification as reviewed:', error);
+      }
+    };
+    
+
+
 
   // Delete notification
   const deleteNotification = () => {
@@ -137,7 +213,7 @@ useEffect(() => {
           </div> */}
           
           {/* Filter tabs */}
-          <div className="flex justify-between  py-2">
+          <div className="flex justify-between  pb-2 pt-4">
             <div className="flex space-x-4">
             {['all', 'unread'].map((filter) => (
             <div className="relative" key={filter}>
@@ -152,11 +228,7 @@ useEffect(() => {
                 {filter === 'all' ? 'همه' : 'خوانده نشده'}
               </button>
               
-              {filter === 'all' && notificationStats.total > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
-                <span className="text-[8px] pt-1">{filter === 'all'  && notificationStats.total}</span>
-              </span>
-              )}
+         
               {filter === 'unread' && notificationStats.unhas_seen > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
                <span className="text-[8px] pt-1">{filter === 'unread' && notificationStats.unhas_seen}</span> 
@@ -188,10 +260,7 @@ useEffect(() => {
                   >
                     <FaTimes />
                   </button>
-                )}
-
-                {/* {searchQuery && <button className="px-4 text-gray-500 hover:text-gray-700" onClick={() => setSearchQuery('')}><FaTimes /></button>} */}
-              </div>
+                )}              </div>
             </div>
             
            
@@ -251,7 +320,7 @@ useEffect(() => {
                         {/* Action buttons - only show on expanded or hover */}
                         <div className={`mt-3 flex space-x-2 ${expandedId === notification.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}>
                           <button 
-                            onClick={(e) => togglehas_seenStatus(notification.id, e)}
+                            onClick={(e) => toggleReadStatus(notification.id, e)}
                             className="text-xs px-2 py-1.5 rounded bg-gray-100 text-green-700 hover:bg-green-200 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
                           >
                             {notification.has_seen ? 'خوانده شده ' : 'خواندن '}
@@ -284,7 +353,7 @@ useEffect(() => {
           </div>
           
           {/* left column - Stats and Quick Actions */}
-          <div className="w-1/3 hidden lg:block sticky">
+          <div className="w-1/3 hidden lg:block sticky top-24 self-start">
             {showStats && selectedNotification && (
             <div className="bg-white rounded-lg shadow-sm p-5 mb-6">
               <h3 className="text-lg font-medium text-gray-800 mb-4">
@@ -297,7 +366,7 @@ useEffect(() => {
                 <div className="grid grid-cols-1 gap-2">
                   <button className="text-xs px-3 py-3 bg-white text-green-700 border-2 border-green-700 rounded hover:bg-green-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
                    <FaCheckDouble className='ml-1 inline' />
-                   خواندن
+                   مشاهده
                   </button>
                             
                       

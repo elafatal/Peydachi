@@ -10,9 +10,7 @@ import Features from './lastSection';
 const LandingPage = () => {
  
   return (
-    <div className="min-h-screen bg-white" dir='ltr'>
-      {/* Header */}
-      {/* <Navbar/> */}
+    <div className=" bg-white" dir='ltr'>
       {/* Hero Section */}
       <FirstSection/>
       {/* How It Works Section */}
@@ -21,8 +19,7 @@ const LandingPage = () => {
       {/* Features Section */}
     <Features/>
 
-      {/* Footer */}
-      {/* <Footer/> */}
+
     </div>
   );
 };
