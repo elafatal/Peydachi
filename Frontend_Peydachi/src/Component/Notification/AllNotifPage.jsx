@@ -195,22 +195,6 @@ useEffect(() => {
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-10 ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* <div className="flex justify-between items-center py-4 border-b border-gray-100">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-semibold text-blue-600">اعلان‌ها</h1>
-          
-            </div>
-            <div className="flex items-center space-x-1">
-              <button 
-                onClick={goHome}
-                className="text-blue-600 hover:text-blue-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
-                aria-label="Notification settings"
-              >
-                بازگشت
-                <IoArrowBackCircleOutline className='text-3xl inline' />
-              </button>
-            </div>
-          </div> */}
           
           {/* Filter tabs */}
           <div className="flex justify-between  pb-2 pt-4">
@@ -363,7 +347,7 @@ useEffect(() => {
                 {selectedNotification.text}
               </p>
               <div className="mt-6 pt-4 border-t border-gray-100">         
-                <div className="grid grid-cols-1 gap-2">
+                <div onClick={(e) => toggleReadStatus(selectedNotification.id, e)} className="grid grid-cols-1 gap-2">
                   <button className="text-xs px-3 py-3 bg-white text-green-700 border-2 border-green-700 rounded hover:bg-green-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
                    <FaCheckDouble className='ml-1 inline' />
                    مشاهده
@@ -380,45 +364,7 @@ useEffect(() => {
         </div>
       </main>
 
-     
-      {/* Mobile floating action button for settings */}
-      {/* <div className="lg:hidden fixed bottom-6 right-6 flex flex-col space-y-3">
-        <button 
-          onClick={() => setShowStats(!showStats)}
-          className="bg-white text-blue-600 p-4 rounded-full shadow-lg hover:bg-blue-50 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
-        >
-        <FaChartPie className='inline'/>
-         
-        </button>
-       
-      </div> */}
 
-  
-      {/* Mobile stats panel */}
-    {/* {showStats && (
-        <div className="lg:hidden fixed bottom-24 right-6 bg-white rounded-lg shadow-lg p-4 w-64 ">
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="text-sm font-medium text-gray-800">Notification Stats</h3>
-            <button 
-              onClick={() => setShowStats(false)}
-              className="text-gray-400 hover:text-gray-600 cursor-pointer !rounded-button whitespace-nowrap"
-            >
-              <i className="fas fa-times"></i>
-            </button>
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-center">
-            <div className="bg-blue-50 p-2 rounded">
-              <div className="text-lg font-semibold text-blue-600">{notificationStats.total}</div>
-              <div className="text-xs text-gray-600">Total</div>
-            </div>
-            <div className="bg-blue-50 p-2 rounded">
-              <div className="text-lg font-semibold text-blue-600">{notificationStats.unhas_seen}</div>
-              <div className="text-xs text-gray-600">Unread </div>
-            </div>
-           
-          </div>
-        </div>
-      )}  */}
     {showModal && selectedNotification && (
       <div className="font-iran fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
         <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-auto p-5">

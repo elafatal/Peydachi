@@ -4,6 +4,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosNotifications } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from "framer-motion";
+import Cookies from 'js-cookie';
 
 const Notifications=()=>{
     const navigate = useNavigate();
@@ -36,18 +37,22 @@ const Notifications=()=>{
 
       useEffect(() => {
         const GetUnreadNotif = async () => {
-          try {
-            const response = await axiosInstance.get('/notification/get_notif_count_and_first_three_notifs', {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            });
-            setUnreadNotif(response.data);
-            setisUnreadNotif(true)
-            console.log(response.data);
-          } catch (error) {
-            console.log(error); 
-          } 
+          const authToken = Cookies.get('auth_token');
+          if (authToken){
+            try {
+              const response = await axiosInstance.get('/notification/get_notif_count_and_first_three_notifs', {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              });
+              setUnreadNotif(response.data);
+              setisUnreadNotif(true)
+              console.log(response.data);
+            } catch (error) {
+              console.log(error); 
+            } 
+          }
+         
         };
         GetUnreadNotif();
       }, []);

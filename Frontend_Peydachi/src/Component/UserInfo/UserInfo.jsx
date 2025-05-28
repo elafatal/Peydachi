@@ -225,19 +225,6 @@ const handleGoHome =()=>{
    
   };
 
-
-  // const DeleteSelfStore=async()=>{
-  //   const authToken = Cookies.get('auth_token');
-  //   const response = await axios.delete('http://127.0.0.1:8000/seller/store/delete_store', 
-  //     userInfo , {
-  //     headers: {
-  //         'Authorization': `Bearer ${authToken}`,
-  //         'Content-Type': 'application/json'
-  //     } 
-  // });
-  //   console.log(response);
-    
-  // }
   const DeleteSelfStore = async () => {    
     try {
       await axiosInstance.delete('/seller/store/delete_store', {

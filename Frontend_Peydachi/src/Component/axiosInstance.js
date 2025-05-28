@@ -17,7 +17,6 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const token = Cookies.get('auth_token');
 
-    // 👇 اگر در ریکوئست گفتیم Authorization=null، باید حذفش کنیم
     if (config.headers && config.headers.Authorization === null) {
       delete config.headers.Authorization;
     } else if (token) {
@@ -79,7 +78,6 @@ axiosInstance.interceptors.response.use(
 function forceLogout() {
   Cookies.remove('auth_token');
   Cookies.remove('refresh_token');
-  window.location.href = "/login";
 }
 
 export default axiosInstance;
