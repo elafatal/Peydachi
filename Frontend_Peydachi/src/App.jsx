@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AboutUs from './Component/About us/AboutUs';
 import Login from './Component/SignUp-SignIn/Login';
 import LandingPage from './Component/landingPage/LandingPage';
-import Footer from './Component/landingPage/footer';
+import Footer from './Component/Footer/footer';
 import MenuBar from './Component/Navbar/Navbar';
 import ErrorPage from './Component/Error/Error';
 import UserInfo from './Component/UserInfo/UserInfo';
@@ -44,7 +44,7 @@ function App() {
             <Route path="/SearchStore" element={<SearchStore/>} />
             <Route path="/StoreDetail/:id" element={<Store />} />
             <Route path="/test" element={<MainSearch/>} />
-            <Route path="/test2" element={<SearchProduct/>} />
+            <Route path="/SearchProduct" element={<SearchProduct/>} />
             <Route path="/AllNotification" element={<AllNotifPage/>} />
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>

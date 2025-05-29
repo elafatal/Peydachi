@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import FirstSection from './firstSection';
 import MenuBar from '../Navbar/Navbar';
 import Navbar from './navbar';
-import Footer from './footer';
+import Footer from '../Footer/footer';
 import HowItWorks from './secondSection';
 import Features from './lastSection';
 
