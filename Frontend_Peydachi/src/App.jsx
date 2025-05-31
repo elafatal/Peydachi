@@ -44,7 +44,7 @@ function App() {
             <Route path="/UserCommentReport" element={<UserComment/>} />
             <Route path="/SearchStore" element={<SearchStore/>} />
             <Route path="/StoreDetail/:id" element={<Store />} />
-            <Route path="/Search" element={<SearchMain/>} />
+            <Route path="/Search" element={<MainSearch/>} />
             <Route path="/SearchProduct" element={<SearchProduct/>} />
             <Route path="/AllNotification" element={<AllNotifPage/>} />
             {/* مسیرهای محافظت شده */}
