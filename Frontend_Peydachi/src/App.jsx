@@ -20,6 +20,7 @@ import SearchProduct from './Component/otherServices/Product/SearchProduct';
 import AllNotifPage from './Component/Notification/AllNotifPage';
 import Navbar from './Component/landingPage/navbar';
 import ScrollToTop from './Component/ScrollToTop';
+import SearchMain from './Component/MainSearch/SearchMain';
 function App() {
 
 
@@ -43,7 +44,7 @@ function App() {
             <Route path="/UserCommentReport" element={<UserComment/>} />
             <Route path="/SearchStore" element={<SearchStore/>} />
             <Route path="/StoreDetail/:id" element={<Store />} />
-            <Route path="/test" element={<MainSearch/>} />
+            <Route path="/Search" element={<SearchMain/>} />
             <Route path="/SearchProduct" element={<SearchProduct/>} />
             <Route path="/AllNotification" element={<AllNotifPage/>} />
             {/* مسیرهای محافظت شده */}

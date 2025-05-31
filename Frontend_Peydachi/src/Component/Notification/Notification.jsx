@@ -13,23 +13,6 @@ const Notifications=()=>{
     const [isUnreadNotif,setisUnreadNotif]=useState(false)
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedNotification, setSelectedNotification] = useState(null);
-  
-    useEffect(() => {
-        const GetAllNotif = async () => {
-          try {
-            const response = await axiosInstance.post('/notification/get_all_self_notifications', {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            });
-            setNotif(response.data);
-            console.log(response.data);
-          } catch (error) {
-            console.log(error); 
-          } 
-        };
-        GetAllNotif();
-      }, []);
 
       const goToNotifPage =()=>{
         navigate('/', { replace: true });

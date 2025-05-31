@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaAllergies, FaSearch } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 import { FaLocationDot } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import Cookies from 'js-cookie';
@@ -7,6 +8,7 @@ import axios from 'axios';
 import axiosInstance from '../axiosInstance';
 import backgroundImage from '../../../public/backgroundImage.jpg' 
 const FirstSection = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState('');
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
@@ -101,11 +103,11 @@ const FirstSection = () => {
   
   const handleSearch = () => {
     console.log({ city, location, searchQuery });
-    if (Cookies.get('auth_token') != 'undefined') {
-      console.log(Cookies.get('auth_token'));
-    }
 
-    
+    const selectedCity = allCities.find((c) => c.name === city);
+    const cityId = selectedCity?.id;
+
+    navigate(`/Search?city_id=${cityId}&city_name=${encodeURIComponent(city)}&Query=${encodeURIComponent(searchQuery)}`);
   };
   const handleRegionsInput =(e)=>{
     setLocation(e.target.value);
@@ -157,7 +159,7 @@ const handleCityKeyDown = (e) => {
 
       {/* Overlay with content */}
       <div className="relative bg-gradient-to-r from-white/90 to-white/50" dir="rtl">
-        <div className="max-w-8xl mx-auto px-6 lg:py-30">
+        <div className="max-w-8xl mx-auto px-6 py-16 lg:py-30">
           <div className="flex flex-col lg:flex-row items-center justify-center">
             {/*  Text & Title */}
             <div className="w-full lg:w-1/2 flex flex-col text-center">
