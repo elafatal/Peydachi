@@ -20,7 +20,7 @@ import SearchProduct from './Component/otherServices/Product/SearchProduct';
 import AllNotifPage from './Component/Notification/AllNotifPage';
 import Navbar from './Component/landingPage/navbar';
 import ScrollToTop from './Component/ScrollToTop';
-import SearchMain from './Component/MainSearch/SearchMain';
+
 function App() {
 
 

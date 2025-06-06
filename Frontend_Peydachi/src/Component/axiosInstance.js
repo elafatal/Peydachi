@@ -12,7 +12,7 @@ const axiosInstance = axios.create({
   },
 });
 
-// هندل کردن درخواست ها
+
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = Cookies.get('auth_token');
@@ -28,7 +28,7 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// هندل کردن پاسخ ها
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
