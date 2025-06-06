@@ -350,7 +350,7 @@ async def search_near_products(search: ProductSearchModels, redis_db: Redis, db:
         redis_db.geoadd(generated_key, (this_long, this_lat, store.id))
 
 
-    print(search.range_km)
+    redis_db.expire(generated_key, 60)
     search_result = redis_db.geosearch(
         generated_key,
         unit="km",
