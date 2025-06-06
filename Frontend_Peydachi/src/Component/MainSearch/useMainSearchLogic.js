@@ -98,6 +98,37 @@ const useMainSearchLogic = () => {
     alert('مکان مورد نظر پیدا نشد.');
   };
 
+  const handleSearchLocation2 = async () => {
+    setLocationQuery('')
+    const normalize = (text) => text.trim().replace(/\s+/g, ' ');
+    const tryGeocode = async (query) => {
+      const coords = await geocodeLocation(query, cityRef.current);
+      if (coords) {
+        const newLoc = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
+        setMapCenter([coords.lat, coords.lng]);
+        setLocation(newLoc);
+        return true;
+      }
+      return false;
+    };
+
+    const normalizedQuery = normalize(locationQuery);
+    if (await tryGeocode(normalizedQuery)) return;
+
+    const words = normalizedQuery.split(' ').filter((w) => w.length > 1);
+    for (let word of words) {
+      if (await tryGeocode(word)) return;
+    }
+
+    for (let windowSize = 2; windowSize <= Math.min(3, words.length); windowSize++) {
+      for (let i = 0; i <= words.length - windowSize; i++) {
+        const phrase = words.slice(i, i + windowSize).join(' ');
+        if (await tryGeocode(phrase)) return;
+      }
+    }
+
+    alert('مکان مورد نظر پیدا نشد.');
+  };
   useEffect(() => {
     const initialize = async () => {
       const initialCity = searchParams.get('city_name');
@@ -133,6 +164,7 @@ const useMainSearchLogic = () => {
     stores,
     cityName,
     setCityName,
+    handleSearchLocation2
   };
 };
 

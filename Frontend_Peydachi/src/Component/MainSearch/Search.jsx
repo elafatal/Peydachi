@@ -43,6 +43,7 @@ const MainSearch = () => {
     sidebarOpen, setSidebarOpen,
     stores,
     cityName, setCityName,
+    handleSearchLocation2
   } = useMainSearchLogic();
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const LocationSelector = ({ onSelect }) => {
@@ -102,7 +103,8 @@ const MainSearch = () => {
           setRange={setRange}
           handleSearch={handleSearch}
           cityName={cityName}
-          setCityName={setCityName} />
+          setCityName={setCityName}
+          handleSearchLocation2={handleSearchLocation2} />
         </div>
 
         {/* ----------------------------------------------------------------

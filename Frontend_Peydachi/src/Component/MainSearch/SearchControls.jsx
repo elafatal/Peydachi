@@ -11,7 +11,8 @@ const SearchControls = ({
   setRange,
   handleSearch,
   cityName,
-  setCityName
+  setCityName,
+  handleSearchLocation2
 }) => {
   
   return (
@@ -58,6 +59,8 @@ const SearchControls = ({
                 </div>
                 
               </div>
+
+              <div className="relative">
               <input
                 type="text"
                 placeholder="تغییر شهر مرکزی (مثلاً آمل)"
@@ -65,6 +68,14 @@ const SearchControls = ({
                 onChange={(e) => setCityName(e.target.value)}
                 className="block w-full my-3 pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
               />
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <button className="text-blue-500 hover:text-blue-700">
+                    <FaCrosshairs onClick={handleSearchLocation2} />
+                  </button>
+                </div>
+                
+              </div>
+             
 
             </div>
 
