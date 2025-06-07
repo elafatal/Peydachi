@@ -1,232 +1,58 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
+import useSearchProduct from './useSearchProduct';
 import {
   FaStore,
-  FaHeart,
   FaRegHeart,
-  FaHistory,
-  FaUser,
-  FaBars,
   FaSearch,
   FaMapMarkerAlt,
-  FaTag,
   FaChevronDown,
-  FaBox,
   FaCheckCircle,
   FaTimesCircle,
   FaTimes,
-  FaLaptop,
-  FaCouch,
-  FaTshirt,
-  FaBook,
-  FaRunning,
-  FaHome,
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedinIn,
-  FaCcVisa,
-  FaCcMastercard,
-  FaCcAmex,
-  FaCcPaypal,
   FaStar,
   FaRegStar,
   FaStarHalfAlt
 } from 'react-icons/fa';
-import { IoArrowBackCircleOutline } from "react-icons/io5";
+import useCitySelector from './useCitySelector';
 import axiosInstance from '../../axiosInstance';
-
-/* ---------- component ---------- */
+import searchProduct from '../../../../public/searchProduct.jpg'
+import { motion, AnimatePresence } from 'framer-motion';
 const SearchProduct = () => {
-  /* ----- state ----- */
-  const [searchTerm, setSearchTerm]             = useState('');
-  const [selectedCity, setSelectedCity]         = useState(null);
-  const [showAvailableOnly, setShowAvailableOnly] = useState(false);
-  const [products, setProducts]                 = useState([]);
-  const [loading, setLoading]                   = useState(false);
-  const [selectedProduct, setSelectedProduct]   = useState(null);
-  const [isModalOpen, setIsModalOpen]           = useState(false);
-  const [comments, setComments]                 = useState([]);
-  const chartRef                                = useRef(null);
-  const [allCities, setAllCities] = useState([]);
-
-
-  /* get all cities */
-  useEffect(() => {
-    const handleAllCities = async () => {
-      try {
-        const response = await axiosInstance.get('/city/get_all_cities', {
-          headers: {
-            Authorization: null,
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        setAllCities(response.data);
-        console.log(response);
-      } catch (error) {
-        console.log(error); 
-      } 
-    };
-    handleAllCities();
-  }, []);
-
-
-  /* ----- close dropdown on outside click ----- */
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (cityBoxRef.current && !cityBoxRef.current.contains(e.target)) {
-        setCityDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  /* ----- mock product data ----- */
-  useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      const mockProducts = [
-        {
-          id: 1,
-          name: 'Wireless Headphones',
-          description: 'Premium noise-cancelling wireless headphones with 30-hour battery life and comfortable over-ear design.',
-          quantity: 15,
-          date_added: '2025-05-10T10:30:00.000Z',
-          city_id: 1,
-          pic_url: 'https://readdy.ai/api/search-image?query=Premium%20wireless%20headphones%20with%20noise%20cancellation%20feature%20on%20a%20minimalist%20white%20background%20with%20soft%20shadows%2C%20professional%20product%20photography%20with%20high%20detail%20and%20clarity&width=400&height=300&seq=1&orientation=landscape',
-          average_rating: 4.7
-        },
-        {
-          id: 2,
-          name: 'Smart Watch',
-          description: 'Fitness tracker with heart-rate monitor, sleep tracking, and smartphone notifications.',
-          quantity: 8,
-          date_added: '2025-05-12T14:20:00.000Z',
-          city_id: 2,
-          pic_url: 'https://readdy.ai/api/search-image?query=Modern%20smartwatch%20with%20fitness%20tracking%20features%20displayed%20on%20a%20clean%20white%20background%2C%20high-resolution%20product%20photography%20showing%20the%20watch%20face%20and%20band%20details&width=400&height=300&seq=2&orientation=landscape',
-          average_rating: 4.3
-        },
-        {
-          id: 3,
-          name: 'Portable Bluetooth Speaker',
-          description: 'Waterproof portable speaker with 360° sound and 20-hour playtime.',
-          quantity: 0,
-          date_added: '2025-05-15T09:45:00.000Z',
-          city_id: 3,
-          pic_url: 'https://readdy.ai/api/search-image?query=Waterproof%20portable%20bluetooth%20speaker%20with%20modern%20design%20on%20minimalist%20white%20background%2C%20professional%20product%20photography%20showing%20texture%20and%20controls%20in%20detail&width=400&height=300&seq=3&orientation=landscape',
-          average_rating: 4.5
-        },
-        {
-          id: 4,
-          name: 'Ergonomic Office Chair',
-          description: 'Adjustable office chair with lumbar support and breathable mesh back.',
-          quantity: 5,
-          date_added: '2025-05-08T11:15:00.000Z',
-          city_id: 1,
-          pic_url: 'https://readdy.ai/api/search-image?query=Ergonomic%20office%20chair%20with%20adjustable%20features%20and%20mesh%20back%20on%20clean%20white%20background%2C%20professional%20product%20photography%20showing%20the%20chair%20from%20a%20slight%20angle&width=400&height=300&seq=4&orientation=landscape',
-          average_rating: 4.2
-        },
-        {
-          id: 5,
-          name: 'Digital Camera',
-          description: 'Mirrorless camera with 24 MP sensor, 4 K video recording, and interchangeable lenses.',
-          quantity: 3,
-          date_added: '2025-05-14T16:50:00.000Z',
-          city_id: 4,
-          pic_url: 'https://readdy.ai/api/search-image?query=Professional%20digital%20mirrorless%20camera%20with%20lens%20on%20minimalist%20white%20background%2C%20high-resolution%20product%20photography%20showing%20details%20of%20camera%20body%20and%20controls&width=400&height=300&seq=5&orientation=landscape',
-          average_rating: 4.8
-        },
-        {
-          id: 6,
-          name: 'Coffee Maker',
-          description: 'Programmable coffee maker with thermal carafe and auto-shutoff feature.',
-          quantity: 0,
-          date_added: '2025-05-11T08:30:00.000Z',
-          city_id: 5,
-          pic_url: 'https://readdy.ai/api/search-image?query=Modern%20programmable%20coffee%20maker%20with%20thermal%20carafe%20on%20clean%20white%20background%2C%20professional%20product%20photography%20showing%20the%20machine%20from%20front%20angle%20with%20clear%20details&width=400&height=300&seq=6&orientation=landscape',
-          average_rating: 4.1
-        }
-      ];
-      setProducts(mockProducts);
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  /* ----- derived data ----- */
-  const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          p.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCity   = selectedCity === null || p.city_id === selectedCity;
-    const isAvailable   = !showAvailableOnly || p.quantity > 0;
-    return matchesSearch && matchesCity && isAvailable;
-  });
-
-  /* ----- handlers ----- */
-  const handleSearchChange       = (e) => setSearchTerm(e.target.value);
-  const handleCityChange         = (e) => {
-    const id = parseInt(e.target.value);
-    setSelectedCity(isNaN(id) ? null : id);
-  };
-  const handleAvailabilityToggle = () => setShowAvailableOnly(!showAvailableOnly);
-
-  /* ----- modal open ----- */
-  const openProductModal = (product) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
-
-    /* mock comments */
-    const mockComments = [
-      { id: 1, user: 'Sarah J.',   text: 'Excellent product! Exactly as described and arrived quickly.',                 rating: 5 },
-      { id: 2, user: 'Michael T.', text: 'Good quality but shipping took longer than expected.',                          rating: 4 },
-      { id: 3, user: 'Emma R.',    text: 'Works well but the battery life is shorter than advertised.',                   rating: 3 },
-      { id: 4, user: 'David L.',   text: 'Perfect! Would definitely recommend to others.',                                rating: 5 },
-      { id: 5, user: 'Lisa M.',    text: 'Great value for the price. Very satisfied with my purchase.',                   rating: 4 }
-    ];
-    setComments(mockComments);
-
-    /* chart in next tick */
-    setTimeout(() => {
-      if (!chartRef.current) return;
-      const chart = echarts.init(chartRef.current);
-      chart.setOption({
-        animation: false,
-        title:   { text: 'Rating Distribution', left: 'center', textStyle: { fontSize: 14 } },
-        tooltip: { trigger: 'item' },
-        series: [{
-          name:  'Ratings',
-          type:  'pie',
-          radius:['40%','70%'],
-          avoidLabelOverlap: false,
-          itemStyle:{ borderRadius:10,borderColor:'#fff',borderWidth:2 },
-          label:      { show:false, position:'center' },
-          emphasis:   { label:{ show:true, fontSize:'14', fontWeight:'bold' } },
-          labelLine:  { show:false },
-          data: [
-            { value: mockComments.filter(c=>c.rating===5).length, name:'5 Stars', itemStyle:{ color:'#4CAF50' } },
-            { value: mockComments.filter(c=>c.rating===4).length, name:'4 Stars', itemStyle:{ color:'#8BC34A' } },
-            { value: mockComments.filter(c=>c.rating===3).length, name:'3 Stars', itemStyle:{ color:'#FFC107' } },
-            { value: mockComments.filter(c=>c.rating===2).length, name:'2 Stars', itemStyle:{ color:'#FF9800' } },
-            { value: mockComments.filter(c=>c.rating===1).length, name:'1 Star',  itemStyle:{ color:'#F44336' } }
-          ]
-        }]
-      });
-
-      const onResize = () => chart.resize();
-      window.addEventListener('resize', onResize);
-      return () => {
-        chart.dispose();
-        window.removeEventListener('resize', onResize);
-      };
-    }, 0);
-  };
-
-  const closeProductModal = () => {
-    setIsModalOpen(false);
-    setSelectedProduct(null);
-  };
-
+  const {
+    searchTerm,
+    showAvailableOnly,
+    products,
+    loading,
+    selectedProduct,
+    isModalOpen,
+    comments,
+    chartRef,
+    allCities,
+    filteredProducts,
+    handleSearchChange,
+    handleCityChange,
+    handleAvailabilityToggle,
+    openProductModal,
+    closeProductModal,
+    getCityName,
+    formatDate,
+    clearFilters
+  } = useSearchProduct();
+  const {
+    cityInput,
+    selectedCity,
+    filteredCities,
+    showCityDropdown,
+    cityIndex,
+    setSelectedCity,
+    setShowCityDropdown,
+    handleCityInput,
+    handleCityKeyDown,
+    handleCitySelect,
+  } = useCitySelector();
+  
   /* ----- helpers ----- */
   const renderStars = (rating) => {
     const stars = [];
@@ -239,12 +65,6 @@ const SearchProduct = () => {
     }
     return stars;
   };
-
-  const getCityName = (id) => allCities.find(c=>c.id===id)?.name ?? 'Unknown';
-
-  const formatDate = (iso) => new Date(iso).toLocaleDateString(
-    'en-US',{ year:'numeric',month:'long',day:'numeric' }
-  );
 
   /* ---------- JSX ---------- */
   return (
@@ -281,7 +101,7 @@ const SearchProduct = () => {
             </div>
             <div className="md:w-1/2 flex justify-center md:justify-end">
               <img
-                src="https://readdy.ai/api/search-image?query=3D%20illustration%20of%20a%20smartphone%20with%20a%20shopping%20app%20showing%20product%20search%20results%20with%20a%20clean%20modern%20design%20floating%20above%20a%20minimalist%20surface%20with%20soft%20shadows%20and%20blue%20accent%20colors&width=500&height=400&seq=8&orientation=portrait"
+                src={searchProduct}
                 alt="Product Search App"
                 className="w-full max-w-md rounded-lg shadow-lg transform md:translate-y-4"
               />
@@ -290,7 +110,7 @@ const SearchProduct = () => {
         </div>
 
         {/* --- search card --- */}
-        <div className="bg-gradient-to-r from-blue-600/5 to-purple-600/5 backdrop-blur-sm rounded-2xl shadow-lg p-8 mb-12 border border-blue-100/50 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600/5 to-purple-600/5 backdrop-blur-sm rounded-2xl shadow-lg p-8 mb-12 border border-blue-100/50 relative ">
           <div className="absolute inset-0 bg-white/40" />
           <div className="relative max-w-3xl mx-auto">
 
@@ -299,7 +119,7 @@ const SearchProduct = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 جستجو و بررسی محصول
               </h2>
-              <p className="text-gray-600">Search across thousands of products from local stores</p>
+              <p className="text-gray-600">جستجو در میان هزاران محصول از فروشگاه‌های محلی</p>
             </div>
 
             {/* search bar */}
@@ -326,29 +146,52 @@ const SearchProduct = () => {
 
               {/* city select */}
               <div className="relative group">
-                <label htmlFor="city-select" className="block text-sm font-medium text-gray-700 mb-2 ml-1">
-                  Location
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaMapMarkerAlt className="text-blue-500" />
-                  </div>
-                  <select
-                    id="city-select"
-                    value={selectedCity ?? ''}
-                    onChange={handleCityChange}
-                    className="block w-full pl-10 pr-10 py-3 bg-white/80 backdrop-blur border-2 border-blue-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent appearance-none text-base transition-all duration-300"
-                  >
-                    <option value="">All Cities</option>
-                    {allCities.map(c => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-blue-500">
-                    <FaChevronDown />
-                  </div>
-                </div>
+            <label className="block text-sm font-medium text-gray-700 mb-2 ml-1">
+              موقعیت مکانی
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FaMapMarkerAlt className="text-blue-500" />
               </div>
+              <input
+                type="text"
+                placeholder="شهر را وارد کنید..."
+                value={cityInput}
+                onChange={handleCityInput}
+                onKeyDown={handleCityKeyDown}
+                onFocus={() => setShowCityDropdown(true)}
+                className="block w-full pl-10 pr-10 py-3 bg-white/80 backdrop-blur border-2 border-blue-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent text-base transition-all duration-300"
+              />
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-blue-500">
+                <FaChevronDown />
+              </div>
+            </div>
+
+            <AnimatePresence>
+              {showCityDropdown && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="absolute z-50 mt-2 w-full bg-white rounded-lg shadow-lg max-h-40 overflow-y-auto origin-top"
+                >
+                  {filteredCities.map((city, idx) => (
+                    <div
+                      key={city.id}
+                      className={`px-4 py-3 cursor-pointer ${
+                        idx === cityIndex ? 'bg-blue-50' : 'hover:bg-gray-100'
+                      }`}
+                      onClick={() => handleCitySelect(city)}
+                    >
+                      {city.name}
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+          </div>
 
               {/* availability toggle */}
               <div className="flex items-center mt-2 sm:mt-0">
@@ -494,11 +337,7 @@ const SearchProduct = () => {
             </p>
             <button
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
-              onClick={()=>{
-                setSearchTerm('');
-                setSelectedCity(null);
-                setShowAvailableOnly(false);
-              }}
+              onClick={clearFilters}
             >
               Clear Filters
             </button>

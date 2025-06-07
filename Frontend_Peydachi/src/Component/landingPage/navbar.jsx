@@ -53,14 +53,11 @@ const Navbar = ()=>{
 
 
     return(
-        <motion.div 
-        initial={{ y: -100, opacity: 0 }} 
-        animate={{ y: 0, opacity: 1 }} 
-        transition={{ duration: 1 }} className="fixed w-full z-50 bg-white backdrop-blur-sm border-b border-gray-100" dir='rtl'>
+        <div className="fixed w-full z-50 bg-white backdrop-blur-sm border-b border-gray-100" dir='rtl'>
         <div  className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div className="flex items-center gap-2">
-             
-              <TbMapSearch className="z-10 text-blue-600 text-6xl "/>
+             <a href="/"><TbMapSearch className="z-10 text-blue-600 text-6xl "/></a>
+              
               <a href="/" className="text-3xl font-bold text-gray-800">پیداچی</a>
             </div>
             <div className="sm:hidden">
@@ -95,7 +92,7 @@ const Navbar = ()=>{
               </ul>
             </nav>
             </div>
-      </motion.div>
+      </div>
     )
 }
 
