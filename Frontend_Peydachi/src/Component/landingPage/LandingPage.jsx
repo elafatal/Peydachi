@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import FirstSection from './firstSection';
-import MenuBar from '../Navbar/Navbar';
 import Navbar from './navbar';
 import Footer from '../Footer/footer';
 import HowItWorks from './secondSection';
@@ -11,13 +10,10 @@ const LandingPage = () => {
  
   return (
     <div className=" bg-white" dir='ltr'>
-      {/* Hero Section */}
-      <FirstSection/>
-      {/* How It Works Section */}
-      <HowItWorks/>
 
-      {/* Features Section */}
-    <Features/>
+      <FirstSection/>
+      <HowItWorks/>
+      <Features/>
 
 
     </div>

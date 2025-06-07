@@ -1,6 +1,5 @@
 import React from 'react';
 import { FaSearch, FaMapMarkerAlt, FaCrosshairs } from 'react-icons/fa';
-
 const SearchControls = ({
   searchTerm,
   setSearchTerm,

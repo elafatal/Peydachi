@@ -5,7 +5,7 @@ import AboutUs from './Component/About us/AboutUs';
 import Login from './Component/SignUp-SignIn/Login';
 import LandingPage from './Component/landingPage/LandingPage';
 import Footer from './Component/Footer/footer';
-import MenuBar from './Component/Navbar/Navbar';
+
 import ErrorPage from './Component/Error/Error';
 import UserInfo from './Component/UserInfo/UserInfo';
 import { AuthProvider } from './Component/AuthContext/AuthContext';
@@ -36,7 +36,6 @@ function App() {
             <Route path="/aboutUs" element={<AboutUs />} />
             <Route path="/login" element={<Login />} />
             <Route path="/footer" element={<Footer />} />
-            <Route path="/m" element={<MenuBar />} />
             <Route path="*" element={<ErrorPage />} />
             <Route path="/userInfo" element={<UserInfo />} />
             <Route path="/Admin" element={<AdminPage/>} />
