@@ -33,7 +33,7 @@ const renderStars = (rating) => {
 // };
 
 
-const ProductList = ({ stores }) => {
+const ProductList = ({ stores , onStoreClick }) => {
   return (
     <div className="flex-1 overflow-auto p-4">
     <div className="mb-4">
@@ -49,6 +49,7 @@ const ProductList = ({ stores }) => {
       {stores.map((item, i) => (
         <div
           key={item.store.id}
+          onClick={() => onStoreClick(item.store)}
           className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
         >
           <div className="p-4">
@@ -87,10 +88,15 @@ const ProductList = ({ stores }) => {
                 </p>
 
                 {/* Stock badge */}
-                <div className="mt-2">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <div className="mt-2 flex justify-between">
+             
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                     <FaCheckCircle className="mr-1" /> 
                     موجود در انبار: {item.product.quantity}
+                  </span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <FaCheckCircle className="mr-1" /> 
+                    جزئیات فروشگاه 
                   </span>
                 </div>
               </div>

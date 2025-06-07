@@ -9,6 +9,7 @@ const useMainSearchLogic = () => {
   const [locationQuery, setLocationQuery] = useState('');
   const [range, setRange] = useState(5);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [selectedStoreLocation, setSelectedStoreLocation] = useState(null);
   const [searchPayload, setSearchPayload] = useState({
     name: '',
     city_id: null,
@@ -172,7 +173,8 @@ const useMainSearchLogic = () => {
     stores,
     cityName,
     setCityName,
-    handleSearchLocation2
+    handleSearchLocation2,
+    selectedStoreLocation, setSelectedStoreLocation
   };
 };
 

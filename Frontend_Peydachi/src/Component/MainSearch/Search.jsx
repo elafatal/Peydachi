@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { useSearchParams } from 'react-router-dom';
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import {
   FaChevronLeft,
   FaChevronRight,
@@ -14,9 +15,13 @@ import L from 'leaflet';
 import FlyToLocation from './FlyToLocation';
 import ProductList from './ProductList';
 import SearchControls from './SearchControls';
+import RoutePath from './RoutePath';
 
 import useMainSearchLogic from './useMainSearchLogic';
+import MapProvider from './MapProvider';
 const MainSearch = () => {
+  const [mapInstance, setMapInstance] = useState(null);
+
   const {
     searchTerm, setSearchTerm,
     location, setLocation,
@@ -28,7 +33,8 @@ const MainSearch = () => {
     sidebarOpen, setSidebarOpen,
     stores,
     cityName, setCityName,
-    handleSearchLocation2
+    handleSearchLocation2,
+    selectedStoreLocation, setSelectedStoreLocation
   } = useMainSearchLogic();
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const LocationSelector = ({ onSelect }) => {
@@ -95,7 +101,14 @@ const MainSearch = () => {
         {/* ----------------------------------------------------------------
          * Store list
          * -------------------------------------------------------------- */}
-        <ProductList stores={stores}/>
+<ProductList
+  stores={stores}
+  onStoreClick={(store) => {
+    console.log('📍 Store clicked:', store);
+    setSelectedStoreLocation(store); // این تابع در useMainSearchLogic تعریف شده
+  }}
+/>
+
       </div>
         {/* ////map */}
 
@@ -113,7 +126,10 @@ const MainSearch = () => {
             zoom={15}
             scrollWheelZoom={true}
             style={{ height: 'calc(100vh - 64px)', width: '100%' }}
+           
           >
+            <MapProvider setMap={setMapInstance}/>
+
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution="&copy; OpenStreetMap contributors"
@@ -136,9 +152,27 @@ const MainSearch = () => {
                 })}
               />
             )}
+            
+ <RoutePath
+  map={mapInstance}
+  from={location ? location.split(',').map(parseFloat) : null}
+  to={
+    selectedStoreLocation
+      ? [
+          parseFloat(selectedStoreLocation.location_latitude),
+          parseFloat(selectedStoreLocation.location_longitude),
+        ]
+      : null
+  }
+/>
+
+
+
+
+
           </MapContainer>
         )}
-          
+
           </div>
       {/* ----------------------------------------------------------------
        * Mobile bottom navigation

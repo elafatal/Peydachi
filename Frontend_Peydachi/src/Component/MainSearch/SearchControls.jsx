@@ -102,10 +102,10 @@ const SearchControls = ({
             {/* Search button */}
             <button
               onClick={handleSearch}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out flex items-center justify-center space-x-2 !rounded-button whitespace-nowrap"
+              className="w-full bg-blue-700 hover:bg-blue-600 text-white py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out flex items-center justify-center space-x-2 !rounded-button whitespace-nowrap"
             >
               <FaSearch />
-              <span>Search Nearby Stores</span>
+              <span>جستجو در فروشگاه‌های اطراف</span>
             </button>
           </div>
   );
