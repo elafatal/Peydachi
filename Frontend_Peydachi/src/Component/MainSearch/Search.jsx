@@ -1,26 +1,11 @@
-/* 
-  The exported code uses Tailwind CSS and react-icons. 
-  Make sure you have both libraries installed in your project:
-    npm install -D tailwindcss
-    npm install react-icons
-  Then follow Tailwind’s setup guide to include its styles.
-*/
-
 import React, { useEffect, useState, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { useSearchParams } from 'react-router-dom';
 import {
-  FaStar,
-  FaStarHalfAlt,
-  FaRegStar,
-  FaSearch,
-  FaMapMarkerAlt,
-  FaCrosshairs,
   FaChevronLeft,
   FaChevronRight,
   FaMap,
-  FaCheckCircle,
   FaList,
   FaMapMarkedAlt,
 } from 'react-icons/fa';
@@ -113,12 +98,6 @@ const MainSearch = () => {
         <ProductList stores={stores}/>
       </div>
         {/* ////map */}
-        {/* <MapSection  mapCenter={mapCenter}
-                location={location}
-                setLocation={setLocation}
-                sidebarOpen={sidebarOpen}
-                toggleSidebar={() => setSidebarOpen(prev => !prev)}
-                zoom={zoom} /> */}
 
         <div className={`relative ${sidebarOpen ? 'hidden md:block md:w-2/3' : 'w-full'}`}>
             {!sidebarOpen && (

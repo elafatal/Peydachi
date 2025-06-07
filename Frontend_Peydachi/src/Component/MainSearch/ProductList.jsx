@@ -38,7 +38,10 @@ const ProductList = ({ stores }) => {
     <div className="flex-1 overflow-auto p-4">
     <div className="mb-4">
       <h2 className="text-lg font-medium text-gray-800">
-        Found {stores.length} stores nearby
+      {stores.length > 0 ? <> برای شما
+       <span className='p-0.5'> {stores.length} </span>
+        فروشگاه پیدا شد </> : <span className='p-0.5'> نتیجه‌ای یافت نشد </span>}
+       
       </h2>
     </div>
 
@@ -53,9 +56,7 @@ const ProductList = ({ stores }) => {
               {/* Thumbnail */}
               <div className="h-16 w-16 rounded-lg overflow-hidden bg-blue-100 flex-shrink-0 mr-4">
                 <img
-                  src={`https://readdy.ai/api/search-image?query=Fresh%20organic%20grocery%20store%20with%20apples%20and%20fruits%2C%20clean%20modern%20interior%2C%20bright%20lighting%2C%20professional%20product%20display%2C%20minimalist%20design%2C%20high%20quality%20commercial%20photography&width=100&height=100&seq=${
-                    i + 1
-                  }&orientation=squarish`}
+                  src={item.product.pic_url}
                   alt={item.store.name}
                   className="h-full w-full object-cover object-top"
                 />
@@ -76,7 +77,7 @@ const ProductList = ({ stores }) => {
                 <div className="flex items-center mt-1">
                   <div className="flex mr-1">{renderStars(item.store.average_rating)}</div>
                   <span className="text-sm text-gray-500">
-                    ({item.store.average_rating.toFixed(1)})
+                    ({item.store.average_rating?.toFixed(1)})
                   </span>
                 </div>
 
@@ -88,8 +89,8 @@ const ProductList = ({ stores }) => {
                 {/* Stock badge */}
                 <div className="mt-2">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    <FaCheckCircle className="mr-1" />
-                    In Stock: {item.product.quantity}
+                    <FaCheckCircle className="mr-1" /> 
+                    موجود در انبار: {item.product.quantity}
                   </span>
                 </div>
               </div>
