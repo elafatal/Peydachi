@@ -37,7 +37,7 @@ class ProductSearchModels(BaseSchema):
 class SearchNearProductDisplay(BaseSchema):
     store: StoreDisplay
     product: ProductDisplay
-    distance: float | None
+    distance: float | None = None
 
 
 class FullSearchStoreProductModel(BaseSchema):

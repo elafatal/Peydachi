@@ -22,7 +22,7 @@ from botocore.exceptions import NoCredentialsError
 from dotenv import load_dotenv
 import os
 import io
-from redis import Redis
+from redis.asyncio import Redis
 
 
 load_dotenv()
@@ -343,27 +343,36 @@ async def search_near_products(search: ProductSearchModels, redis_db: Redis, db:
 
     generated_key = ''.join(random.choice(ascii_letters) for _ in range(6))
 
+
     for store in stores:
-        await redis_db.geoadd(generated_key, (float(store.location_longitude), float(store.location_latitude)), store.id)
+        this_long = float(store.location_longitude)
+        this_lat = float(store.location_latitude)
+        redis_db.geoadd(generated_key, (this_long, this_lat, store.id))
 
 
+    redis_db.expire(generated_key, 60)
     search_result = redis_db.geosearch(
         generated_key,
         unit="km",
         radius=search.range_km if search.range_km else 10,
         longitude=float(search.location_longitude),
-        latitude=float(search.location_latitude)
+        latitude=float(search.location_latitude),
+        withdist=True
     )
 
+
     if not search_result:
-        raise INTERNAL_ERROR
+        raise NO_PRODUCT_FOUND_ERROR
 
     result_display = []
     for result in search_result:
-        store_id = int(result[0])
+        print(result)
+        store_id = int(result[0].decode("utf-8"))
         result_product = next((product for product in products if product.store_id == store_id), None)
         result_store = next((store for store in stores if store.id == store_id), None)
-        distance = result[1]
+        distance = float(result[1])
+        print("Distance:", distance)
+
 
         result_json = {
             'store': result_store,
