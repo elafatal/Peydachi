@@ -20,6 +20,7 @@ import SearchProduct from './Component/otherServices/Product/SearchProduct';
 import AllNotifPage from './Component/Notification/AllNotifPage';
 import Navbar from './Component/landingPage/navbar';
 import ScrollToTop from './Component/ScrollToTop';
+import SelfStore from './Component/Store/selfStore';
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
             <Route path="/Search" element={<MainSearch/>} />
             <Route path="/SearchProduct" element={<SearchProduct/>} />
             <Route path="/AllNotification" element={<AllNotifPage/>} />
+            <Route path="/selfStore" element={<SelfStore/>} />
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />
