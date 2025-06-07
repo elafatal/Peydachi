@@ -370,7 +370,7 @@ async def search_near_products(search: ProductSearchModels, redis_db: Redis, db:
         store_id = int(result[0].decode("utf-8"))
         result_product = next((product for product in products if product.store_id == store_id), None)
         result_store = next((store for store in stores if store.id == store_id), None)
-        distance = float(result[1])
+        distance = round(float(result[1]), 2)
         print("Distance:", distance)
 
 
