@@ -6,6 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { TbMapPinSearch } from "react-icons/tb";
 import { TbMapSearch } from "react-icons/tb";
+import { IoIosMenu } from "react-icons/io";
+
+import { RiMenu2Fill } from "react-icons/ri";
+import { IoMdClose } from "react-icons/io";
 import { useAuth } from '../AuthContext/AuthContext';
 import Cookies from 'js-cookie';
 import Notifications from "../Notification/Notification";
@@ -62,9 +66,9 @@ const Navbar = ()=>{
             </div>
             <div className="sm:hidden">
               {isMenuOpen ? (
-                <FaUniversity onClick={toggleMenu} className="h-6 w-6 cursor-pointer" strokeWidth={2} />
+                <IoMdClose onClick={toggleMenu} className="h-6 w-6 cursor-pointer text-blue-800" strokeWidth={2} />
               ) : (
-                <FaUniversity onClick={toggleMenu} className="h-6 w-6 cursor-pointer" strokeWidth={2} />
+                <IoIosMenu onClick={toggleMenu} className="h-6 w-6 cursor-pointer text-blue-800" strokeWidth={2} />
               )}
             </div>
             <nav className={`sm:flex ${isMenuOpen ? 'block fixed inset-x-0 top-full left-0 w-4/5 m-auto sm:w-auto sm:relative sm:bg-transparent bg-white shadow-lg' : 'hidden'} mt-3 rounded-lg p-6 sm:p-0 z-10`}>

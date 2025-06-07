@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import loginLogo from '../../../public/loginLogo.jpg'
 import SignUp from './SignUp/SignUp';
 import SignIn from './SignIn/SignIn';
+import OTPVerification from './Verify/Verification';
 const Login= () => {
   // const location = useLocation();
   // const from = location.state?.from?.pathname || '/';
@@ -13,7 +14,7 @@ const Login= () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [showComponent, setshowComponent] = useState("Signin");
-
+const [username, setusername] = useState('');
   const handleSubmit = (e) => {
  
     e.preventDefault();
@@ -23,12 +24,14 @@ const Login= () => {
   const renderContent = () => {
     switch (showComponent) {
         case "Signin":
-            return(<SignIn  showComponent={showComponent} setshowComponent={setshowComponent}/>)
+            return(<SignIn  showComponent={showComponent} setshowComponent={setshowComponent} setusername={setusername} username={username} />)
             break;
         case "Signup":
             return(<SignUp showComponent={showComponent} setshowComponent={setshowComponent}/>)
             break;
-        
+        case "verify":
+            return(<OTPVerification  showComponent={showComponent} setshowComponent={setshowComponent} username={username}/> )
+            break;
         default:
             return(<SignUp showComponent={showComponent} setshowComponent={setshowComponent}/>)
             break;

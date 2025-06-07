@@ -6,15 +6,33 @@ import { useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../AuthContext/AuthContext';
-const SignIn= ({showComponent,setshowComponent }) => {
+
+const SignIn= ({showComponent,setshowComponent, setusername , username }) => {
   const navigate = useNavigate();
   const { login } = useAuth()
-  const [username, setusername] = useState('');
+  
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   
-  
+  const user_forget_password = async()=>{
+    setshowComponent("verify");
+    try {
+      const response = await axiosInstance.post('/phone_verification/user_forget_password', {
+        username: username
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      });
+      console.log(response);
+    } catch (error) {
+   console.log(error);
+   
+    }
+
+  }
   const handleSubmit =async (e) => {
     e.preventDefault();
     try{
@@ -132,15 +150,20 @@ const SignIn= ({showComponent,setshowComponent }) => {
           </div>
         </div>
         
-        <div className="flex items-center mb-6">
-          <input 
+        <div className="flex items-center justify-between mb-6">
+          <div > <input 
             type="checkbox" 
             id="remember" 
             checked={rememberMe}
             onChange={() => setRememberMe(!rememberMe)}
             className="h-4 w-4 text-blue-500 border-gray-300 rounded cursor-pointer"
           />
-          <label htmlFor="remember" className="mr-2 text-[13px] text-gray-600 cursor-pointer">مرا به خاطر بسپار</label>
+          <label htmlFor="remember" className="mr-2 text-[13px] text-gray-600 cursor-pointer">مرا به خاطر بسپار</label></div>
+          <div className="text-xs text-gray-500" onClick={() => {
+       
+            user_forget_password();
+          }}
+          >فراموشی رمز عبور</div>
         </div>
         
         <button 
