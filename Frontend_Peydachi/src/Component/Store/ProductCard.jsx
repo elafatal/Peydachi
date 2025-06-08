@@ -7,7 +7,7 @@ const ProductCard = ({ product, onEdit, formatDate }) => {
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
       <div className="relative">
         <img
-          src={product.pic_url}
+          src={product.pic_url || "/defult.png"}
           alt={product.name}
           className="w-full h-48 object-cover object-top"
         />
@@ -23,7 +23,7 @@ const ProductCard = ({ product, onEdit, formatDate }) => {
           <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
           <div className="flex items-center">
             <FaStar className="text-yellow-400 mr-1 text-sm" />
-            <span className="text-sm text-gray-600">{product.average_rating.toFixed(1)}</span>
+            <span className="text-sm text-gray-600">{(product.average_rating  ?? 0).toFixed(1)}</span>
           </div>
         </div>
         <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>

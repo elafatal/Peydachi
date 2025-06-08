@@ -355,7 +355,7 @@ if (sortOption === 'highestRated') {
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
               <div className="absolute top-0 right-0 pt-4 pr-4">
                 <button type="button" className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none !rounded-button whitespace-nowrap cursor-pointer" onClick={closeProductModal}>
-                  <span className="sr-only">Close</span>
+                  <span className="sr-only">بستن</span>
                   <FaTimes className="text-xl" />
                 </button>
               </div>
@@ -370,7 +370,7 @@ if (sortOption === 'highestRated') {
                     <div className="bg-gray-50 rounded-lg p-4">
                       <h4 className="text-sm font-medium text-gray-900 mb-2">Product Details</h4>
                       <div className="grid grid-cols-2 gap-2 text-sm">
-                        <div className="text-gray-600">Availability:</div>
+                        <div className="text-gray-600">موجودی:</div>
                         <div className={`font-medium ${selectedProduct.quantity>0?'text-green-600':'text-red-600'}`}>
                           {selectedProduct.quantity>0 ? `${selectedProduct.quantity} :موجودی` : 'ناموجود'}
                         </div>
