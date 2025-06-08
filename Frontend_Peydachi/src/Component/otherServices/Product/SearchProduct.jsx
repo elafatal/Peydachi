@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   FaStore,
   FaRegHeart,
+  FaHeart,
   FaSearch,
   FaMapMarkerAlt,
   FaChevronDown,
@@ -16,6 +17,7 @@ import {
   FaRegStar,
   FaStarHalfAlt
 } from 'react-icons/fa';
+
 import axiosInstance from '../../axiosInstance';
 import searchProduct from '../../../../public/searchProduct.jpg'
 import { motion, AnimatePresence } from 'framer-motion';
@@ -42,24 +44,35 @@ const SearchProduct = () => {
     clearFilters,
     handleSearch,
     sortOption,
-    setSortOption
+    setSortOption,
+    favorites,
+  toggleFavorite,
+  showOnlyFavorites,
+  setShowOnlyFavorites,
   } = useSearchProduct();
+
 const goHome =()=>{
   navigate('/', { replace: true });
 }
 const goMainSearch =()=>{
   navigate('/Search', { replace: true });
 }
-let sortedProducts = [...filteredProducts];
+
+let displayedProducts = [...filteredProducts];
+
+if (showOnlyFavorites) {
+  displayedProducts = displayedProducts.filter(p => favorites.includes(p.id));
+}
+
+let sortedProducts = [...displayedProducts];
 
 if (sortOption === 'highestRated') {
   sortedProducts.sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0));
 } else if (sortOption === 'newest') {
   sortedProducts.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
-}else if (sortOption === 'mostAvailable') {
+} else if (sortOption === 'mostAvailable') {
   sortedProducts.sort((a, b) => (b.quantity || 0) - (a.quantity || 0));
 }
-
 
 
   /* ----- helpers ----- */
@@ -188,6 +201,16 @@ if (sortOption === 'highestRated') {
               </p>
             </div>
             <div className="flex items-center bg-white rounded-lg shadow-sm p-2">
+            <button
+            onClick={() => setShowOnlyFavorites(prev => !prev)}
+            className={`text-sm font-medium px-4 py-2 rounded-lg transition-all duration-200 border 
+              ${showOnlyFavorites 
+                ? 'bg-red-100 text-red-700 border-red-400 hover:bg-red-200' 
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+          >
+            {showOnlyFavorites ? 'نمایش همه محصولات' : 'نمایش علاقه‌مندی‌ها'}
+          </button>
+
               <span className="text-sm text-gray-600 mr-3">مرتب سازی:</span>
                       <select
           value={sortOption}
@@ -252,9 +275,18 @@ if (sortOption === 'highestRated') {
                 <div className="p-6">
                   <div className="flex items-center mb-2">
                     <h3 className="text-lg font-bold text-gray-900 flex-1">{p.name}</h3>
-                    <button className="text-gray-400 hover:text-red-500 transition-colors">
-                      <FaRegHeart />
-                    </button>
+                    <button
+                    className={`text-xl transition-colors ${
+                      favorites.includes(p.id) ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
+                    }`}
+                    onClick={(e) => {
+                      e.stopPropagation(); // جلوگیری از باز شدن مودال
+                      toggleFavorite(p.id);
+                    }}
+                  >
+                    {favorites.includes(p.id) ? <FaHeart /> : <FaRegHeart />}
+                  </button>
+
                   </div>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-2">{p.description}</p>
                   <div className="flex items-center mb-4">
@@ -387,12 +419,21 @@ if (sortOption === 'highestRated') {
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-3">
-                      <button className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center !rounded-button whitespace-nowrap cursor-pointer">
+                      <button onClick={() => navigate(`/StoreDetail/${selectedProduct.store_id}`)} className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center !rounded-button whitespace-nowrap cursor-pointer">
                         <FaStore className="mr-2" /> دیدن جزئیات فروشگاه
                       </button>
-                      <button className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center !rounded-button whitespace-nowrap cursor-pointer">
-                        <FaRegHeart className="mr-2" /> Save to Favorites
-                      </button>
+                      <button
+                      className={`flex-1 border px-4 py-2 rounded-lg transition-colors flex items-center justify-center !rounded-button whitespace-nowrap cursor-pointer
+                        ${favorites.includes(selectedProduct.id)
+                          ? 'bg-red-100 border-red-400 text-red-700 hover:bg-red-200'
+                          : 'border-gray-300 text-gray-700 hover:bg-gray-50'}
+                      `}
+                      onClick={() => toggleFavorite(selectedProduct.id)}
+                    >
+                      <FaRegHeart className="mr-2" />
+                      {favorites.includes(selectedProduct.id) ? 'حذف از علاقه‌مندی‌' : 'افزودن به علاقه‌مندی‌'}
+                    </button>
+
                     </div>
                   </div>
                 </div>

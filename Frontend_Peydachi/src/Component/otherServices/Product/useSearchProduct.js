@@ -13,9 +13,28 @@ const useSearchProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [allCities, setAllCities] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+
   const chartRef = useRef(null);
 
-
+  useEffect(() => {
+    const stored = localStorage.getItem('favorites');
+    if (stored) {
+      setFavorites(JSON.parse(stored));
+    }
+  }, []);
+  const toggleFavorite = (productId) => {
+    setFavorites(prev => {
+      const updated = prev.includes(productId)
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId];
+  
+      localStorage.setItem('favorites', JSON.stringify(updated));
+      return updated;
+    });
+  };
+    
 
   const filteredProducts = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -163,7 +182,11 @@ const useSearchProduct = () => {
     clearFilters,
     handleSearch,
     sortOption,
-    setSortOption
+    setSortOption,
+    favorites,
+  toggleFavorite,
+  showOnlyFavorites,
+  setShowOnlyFavorites,
   };
 };
 
