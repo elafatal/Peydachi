@@ -22,7 +22,7 @@ async def get_all_regions(db: Session):
 
 
 async def search_region_by_name(region_name: str, db: Session):
-    regions = db.query(Region).filter(Region.name.match(region_name)).all()
+    regions = db.query(Region).filter(Region.name.contains(region_name)).all()
 
     if not regions:
         raise NO_REGION_FOUND_ERROR

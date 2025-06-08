@@ -32,7 +32,7 @@ async def get_cities_of_region(region_id: int, db: Session):
 
 
 async def search_city_by_name(city_name: str, db: Session):
-    cities = db.query(City).filter(City.name.match(city_name)).all()
+    cities = db.query(City).filter(City.name.contains(city_name)).all()
 
     if not cities:
         raise NO_CITY_FOUND_ERROR
@@ -41,7 +41,7 @@ async def search_city_by_name(city_name: str, db: Session):
 
 
 async def search_city_in_region(city_name: str, region_id: int, db: Session):
-    cities = db.query(City).filter(and_(City.name.match(city_name), City.region_id == region_id)).all()
+    cities = db.query(City).filter(and_(City.name.contains(city_name), City.region_id == region_id)).all()
 
     if not cities:
         raise NO_CITY_FOUND_ERROR
