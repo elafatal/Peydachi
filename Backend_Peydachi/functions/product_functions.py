@@ -3,7 +3,7 @@ from fastapi import UploadFile, File
 from database.models import Product, Store, ProductComment, ProductRating, DeletedPics
 from sqlalchemy.orm import Session
 from urllib.parse import quote
-from sqlalchemy import delete, and_
+from sqlalchemy import delete, and_, func
 from schemas.product_schemas import ProductModel, UpdateProductModel, ProductSearchModels, FullSearchStoreProductModel
 from string import ascii_letters
 import random
@@ -402,7 +402,7 @@ async def full_search_in_store_products(search_request: FullSearchStoreProductMo
     elif search_request.order:
         if search_request.search_text:
             if search_request.order == 'favorite':
-                products = db.query(Product).filter(and_(Product.store_id == search_request.store_id, Product.name.contains(search_request.search_text))).order_by(Product.average_rating.desc()).limit(search_limit).offset(search_offset).all()
+                products = db.query(Product).filter(and_(Product.store_id == search_request.store_id, Product.name.contains(search_request.search_text))).order_by(func.coalesce(Product.average_rating, 0).desc()).limit(search_limit).offset(search_offset).all()
 
             elif search_request.order == 'newest':
                 products = db.query(Product).filter(and_(Product.store_id == search_request.store_id, Product.name.contains(search_request.search_text))).order_by(Product.date_added.desc()).limit(search_limit).offset(search_offset).all()
@@ -410,9 +410,12 @@ async def full_search_in_store_products(search_request: FullSearchStoreProductMo
             elif search_request.order == 'oldest':
                 products = db.query(Product).filter(and_(Product.store_id == search_request.store_id, Product.name.contains(search_request.search_text))).order_by(Product.date_added.asc()).limit(search_limit).offset(search_offset).all()
 
+            else:
+                products = db.query(Product).filter(and_(Product.store_id == search_request.store_id, Product.name.contains(search_request.search_text))).order_by(func.coalesce(Product.average_rating, 0).desc()).limit(search_limit).offset(search_offset).all()
+
         else:
             if search_request.order == 'favorite':
-                products = db.query(Product).filter(Product.store_id == search_request.store_id).order_by(Product.average_rating.desc()).limit(search_limit).offset(search_offset).all()
+                products = db.query(Product).filter(Product.store_id == search_request.store_id).order_by(func.coalesce(Product.average_rating, 0).desc()).limit(search_limit).offset(search_offset).all()
 
             elif search_request.order == 'newest':
                 products = db.query(Product).filter(Product.store_id == search_request.store_id).order_by(Product.date_added.desc()).limit(search_limit).offset(search_offset).all()
@@ -420,8 +423,12 @@ async def full_search_in_store_products(search_request: FullSearchStoreProductMo
             elif search_request.order == 'oldest':
                 products = db.query(Product).filter(Product.store_id == search_request.store_id).order_by(Product.date_added.asc()).limit(search_limit).offset(search_offset).all()
 
+            else:
+                products = db.query(Product).filter(Product.store_id == search_request.store_id).order_by(func.coalesce(Product.average_rating, 0).desc()).limit(search_limit).offset(search_offset).all()
+
+
     else:
-        products = db.query(Product).filter(Product.store_id == search_request.store_id).order_by(Product.average_rating.desc()).limit(search_limit).offset(search_offset).all()
+        products = db.query(Product).filter(Product.store_id == search_request.store_id).order_by(func.coalesce(Product.average_rating, 0).desc()).limit(search_limit).offset(search_offset).all()
 
 
     if not products:

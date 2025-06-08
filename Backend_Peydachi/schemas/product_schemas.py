@@ -18,6 +18,7 @@ class UpdateProductModel(BaseSchema):
 class ProductDisplay(BaseSchema):
     id: int
     name: str
+    store_id: int
     description: str | None = None
     quantity: int | None = None
     date_added: datetime.datetime
@@ -41,7 +42,7 @@ class SearchNearProductDisplay(BaseSchema):
 
 
 class FullSearchStoreProductModel(BaseSchema):
-    search_text: str | None
+    search_text: str | None = None
     store_id: int
     show_limit: int | None = 10
     page: int | None = 1
