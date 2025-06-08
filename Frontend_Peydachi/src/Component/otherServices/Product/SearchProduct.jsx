@@ -315,15 +315,15 @@ if (sortOption === 'highestRated') {
                       )}
                     </div>
                     <div className="text-sm text-gray-500">
-  <FaMapMarkerAlt className="text-blue-500 mr-1 inline" />
-  {getCityName(p.city_id)}
-</div>
+      <FaMapMarkerAlt className="text-blue-500 mr-1 inline" />
+        {getCityName(p.city_id)}
+      </div>
 
-                  </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            ))}
-          </div>
         ) : (
           /* empty state */
           <div className="text-center py-12">
@@ -397,24 +397,20 @@ if (sortOption === 'highestRated') {
                       <div ref={chartRef} className="h-48 w-full" />
                     </div>
 
-                    <div className="mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Customer Reviews</h3>
+                    <div  className="mb-6">
+                      <h3 dir='rtl' className="text-lg text-start font-semibold text-gray-900 mb-3">نظرات مشتریان</h3>
                       <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
-                        {comments.map(c=>(
-                          <div key={c.id} className="border-b border-gray-200 pb-3">
+                        {comments.length === 0 ?  <p className="text-sm text-end text-gray-500">.نظری برای این محصول ثبت نشده است</p> :
+                        comments.map(c=>(
+                          <div dir='rtl' key={c.id} className="border-b border-gray-200 pb-3">
                             <div className="flex justify-between items-center mb-1">
-                              <h4 className="font-medium text-gray-900">{c.user}</h4>
-                              <div className="flex">
-                                {[...Array(5)].map((_,i)=>(
-                                  i < c.rating
-                                    ? <FaStar key={i} className="text-yellow-400 text-xs" />
-                                    : <FaRegStar key={i} className="text-yellow-400 text-xs" />
-                                ))}
-                              </div>
+                              <h4 className="font-medium text-gray-900">{c.user_name}</h4>
+                              <div className="">{formatDate(c.date_added)}</div>
                             </div>
-                            <p className="text-sm text-gray-600">{c.text}</p>
+                            <p className="text-sm text-start  text-gray-600">{c.text}</p>
                           </div>
                         ))}
+                       
                       </div>
                     </div>
 
@@ -430,8 +426,7 @@ if (sortOption === 'highestRated') {
                       `}
                       onClick={() => toggleFavorite(selectedProduct.id)}
                     >
-                      <FaRegHeart className="mr-2" />
-                      {favorites.includes(selectedProduct.id) ? 'حذف از علاقه‌مندی‌' : 'افزودن به علاقه‌مندی‌'}
+                      {favorites.includes(selectedProduct.id) ?<> < FaHeart className='mr-1'/> حذف از علاقه‌مندی‌</> : <> < FaRegHeart className='mr-1'/> افزودن به علاقه‌مندی‌</> }
                     </button>
 
                     </div>
