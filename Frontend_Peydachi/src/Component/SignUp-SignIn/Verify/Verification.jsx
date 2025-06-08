@@ -137,7 +137,7 @@ const OTPVerification = ({ showComponent,setshowComponent ,username }) => {
       </header>
       <form onSubmit={handleSubmit}>
         <div className="flex items-center justify-center gap-3">
-          {[...Array(6)].map((_, index) => (
+          {[...Array(5)].map((_, index) => (
             <input
               key={index}
               type="text"
