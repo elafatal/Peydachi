@@ -6,7 +6,7 @@ import axiosInstance from '../axiosInstance';
 import { formatDistanceToNow } from 'date-fns';
 import faIR from 'date-fns/locale/fa-IR';
 
-const Store = () => {
+const StoreProfile = () => {
   const { id } = useParams(); 
   const [store, setStore] = useState(null);
   const [products2,setProducts2]=useState(null)
@@ -328,4 +328,4 @@ const Store = () => {
   );
 };
 
-export default Store;
+export default StoreProfile;
