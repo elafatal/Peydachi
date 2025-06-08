@@ -1,10 +1,10 @@
 from schemas.base_schemas import BaseSchema
-
+from typing import Dict
 
 class StoreModel(BaseSchema):
     name: str
     owner_id: int | None = None
-    contact_info: dict | None = None
+    contact_info: Dict[str, str] | None = None
     description: str | None = None
     location_longitude: str | None = None
     location_latitude: str | None = None
