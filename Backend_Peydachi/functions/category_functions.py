@@ -52,7 +52,7 @@ async def change_category_name(update: UpdateCategoryModel, db: Session):
 
 
 async def search_category(name: str, db: Session):
-    categories = db.query(Category).filter(Category.name.match(name)).all()
+    categories = db.query(Category).filter(Category.name.contains(name)).all()
     if not categories:
         raise NO_CATEGORY_FOUND_ERROR
 
