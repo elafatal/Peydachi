@@ -8,7 +8,7 @@ const useSearchProduct = () => {
   const [showAvailableOnly, setShowAvailableOnly] = useState(false);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [start, setStart] = useState(false);
+  const [sortOption, setSortOption] = useState('relevance');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
@@ -162,8 +162,8 @@ const useSearchProduct = () => {
     formatDate,
     clearFilters,
     handleSearch,
-    setStart,
-    start
+    sortOption,
+    setSortOption
   };
 };
 

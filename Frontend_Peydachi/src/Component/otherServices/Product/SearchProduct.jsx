@@ -41,8 +41,8 @@ const SearchProduct = () => {
     formatDate,
     clearFilters,
     handleSearch,
-    setStart,
-    start
+    sortOption,
+    setSortOption
   } = useSearchProduct();
 const goHome =()=>{
   navigate('/', { replace: true });
@@ -50,7 +50,18 @@ const goHome =()=>{
 const goMainSearch =()=>{
   navigate('/Search', { replace: true });
 }
-  
+let sortedProducts = [...filteredProducts];
+
+if (sortOption === 'highestRated') {
+  sortedProducts.sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0));
+} else if (sortOption === 'newest') {
+  sortedProducts.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
+}else if (sortOption === 'mostAvailable') {
+  sortedProducts.sort((a, b) => (b.quantity || 0) - (a.quantity || 0));
+}
+
+
+
   /* ----- helpers ----- */
   const renderStars = (rating) => {
     const stars = [];
@@ -178,13 +189,17 @@ const goMainSearch =()=>{
             </div>
             <div className="flex items-center bg-white rounded-lg shadow-sm p-2">
               <span className="text-sm text-gray-600 mr-3">مرتب سازی:</span>
-              <select className="text-sm bg-transparent border-none focus:ring-0 focus:outline-none text-gray-700 pr-8 cursor-pointer">
-                <option>Most Relevant</option>
-                <option>Highest Rated</option>
-                <option>Newest Arrivals</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-              </select>
+                      <select
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+          className="text-sm bg-transparent border-none focus:ring-0 focus:outline-none text-gray-700 pr-8 cursor-pointer"
+        >
+          <option value="relevance"> مرتبط ترین </option>
+          <option value="highestRated">بیشترین امتیاز</option>
+          <option value="newest">جدیدترین</option>
+          <option value="mostAvailable">بیشترین موجودی</option>
+        </select>
+
             </div>
           </div>
         </div>
@@ -212,9 +227,9 @@ const goMainSearch =()=>{
               </div>
             ))}
           </div>
-        ) : filteredProducts.length ? (
+        ) : sortedProducts .length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {filteredProducts.map(p=>(
+            {sortedProducts .map(p=>(
               <div
                 key={p.id}
                 className="group bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl transform hover:-translate-y-2 cursor-pointer"
@@ -223,13 +238,14 @@ const goMainSearch =()=>{
                 <div className="relative h-56 overflow-hidden bg-gradient-to-r from-blue-50 to-purple-50">
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 group-hover:opacity-0 transition-opacity duration-300" />
                   <img
-                    src={p.pic_url}
-                    alt={p.name}
-                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
-                  />
+                  src={p.pic_url || "/defult.png"}
+                  alt={p.name}
+                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                />
+
                   {p.quantity>0 && (
                     <div className="absolute top-4 right-4 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                      In Stock
+                      موجود در انبار
                     </div>
                   )}
                 </div>
@@ -258,11 +274,11 @@ const goMainSearch =()=>{
                     <div className={`text-sm font-medium ${p.quantity>0?'text-green-600':'text-red-500'}`}>
                       {p.quantity>0 ? (
                         <span className="flex items-center">
-                          <FaCheckCircle className="mr-1" /> {p.quantity} available
+                          <FaCheckCircle className="mr-1" /> موجود
                         </span>
                       ) : (
                         <span className="flex items-center">
-                          <FaTimesCircle className="mr-1" /> Out of stock
+                          <FaTimesCircle className="mr-1" /> ناموجود  
                         </span>
                       )}
                     </div>
@@ -324,7 +340,7 @@ const goMainSearch =()=>{
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div className="text-gray-600">Availability:</div>
                         <div className={`font-medium ${selectedProduct.quantity>0?'text-green-600':'text-red-600'}`}>
-                          {selectedProduct.quantity>0 ? `${selectedProduct.quantity} in stock` : 'Out of stock'}
+                          {selectedProduct.quantity>0 ? `${selectedProduct.quantity} :موجودی` : 'ناموجود'}
                         </div>
                         <div className="text-gray-600">Location:</div>
                         <div>{getCityName(selectedProduct.city_id)}</div>
