@@ -170,7 +170,7 @@ const AddStore = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-10 px-4" dir='ltr'>
+    <div className="min-h-screen bg-blue-50 flex items-center justify-center py-10 px-4" dir='ltr'>
       <div className="w-full max-w-3xl bg-white rounded-2xl shadow-md overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white">
           <h1 className="mt-3 text-center text-3xl font-bold">ثبت فروشگاه</h1>

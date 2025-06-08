@@ -13,9 +13,28 @@ const useSearchProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [allCities, setAllCities] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+
   const chartRef = useRef(null);
 
-
+  useEffect(() => {
+    const stored = localStorage.getItem('favorites');
+    if (stored) {
+      setFavorites(JSON.parse(stored));
+    }
+  }, []);
+  const toggleFavorite = (productId) => {
+    setFavorites(prev => {
+      const updated = prev.includes(productId)
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId];
+  
+      localStorage.setItem('favorites', JSON.stringify(updated));
+      return updated;
+    });
+  };
+    
 
   const filteredProducts = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -31,23 +50,32 @@ const useSearchProduct = () => {
     setSelectedCity(isNaN(id) ? null : id);
   };
   const handleAvailabilityToggle = () => setShowAvailableOnly(!showAvailableOnly);
-
-  const openProductModal = (product) => {
+  const openProductModal = async (product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
-
-    const mockComments = [
-      { id: 1, user: 'Sarah J.', text: 'Excellent product! Exactly as described and arrived quickly.', rating: 5 },
-      { id: 2, user: 'Michael T.', text: 'Good quality but shipping took longer than expected.', rating: 4 },
-      { id: 3, user: 'Emma R.', text: 'Works well but the battery life is shorter than advertised.', rating: 3 },
-      { id: 4, user: 'David L.', text: 'Perfect! Would definitely recommend to others.', rating: 5 },
-      { id: 5, user: 'Lisa M.', text: 'Great value for the price. Very satisfied with my purchase.', rating: 4 }
-    ];
-    setComments(mockComments);
-
+    setComments([]); // برای نمایش حالت لودینگ یا خالی بودن تا گرفتن دیتا
+  
+    try {
+      const response = await axiosInstance.post('/product_comment/get_product_comments', {
+        product_id: product.id
+      });
+  
+      setComments(response.data); // فرض بر اینه که دیتا آرایه‌ای از کامنت‌هاست
+  
+    } catch (error) {
+      console.error('خطا در دریافت کامنت‌ها:', error);
+      setComments([]); // یا شاید پیام خطا نشان بدی
+    }
+  
+    // chart rendering
     setTimeout(() => {
       if (!chartRef.current) return;
       const chart = echarts.init(chartRef.current);
+      const ratingData = [5, 4, 3, 2, 1].map(r => ({
+        value: comments.filter(c => c.rating === r).length,
+        name: `${r} Stars`
+      }));
+  
       chart.setOption({
         animation: false,
         title: { text: 'Rating Distribution', left: 'center', textStyle: { fontSize: 14 } },
@@ -61,16 +89,10 @@ const useSearchProduct = () => {
           label: { show: false, position: 'center' },
           emphasis: { label: { show: true, fontSize: '14', fontWeight: 'bold' } },
           labelLine: { show: false },
-          data: [
-            { value: mockComments.filter(c => c.rating === 5).length, name: '5 Stars', itemStyle: { color: '#4CAF50' } },
-            { value: mockComments.filter(c => c.rating === 4).length, name: '4 Stars', itemStyle: { color: '#8BC34A' } },
-            { value: mockComments.filter(c => c.rating === 3).length, name: '3 Stars', itemStyle: { color: '#FFC107' } },
-            { value: mockComments.filter(c => c.rating === 2).length, name: '2 Stars', itemStyle: { color: '#FF9800' } },
-            { value: mockComments.filter(c => c.rating === 1).length, name: '1 Star',  itemStyle: { color: '#F44336' } }
-          ]
+          data: ratingData
         }]
       });
-
+  
       const onResize = () => chart.resize();
       window.addEventListener('resize', onResize);
       return () => {
@@ -79,7 +101,7 @@ const useSearchProduct = () => {
       };
     }, 0);
   };
-
+  
   const closeProductModal = () => {
     setIsModalOpen(false);
     setSelectedProduct(null);
@@ -163,7 +185,11 @@ const useSearchProduct = () => {
     clearFilters,
     handleSearch,
     sortOption,
-    setSortOption
+    setSortOption,
+    favorites,
+  toggleFavorite,
+  showOnlyFavorites,
+  setShowOnlyFavorites,
   };
 };
 
