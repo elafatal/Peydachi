@@ -20,7 +20,7 @@ class StoreDisplay(StoreModel):
 
 class UpdateStoreModel(BaseSchema):
     name: str | None = None
-    contact_info: dict | None = None
+    contact_info: Dict[str, str] | None = None
     description: str | None = None
     location_longitude: str | None = None
     location_latitude: str | None = None
