@@ -172,48 +172,7 @@ const SelfStore = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50" dir='ltr'>
-      {/* Header */}
-      {/* <header className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white shadow-xl overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src="https://readdy.ai/api/search-image?query=vibrant%20cosmic%20nebula%20with%20swirling%20clouds%20of%20purple%2C%20blue%20and%20pink%20cosmic%20dust%2C%20with%20glowing%20stars%20and%20ethereal%20light%20beams%20creating%20a%20magical%20and%20inspiring%20atmosphere%2C%20perfect%20for%20a%20creative%20product%20dashboard%20header&width=1440&height=240&seq=header3&orientation=landscape" 
-            className="w-full h-full object-cover mix-blend-overlay opacity-70" 
-            alt="cosmic nebula" 
-          />
-        </div>
-        <div className="container mx-auto px-6 py-10 relative">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button className="hover:bg-white/20 p-3 rounded-full transition-all duration-300 cursor-pointer backdrop-blur-sm">
-                <i className="fas fa-arrow-left"></i>
-              </button>
-              <div>
-                <h1 className="text-4xl font-bold mb-2 tracking-tight">Create Masterpiece</h1>
-                <p className="text-blue-100 text-lg">Bring your product vision to life</p>
-              </div>
-            </div>
-            <div className="hidden md:flex items-center space-x-4">
-              <button className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full transition-all duration-300 cursor-pointer !rounded-button whitespace-nowrap">
-                <i className="fas fa-question-circle mr-2"></i>
-                Get Help
-              </button>
-              <button className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full transition-all duration-300 cursor-pointer !rounded-button whitespace-nowrap">
-                <i className="fas fa-magic mr-2"></i>
-                Auto-Fill
-              </button>
-            </div>
-          </div>
-          <div className="mt-8 flex items-center space-x-4">
-            <div className="flex-1">
-              <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-                <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: '25%' }}></div>
-              </div>
-            </div>
-            <span className="text-white/80 text-sm font-medium">Step 1 of 4</span>
-          </div>
-        </div>
-      </header> */}
-
+    
       {/* Main Content */}
       <main className="container mx-auto px-6 py-12 relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200 rounded-full opacity-20 blur-3xl -z-10"></div>

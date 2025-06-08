@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import useSearchProduct from './useSearchProduct';
+import { useNavigate } from 'react-router-dom';
 import {
   FaStore,
   FaRegHeart,
@@ -15,11 +16,11 @@ import {
   FaRegStar,
   FaStarHalfAlt
 } from 'react-icons/fa';
-import useCitySelector from './useCitySelector';
 import axiosInstance from '../../axiosInstance';
 import searchProduct from '../../../../public/searchProduct.jpg'
 import { motion, AnimatePresence } from 'framer-motion';
 const SearchProduct = () => {
+  const navigate = useNavigate();
   const {
     searchTerm,
     showAvailableOnly,
@@ -38,20 +39,17 @@ const SearchProduct = () => {
     closeProductModal,
     getCityName,
     formatDate,
-    clearFilters
+    clearFilters,
+    handleSearch,
+    setStart,
+    start
   } = useSearchProduct();
-  const {
-    cityInput,
-    selectedCity,
-    filteredCities,
-    showCityDropdown,
-    cityIndex,
-    setSelectedCity,
-    setShowCityDropdown,
-    handleCityInput,
-    handleCityKeyDown,
-    handleCitySelect,
-  } = useCitySelector();
+const goHome =()=>{
+  navigate('/', { replace: true });
+}
+const goMainSearch =()=>{
+  navigate('/Search', { replace: true });
+}
   
   /* ----- helpers ----- */
   const renderStars = (rating) => {
@@ -91,10 +89,10 @@ const SearchProduct = () => {
                 برای خرید آسان، موقعیت مکانی را وارد کنید.
               </p>
               <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-                <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors !rounded-button whitespace-nowrap cursor-pointer">
+                <button onClick={goMainSearch} className="bg-white text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors !rounded-button whitespace-nowrap cursor-pointer">
                   <FaMapMarkerAlt className="inline mr-2" /> جستجو با لوکیشن
                 </button>
-                <button className="bg-transparent text-white border border-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors !rounded-button whitespace-nowrap cursor-pointer">
+                <button onClick={goHome} className="bg-transparent text-white border border-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors !rounded-button whitespace-nowrap cursor-pointer">
                  بازگشت به خانه
                 </button>
               </div>
@@ -124,19 +122,17 @@ const SearchProduct = () => {
 
             {/* search bar */}
             <div className="relative transform hover:scale-[1.02] transition-transform duration-300">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <FaSearch className="text-blue-500 text-lg" />
-              </div>
-              <input
+             
+              <input dir='rtl'
                 type="text"
                 value={searchTerm}
                 onChange={handleSearchChange}
-                placeholder="What are you looking for today?"
-                className="w-full pl-12 pr-40 py-4 bg-white/80 backdrop-blur border-2 border-blue-100 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent text-base shadow-sm transition-all duration-300"
+                placeholder="دنبال چه چیزی میگردید؟"
+                className="w-full pr-15 pl-40 py-4 bg-white/80 backdrop-blur border-2 border-blue-100 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent text-base shadow-sm transition-all duration-300"
               />
               <div className="absolute inset-y-2 right-2 flex items-center">
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg shadow-sm transition-colors flex items-center !rounded-button whitespace-nowrap cursor-pointer">
-                  <FaSearch className="mr-2" /> Search
+                <button onClick={handleSearch} className=" border-1 border-blue-500 px-2 py-2 rounded-full shadow-sm transition-colors flex items-center !rounded-button whitespace-nowrap cursor-pointer">
+                  <FaSearch className='text-blue-500' /> 
                 </button>
               </div>
             </div>
@@ -144,54 +140,7 @@ const SearchProduct = () => {
             {/* filters */}
             <div className="mt-6 flex justify-between">
 
-              {/* city select */}
-              <div className="relative group">
-            <label className="block text-sm font-medium text-gray-700 mb-2 ml-1">
-              موقعیت مکانی
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaMapMarkerAlt className="text-blue-500" />
-              </div>
-              <input
-                type="text"
-                placeholder="شهر را وارد کنید..."
-                value={cityInput}
-                onChange={handleCityInput}
-                onKeyDown={handleCityKeyDown}
-                onFocus={() => setShowCityDropdown(true)}
-                className="block w-full pl-10 pr-10 py-3 bg-white/80 backdrop-blur border-2 border-blue-100 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent text-base transition-all duration-300"
-              />
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-blue-500">
-                <FaChevronDown />
-              </div>
-            </div>
 
-            <AnimatePresence>
-              {showCityDropdown && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  className="absolute z-50 mt-2 w-full bg-white rounded-lg shadow-lg max-h-40 overflow-y-auto origin-top"
-                >
-                  {filteredCities.map((city, idx) => (
-                    <div
-                      key={city.id}
-                      className={`px-4 py-3 cursor-pointer ${
-                        idx === cityIndex ? 'bg-blue-50' : 'hover:bg-gray-100'
-                      }`}
-                      onClick={() => handleCitySelect(city)}
-                    >
-                      {city.name}
-                    </div>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-          </div>
 
               {/* availability toggle */}
               <div className="flex items-center mt-2 sm:mt-0">
@@ -209,7 +158,7 @@ const SearchProduct = () => {
                   ></label>
                 </div>
                 <label htmlFor="availability-toggle" className="text-sm font-medium text-gray-700 cursor-pointer">
-                  Show Available Only
+                  موجود
                 </label>
               </div>
             </div>
@@ -217,18 +166,18 @@ const SearchProduct = () => {
         </div>
 
         {/* --- results header --- */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-6">
+        <div dir='rtl' className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                {loading ? 'Discovering products...' : `${filteredProducts.length} Amazing Finds`}
+                {loading ? 'درحال جستجو' : `نتیجه یافت شد ${filteredProducts.length}`}
               </h2>
-              <p className="text-gray-600 text-sm">
-                {loading ? 'Searching across all stores...' : 'Browse through our curated selection'}
+              <p  className="text-gray-600 text-sm">
+                {loading ? 'جستجو در تمام فروشگاه‌ها...' : ' از میان مجموعه منتخب ما مرور کنید'}
               </p>
             </div>
             <div className="flex items-center bg-white rounded-lg shadow-sm p-2">
-              <span className="text-sm text-gray-600 mr-3">Sort by:</span>
+              <span className="text-sm text-gray-600 mr-3">مرتب سازی:</span>
               <select className="text-sm bg-transparent border-none focus:ring-0 focus:outline-none text-gray-700 pr-8 cursor-pointer">
                 <option>Most Relevant</option>
                 <option>Highest Rated</option>
@@ -295,7 +244,10 @@ const SearchProduct = () => {
                   <div className="flex items-center mb-4">
                     <div className="flex-1">
                       {renderStars(p.average_rating)}
-                      <span className="ml-2 text-sm text-gray-500">({p.average_rating.toFixed(1)})</span>
+                      <span className="ml-2 text-sm text-gray-500">
+                    ({(p.average_rating ?? 0).toFixed(1)})
+                  </span>
+
                     </div>
                     {/* <div className="text-sm text-gray-500">
                       <FaMapMarkerAlt className="text-blue-500 mr-1 inline" />
@@ -315,9 +267,10 @@ const SearchProduct = () => {
                       )}
                     </div>
                     <div className="text-sm text-gray-500">
-                      <FaMapMarkerAlt className="text-blue-500 mr-1 inline" />
-                      {getCityName(p.city_id)}
-                    </div>
+  <FaMapMarkerAlt className="text-blue-500 mr-1 inline" />
+  {getCityName(p.city_id)}
+</div>
+
                   </div>
                 </div>
               </div>
@@ -331,15 +284,14 @@ const SearchProduct = () => {
               alt="No results found"
               className="mx-auto w-48 h-auto mb-4"
             />
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No products found</h3>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">محصولی پیدا نشد</h3>
             <p className="text-gray-600 mb-4">
-              Try adjusting your search or filter to find what you're looking for.
+            سعی کنید جستجو یا فیلتر خود را برای یافتن آنچه به دنبالش هستید تنظیم کنید
             </p>
             <button
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
               onClick={clearFilters}
-            >
-              Clear Filters
+            >پاک کردن فیلترها
             </button>
           </div>
         )}
@@ -389,7 +341,7 @@ const SearchProduct = () => {
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedProduct.name}</h2>
                     <div className="flex items-center mb-4">
                       {renderStars(selectedProduct.average_rating)}
-                      <span className="ml-2 text-sm text-gray-600">{selectedProduct.average_rating.toFixed(1)} out of 5</span>
+                      <span className="ml-2 text-sm text-gray-600">{selectedProduct.average_rating?.toFixed(1)} 5</span>
                     </div>
                     <p className="text-gray-700 mb-6">{selectedProduct.description}</p>
 
@@ -420,7 +372,7 @@ const SearchProduct = () => {
 
                     <div className="flex flex-col sm:flex-row gap-3">
                       <button className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center !rounded-button whitespace-nowrap cursor-pointer">
-                        <FaStore className="mr-2" /> View Store Details
+                        <FaStore className="mr-2" /> دیدن جزئیات فروشگاه
                       </button>
                       <button className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center !rounded-button whitespace-nowrap cursor-pointer">
                         <FaRegHeart className="mr-2" /> Save to Favorites

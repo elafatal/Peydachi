@@ -117,7 +117,7 @@ const Store = () => {
           store_id: Number(id),
         });
         setProducts2(response.data);
-        console.log(products2);
+        console.log(response.data);
         
       } catch (err) {
         console.error('خطا در دریافت اطلاعات محصول:', err);
