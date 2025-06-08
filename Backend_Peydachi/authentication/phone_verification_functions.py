@@ -18,7 +18,7 @@ async def user_sign_up_phone_verification(phone_number: str, redis_db: Redis, db
     if user:
         raise PHONE_NUMBER_DUPLICATE_ERROR
 
-    code = randint(100000, 999999)
+    code = randint(10000, 99999)
 
     user_verification_code = {
         'code': code,
@@ -61,7 +61,7 @@ async def user_forget_password(username: str, redis_db: Redis, db: Session):
     phone_number = user.phone_number
     if not phone_number:
         raise USER_HAS_NO_PHONE_NUMBER_ERROR
-    code = randint(100000, 999999)
+    code = randint(10000, 99999)
 
     try:
         user_verification_code = {
