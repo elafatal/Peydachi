@@ -13,24 +13,6 @@ const renderStars = (rating) => {
     </>
   );
 };
-// const renderStars = (rating) => {
-//   const fullStars = Math.floor(rating);
-//   const halfStar = rating % 1 >= 0.5;
-//   const elements = [];
-  
-  
-//   for (let i = 0; i < fullStars; i++) {
-//     elements.push(<FaStar key={`full-${i}`} className="text-yellow-400" />);
-//   }
-//   if (halfStar) {
-//     elements.push(<FaStarHalfAlt key="half" className="text-yellow-400" />);
-//   }
-//   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-//   for (let i = 0; i < emptyStars; i++) {
-//     elements.push(<FaRegStar key={`empty-${i}`} className="text-yellow-400" />);
-//   }
-//   return elements;
-// };
 
 
 const ProductList = ({ stores , onStoreClick }) => {

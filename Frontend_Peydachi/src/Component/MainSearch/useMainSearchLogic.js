@@ -59,7 +59,39 @@ const useMainSearchLogic = () => {
     }
     return null;
   };
-
+  
+  useEffect(() => {
+    const cityIdFromParams = searchParams.get('city_id');
+    const cityNameFromParams = searchParams.get('city_name');
+    const query = searchParams.get('Query');
+  
+    if (cityIdFromParams) setCityId(cityIdFromParams);
+    if (cityNameFromParams) setCityName(cityNameFromParams);
+    if (query) setSearchTerm(query);
+  
+    const targetCity = cityNameFromParams || 'تهران'; 
+  
+    geocodeLocation(targetCity).then((coords) => {
+      if (coords) {
+        setMapCenter([coords.lat, coords.lng]);
+        setLocation(`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`);
+      } else {
+        console.warn('❌ نتوانستیم مختصات مکان پیش‌فرض را بگیریم.');
+      }
+    });
+  }, []);
+  
+  useEffect(() => {
+    if (!cityName) return;
+  
+    geocodeLocation(cityName).then((coords) => {
+      if (coords) {
+        setMapCenter([coords.lat, coords.lng]);
+        setLocation(`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`);
+      }
+    });
+  }, [cityName]);
+    
   const handleSearch = async() => {
    console.log(searchPayload);
    try {
@@ -134,26 +166,6 @@ const useMainSearchLogic = () => {
     if (await tryGeocode(normalizedQuery)) return;
     alert('شهر مورد نظر پیدا نشد.');
   };
-
-  useEffect(() => {
-    const cityIdFromParams = searchParams.get('city_id');
-    const cityNameFromParams = searchParams.get('city_name');
-    const query = searchParams.get('Query');
-  
-    if (cityIdFromParams) setCityId(cityIdFromParams);
-    if (cityNameFromParams) setCityName(cityNameFromParams);
-    if (query) setSearchTerm(query);
-  
-    if (cityNameFromParams) {
-      geocodeLocation(cityNameFromParams).then((coords) => {
-        if (coords) {
-          setMapCenter([coords.lat, coords.lng]);
-          setLocation(`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`);
-        }
-      });
-    }
-  }, []);
-  
 
   return {
     searchTerm,
