@@ -18,14 +18,13 @@ const renderStars = (rating) => {
 const ProductList = ({ stores , onStoreClick }) => {
   return (
     <div className="flex-1 overflow-auto p-4">
-    <div className="mb-4">
-      <h2 className="text-lg font-medium text-gray-800">
-      {stores.length > 0 ? <> برای شما
-       <span className='p-0.5'> {stores.length} </span>
-        فروشگاه پیدا شد </> : <span className='p-0.5'> نتیجه‌ای یافت نشد </span>}
-       
-      </h2>
-    </div>
+      {stores.length > 0 ? <></> :
+      <> <div className="mb-4">
+          <h2 className="text-lg font-medium text-gray-800">
+          <span className='p-0.5'> نتیجه‌ای یافت نشد </span>
+          </h2>
+        </div></>} 
+      
 
     <div className="space-y-4">
       {stores.map((item, i) => (
