@@ -455,9 +455,8 @@ contact_info: {
 }
 });
 };
-const handleSaveChanges = () => {
-// In a real app, you would send the editData to your API
-// For now, we'll just update the local state
+const handleSaveChanges = async() => {
+  
 setStoreInfo({
 ...storeInfo,
 name: editData.name,
@@ -466,7 +465,37 @@ description: editData.description,
 location_longitude: editData.location_longitude,
 location_latitude: editData.location_latitude
 });
+try {
+  const response = await axiosInstance.put('/seller/store/update_store_info',editData, {
+    headers: {
+       'Accept': 'application/json'
+    }
+  });
+  console.log(response);
+ if (response.data) {
+  Swal.fire({
+    position: "top-end",
+    icon: "success",
+    title: " بروزرسانی شد ",
+    showConfirmButton: false,
+    timer: 1500,
+    toast: true,
+    customClass: {
+      popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+      title: 'text-xs', 
+      content: 'text-xs',
+      icon : 'text-xs mb-2'
+    }
+});
+  //await getSelfStoreProduct();
+  // handleProductModalClose();
+ }
+} catch (error) {
+  console.log(error);
+}
 setIsEditing(false);
+
+
 };
 
 const formatDate = (dateString) => {
