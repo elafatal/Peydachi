@@ -1,8 +1,9 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import axiosInstance from '../axiosInstance';
 import Swal from 'sweetalert2';
+import ProductModal from '../otherServices/Product/ProductModal'; // مسیر دقیق رو با توجه به ساختار پروژه‌ت تنظیم کن
 
 import {
     FaEdit,
@@ -21,7 +22,66 @@ import EditProductModal from './EditProductModal';
 import { useParams } from 'react-router-dom';
 import { FaRegStar } from "react-icons/fa";
 import ConfirmModal from './ConfirmModal';
+import SelfProductModal from './SelfProductModal';
 const SelfStore = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+const [modalProduct, setModalProduct] = useState(null);
+const [comments, setComments] = useState([]);
+const chartRef = useRef(null);
+const openProductModal = async (product) => {
+  setModalProduct(product);
+  setIsModalOpen(true);
+  setComments([]); // برای حالت لودینگ اولیه
+
+  try {
+    const res = await axiosInstance.post('/product_comment/get_product_comments', {
+      product_id: product.id,
+    });
+    setComments(res.data);
+  } catch (err) {
+    console.error("خطا در گرفتن نظرات:", err);
+    setComments([]);
+  }
+
+  setTimeout(() => {
+    if (!chartRef.current) return;
+    const chart = echarts.init(chartRef.current);
+    const ratingData = [5, 4, 3, 2, 1].map((r) => ({
+      value: res.data.filter((c) => c.rating === r).length,
+      name: `${r} Stars`,
+    }));
+
+    chart.setOption({
+      animation: false,
+      title: { text: 'Rating Distribution', left: 'center', textStyle: { fontSize: 14 } },
+      tooltip: { trigger: 'item' },
+      series: [{
+        name: 'Ratings',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+        label: { show: false, position: 'center' },
+        emphasis: { label: { show: true, fontSize: '14', fontWeight: 'bold' } },
+        labelLine: { show: false },
+        data: ratingData,
+      }]
+    });
+
+    const onResize = () => chart.resize();
+    window.addEventListener('resize', onResize);
+    return () => {
+      chart.dispose();
+      window.removeEventListener('resize', onResize);
+    };
+  }, 0);
+};
+
+const closeProductModal = () => {
+  setIsModalOpen(false);
+  setModalProduct(null);
+};
+
   const [searchTerm, setSearchTerm] = useState('');
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -484,110 +544,110 @@ onChange={handleInputChange}
 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
 />
 </div>
-    <div>
-      <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-      توضیحات فروشگاه
-      </label>
-      <textarea
-      id="description"
-      name="description"
-      rows={4}
-      value={editData.description}
-      onChange={handleInputChange}
-      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-      ></textarea>
-    </div>
-    <div>
-      <div className="space-y-3">
-          {Object.entries(editData.contact_info).map(([key, value]) => (
-            <div key={key} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-              <div className="md:col-span-1">
-                <span className="text-gray-600 capitalize">{key}:</span>
-              </div>
-              <div className="md:col-span-2">
-                <input
-                type="text"
-                value={value}
-                onChange={(e) => handleContactInfoChange(key, e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                />
-              </div>
-            </div>
-          ))}
-        <button className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center cursor-pointer whitespace-nowrap !rounded-button">
-          <FaPlus className="ml-1" /> افزودن
-        </button>
-
+      <div>
+        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+        توضیحات فروشگاه
+        </label>
+        <textarea
+        id="description"
+        name="description"
+        rows={4}
+        value={editData.description}
+        onChange={handleInputChange}
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+        ></textarea>
       </div>
-    </div>
-  <div>
-  <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 flex items-center cursor-pointer whitespace-nowrap !rounded-button">
-  <FaMapMarkerAlt className="ml-2 text-blue-600" />
-  تغییر موقعیت فروشگاه
-  </button>
-  </div>
-  <div className="flex justify-end">
-  <button
-  onClick={handleSaveChanges}
-  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap !rounded-button"
-  >
-  ذخیره تغییرات
-  </button>
-  </div>
-</div>
-) : (
-<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-<div className="lg:col-span-2 space-y-6">
-<div>
-<h3 className="text-xl font-bold text-gray-800 mb-2">{storeInfo.name}</h3>
-<div className="flex items-center mb-4">
-<div className="flex ml-3">
-{renderStars(storeInfo.average_rating)}
-</div>
-<span className="text-gray-600 text-sm pt-1">
-{(storeInfo.average_rating ?? 0).toFixed(1)}
-</span>
-</div>
-<p className="text-gray-600 text-justify">{storeInfo.description}</p>
-</div>
-<div>
-<h4 className="text-md font-semibold text-gray-700 mb-3">اطلاعات تماس</h4>
-<div className="space-y-2">
-      {Object.entries(storeInfo.contact_info).map(([key, value]) => (
-        <div key={key} className="flex">
-          <span className="text-gray-500 capitalize w-24">{key}:</span>
-          <span className="text-gray-800 mr-1">{value}</span>
+      <div>
+        <div className="space-y-3">
+            {Object.entries(editData.contact_info).map(([key, value]) => (
+              <div key={key} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                <div className="md:col-span-1">
+                  <span className="text-gray-600 capitalize">{key}:</span>
+                </div>
+                <div className="md:col-span-2">
+                  <input
+                  type="text"
+                  value={value}
+                  onChange={(e) => handleContactInfoChange(key, e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  />
+                </div>
+              </div>
+            ))}
+          <button className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center cursor-pointer whitespace-nowrap !rounded-button">
+            <FaPlus className="ml-1" /> افزودن
+          </button>
+
         </div>
-      ))}
-</div>
-</div>
-<div>
-<h4 className="text-md font-semibold text-gray-700 mb-3">وضعیت </h4>
-<div className="flex items-center">
-<span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${storeInfo.is_banned ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
-<span className={`w-2 h-2 rounded-full ml-2 ${storeInfo.is_banned ? 'bg-red-600' : 'bg-green-600'}`}></span>
-{storeInfo.is_banned ? 'مسدود شده' : 'فعال'}
-</span>
-</div>
-</div>
-</div>
-<div className="lg:col-span-1">
-<h4 className="text-md font-semibold text-gray-700 mb-3"> رتبه‌بندی عملکرد</h4>
-<div id="rating-chart" className="w-full h-64"></div>
-<div className="mt-4 grid grid-cols-2 gap-4">
-<div className="bg-blue-50 p-4 rounded-lg">
-<div className="text-xs text-blue-600 font-medium mb-1">امتیاز فروشگاه </div>
-<div className="text-2xl font-bold text-blue-800">{(storeInfo.average_rating ?? 0).toFixed(1)}</div>
-</div>
-<div className="bg-blue-50 p-4 rounded-lg">
-<div className="text-xs text-blue-600 font-medium mb-1">امتیاز محصولات</div>
-<div className="text-2xl font-bold text-blue-800">{(storeInfo.average_product_rating ?? 0).toFixed(1)}</div>
-</div>
-</div>
-</div>
-</div>
-)}
-</div>
+      </div>
+    <div>
+    <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 flex items-center cursor-pointer whitespace-nowrap !rounded-button">
+    <FaMapMarkerAlt className="ml-2 text-blue-600" />
+    تغییر موقعیت فروشگاه
+    </button>
+    </div>
+    <div className="flex justify-end">
+    <button
+    onClick={handleSaveChanges}
+    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 cursor-pointer whitespace-nowrap !rounded-button"
+    >
+    ذخیره تغییرات
+    </button>
+    </div>
+  </div>
+  ) : (
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <div className="lg:col-span-2 space-y-6">
+  <div>
+  <h3 className="text-xl font-bold text-gray-800 mb-2">{storeInfo.name}</h3>
+  <div className="flex items-center mb-4">
+  <div className="flex ml-3">
+  {renderStars(storeInfo.average_rating)}
+  </div>
+  <span className="text-gray-600 text-sm pt-1">
+  {(storeInfo.average_rating ?? 0).toFixed(1)}
+  </span>
+  </div>
+  <p className="text-gray-600 text-justify">{storeInfo.description}</p>
+  </div>
+  <div>
+  <h4 className="text-md font-semibold text-gray-700 mb-3">اطلاعات تماس</h4>
+  <div className="space-y-2">
+        {Object.entries(storeInfo.contact_info).map(([key, value]) => (
+          <div key={key} className="flex">
+            <span className="text-gray-500 capitalize w-24">{key}:</span>
+            <span className="text-gray-800 mr-1">{value}</span>
+          </div>
+        ))}
+  </div>
+  </div>
+  <div>
+  <h4 className="text-md font-semibold text-gray-700 mb-3">وضعیت </h4>
+  <div className="flex items-center">
+  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${storeInfo.is_banned ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+  <span className={`w-2 h-2 rounded-full ml-2 ${storeInfo.is_banned ? 'bg-red-600' : 'bg-green-600'}`}></span>
+  {storeInfo.is_banned ? 'مسدود شده' : 'فعال'}
+  </span>
+  </div>
+  </div>
+  </div>
+  <div className="lg:col-span-1">
+      <h4 className="text-md font-semibold text-gray-700 mb-3"> رتبه‌بندی عملکرد</h4>
+      <div id="rating-chart" className="w-full h-64"></div>
+      <div className="mt-4 grid grid-cols-2 gap-4">
+        <div className="bg-blue-50 p-4 rounded-lg">
+          <div className="text-xs text-blue-600 font-medium mb-1">امتیاز فروشگاه </div>
+          <div className="text-2xl font-bold text-blue-800">{(storeInfo.average_rating ?? 0).toFixed(1)}</div>
+        </div>
+        <div className="bg-blue-50 p-4 rounded-lg">
+          <div className="text-xs text-blue-600 font-medium mb-1">امتیاز محصولات</div>
+          <div className="text-2xl font-bold text-blue-800">{(storeInfo.average_product_rating ?? 0).toFixed(1)}</div>
+        </div>
+      </div>
+  </div>
+  </div>
+  )}
+  </div>
 </div>
 {/* Products Section */}
 <div className="mb-8">
@@ -614,11 +674,12 @@ className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {filteredProducts.map((product) => (
       <ProductCard
-        key={product.id}
-        product={product}
-        onEdit={handleProductEdit}
-        formatDate={formatDate}
-      />
+      key={product.id}
+      product={product}
+      onEdit={handleProductEdit}
+      onView={openProductModal}
+      formatDate={formatDate}
+    />    
     ))}
   </div>
 </div>
@@ -649,7 +710,16 @@ className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
   onConfirm={confirmModalConfig.onConfirm}
   onCancel={closeConfirmModal}
 />
-
+<SelfProductModal   selectedProduct={modalProduct}
+  isModalOpen={isModalOpen}
+  comments={comments}
+  chartRef={chartRef}
+  closeProductModal={closeProductModal}
+  getCityName={(id) => 'نام شهر'} // اگر لازم نیست واقعی باشه
+  formatDate={formatDate}
+  toggleFavorite={() => {}} // چون در صفحه فروشنده نیست
+  favorites={[]} // خالی می‌تونه بمونه
+  />
 </div>
 );
 };

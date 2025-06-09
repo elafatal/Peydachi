@@ -2,7 +2,7 @@
 import React from 'react';
 import { FaEdit, FaStar, FaCubes, FaCalendarAlt } from 'react-icons/fa';
 import { LuInfo } from "react-icons/lu";
-const ProductCard = ({ product, onEdit, formatDate }) => {
+const ProductCard = ({ product, onEdit, onView,formatDate }) => {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
       <div className="relative">
@@ -18,11 +18,12 @@ const ProductCard = ({ product, onEdit, formatDate }) => {
           <FaEdit />
         </button>
         <button
-          onClick={() => onEdit(product)}
+          onClick={() => onView(product)} 
           className="absolute top-2 left-2 w-8 h-8 bg-white rounded-full shadow flex items-center justify-center text-blue-600 hover:text-blue-800 cursor-pointer"
         >
-          <LuInfo className='x-10 h-10'  />
+          <LuInfo className='x-10 h-10' />
         </button>
+
       </div>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">

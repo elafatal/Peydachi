@@ -9,7 +9,16 @@ import faIR from 'date-fns/locale/fa-IR';
 const StoreProfile = () => {
   const { id } = useParams(); 
   const [store, setStore] = useState(null);
-  const [products2,setProducts2]=useState(null)
+  const [products,setProducts]=useState([    {
+    id: 1,
+    name: "Coastal Linen Throw Pillow",
+    description: "Handcrafted linen throw pillow with coastal patterns. Perfect for adding a touch of the ocean to your living space.",
+    quantity: 24,
+    date_added: "2025-04-15T10:30:00.000Z",
+    city_id: 1,
+    pic_url: "https://readdy.ai/api/search-image?query=A%20luxurious%20coastal-themed%20linen%20throw%20pillow%20with%20blue%20and%20white%20patterns%2C%20photographed%20in%20a%20minimalist%20setting%20with%20soft%20natural%20lighting%2C%20showing%20texture%20details%20and%20elegant%20stitching%2C%20perfect%20for%20a%20modern%20coastal%20home%20decor&width=600&height=400&seq=1001&orientation=landscape",
+    average_rating: 4.8
+  }])
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [error, setError] = useState(null);
@@ -30,66 +39,7 @@ const StoreProfile = () => {
         locale: faIR,
       });
     };
-  const products = [    {
-    id: 1,
-    name: "Coastal Linen Throw Pillow",
-    description: "Handcrafted linen throw pillow with coastal patterns. Perfect for adding a touch of the ocean to your living space.",
-    quantity: 24,
-    date_added: "2025-04-15T10:30:00.000Z",
-    city_id: 1,
-    pic_url: "https://readdy.ai/api/search-image?query=A%20luxurious%20coastal-themed%20linen%20throw%20pillow%20with%20blue%20and%20white%20patterns%2C%20photographed%20in%20a%20minimalist%20setting%20with%20soft%20natural%20lighting%2C%20showing%20texture%20details%20and%20elegant%20stitching%2C%20perfect%20for%20a%20modern%20coastal%20home%20decor&width=600&height=400&seq=1001&orientation=landscape",
-    average_rating: 4.8
-  },
-  {
-    id: 2,
-    name: "Handmade Ceramic Vase",
-    description: "Artisanal ceramic vase with ocean-inspired blue glazing. Each piece is unique and handcrafted by local artists.",
-    quantity: 12,
-    date_added: "2025-04-22T14:45:00.000Z",
-    city_id: 1,
-    pic_url: "https://readdy.ai/api/search-image?query=An%20elegant%20handmade%20ceramic%20vase%20with%20blue%20ocean-inspired%20glazing%2C%20photographed%20against%20a%20clean%20white%20background%20with%20soft%20shadows%2C%20showing%20the%20unique%20texture%20and%20artisanal%20quality%20of%20the%20piece%20with%20subtle%20variations%20in%20the%20glaze&width=600&height=400&seq=1002&orientation=landscape",
-    average_rating: 4.6
-  },
-  {
-    id: 3,
-    name: "Sustainable Linen Shirt",
-    description: "Eco-friendly linen shirt made from sustainably sourced materials. Breathable, comfortable, and perfect for warm weather.",
-    quantity: 18,
-    date_added: "2025-04-28T09:15:00.000Z",
-    city_id: 1,
-    pic_url: "https://readdy.ai/api/search-image?query=A%20high-quality%20sustainable%20linen%20shirt%20in%20light%20blue%20color%2C%20photographed%20flat%20lay%20on%20a%20minimal%20white%20background%20with%20soft%20natural%20lighting%2C%20showing%20the%20natural%20texture%20of%20the%20fabric%20and%20clean%20tailoring%20with%20attention%20to%20detail&width=600&height=400&seq=1003&orientation=landscape",
-    average_rating: 4.9
-  },
-  {
-    id: 4,
-    name: "Sea Glass Wall Art",
-    description: "Beautiful wall art created with authentic sea glass collected from local beaches. A stunning piece that brings the ocean into your home.",
-    quantity: 8,
-    date_added: "2025-05-01T11:20:00.000Z",
-    city_id: 1,
-    pic_url: "https://readdy.ai/api/search-image?query=An%20artistic%20sea%20glass%20wall%20art%20piece%20with%20various%20shades%20of%20blue%20and%20turquoise%20sea%20glass%20arranged%20in%20a%20wave%20pattern%2C%20photographed%20against%20a%20clean%20white%20wall%20with%20natural%20lighting%20highlighting%20the%20translucent%20quality%20and%20texture%20of%20the%20sea%20glass&width=600&height=400&seq=1004&orientation=landscape",
-    average_rating: 4.7
-  },
-  {
-    id: 5,
-    name: "Ocean-Scented Soy Candle",
-    description: "Hand-poured soy candle with a refreshing ocean scent. Made with natural ingredients and essential oils for a clean burn.",
-    quantity: 32,
-    date_added: "2025-05-03T16:10:00.000Z",
-    city_id: 1,
-    pic_url: "https://readdy.ai/api/search-image?query=A%20premium%20ocean-scented%20soy%20candle%20in%20an%20elegant%20blue%20glass%20container%2C%20photographed%20in%20a%20minimalist%20setting%20with%20soft%20lighting%2C%20showing%20the%20smooth%20texture%20of%20the%20wax%20and%20subtle%20reflections%20on%20the%20glass%20surface%20with%20a%20clean%20white%20background&width=600&height=400&seq=1005&orientation=landscape",
-    average_rating: 4.5
-  },
-  {
-    id: 6,
-    name: "Handwoven Beach Tote",
-    description: "Durable and stylish beach tote handwoven from sustainable materials. Spacious enough for all your beach essentials.",
-    quantity: 15,
-    date_added: "2025-05-04T13:25:00.000Z",
-    city_id: 1,
-    pic_url: "https://readdy.ai/api/search-image?query=A%20stylish%20handwoven%20beach%20tote%20in%20natural%20and%20blue%20tones%2C%20photographed%20from%20above%20on%20a%20white%20surface%20with%20soft%20natural%20lighting%2C%20showing%20the%20intricate%20weaving%20pattern%20and%20spacious%20interior%20with%20some%20subtle%20beach%20items%20visible%20inside&width=600&height=400&seq=1006&orientation=landscape",
-    average_rating: 4.4
-  }];
+    ;
   useEffect(() => {
     const fetchStore = async () => {
       try {
@@ -116,7 +66,7 @@ const StoreProfile = () => {
         const response = await axiosInstance.post('/product/get_all_available_products_of_store', {
           store_id: Number(id),
         });
-        setProducts2(response.data);
+        setProducts(response.data);
         console.log(response.data);
         
       } catch (err) {
@@ -149,7 +99,7 @@ const StoreProfile = () => {
         {[...Array(5)].map((_, i) => (
           <FaStar key={i} className={`text-sm ${i < Math.floor(rating) ? 'text-yellow-400' : 'text-gray-300'}`} />
         ))}
-        <span className="ml-1 text-sm text-gray-600">{rating?.toFixed(1)}</span>
+        {/* <span className="mr-1 mt-2 text-sm text-gray-600">{rating?.toFixed(1)}</span> */}
       </div>
     );
   };
@@ -176,63 +126,50 @@ const StoreProfile = () => {
               <div className="md:w-2/3 pr-0 md:pr-8">
                 <h1 className="text-4xl font-bold text-blue-800 mb-2">{store.name}</h1>
                 <div className="h-1 w-24 bg-blue-500 mb-6"></div>
-                <p className="text-gray-700 mb-6 leading-relaxed">{store.description}</p>
-  
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <h3 className="text-lg font-semibold text-blue-700 mb-2">Contact Information</h3>
-                    <div className="space-y-2">
-                      <p className="flex items-center text-gray-600">
-                        <FaEnvelope className="w-6 text-blue-500" />
-                        <span className="ml-2">{store.contact_info?.email}</span>
-                      </p>
-                      <p className="flex items-center text-gray-600">
-                        <FaPhone className="w-6 text-blue-500" />
-                        <span className="ml-2">{store.contact_info?.phone}</span>
-                      </p>
-                      <p className="flex items-center text-gray-600">
-                        <FaGlobe className="w-6 text-blue-500" />
-                        <span className="ml-2">{store.contact_info?.website}</span>
-                      </p>
-                    </div>
+                <p className="text-justify text-gray-700 mb-6 leading-relaxed max-w-full md:max-w-[800px]">{store.description}</p>
+
+
+                <h4 className="text-md font-semibold text-gray-700 mb-3">اطلاعات تماس</h4>
+                  <div className="space-y-2">
+                        {Object.entries(store.contact_info).map(([key, value]) => (
+                          <div key={key} className="flex">
+                            <span className="text-gray-500 capitalize w-24">{key}:</span>
+                            <span className="text-gray-800 mr-1">{value}</span>
+                          </div>
+                        ))}
                   </div>
-  
-                  <div>
-                    <h3 className="text-lg font-semibold text-blue-700 mb-2">Location</h3>
-                    <p className="flex items-center text-gray-600 mb-2">
-                      <FaMapMarkerAlt className="w-6 text-blue-500" />
-                      <span className="ml-2">{store.city_name}</span>
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Coordinates: {store.location_latitude}, {store.location_longitude}
-                    </p>
-                  </div>
-                </div>
               </div>
   
               <div className="md:w-1/3 mt-6 md:mt-0 bg-white p-6 rounded-lg shadow-sm border border-blue-100">
                 <div className="text-center mb-4">
-                  <h3 className="text-xl font-semibold text-blue-800 mb-4">Store Ratings</h3>
+                  <h3 className="text-xl font-semibold text-blue-800 mb-4">عملکرد فروشگاه</h3>
                   <div className="flex flex-col items-center justify-center space-y-4">
                     <div>
-                      <p className="text-gray-600 mb-1">Store Rating</p>
+                      <p className="text-gray-600 mb-1">امتیاز فروشگاه</p>
                       <div className="flex items-center justify-center">
                         {renderRating(store.average_rating)}
                       </div>
                     </div>
                     <div>
-                      <p className="text-gray-600 mb-1">Product Rating</p>
+                      <p className="text-gray-600 mb-1">امتیاز محصولات</p>
                       <div className="flex items-center justify-center">
                         {renderRating(store.average_product_rating)}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="mt-6 pt-6 border-t border-blue-100">
-                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-sm transition duration-200 flex items-center justify-center whitespace-nowrap cursor-pointer">
-                    <FaHeart className="mr-2" /> Follow Store
-                  </button>
+                <div className="lg:col-span-1"> 
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <div className="text-xs text-blue-600 font-medium mb-1">امتیاز فروشگاه </div>
+                    <div className="text-2xl font-bold text-blue-800">{(store.average_rating ?? 0).toFixed(1)}</div>
+                  </div>
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <div className="text-xs text-blue-600 font-medium mb-1">امتیاز محصولات</div>
+                    <div className="text-2xl font-bold text-blue-800">{(store.average_product_rating ?? 0).toFixed(1)}</div>
+                  </div>
                 </div>
+  </div>
               </div>
             </div>
           </div>
@@ -257,13 +194,13 @@ const StoreProfile = () => {
             </div>
             <div className="relative ml-4">
             <select
-  value={sortBy}
-  onChange={(e) => setSortBy(e.target.value)}
-  className="flex items-center bg-white border border-blue-200 rounded-lg px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition duration-200 cursor-pointer whitespace-nowrap !rounded-button"
->
-  <option value="newest">جدیدترین</option>
-  <option value="rating">بالاترین امتیاز</option>
-</select>
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="flex items-center bg-white border border-blue-200 rounded-lg px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition duration-200 cursor-pointer whitespace-nowrap !rounded-button"
+        >
+        <option value="newest">جدیدترین</option>
+        <option value="rating">بالاترین امتیاز</option>
+      </select>
             </div>
           </div>
         </div>
