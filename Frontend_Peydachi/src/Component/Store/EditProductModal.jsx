@@ -22,7 +22,7 @@ const EditProductModal = ({
       <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl mx-4 overflow-hidden">
         <div className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-gray-800">Edit Product</h3>
+            <h3 className="text-xl font-bold text-gray-800">ویرایش محصول</h3>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600 cursor-pointer">
               <FaTimes />
             </button>
@@ -117,7 +117,7 @@ const EditProductModal = ({
                   >
                     <div className="text-center">
                       <FaPlus className="inline text-2xl text-gray-400 mb-2" />
-                      <p className="text-sm text-gray-500">Add Image</p>
+                      <p className="text-sm text-gray-500">آپلود عکس جدید</p>
                     </div>
                   </label>
                 </div>

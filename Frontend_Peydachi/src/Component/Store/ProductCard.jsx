@@ -1,7 +1,7 @@
 // components/ProductCard.jsx
 import React from 'react';
 import { FaEdit, FaStar, FaCubes, FaCalendarAlt } from 'react-icons/fa';
-
+import { LuInfo } from "react-icons/lu";
 const ProductCard = ({ product, onEdit, formatDate }) => {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
@@ -17,6 +17,12 @@ const ProductCard = ({ product, onEdit, formatDate }) => {
         >
           <FaEdit />
         </button>
+        <button
+          onClick={() => onEdit(product)}
+          className="absolute top-2 left-2 w-8 h-8 bg-white rounded-full shadow flex items-center justify-center text-blue-600 hover:text-blue-800 cursor-pointer"
+        >
+          <LuInfo className='x-10 h-10'  />
+        </button>
       </div>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
@@ -28,13 +34,7 @@ const ProductCard = ({ product, onEdit, formatDate }) => {
         </div>
         <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
         <div className="flex justify-between items-center text-sm">
-          <span className="text-gray-500">
-            <FaCubes className="mr-1 inline" /> {product.quantity} in stock
-          </span>
-          <span className="text-gray-500">
-            <FaCalendarAlt className="mr-1 inline" />
-            {formatDate(product.date_added)}
-          </span>
+            {product.quantity === 0 ? <span className='text-red-600'> <FaCubes className="mr-1 inline" />  ناموجود  </span> : <span className='text-blue-600'> <FaCubes className="mr-1 inline" /> {product.quantity} موجود در انبار</span>}
         </div>
       </div>
     </div>

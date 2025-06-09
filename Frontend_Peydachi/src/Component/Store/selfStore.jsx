@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import * as echarts from 'echarts';
 import axiosInstance from '../axiosInstance';
+import Swal from 'sweetalert2';
+
 import {
     FaEdit,
     FaTimes,
@@ -18,10 +20,34 @@ import {
 import EditProductModal from './EditProductModal';
 import { useParams } from 'react-router-dom';
 import { FaRegStar } from "react-icons/fa";
+import ConfirmModal from './ConfirmModal';
 const SelfStore = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-        
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [confirmModalConfig, setConfirmModalConfig] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: null,
+  });
+
+  const showConfirmModal = ({ title, message, onConfirm }) => {
+    setConfirmModalConfig({
+      isOpen: true,
+      title,
+      message,
+      onConfirm: () => {
+        onConfirm();
+        setConfirmModalConfig(prev => ({ ...prev, isOpen: false }));
+      },
+    });
+  };
+  
+  const closeConfirmModal = () => {
+    setConfirmModalConfig(prev => ({ ...prev, isOpen: false }));
+  };
+  
 const [storeInfo, setStoreInfo] = useState({
 name: "Organic Harvest Market",
 owner_id: 1,
@@ -66,26 +92,25 @@ useEffect(() => {
   getSelfStoreInfo();
 }, []);
 
-useEffect(() => {
-  const getSelfStoreProduct =async()=>{
-    try {
-      const response = await axiosInstance.get('/seller/product/get_self_products', {
-        headers: {
-           'Accept': 'application/json'
-        }
-      });
-     if (response.data) {
-  setProducts(response.data); 
-  console.log('Store info:', response.data);
+const getSelfStoreProduct =async()=>{
+  try {
+    const response = await axiosInstance.get('/seller/product/get_self_products', {
+      headers: {
+         'Accept': 'application/json'
+      }
+    });
+   if (response.data) {
+setProducts(response.data); 
+console.log('Store info:', response.data);
 }
-
-    } catch (error) {
-      console.log(error);
-    }
+  } catch (error) {
+    console.log(error);
   }
-
+}
+useEffect(() => {
   getSelfStoreProduct();
 }, []);
+
 const [isEditing, setIsEditing] = useState(false);
 const [editData, setEditData] = useState({
 name: "",
@@ -148,50 +173,67 @@ myChart.dispose();
 const [selectedProduct, setSelectedProduct] = useState(null);
 const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 const [productEditData, setProductEditData] = useState({
-name: '',
-description: '',
-quantity: 0
-});
+    id: 0,
+    name: '',
+    description: '',
+    quantity: 0,
+    });
 const [selectedFile, setSelectedFile] = useState(null);
 const handleEditToggle = () => {
-setIsEditing(!isEditing);
-if (!isEditing) {
-setEditData({
-name: storeInfo.name,
-contact_info: { ...storeInfo.contact_info },
-description: storeInfo.description,
-location_longitude: storeInfo.location_longitude,
-location_latitude: storeInfo.location_latitude
-});
-}
+    setIsEditing(!isEditing);
+    if (!isEditing) {
+      setEditData({
+        name: storeInfo.name,
+        contact_info: { ...storeInfo.contact_info },
+        description: storeInfo.description,
+        location_longitude: storeInfo.location_longitude,
+        location_latitude: storeInfo.location_latitude
+    });
+    }
 };
 const handleProductEdit = (product) => {
-setSelectedProduct(product);
-setProductEditData({
-name: product.name,
-description: product.description,
-quantity: product.quantity
-});
-setIsProductModalOpen(true);
+    setSelectedProduct(product);
+    setProductEditData({
+        id:product.id,
+        name: product.name,
+        description: product.description,
+        quantity: product.quantity
+    });
+    setIsProductModalOpen(true);
 };
 const handleProductModalClose = () => {
-setIsProductModalOpen(false);
-setSelectedProduct(null);
-setSelectedFile(null);
+    setIsProductModalOpen(false);
+    setSelectedProduct(null);
+    setSelectedFile(null);
 };
 const handleProductInputChange = (e) => {
-const { name, value } = e.target;
-setProductEditData({ ...productEditData, [name]: value });
+  const { name, value } = e.target;
+  setProductEditData({ ...productEditData, [name]: value });
 };
 const handleFileChange = (e) => {
-if (e.target.files && e.target.files[0]) {
-setSelectedFile(e.target.files[0]);
+  if (e.target.files && e.target.files[0]) {
+  setSelectedFile(e.target.files[0]);
 }
 };
-const handleUpdateProduct = () => {
-// Here you would implement the API calls
-console.log('Updating product:', productEditData);
-handleProductModalClose();
+const handleUpdateProduct = async() => {
+try {
+  const response = await axiosInstance.put('/seller/product/update_product',
+    {id: productEditData.id,
+    name:productEditData.name,
+    description:productEditData.description
+  }, {
+    headers: {
+       'Accept': 'application/json'
+    }
+  });
+ if (response.data) {
+  console.log('updated ');
+  await getSelfStoreProduct();
+  handleProductModalClose();
+ }
+} catch (error) {
+  console.log(error);
+}
 };
 const handleUpdateQuantity = async() => {
     if (!selectedProduct) return;
@@ -205,23 +247,79 @@ const handleUpdateQuantity = async() => {
         }
       });
      if (response.data) {
-      console.log('updated: ', response.data);
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "موجودی بروزرسانی شد ",
+        showConfirmButton: false,
+        timer: 1500,
+        toast: true,
+        customClass: {
+          popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+          title: 'text-xs', 
+          content: 'text-xs',
+          icon : 'text-xs mb-2'
+        }
+    });
+      await getSelfStoreProduct();
+      handleProductModalClose();
      }
     } catch (error) {
       console.log(error);
     }
 };
-const handleDeleteProduct = () => {
+
+const handleAskDeleteProduct = () => {
+  showConfirmModal({
+    title: 'حذف محصول',
+    message: 'آیا مطمئن هستی می‌خوای این محصول رو حذف کنی؟ این عمل قابل بازگشت نیست.',
+    onConfirm: handleDeleteProduct
+  });
+};
+const handleAskRemovePic = () => {
+  showConfirmModal({
+    title: 'حذف عکس محصول',
+    message: 'آیا مطمئن هستی می‌خوای عکس این محصول رو حذف کنی؟',
+    onConfirm: handleRemovePic
+  });
+};
+const handleAskUploadPic = () => {
+  showConfirmModal({
+    title: 'حذف عکس محصول',
+    message: 'آیا مطمئن هستی می‌خوای عکس این محصول رو حذف کنی؟',
+    onConfirm: handleUploadProductPic
+  });
+};
+
+
+
+const handleDeleteProduct =async() => {
 if (!selectedProduct) return;
 console.log('Deleting product:', { product_id: selectedProduct.id });
-handleProductModalClose();
+try {
+  const response = await axiosInstance.delete('/seller/product/delete_product', {
+    headers: {
+      'Accept': 'application/json'
+    },
+    data: {
+      product_id: selectedProduct.id
+    }
+  });
+  
+  if (response.data) {
+    console.log('deleted: ', response.data);
+    await getSelfStoreProduct();
+    setIsConfirmModalOpen(false)
+    handleProductModalClose();
+  }
+} catch (error) {
+  console.log(error);
+}
+
 };
+
 const handleRemovePic = async () => {
   if (!selectedProduct) return;
-
-  const confirmDelete = window.confirm("آیا مطمئن هستید که می‌خواهید عکس این محصول حذف شود؟");
-  if (!confirmDelete) return;
-
   try {
     const response = await axiosInstance.put('/seller/product/remove_product_pic', {
       product_id: selectedProduct.id
@@ -232,11 +330,14 @@ const handleRemovePic = async () => {
     });
     if (response.data) {
       console.log('updated: ', response.data);
+      await getSelfStoreProduct();
+      handleProductModalClose();
       // optionally update local state if needed
     }
   } catch (error) {
     console.log(error);
   }
+ 
 };
 
 const handleUploadProductPic = async () => {
@@ -244,10 +345,6 @@ const handleUploadProductPic = async () => {
       alert("لطفاً ابتدا یک فایل انتخاب کنید.");
       return;
     }
-
-    const confirmUpload = window.confirm("آیا مطمئن هستید که می‌خواهید عکس جدید آپلود شود؟");
-    if (!confirmUpload) return;
-
     const formData = new FormData();
     formData.append("product_id", selectedProduct.id);
     formData.append("pic", selectedFile);
@@ -259,14 +356,29 @@ const handleUploadProductPic = async () => {
         }
       });
       if (response.data) {
-        console.log("تصویر با موفقیت آپلود شد:", response.data);
-        alert("تصویر با موفقیت آپلود شد.");
+         Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: "تصویر بروزرسانی شد ",
+                  showConfirmButton: false,
+                  timer: 1500,
+                  toast: true,
+                  customClass: {
+                    popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+                    title: 'text-xs', 
+                    content: 'text-xs',
+                    icon : 'text-xs mb-2'
+                  }
+              });
+        await getSelfStoreProduct();
         setSelectedFile(null);
+        handleProductModalClose();
       }
     } catch (error) {
       console.error("خطا در آپلود تصویر:", error);
       alert("مشکلی در آپلود تصویر رخ داد.");
     }
+    
 };
 
 const handleInputChange = (e) => {
@@ -323,7 +435,7 @@ const renderStars = (rating) => {
   };
   
 return (
-<div dir='rtl'  className="min-h-screen bg-gray-50">
+<div dir='rtl'  className="min-h-screen bg-gradient-to-r from-blue-50 to-white">
 <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 {/* {Object.entries(storeInfo.contact_info || {}).map(([key, value]) => (
   <div key={key} className="flex">
@@ -522,13 +634,21 @@ className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
     onChange={handleProductInputChange}
     onFileChange={handleFileChange}
     onUpdateQuantity={handleUpdateQuantity}
-    onDelete={handleDeleteProduct}
-    onRemovePic={handleRemovePic}
+    onDelete={handleAskDeleteProduct}
+    onRemovePic={handleAskRemovePic}
     onSave={handleUpdateProduct}
     clearSelectedFile={() => setSelectedFile(null)}
-    handleUploadProductPic ={handleUploadProductPic}
+    handleUploadProductPic ={handleAskUploadPic}
   />
 )}
+
+<ConfirmModal
+  isOpen={confirmModalConfig.isOpen}
+  title={confirmModalConfig.title}
+  message={confirmModalConfig.message}
+  onConfirm={confirmModalConfig.onConfirm}
+  onCancel={closeConfirmModal}
+/>
 
 </div>
 );
