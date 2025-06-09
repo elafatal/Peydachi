@@ -4,7 +4,7 @@ import * as echarts from 'echarts';
 import axiosInstance from '../axiosInstance';
 import Swal from 'sweetalert2';
 import ProductModal from '../otherServices/Product/ProductModal'; // مسیر دقیق رو با توجه به ساختار پروژه‌ت تنظیم کن
-
+import Cookies from 'js-cookie';
 import {
     FaEdit,
     FaTimes,
@@ -23,6 +23,7 @@ import { useParams } from 'react-router-dom';
 import { FaRegStar } from "react-icons/fa";
 import ConfirmModal from './ConfirmModal';
 import SelfProductModal from './SelfProductModal';
+import UnauthorizedPage from '../Error/UnauthorizedPage';
 const SelfStore = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 const [modalProduct, setModalProduct] = useState(null);
@@ -496,7 +497,7 @@ const renderStars = (rating) => {
   
 return (
 <div dir='rtl'  className="min-h-screen bg-gradient-to-r from-blue-50 to-white">
-<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+{Cookies.get('auth_token') ?<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 {/* {Object.entries(storeInfo.contact_info || {}).map(([key, value]) => (
   <div key={key} className="flex">
     <span className="text-gray-500 capitalize w-24">{key}:</span>
@@ -683,7 +684,7 @@ className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
     ))}
   </div>
 </div>
-</main>
+</main> : <UnauthorizedPage/>}
 
 {/* Product Edit Modal */}
 {isProductModalOpen && selectedProduct && (
