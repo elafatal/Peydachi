@@ -81,13 +81,7 @@ const SearchResults = ({
           onClick={() => handleItemClick(item)}
           dir='rtl'
         >
-          <div className="h-48 bg-gray-200">
-            <img
-              src={`https://readdy.ai/api/search-image?query=Professional%20store&width=600&height=400&seq=${item.id}`}
-              alt={item.name}
-              className="w-full h-full object-cover object-top"
-            />
-          </div>
+   
           <div className="p-4">
             <div className="flex gap-1">
             <h3 className="text-xl font-semibold text-gray-800 mb-1">{item.name}</h3>

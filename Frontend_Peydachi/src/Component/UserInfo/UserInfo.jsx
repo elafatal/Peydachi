@@ -39,7 +39,7 @@ const UserInfo = () => {
           console.log("No auth token found");
           return;
         }
-        const response = await axiosInstance.get('/userget_self_user_info', {
+        const response = await axiosInstance.get('/user/get_self_user_info', {
           headers: {
              'Accept': 'application/json'
             // 'Content-Type': 'multipart/form-data'

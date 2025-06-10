@@ -19,6 +19,7 @@ const StoreProfile = () => {
     pic_url: "https://readdy.ai/api/search-image?query=A%20luxurious%20coastal-themed%20linen%20throw%20pillow%20with%20blue%20and%20white%20patterns%2C%20photographed%20in%20a%20minimalist%20setting%20with%20soft%20natural%20lighting%2C%20showing%20texture%20details%20and%20elegant%20stitching%2C%20perfect%20for%20a%20modern%20coastal%20home%20decor&width=600&height=400&seq=1001&orientation=landscape",
     average_rating: 4.8
   }])
+  const [products2,setProducts2]=useState([])
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [error, setError] = useState(null);
@@ -26,12 +27,9 @@ const StoreProfile = () => {
   const [offset , setOffset]= useState(1)
   const navigate = useNavigate();
     
-  const handleSetOffset =()=>{
-    const i=offset+1;
-    setOffset(offset+1)
-    console.log(offset);
-    
-  }
+  const handleSetOffset = () => {
+    setOffset((prevOffset) => prevOffset + 1);
+  };
     
      const formatRelativeDate = (dateString) => {
       return formatDistanceToNow(new Date(dateString), {
@@ -60,25 +58,32 @@ const StoreProfile = () => {
     fetchStore();
   }, [id]);
 
-  useEffect(() => {
-    const fetchStoreProduct = async () => {
-      try {
-        const response = await axiosInstance.post('/product/get_all_available_products_of_store', {
-          store_id: Number(id),
-        });
-        setProducts(response.data);
-        console.log(response.data);
-        
-      } catch (err) {
-        console.error('خطا در دریافت اطلاعات محصول:', err);
-        // setError('مشکلی در بارگیری اطلاعات محصول رخ داد.');
-      } finally {
-        setLoading(false);
-      }
-    };
+// بارگذاری محصولات
+useEffect(() => {
+  const fetchStoreProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.post('/product/full_search_in_store_products', {
+        search_text: searchTerm,
+        store_id: Number(id),
+        show_limit: 10,
+        page: offset,
+        order: sortBy === 'newest' ? 'newest' : sortBy === 'rating' ? 'favorite' : null,
+      });
 
-    fetchStoreProduct();
-  }, [id]);
+      setProducts((prevProducts) =>
+        offset === 1 ? response.data : [...prevProducts, ...response.data]
+      );
+    } catch (err) {
+      console.error('خطا در دریافت اطلاعات محصول:', err);
+      setError('مشکلی در بارگیری محصولات رخ داد.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchStoreProducts();
+}, [id, searchTerm, sortBy, offset]);
 
   const filteredProducts = products?.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
