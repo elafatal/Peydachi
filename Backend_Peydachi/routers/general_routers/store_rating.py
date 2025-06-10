@@ -3,7 +3,7 @@ from functions import store_rating_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY
 from dependencies.access_dependencies import USER_DEPENDENCY
-from schemas.store_rating_schemas import AddStoreRatingModel, StoreRatingDisplayModel, StoreRatingDistributionDisplay
+from schemas.store_rating_schemas import AddStoreRatingModel, StoreRatingDisplayModel, StoreRatingDistributionModel
 
 
 router = APIRouter(
@@ -17,6 +17,6 @@ async def rate_store(rating: AddStoreRatingModel, db: DB_DEPENDENCY, user: USER_
     return await store_rating_functions.rate_store(rating=rating, db=db, user_id=user.id)
 
 
-@router.post('/get_store_rating_distribution', status_code=200, response_model=StoreRatingDistributionDisplay)
+@router.post('/get_store_rating_distribution', status_code=200, response_model=list[StoreRatingDistributionModel])
 async def get_store_rating_distribution(store_id: ID_BODY, db: DB_DEPENDENCY):
     return await store_rating_functions.get_store_rating_distribution(store_id=store_id, db=db)
