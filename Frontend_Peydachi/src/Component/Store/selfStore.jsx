@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import axiosInstance from '../axiosInstance';
 import Swal from 'sweetalert2';
-import ProductModal from '../otherServices/Product/ProductModal'; // مسیر دقیق رو با توجه به ساختار پروژه‌ت تنظیم کن
+import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import {
     FaEdit,
@@ -17,14 +17,15 @@ import {
     FaCalendarAlt,
     FaTrashAlt,
   } from 'react-icons/fa';
-  import ProductCard from './ProductCard';
+import ProductCard from './ProductCard';
 import EditProductModal from './EditProductModal';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { FaRegStar } from "react-icons/fa";
 import ConfirmModal from './ConfirmModal';
 import SelfProductModal from './SelfProductModal';
 import UnauthorizedPage from '../Error/UnauthorizedPage';
 const SelfStore = () => {
+    const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 const [modalProduct, setModalProduct] = useState(null);
 const [comments, setComments] = useState([]);
@@ -32,7 +33,7 @@ const chartRef = useRef(null);
 const openProductModal = async (product) => {
   setModalProduct(product);
   setIsModalOpen(true);
-  setComments([]); // برای حالت لودینگ اولیه
+  setComments([]);
 
   try {
     const res = await axiosInstance.post('/product_comment/get_product_comments', {
@@ -695,8 +696,8 @@ className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full sm:w-64 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center cursor-pointer whitespace-nowrap !rounded-button">
-          <FaPlus className="ml-2" /> افزودن محصول
+        <button onClick={()=>navigate('/AddProduct')} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center cursor-pointer whitespace-nowrap !rounded-button">
+          <FaPlus  className="ml-2" /> افزودن محصول
         </button>
       </div>
   </div>
