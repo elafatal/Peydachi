@@ -79,6 +79,7 @@ async def update_store_info(user_id: int, request: UpdateStoreModel, db: Session
 
 async def get_self_store(user_id: int, db: Session):
     store = db.query(Store).filter(Store.owner_id == user_id).first()
+    
     if not store:
         raise NO_STORE_FOUND_ERROR
 

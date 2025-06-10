@@ -17,7 +17,7 @@ async def create_user(request: UserModel, db: DB_DEPENDENCY):
     return await user_functions.create_user(request=request, db=db)
 
 
-@router.get('get_self_user_info', status_code=200, response_model=UserDisplay)
+@router.get('/get_self_user_info', status_code=200, response_model=UserDisplay)
 async def get_self_user_info(db: DB_DEPENDENCY, user: USER_DEPENDENCY):
     return await user_functions.get_user_by_id(user_id=user.id, db=db)
 

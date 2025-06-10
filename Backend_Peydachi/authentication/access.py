@@ -12,7 +12,7 @@ from errors.user_errors import (
     USER_IS_BANNED_ERROR
 )
 from dependencies.dependencies import DB_DEPENDENCY, TOKEN_DEPENDENCY, AUTHENTICATION_DEPENDENCY
-from datetime import datetime, timedelta
+from datetime import datetime, UTC, timedelta
 from database.models import User
 from hash.hash import Hash
 from jose.exceptions import JWTError
@@ -34,17 +34,18 @@ def create_token(data: dict, expires_delta: timedelta | None = None, refresh: bo
 
     if not refresh:
         if expires_delta:
-            expire = datetime.utcnow() + expires_delta
+            expire = datetime.now(UTC) + expires_delta
 
         else:
-            expire = datetime.utcnow() + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
+            expire = datetime.now(UTC) + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
 
     if refresh:
         if expires_delta:
-            expire = datetime.utcnow() + expires_delta
+            expire = datetime.now(UTC) + expires_delta
 
         else:
-            expire = datetime.utcnow() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+            expire = datetime.now(UTC) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+
 
     to_encode.update({'exp': expire})
     to_encode.update({'refresh': refresh})
