@@ -37,7 +37,7 @@ async def send_add_store_request(request: AddAddStoreRequestModel, db: Session):
 
 
 async def get_requests_to_review(db: Session):
-    requests = db.query(AddStoreRequest).filter(AddStoreRequest.reviewed == False).all()
+    requests = db.query(AddStoreRequest).filter(AddStoreRequest.is_reviewed == False).all()
 
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
@@ -64,7 +64,7 @@ async def search_add_store_requests(request_text: str, db: Session):
 
 
 async def search_reviewed_add_store_requests(request_text: str, db: Session):
-    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.store_name.contains(request_text), AddStoreRequest.reviewed == True)).all()
+    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.store_name.contains(request_text), AddStoreRequest.is_reviewed == True)).all()
 
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
@@ -73,7 +73,7 @@ async def search_reviewed_add_store_requests(request_text: str, db: Session):
 
 
 async def search_not_reviewed_add_store_requests(request_text: str, db: Session):
-    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.store_name.contains(request_text), AddStoreRequest.reviewed == False)).all()
+    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.store_name.contains(request_text), AddStoreRequest.is_reviewed == False)).all()
 
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
@@ -82,7 +82,7 @@ async def search_not_reviewed_add_store_requests(request_text: str, db: Session)
 
 
 async def get_all_reviewed_add_store_requests(db: Session):
-    requests = db.query(AddStoreRequest).filter(AddStoreRequest.reviewed == True).all()
+    requests = db.query(AddStoreRequest).filter(AddStoreRequest.is_reviewed == True).all()
 
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
@@ -95,10 +95,10 @@ async def review_add_store_request(request_id: int, db: Session):
     if not request:
         raise ADD_STORE_REQUEST_NOT_FOUND_ERROR
 
-    if request.reviewed:
+    if request.is_reviewed:
         raise ADD_STORE_REQUEST_ALREADY_REVIEWED_ERROR
 
-    request.reviewed = True
+    request.is_reviewed = True
     db.commit()
 
     return request
@@ -116,7 +116,7 @@ async def remove_add_store_request(request_id: int, db: Session):
 
 
 async def remove_all_reviewed_add_store_requests(db: Session):
-    requests = db.query(AddStoreRequest).filter(AddStoreRequest.reviewed == True).all()
+    requests = db.query(AddStoreRequest).filter(AddStoreRequest.is_reviewed == True).all()
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
 
@@ -136,7 +136,7 @@ async def get_all_add_store_requests_of_region(region_id: int, db: Session):
 
 
 async def get_all_add_store_requests_of_region_to_review(region_id: int, db: Session):
-    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.region_id == region_id, AddStoreRequest.reviewed == False)).all()
+    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.region_id == region_id, AddStoreRequest.is_reviewed == False)).all()
 
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
@@ -154,7 +154,7 @@ async def get_all_add_store_requests_of_city(city_id: int, db: Session):
 
 
 async def get_all_add_store_requests_of_city_to_review(city_id: int, db: Session):
-    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.city_id == city_id, AddStoreRequest.reviewed == False)).all()
+    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.city_id == city_id, AddStoreRequest.is_reviewed == False)).all()
 
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
@@ -163,7 +163,7 @@ async def get_all_add_store_requests_of_city_to_review(city_id: int, db: Session
 
 
 async def get_all_reviewed_add_store_requests_of_region(region_id: int, db: Session):
-    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.region_id == region_id, AddStoreRequest.reviewed == True)).all()
+    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.region_id == region_id, AddStoreRequest.is_reviewed == True)).all()
 
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
@@ -172,7 +172,7 @@ async def get_all_reviewed_add_store_requests_of_region(region_id: int, db: Sess
 
 
 async def get_all_reviewed_add_store_requests_of_city(city_id: int, db: Session):
-    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.city_id == city_id, AddStoreRequest.reviewed == True)).all()
+    requests = db.query(AddStoreRequest).filter(and_(AddStoreRequest.city_id == city_id, AddStoreRequest.is_reviewed == True)).all()
 
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
