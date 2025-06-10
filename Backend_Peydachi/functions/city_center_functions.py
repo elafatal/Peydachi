@@ -43,13 +43,13 @@ async def get_center_of_city(city_id: int, db: Session):
     return city_center
 
 
-async def update_city_center(city_center: AddCityCenterModel, db: Session):
-    city_center = db.query(CityCenter).filter(CityCenter.city_id == city_center.city_id).first()
+async def update_city_center(new_city_center: AddCityCenterModel, db: Session):
+    city_center = db.query(CityCenter).filter(CityCenter.city_id == new_city_center.city_id).first()
     if not city_center:
         raise CITY_CENTER_NOT_FOUND_ERROR
 
-    city_center.longitude = city_center.longitude
-    city_center.latitude = city_center.latitude
+    city_center.longitude = new_city_center.longitude
+    city_center.latitude = new_city_center.latitude
 
     db.commit()
     db.refresh(city_center)
