@@ -1,11 +1,10 @@
 import React from "react";
 import { FaStar, FaRegStar, FaStarHalfAlt, FaTimes, FaStore, FaHeart, FaRegHeart } from 'react-icons/fa';
 
-const ProductModal = ({
+const SelfProductModal = ({
   selectedProduct,
   isModalOpen,
   comments,
-  chartRef,
   closeProductModal,
   getCityName,
   formatDate,
@@ -29,7 +28,7 @@ const ProductModal = ({
 
   return (
   <>{isModalOpen && selectedProduct && (
-    <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div dir="ltr" className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onClick={closeProductModal} />
         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
@@ -44,12 +43,12 @@ const ProductModal = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
               {/* image & details */}
-              <div>
+              <div dir="rtl">
                 <div className="rounded-lg overflow-hidden mb-4">
                   <img src={selectedProduct.pic_url} alt={selectedProduct.name} className="w-full h-auto object-cover" />
                 </div>
-                <div dir="rtl" className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="text-sm font-medium text-gray-900 mb-2">جزئیات محصول</h4>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="text-sm font-medium text-gray-900 mb-2">Product Details</h4>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div className="text-gray-600">موجودی:</div>
                     <div className={`font-medium ${selectedProduct.quantity>0?'text-green-600':'text-red-600'}`}>
@@ -59,23 +58,20 @@ const ProductModal = ({
                     <div>{getCityName(selectedProduct.city_id)}</div>
                     <div className="text-gray-600">تاریخ اضافه شدن:</div>
                     <div>{formatDate(selectedProduct.date_added)}</div>
-                    {/* <div className="text-gray-600">Product ID:</div>
-                    <div>#{selectedProduct.id}</div> */}
+                    <div className="text-gray-600">شناسه محصول:</div>
+                    <div>#{selectedProduct.id}</div>
                   </div>
                 </div>
               </div>
 
               {/* right column */}
               <div>
-              <h2 className="text-end text-2xl font-bold text-gray-900 my-2">{selectedProduct.name}</h2>
+                <h2 className="text-end text-2xl font-bold text-gray-900 mb-2">{selectedProduct.name}</h2>
                 <div className="flex items-center mb-4">
                   {renderStars(selectedProduct.average_rating)}
                   <span className="ml-2 text-sm text-gray-600">{selectedProduct.average_rating?.toFixed(1)} 5</span>
                 </div>
-                <p dir="rtl" className="text-justify text-gray-700 mb-6">{selectedProduct.description}</p>
-                <div className="mb-6">
-                  <div ref={chartRef} className="h-48 w-full" />
-                </div>
+                <p dir="rtl" className=" text-justify text-gray-700 mb-6">{selectedProduct.description}</p>
 
                 <div  className="mb-6">
                   <h3 dir='rtl' className="text-lg text-start font-semibold text-gray-900 mb-3">نظرات مشتریان</h3>
@@ -90,25 +86,8 @@ const ProductModal = ({
                         <p className="text-sm text-start  text-gray-600">{c.text}</p>
                       </div>
                     ))}
-                   
+
                   </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <button onClick={() => navigate(`/StoreDetail/${selectedProduct.store_id}`)} className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center !rounded-button whitespace-nowrap cursor-pointer">
-                    <FaStore className="mr-2" /> دیدن جزئیات فروشگاه
-                  </button>
-                  <button
-                  className={`flex-1 border px-4 py-2 rounded-lg transition-colors flex items-center justify-center !rounded-button whitespace-nowrap cursor-pointer
-                    ${favorites.includes(selectedProduct.id)
-                      ? 'bg-red-100 border-red-400 text-red-700 hover:bg-red-200'
-                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'}
-                  `}
-                  onClick={() => toggleFavorite(selectedProduct.id)}
-                >
-                  {favorites.includes(selectedProduct.id) ?<> < FaHeart className='mr-1'/> حذف از علاقه‌مندی‌</> : <> < FaRegHeart className='mr-1'/> افزودن به علاقه‌مندی‌</> }
-                </button>
-
                 </div>
               </div>
             </div>
@@ -120,4 +99,4 @@ const ProductModal = ({
   );
 };
 
-export default ProductModal;
+export default SelfProductModal;

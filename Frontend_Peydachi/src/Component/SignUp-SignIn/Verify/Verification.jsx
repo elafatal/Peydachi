@@ -132,7 +132,7 @@ const OTPVerification = ({ showComponent,setshowComponent ,username }) => {
       <header className="mb-8">
         <h1 className="text-2xl font-bold mb-1">تایید شماره تلفن</h1>
         <p className="text-[15px] text-slate-500">
-          کد تأیید 4 رقمی را وارد کنید
+          کد تأیید 5 رقمی را وارد کنید
         </p>
       </header>
       <form onSubmit={handleSubmit}>

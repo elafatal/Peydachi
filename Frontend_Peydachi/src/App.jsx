@@ -14,17 +14,17 @@ import AdminPage from './Component/Admin/Admin';
 import SearchStore from './Component/otherServices/Store/SearchStore/SearchStore';
 import AddStore from './Component/otherServices/Store/AddStoreRequest/AddStoreRequest';
 import UserComment from './Component/otherServices/UserComments/UserComment';
-import Store from './Component/Store/Store';
+import StoreProfile from './Component/Store/StoreProfile';
 import MainSearch from './Component/MainSearch/Search';
 import SearchProduct from './Component/otherServices/Product/SearchProduct';
 import AllNotifPage from './Component/Notification/AllNotifPage';
 import Navbar from './Component/landingPage/navbar';
 import ScrollToTop from './Component/ScrollToTop';
+import AddProduct from './Component/Store/AddProduct';
 import SelfStore from './Component/Store/selfStore';
 
+
 function App() {
-
-
   return (
     <AuthProvider>
       <Router>
@@ -43,11 +43,12 @@ function App() {
             <Route path="/AddStoreRequest" element={<AddStore/>} />
             <Route path="/UserCommentReport" element={<UserComment/>} />
             <Route path="/SearchStore" element={<SearchStore/>} />
-            <Route path="/StoreDetail/:id" element={<Store />} />
+            <Route path="/StoreDetail/:id" element={<StoreProfile />} />
             <Route path="/Search" element={<MainSearch/>} />
             <Route path="/SearchProduct" element={<SearchProduct/>} />
             <Route path="/AllNotification" element={<AllNotifPage/>} />
-            <Route path="/selfStore" element={<SelfStore/>} />
+            <Route path="/AddProduct" element={<AddProduct/>} />
+            <Route path="/SelfStore" element={<SelfStore/>} />
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />
