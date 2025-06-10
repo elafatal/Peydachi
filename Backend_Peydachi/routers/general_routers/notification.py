@@ -12,17 +12,17 @@ router = APIRouter(
 )
 
 
-@router.post('/get_all_self_notifications', status_code=200, response_model=list[NotificationDisplay])
+@router.get('/get_all_self_notifications', status_code=200, response_model=list[NotificationDisplay])
 async def get_all_self_notifications(db: DB_DEPENDENCY, user: USER_DEPENDENCY):
     return await notification_functions.get_all_self_notifications(db=db, user_id=user.id)
 
 
-@router.post('/get_all_self_unread_notifications', status_code=200, response_model=list[NotificationDisplay])
+@router.get('/get_all_self_unread_notifications', status_code=200, response_model=list[NotificationDisplay])
 async def get_all_self_unread_notifications(db: DB_DEPENDENCY, user: USER_DEPENDENCY):
     return await notification_functions.get_all_self_unread_notifications(db=db, user_id=user.id)
 
 
-@router.post('/review_notification', status_code=200, response_model=NotificationDisplay)
+@router.put('/review_notification', status_code=200, response_model=NotificationDisplay)
 async def review_notification(notification_id: ID_BODY, db: DB_DEPENDENCY, user: USER_DEPENDENCY):
     return await notification_functions.review_notification(notification_id=notification_id, db=db, user_id=user.id)
 
@@ -48,5 +48,5 @@ async def mark_all_notifs_as_seen(db: DB_DEPENDENCY, user: USER_DEPENDENCY):
 
 
 @router.delete('/user_delete_self_notif', status_code=200)
-async def user_delete_self_notif(notif_id: int, db: DB_DEPENDENCY, user: USER_DEPENDENCY):
+async def user_delete_self_notif(notif_id: ID_BODY, db: DB_DEPENDENCY, user: USER_DEPENDENCY):
     return await notification_functions.user_delete_self_notif(notif_id=notif_id, db=db, user_id=user.id)
