@@ -391,7 +391,7 @@ async def search_near_products(search: ProductSearchModels, redis_db: Redis, db:
 
 async def full_search_in_store_products(search_request: FullSearchStoreProductModel, db: Session):
     search_offset = (search_request.page - 1) * search_request.show_limit
-    search_limit = search_request.page * search_request.show_limit
+    search_limit = search_request.show_limit
 
     if not search_request.order and not search_request.search_text:
         products = db.query(Product).filter(Product.store_id == search_request.store_id).order_by(func.coalesce(Product.average_rating, 0).desc()).limit(search_limit).offset(search_offset).all()
