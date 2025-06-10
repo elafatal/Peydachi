@@ -105,7 +105,7 @@ app.include_router(phone_verification_route.router)
 
 
 
-Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)
 
 
 @app.get("/")
@@ -116,6 +116,8 @@ async def peydachi():
 
 
 if __name__ == "__main__":
+    Base.metadata.create_all(engine)
+    
     import uvicorn
     try:
         uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True, log_level="debug")

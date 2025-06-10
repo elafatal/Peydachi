@@ -6,7 +6,6 @@ alembic
 alembic.ini
 
 
-
 .env
 
 *cache*
