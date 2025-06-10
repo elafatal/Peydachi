@@ -18,13 +18,13 @@ useEffect(() => {
     if (selectedProduct) {
       setProductData({
         id: selectedProduct.id,
-        storeId: selectedProduct.store_id || 456, // اگر store_id در selectedProduct نیست، مقدار پیش‌فرض
+        storeId: selectedProduct.store_id || 456, 
         name: selectedProduct.name,
         image: selectedProduct.pic_url,
       });
     }
   }, [selectedProduct]);
-// Handle star rating selection
+
 const handleRatingClick = (selectedRating) => {
 setRating(selectedRating);
 };
@@ -138,38 +138,37 @@ if (e.target === e.currentTarget) {
 };
 if (!isModalOpen) return null;
 return (
-<div dir='ltr' className="fixed inset-0 flex items-center justify-center  bg-black/40 backdrop-blur-sm z-50" onClick={handleOutsideClick}>
+<div dir='rtl' className="fixed inset-0 flex items-center justify-center  bg-black/40 backdrop-blur-sm z-50" onClick={handleOutsideClick}>
 <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 md:mx-auto overflow-hidden transform transition-all duration-300 ease-in-out">
 {/* Header */}
-<div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 flex justify-between items-center">
-<h2 className="text-white font-semibold text-lg">Rate & Review</h2>
-<button
-onClick={closeProductModal}
-className="text-white hover:text-blue-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
-aria-label="Close"
->
-<FaTimes className="text-white hover:text-blue-100 transition-colors cursor-pointer" />
-</button>
-</div>
+    <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 flex justify-between items-center">
+        <h2 className="text-white font-semibold text-lg">امتیاز و بررسی</h2>
+        <button
+        onClick={closeProductModal}
+        className="text-white hover:text-blue-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
+        aria-label="Close"
+        >
+        <FaTimes className="text-white hover:text-blue-100 transition-colors cursor-pointer" />
+        </button>
+    </div>
 {/* Product Info */}
-<div className="flex items-center p-6 border-b border-gray-100">
-<div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
-<img
-src={productData.image}
-alt={productData.name}
-className="w-full h-full object-cover object-top"
-/>
-</div>
-<div className="ml-4">
-<h3 className="font-medium text-gray-800">{productData.name}</h3>
-<p className="text-sm text-gray-500">Product ID: {productData.id}</p>
-</div>
-</div>
+    <div className="flex items-center p-6 border-b border-gray-100">
+      <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
+      <img
+      src={productData.image}
+      alt={productData.name}
+      className="w-full h-full object-cover object-top"
+      />
+      </div>
+      <div className="mr-4">
+      <h3 className="font-bold text-lg text-gray-800">{productData.name}</h3>
+      </div>
+    </div>
 <form onSubmit={handleSubmit} className="p-6">
 {/* Rating Section */}
 <div className="mb-6">
-<label className="block text-gray-700 font-medium mb-2">Your Rating</label>
-<div className="flex items-center">
+<label className="block text-gray-700 font-medium mb-2">امتیاز دهید</label>
+<div dir='ltr' className="flex items-center">
 {[1, 2, 3, 4, 5].map((star) => (
 <button
 key={star}
@@ -184,27 +183,27 @@ onMouseEnter={() => setHoverRating(star)}
 onMouseLeave={() => setHoverRating(0)}
 aria-label={`Rate ${star} out of 5 stars`}
 >
-<FaStar className="text-2xl mr-1 transition-transform hover:scale-110 focus:outline-none cursor-pointer" />
+<FaStar className="text-2xl ml-1 transition-transform hover:scale-110 focus:outline-none cursor-pointer" />
 </button>
 ))}
 <span className="ml-2 text-sm text-gray-500">
-{rating > 0 ? `${rating} out of 5` : 'Select a rating'}
+{rating > 0 ? `${rating}` : ' '}
 </span>
 </div>
 </div>
 {/* Comment Section */}
 <div className="mb-6">
-<label htmlFor="comment" className="block text-gray-700 font-medium mb-2">Your Review (Optional)</label>
+<label htmlFor="comment" className="block text-gray-700 font-medium mb-2">نظر شما (اختیاری)</label>
 <textarea
 id="comment"
 className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-sm"
 rows={4}
-placeholder="Share your thoughts about this product..."
+placeholder="نظرات خود را در مورد این محصول با ما در میان بگذارید..."
 value={comment}
 onChange={handleCommentChange}
 ></textarea>
 <div className="text-right text-xs text-gray-500 mt-1">
-{comment.length} characters
+{comment.length} کاراکتر
 </div>
 </div>
 {/* Feedback Message */}
@@ -220,9 +219,9 @@ feedback.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red
 <button
 type="button"
 onClick={closeProductModal}
-className="mr-3 px-5 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
+className="ml-3 px-5 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
 >
-Cancel
+لغو
 </button>
 <button
 type="submit"
@@ -233,10 +232,10 @@ disabled={isSubmitting}
 >
 {isSubmitting ? (
 <span className="flex items-center">
-<FaSpinner className="animate-spin mr-2" />
-Submitting...
+<FaSpinner className="animate-spin ml-2" />
+درحال ثبت
 </span>
-) : 'Submit Review'}
+) : 'ثبت بازخورد'}
 </button>
 </div>
 </form>

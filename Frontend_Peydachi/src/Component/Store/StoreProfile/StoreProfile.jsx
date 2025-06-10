@@ -1,5 +1,5 @@
 import React , { useEffect, useState } from 'react';
-import {  FaStar,FaEnvelope, FaPhone, FaGlobe, FaMapMarkerAlt, FaHeart, FaSearch, FaChevronDown, FaBox, FaCalendarAlt, FaEye, FaShoppingCart, FaFacebookF, FaInstagram, FaTwitter, FaPinterest, FaDirections } from 'react-icons/fa';
+import {  FaComments,FaStar, FaHeart, FaSearch, FaChevronDown, FaBox, FaCalendarAlt, FaEye, FaShoppingCart, FaFacebookF, FaInstagram, FaTwitter, FaPinterest, FaDirections } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
@@ -22,6 +22,7 @@ const StoreProfile = () => {
   }])
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [s, setS] = useState(false);
   const [sortBy, setSortBy] = useState('newest');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,6 +40,10 @@ const StoreProfile = () => {
     setModalProduct(null);
   };
   
+const changeSearch =()=>{
+setS(!s)
+}
+
   const handleSetOffset = () => {
     setOffset((prevOffset) => prevOffset + 1);
   };
@@ -95,11 +100,9 @@ useEffect(() => {
   };
 
   fetchStoreProducts();
-}, [id, searchTerm, sortBy, offset]);
+}, [id, sortBy,s, offset]);
 
-  const filteredProducts = products?.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products
   const sortedProducts = [...(filteredProducts || [])].sort((a, b) => {
     if (sortBy === 'newest') return new Date(b.date_added) - new Date(a.date_added);
     if (sortBy === 'rating') return b.average_rating - a.average_rating;
@@ -207,7 +210,7 @@ useEffect(() => {
                 className="pl-10 pr-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
 
               />
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 text-sm" />
+              <FaSearch onClick={changeSearch} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 text-sm" />
             </div>
             <div className="relative ml-4">
             <select
@@ -254,11 +257,11 @@ useEffect(() => {
                  
                 </div>
                 <div className="mt-4 pt-4 border-t border-blue-50 flex justify-between">
-                  <button className="flex items-center bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 py-1 px-3 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
+                  <button className="flex items-center justify-center bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 py-1 px-3 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
                     <FaEye className="mr-1" /> دیدن جزئیات
                   </button>
-                  <button onClick={()=>openProductModal(product)} className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
-                    <FaShoppingCart className="mr-1" /> ثبت نظر
+                  <button onClick={()=>openProductModal(product)} className="flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
+                    <FaComments className="mr-1 " /> ثبت نظر
                   </button>
                 </div>
               </div>

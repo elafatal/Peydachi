@@ -1,6 +1,6 @@
 import React from "react";
 import { FaStar, FaRegStar, FaStarHalfAlt, FaTimes, FaStore, FaHeart, FaRegHeart } from 'react-icons/fa';
-
+import { useNavigate } from 'react-router-dom';
 const ProductModal = ({
   selectedProduct,
   isModalOpen,
@@ -13,7 +13,7 @@ const ProductModal = ({
   favorites
 }) => {
   if (!isModalOpen || !selectedProduct) return null;
-
+  const navigate = useNavigate();
   const renderStars = (rating) => {
     const stars = [];
     const full = Math.floor(rating);
@@ -26,7 +26,6 @@ const ProductModal = ({
     return stars;
   };
   
-
   return (
   <>{isModalOpen && selectedProduct && (
     <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
