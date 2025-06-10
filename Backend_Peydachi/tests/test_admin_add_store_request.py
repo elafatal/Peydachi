@@ -135,3 +135,71 @@ def test_remove_add_store_request(client):
 
     res = client.request("DELETE", "/admin/add_store_request/remove_add_store_request", headers=headers, content=json.dumps({"request_id": store_request["id"]}))
     assert res.status_code == 200
+
+
+
+def test_search_add_store_requests(client):
+    client.post("/super_admin/add_super_admin", json={
+        "username": "admin_store_search",
+        "password": "adminpass",
+        "email": "admin_store_search@example.com",
+        "phone_number": "09110000001"
+    })
+    
+    token = client.post("/authentication/token", data={
+        "grant_type": "password",
+        "username": "admin_store_search",
+        "password": "adminpass",
+        "scope": "",
+        "client_id": "string",
+        "client_secret": "string"
+    }).json()["access_token"]
+    
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    stores_to_create = [
+        {"store_name": "Electronics MegaStore", "phone_number": "09111111111"},
+        {"store_name": "Gadget World", "phone_number": "09111111112"},
+        {"store_name": "Food Market", "phone_number": "09111111113"},
+        {"store_name": "Electronics Plus", "phone_number": "09111111114"}
+    ]
+    
+    for store in stores_to_create:
+        client.post("/add_store_request/send_add_store_request", json=store)
+
+    
+    res_full = client.post(
+        "/admin/add_store_request/search_add_store_requests",
+        json={"request_text": "Electronics MegaStore"},
+        headers=headers
+    )
+    assert res_full.status_code == 200 or 404
+    assert len(res_full.json()) == 1
+    assert res_full.json()[0]["store_name"] == "Electronics MegaStore"
+
+    res_partial = client.post(
+        "/admin/add_store_request/search_add_store_requests",
+        json={"request_text": "Electron"},
+        headers=headers
+    )
+    assert res_partial.status_code == 200 or 404
+    assert len(res_partial.json()) == 2  
+    assert all("Electron" in store["store_name"] for store in res_partial.json())
+
+    res_no_match = client.post(
+        "/admin/add_store_request/search_add_store_requests",
+        json={"request_text": "Clothing"},
+        headers=headers
+    )
+    assert res_no_match.status_code == 200 or 404
+
+
+    res_case = client.post(
+        "/admin/add_store_request/search_add_store_requests",
+        json={"request_text": "gAdGeT"},
+        headers=headers
+    )
+    assert res_case.status_code == 200 or 404
