@@ -184,7 +184,7 @@ useEffect(() => {
       {/* Products Section */}
       <div className="container mx-auto px-4 py-12 w-11/12 m-auto" dir='ltr'>
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold text-blue-800">Available Products</h2>
+          <h2 className="text-2xl font-bold text-blue-800">محصولات موجود</h2>
           <div className="flex items-center">
             <div className="relative">
             <input
@@ -233,7 +233,7 @@ useEffect(() => {
                 <div className="flex justify-between items-center text-sm text-gray-500">
                   <span className="flex items-center">
                     <FaBox className="mr-1 text-blue-400" />
-                    {product.quantity} in stock
+                    {product.quantity} موجود در انبار
                   </span>
                   <span className="flex items-center" dir='rtl'>
                     <FaCalendarAlt className="ml-1 text-blue-400" />
@@ -243,10 +243,10 @@ useEffect(() => {
                 </div>
                 <div className="mt-4 pt-4 border-t border-blue-50 flex justify-between">
                   <button className="flex items-center bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 py-1 px-3 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
-                    <FaEye className="mr-1" /> Quick View
+                    <FaEye className="mr-1" /> دیدن جزئیات
                   </button>
                   <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
-                    <FaShoppingCart className="mr-1" /> Add to Cart
+                    <FaShoppingCart className="mr-1" /> ثبت نظر
                   </button>
                 </div>
               </div>
@@ -259,7 +259,7 @@ useEffect(() => {
   
         <div className="mt-12 flex justify-center">
           <button onClick={handleSetOffset} className="flex items-center bg-white border border-blue-300 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-button transition duration-200 font-medium whitespace-nowrap cursor-pointer">
-            Load More Products <FaChevronDown className="ml-2" />
+            نمایش بیشتر <FaChevronDown className="ml-2" />
           </button>
         </div>
       </div>

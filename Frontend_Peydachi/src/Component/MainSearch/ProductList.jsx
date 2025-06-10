@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaCheckCircle, FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
-
+import { useNavigate } from 'react-router-dom';
 const renderStars = (rating) => {
   const full = Math.floor(rating);
   const half = rating % 1 >= 0.5;
@@ -16,6 +16,10 @@ const renderStars = (rating) => {
 
 
 const ProductList = ({ stores , onStoreClick }) => {
+  const navigate = useNavigate();
+  const handleSeeDetail=(item)=>{
+    navigate(`/storeDetail/${item.store.id}`);
+  }
   return (
     <div className="flex-1 overflow-auto p-4">
       {stores.length > 0 ? <></> :
@@ -28,7 +32,7 @@ const ProductList = ({ stores , onStoreClick }) => {
 
     <div className="space-y-4">
       {stores.map((item, i) => (
-        <div
+        <div 
           key={item.store.id}
           onClick={() => onStoreClick(item.store)}
           className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
@@ -75,7 +79,7 @@ const ProductList = ({ stores , onStoreClick }) => {
                     <FaCheckCircle className="mr-1" /> 
                     موجود در انبار: {item.product.quantity}
                   </span>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  <span onClick={()=>handleSeeDetail(item)} className="inline-flex items-center px-2.5 py-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                     <FaCheckCircle className="mr-1" /> 
                     جزئیات فروشگاه 
                   </span>
