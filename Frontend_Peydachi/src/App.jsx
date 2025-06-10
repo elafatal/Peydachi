@@ -14,7 +14,7 @@ import AdminPage from './Component/Admin/Admin';
 import SearchStore from './Component/otherServices/Store/SearchStore/SearchStore';
 import AddStore from './Component/otherServices/Store/AddStoreRequest/AddStoreRequest';
 import UserComment from './Component/otherServices/UserComments/UserComment';
-import StoreProfile from './Component/Store/StoreProfile';
+import StoreProfile from './Component/Store/StoreProfile/StoreProfile';
 import MainSearch from './Component/MainSearch/Search';
 import SearchProduct from './Component/otherServices/Product/SearchProduct';
 import AllNotifPage from './Component/Notification/AllNotifPage';
@@ -22,6 +22,7 @@ import Navbar from './Component/landingPage/navbar';
 import ScrollToTop from './Component/ScrollToTop';
 import AddProduct from './Component/Store/AddProduct';
 import SelfStore from './Component/Store/selfStore';
+import ProductReview from './Component/Store/StoreProfile/ProductReview';
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
             <Route path="/AllNotification" element={<AllNotifPage/>} />
             <Route path="/AddProduct" element={<AddProduct/>} />
             <Route path="/SelfStore" element={<SelfStore/>} />
+            <Route path="/test" element={<ProductReview/>} />
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />

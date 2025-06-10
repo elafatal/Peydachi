@@ -2,9 +2,10 @@ import React , { useEffect, useState } from 'react';
 import {  FaStar,FaEnvelope, FaPhone, FaGlobe, FaMapMarkerAlt, FaHeart, FaSearch, FaChevronDown, FaBox, FaCalendarAlt, FaEye, FaShoppingCart, FaFacebookF, FaInstagram, FaTwitter, FaPinterest, FaDirections } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import axiosInstance from '../axiosInstance';
+import axiosInstance from '../../axiosInstance';
 import { formatDistanceToNow } from 'date-fns';
 import faIR from 'date-fns/locale/fa-IR';
+import ProductReview from './ProductReview';
 
 const StoreProfile = () => {
   const { id } = useParams(); 
@@ -19,14 +20,25 @@ const StoreProfile = () => {
     pic_url: "https://readdy.ai/api/search-image?query=A%20luxurious%20coastal-themed%20linen%20throw%20pillow%20with%20blue%20and%20white%20patterns%2C%20photographed%20in%20a%20minimalist%20setting%20with%20soft%20natural%20lighting%2C%20showing%20texture%20details%20and%20elegant%20stitching%2C%20perfect%20for%20a%20modern%20coastal%20home%20decor&width=600&height=400&seq=1001&orientation=landscape",
     average_rating: 4.8
   }])
-  const [products2,setProducts2]=useState([])
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [offset , setOffset]= useState(1)
+  const [modalProduct, setModalProduct] = useState(null);
   const navigate = useNavigate();
+  const openProductModal = (product) => {
+    setIsModalOpen(true);
+    setModalProduct(product);
+    console.log(product);
     
+  }
+  const closeProductModal = () => {
+    setIsModalOpen(false);
+    setModalProduct(null);
+  };
+  
   const handleSetOffset = () => {
     setOffset((prevOffset) => prevOffset + 1);
   };
@@ -245,7 +257,7 @@ useEffect(() => {
                   <button className="flex items-center bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 py-1 px-3 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
                     <FaEye className="mr-1" /> دیدن جزئیات
                   </button>
-                  <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
+                  <button onClick={()=>openProductModal(product)} className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
                     <FaShoppingCart className="mr-1" /> ثبت نظر
                   </button>
                 </div>
@@ -263,9 +275,10 @@ useEffect(() => {
           </button>
         </div>
       </div>
-  
+      <ProductReview  closeProductModal={closeProductModal}  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedProduct={modalProduct} />
      
     </div>
+
   </div>
   );
 };
