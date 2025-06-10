@@ -1,14 +1,34 @@
-// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
-
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../axiosInstance';
+import Swal from 'sweetalert2';
 import React, { useState, useRef, ChangeEvent } from 'react';
-
+import {FaLightbulb ,FaTimes,FaSave,FaRocket, FaSpinner,FaCloudUploadAlt, FaCamera,FaImage,FaBox,FaPlus,FaCheck , FaExternalLinkAlt, FaTag, FaExclamationCircle,FaInfoCircle, FaAlignLeft, FaMinus} from 'react-icons/fa';
+import { LuSparkles } from 'react-icons/lu';
+import { useEffect } from 'react'; 
 const AddProduct = () => {
+  const navigate = useNavigate();
+  const [selectedFile, setSelectedFile] = useState(null); // اضافه کن
+  const [hasDraft, setHasDraft] = useState(false);
+
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     quantity: 0,
     pic_url: '',
   });
+  useEffect(() => {
+    const draft = localStorage.getItem('productDraft');
+    if (draft) {
+      const parsed = JSON.parse(draft);
+      if (parsed.formData) {
+        setFormData(parsed.formData);
+      }
+      if (parsed.previewImage) {
+        setPreviewImage(parsed.previewImage);
+      }
+      setHasDraft(true); // ✅ اینجا مشخص می‌کنیم پیش‌نویس هست
+    }
+  }, []);
   
   const [errors, setErrors] = useState({
     name: '',
@@ -38,6 +58,29 @@ const AddProduct = () => {
       });
     }
   };
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    if (!file.type.match('image.*')) {
+      setErrors({ ...errors, pic_url: 'Please upload an image file (JPEG, PNG, etc.)' });
+      return;
+    }
+  
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors({ ...errors, pic_url: 'File size should be less than 5MB' });
+      return;
+    }
+  
+    setSelectedFile(file); // ✅ فایل را ذخیره کن
+    setErrors({ ...errors, pic_url: '' });
+  
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreviewImage(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
   
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value) || 0;
@@ -63,48 +106,7 @@ const AddProduct = () => {
     }
   };
   
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    // File validation
-    if (!file.type.match('image.*')) {
-      setErrors({
-        ...errors,
-        pic_url: 'Please upload an image file (JPEG, PNG, etc.)',
-      });
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setErrors({
-        ...errors,
-        pic_url: 'File size should be less than 5MB',
-      });
-      return;
-    }
-    // Simulate upload progress
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 10;
-      setUploadProgress(progress);
-      if (progress >= 100) {
-        clearInterval(interval);
-        const reader = new FileReader();
-        reader.onload = () => {
-          setPreviewImage(reader.result);
-          setFormData({
-            ...formData,
-            pic_url: 'uploaded_image_url.jpg', // This would be the actual URL from server
-          });
-          setErrors({
-            ...errors,
-            pic_url: '',
-          });
-        };
-        reader.readAsDataURL(file);
-      }
-    }, 200);
-  };
-  
+
   const triggerFileInput = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -123,55 +125,129 @@ const AddProduct = () => {
       newErrors.name = 'Product name is required';
       isValid = false;
     } else if (formData.name.length > 100) {
-      newErrors.name = 'Product name must be less than 100 characters';
+      newErrors.name = 'نام محصول باید کمتر از ۱۰۰ کاراکتر باشد';
       isValid = false;
     }
     if (!formData.description.trim()) {
-      newErrors.description = 'Product description is required';
+      newErrors.description = 'توضیحات محصول الزامی است';
       isValid = false;
     }
     if (formData.quantity < 1) {
-      newErrors.quantity = 'Quantity must be at least 1';
+      newErrors.quantity = 'تعداد باید حداقل ۱ باشد';
       isValid = false;
     }
-    if (!formData.pic_url) {
+    if (!selectedFile) {
       newErrors.pic_url = 'Product image is required';
       isValid = false;
-    }
+    }    
     setErrors(newErrors);
     return isValid;
   };
   
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-    setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setShowSuccess(true);
-      // Reset form after success
-      setTimeout(() => {
-        setShowSuccess(false);
-        setFormData({
-          name: '',
-          description: '',
-          quantity: 0,
-          pic_url: '',
-        });
-        setPreviewImage('');
-        setUploadProgress(0);
-      }, 3000);
-    }, 1500);
-  };
   
-  const handleSaveDraft = () => {
-    // Implement save draft functionality
-    alert('Draft saved successfully!');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!validateForm()) return;
+
+  if (!selectedFile) {
+    setErrors((prev) => ({ ...prev, pic_url: 'Product image is required' }));
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  const formDataToSend = new FormData();
+  formDataToSend.append('name', formData.name);
+  formDataToSend.append('description', formData.description);
+  formDataToSend.append('quantity', formData.quantity.toString());
+  formDataToSend.append('pic', selectedFile); 
+
+
+  try {
+    const response = await axiosInstance.post('/seller/product/add_product', formDataToSend, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    if (response.data) {
+      setShowSuccess(true);
+      setFormData({
+        name: '',
+        description: '',
+        quantity: 0,
+        pic_url: '',
+      });
+      setSelectedFile(null);
+      setPreviewImage('');
+      setUploadProgress(0);
+      console.log("yedddd");
+      localStorage.removeItem('productDraft');
+      setTimeout(() => setShowSuccess(false), 3000);
+    }
+  } catch (error) {
+    console.error('Error submitting product:', error);
+    alert('خطا در ارسال محصول');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+const clearDraft = () => {
+  localStorage.removeItem('productDraft');
+  setFormData({
+    name: '',
+    description: '',
+    quantity: 0,
+    pic_url: '',
+  });
+  setHasDraft(false);
+  setPreviewImage('');
+  setSelectedFile(null);
+  setUploadProgress(0);
+  Swal.fire({
+    icon: 'info',
+    title: 'پیش‌نویس پاک شد',
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 1500,
+  });
+};
+
+const handleSaveDraft = () => {
+  const draftData = {
+    formData,
+    previewImage,
   };
+  setHasDraft(true);
+  localStorage.setItem('productDraft', JSON.stringify(draftData));
+  
+  Swal.fire({
+    icon: 'success',
+    title: 'پیش‌نویس ذخیره شد',
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 1500,
+  });
+};
+
+
+useEffect(() => {
+  const draft = localStorage.getItem('productDraft');
+  if (draft) {
+    const parsed = JSON.parse(draft);
+    if (parsed.formData) {
+      setFormData(parsed.formData);
+    }
+    if (parsed.previewImage) {
+      setPreviewImage(parsed.previewImage);
+    }
+  }
+}, []);
+
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50" dir='ltr'>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50" >
     
       {/* Main Content */}
       <main className="container mx-auto px-6 py-12 relative">
@@ -182,14 +258,14 @@ const AddProduct = () => {
           <div className="mb-8 bg-gradient-to-r from-emerald-400/90 to-teal-400/90 backdrop-blur-sm border border-emerald-200 text-white p-6 rounded-2xl shadow-lg animate-fade-in">
             <div className="flex items-center">
               <div className="bg-white/30 rounded-full p-3 mr-4 backdrop-blur-sm">
-                <i className="fas fa-check text-white text-xl"></i>
+              <FaCheck className="text-white text-xl" />
               </div>
               <div>
-                <h3 className="font-bold text-lg mb-1">Product Added Successfully!</h3>
-                <p className="text-emerald-50">Your product is now live. Product ID: #12345</p>
+                <h3 className="font-bold text-lg mb-1">محصول با موفقیت اضافه شد!</h3>
+                <p className="text-emerald-50">محصول شما اکنون در دسترس است.</p>
               </div>
               <button className="ml-auto bg-white/20 hover:bg-white/30 p-2 rounded-full transition-all duration-300 cursor-pointer">
-                <i className="fas fa-external-link-alt text-white"></i>
+              <FaExternalLinkAlt className="text-white" />
               </button>
             </div>
           </div>
@@ -205,15 +281,15 @@ const AddProduct = () => {
               <div className="flex-1 space-y-8">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                    <i className="fas fa-sparkles text-blue-500 mr-3"></i>
-                    Product Details
+                  <LuSparkles className="text-blue-500 ml-3" />
+                    جزئیات محصول
                   </h2>
                 </div>
                 
                 {/* Product Name */}
-                <div className="group">
+                <div dir='rtl' className="group">
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2 group-focus-within:text-blue-600 transition-colors">
-                    Product Name <span className="text-pink-500">*</span>
+                    نام محصول <span className="text-pink-500">*</span>
                   </label>
                   <div className="relative">
                     <input
@@ -223,29 +299,30 @@ const AddProduct = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-3 rounded-xl border ${errors.name ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white/80 backdrop-blur-sm`}
-                      placeholder="What's your product called?"
+                      placeholder="محصول شما اسمش چیه؟"
                     />
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                      <i className="fas fa-tag"></i>
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                     
+                    <FaTag />
                     </div>
                   </div>
                   {errors.name ? (
                     <p className="mt-2 text-sm text-red-500 flex items-center">
-                      <i className="fas fa-exclamation-circle mr-1"></i>
+                      <FaExclamationCircle className="mr-1" />
                       {errors.name}
                     </p>
                   ) : (
                     <p className="mt-2 text-sm text-gray-500 flex items-center">
-                      <i className="fas fa-info-circle mr-1"></i>
-                      {formData.name.length}/100 characters
+                     <FaInfoCircle className="ml-1" />
+                      {formData.name.length}/100 کاراکتر
                     </p>
                   )}
                 </div>
                 
                 {/* Product Description */}
-                <div className="group">
+                <div dir='rtl' className="group">
                   <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2 group-focus-within:text-blue-600 transition-colors">
-                    Description <span className="text-pink-500">*</span>
+                    توضیحات <span className="text-pink-500">*</span>
                   </label>
                   <div className="relative">
                     <textarea
@@ -255,15 +332,15 @@ const AddProduct = () => {
                       onChange={handleInputChange}
                       rows={5}
                       className={`w-full px-4 py-3 rounded-xl border ${errors.description ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white/80 backdrop-blur-sm`}
-                      placeholder="Tell the world what makes your product special..."
+                      placeholder="به دنیا بگویید چه چیزی محصول شما را خاص می‌کند..."
                     ></textarea>
-                    <div className="absolute right-3 top-3 text-gray-400">
-                      <i className="fas fa-align-left"></i>
+                    <div className="absolute left-3 top-3 text-gray-400">
+                    <FaAlignLeft />
                     </div>
                   </div>
                   {errors.description && (
                     <p className="mt-2 text-sm text-red-500 flex items-center">
-                      <i className="fas fa-exclamation-circle mr-1"></i>
+                      <FaExclamationCircle className="mr-1" />
                       {errors.description}
                     </p>
                   )}
@@ -272,15 +349,15 @@ const AddProduct = () => {
                 {/* Quantity */}
                 <div className="group">
                   <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-2 group-focus-within:text-blue-600 transition-colors">
-                    Quantity <span className="text-pink-500">*</span>
+                    موجودی <span className="text-pink-500">*</span>
                   </label>
                   <div className="flex items-center">
-                    <button
+                  <button
                       type="button"
-                      onClick={decrementQuantity}
-                      className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-l-xl border border-gray-300 cursor-pointer whitespace-nowrap transition-colors"
+                      onClick={incrementQuantity}
+                      className="px-4 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-r-xl border border-gray-300 cursor-pointer whitespace-nowrap transition-colors"
                     >
-                      <i className="fas fa-minus"></i>
+                     <FaPlus />
                     </button>
                     <input
                       type="number"
@@ -293,30 +370,31 @@ const AddProduct = () => {
                     />
                     <button
                       type="button"
-                      onClick={incrementQuantity}
-                      className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-r-xl border border-gray-300 cursor-pointer whitespace-nowrap transition-colors"
+                      onClick={decrementQuantity}
+                      className="px-4 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-l-xl border border-gray-300 cursor-pointer whitespace-nowrap transition-colors"
                     >
-                      <i className="fas fa-plus"></i>
+                      <FaMinus />
                     </button>
-                    <div className="ml-4 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm">
-                      <i className="fas fa-box mr-1"></i>
-                      Units
+                    <div className="mr-4 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm">
+                    <FaBox className="inline ml-1" />
+                      تعداد
                     </div>
                   </div>
                   {errors.quantity && (
                     <p className="mt-2 text-sm text-red-500 flex items-center">
-                      <i className="fas fa-exclamation-circle mr-1"></i>
+                      <FaExclamationCircle className="mr-1" />
                       {errors.quantity}
                     </p>
                   )}
                 </div>
               </div>
-              
+  
+
               {/* Right Column - Image Upload */}
-              <div className="md:w-2/5">
+              <div dir='rtl' className="md:w-2/5">
                 <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                  <i className="fas fa-image text-blue-500 mr-3"></i>
-                  Product Image
+                <FaImage className="text-blue-500 ml-3" />
+                  عکس محصول
                 </h2>
                 
                 <div
@@ -339,8 +417,8 @@ const AddProduct = () => {
                         />
                         <div className="absolute inset-0 flex items-center justify-center bg-blue-600/60 opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-xl backdrop-blur-sm">
                           <div className="text-white text-center">
-                            <i className="fas fa-camera text-3xl mb-3"></i>
-                            <p className="text-sm font-medium">Click to change image</p>
+                          <FaCamera className="text-3xl mb-3" />
+                            <p className="text-sm font-medium">برای تغییر عکس کلیک کنید</p>
                           </div>
                         </div>
                       </div>
@@ -349,18 +427,18 @@ const AddProduct = () => {
                         <div className="relative w-24 h-24 mx-auto">
                           <div className="absolute inset-0 bg-blue-100 rounded-full animate-pulse"></div>
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <i className="fas fa-cloud-upload-alt text-4xl text-blue-500"></i>
+                          <FaCloudUploadAlt className="text-4xl text-blue-500" />
                           </div>
                         </div>
                         <div className="flex flex-col items-center space-y-3">
-                          <p className="text-blue-600 font-medium text-lg">Showcase your product</p>
-                          <p className="text-sm text-gray-500">Drag and drop your image here</p>
+                          <p className="text-blue-600 font-medium text-lg">محصول خود را به نمایش بگذارید</p>
+                          <p className="text-sm text-gray-500">فایل خود را بکشید و اینجا وارد کنید</p>
                           <button type="button" className="px-4 py-2 bg-blue-100 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-200 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
-                            Browse Files
+                          مرور فایل ها
                           </button>
                           <div className="flex items-center space-x-2 text-xs text-gray-400 mt-2">
-                            <i className="fas fa-image"></i>
-                            <span>PNG, JPG, GIF up to 5MB</span>
+                          <FaImage />
+                            <span>PNG، JPG، GIF تا سقف ۵ مگابایت</span>
                           </div>
                         </div>
                       </>
@@ -383,7 +461,7 @@ const AddProduct = () => {
                 />
                 {errors.pic_url && (
                   <p className="mt-2 text-sm text-red-500 flex items-center">
-                    <i className="fas fa-exclamation-circle mr-1"></i>
+                    <FaExclamationCircle className="mr-1" />
                     {errors.pic_url}
                   </p>
                 )}
@@ -399,43 +477,57 @@ const AddProduct = () => {
               >
                 {isSubmitting ? (
                   <>
-                    <i className="fas fa-spinner fa-spin mr-2"></i>
-                    Creating Magic...
+                   <FaSpinner className="animate-spin ml-2" />
+                    درحال ذخیره‌سازی
                   </>
                 ) : (
                   <>
-                    <i className="fas fa-rocket mr-2"></i>
-                    Launch Product
+                   <FaRocket className="ml-2" />
+                    اضافه کردن محصول
                   </>
                 )}
               </button>
+              {hasDraft ? (
+                <button
+                  type="button"
+                  onClick={clearDraft}
+                  className="flex-1 sm:flex-none bg-red-50 hover:bg-red-100 text-red-600 font-medium py-4 px-8 rounded-xl border border-red-300 shadow-sm transition cursor-pointer !rounded-button whitespace-nowrap flex items-center justify-center"
+                >
+                  <FaTimes className="ml-2" />
+                  پاکسازی پیش‌نویس
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSaveDraft}
+                  className="flex-1 sm:flex-none bg-white hover:bg-gray-50 text-blue-600 font-medium py-4 px-8 rounded-xl border-2 border-blue-600 shadow-sm transition cursor-pointer !rounded-button whitespace-nowrap flex items-center justify-center"
+                >
+                  <FaSave className="ml-2" />
+                  ذخیره پیش‌نویس 
+                </button>
+              )}
+
+
               <button
-                type="button"
-                onClick={handleSaveDraft}
-                className="flex-1 sm:flex-none bg-white hover:bg-gray-50 text-blue-600 font-medium py-4 px-8 rounded-xl border-2 border-blue-600 shadow-sm transition cursor-pointer !rounded-button whitespace-nowrap flex items-center justify-center"
-              >
-                <i className="fas fa-save mr-2"></i>
-                Save Draft
-              </button>
-              <button
+              onClick={()=>navigate(-1)}
                 type="button"
                 className="flex-1 sm:flex-none bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-4 px-8 rounded-xl border border-gray-300 shadow-sm transition cursor-pointer !rounded-button whitespace-nowrap flex items-center justify-center"
               >
-                <i className="fas fa-times mr-2"></i>
-                Cancel
+               <FaTimes className="ml-2" />
+                بازگشت
               </button>
             </div>
           </div>
         </form>
         
-        <div className="max-w-4xl mx-auto mt-12 bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-blue-100/50 shadow-lg">
+        <div dir='rtl' className="max-w-4xl mx-auto mt-12 bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-blue-100/50 shadow-lg">
           <div className="flex items-center space-x-4">
             <div className="bg-blue-100 p-3 rounded-full text-blue-600">
-              <i className="fas fa-lightbulb"></i>
+            <FaLightbulb />
             </div>
-            <div>
-              <h3 className="font-bold text-gray-800">Pro Tip</h3>
-              <p className="text-gray-600">High-quality images can increase your product sales by up to 40%</p>
+            <div >
+              <h3 className="font-bold text-gray-800">نکته حرفه ای</h3>
+              <p className="text-gray-600">تصاویر با کیفیت بالا می‌توانند فروش محصول شما را تا ۴۰٪ افزایش دهند.</p>
             </div>
           </div>
         </div>
