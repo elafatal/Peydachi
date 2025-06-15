@@ -9,16 +9,13 @@ import { FaPenToSquare } from 'react-icons/fa6';
 const StoreFullComment = () => {
   const { storeID } = useParams(); 
   const navigate = useNavigate();
-  const [storeId] = useState(1); // Assuming store ID is 1
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [userRating, setUserRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState(null);
-  const [averageRating, setAverageRating] = useState(4.2); // Mock average rating
-  const [totalReviews, setTotalReviews] = useState(128); 
-
+const [sommentNumber,setCommentNumbers]=useState(4)
   // Mock fetch comments
   useEffect(() => {
     const fetchComments = async () => {
@@ -37,7 +34,7 @@ const StoreFullComment = () => {
   const handleCommentSubmit = async () => {
     if (!newComment.trim() && userRating === 0) {
       setNotification({
-        message: "Please add a comment or rating before submitting",
+        message: "لطفا قبل از ارسال، نظر یا امتیاز خود را اضافه کنید",
         type: "error"
       });
       return;
@@ -46,43 +43,38 @@ const StoreFullComment = () => {
     try {
       // Mock API call for submitting comment
       if (newComment.trim()) {
-        // In a real app, this would be an API call
-        const newCommentResponse = {
-          store_id: storeId,
-          text: newComment,
-          id: comments.length + 1,
-          user_id: 999, // Mock user ID
-          user_name: "Current User", // Mock username
-          date_added: new Date().toISOString()
-        };
-        
-        setComments([newCommentResponse, ...comments]);
-        setNewComment('');
+        try {
+          const response = await axiosInstance.post('/store_comment/add_store_comment', {
+            store_id: storeID,
+            text: newComment,
+          });
+          console.log(response.data);
+        } catch (error) {
+          console.log('comment error:', error);
+        }
       }
 
-      // Mock API call for submitting rating
       if (userRating > 0) {
-        // In a real app, this would be an API call
         const ratingResponse = {
-          store_id: storeId,
-          user_id: 999, // Mock user ID
+          store_id: storeID,
           rating: userRating
         };
-        
-        // Update average rating (this would normally come from the API)
-        const newTotal = totalReviews + 1;
-        const newAverage = ((averageRating * totalReviews) + userRating) / newTotal;
-        setAverageRating(parseFloat(newAverage.toFixed(1)));
-        setTotalReviews(newTotal);
+        try {
+          const response = await axiosInstance.post('/store_rating/rate_store', ratingResponse);
+          console.log(response.data);
+        } catch (error) {
+          console.log('Test error:', error);
+        }
+
       }
 
       setNotification({
-        message: "Your feedback has been submitted successfully!",
+        message: "بازخورد شما با موفقیت ارسال شد!",
         type: "success"
       });
     } catch (error) {
       setNotification({
-        message: "Failed to submit your feedback. Please try again.",
+        message: "ارسال بازخورد ناموفق بود. لطفاً دوباره امتحان کنید.",
         type: "error"
       });
     } finally {
@@ -110,64 +102,7 @@ const StoreFullComment = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Store Rating Overview */}
-        <div className="bg-white rounded-xl shadow-md overflow-hidden mb-10">
-          <div className="relative">
-            <img 
-              src="https://readdy.ai/api/search-image?query=A%20modern%2C%20elegant%20retail%20storefront%20with%20large%20glass%20windows%20displaying%20stylish%20products%2C%20soft%20ambient%20lighting%2C%20and%20a%20clean%20minimalist%20design.%20The%20store%20has%20a%20sophisticated%20blue%20color%20scheme%20with%20white%20accents%2C%20creating%20an%20inviting%20and%20premium%20shopping%20atmosphere%20with%20subtle%20decorative%20elements&width=1200&height=400&seq=1&orientation=landscape" 
-              alt="Store front" 
-              className="w-full h-64 object-cover object-top"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-            <div className="absolute bottom-0 right-0 p-6 text-white">
-              <h2 className="text-3xl font-bold">Awesome Store</h2>
-              <p className="text-blue-100 mt-1">Premium shopping experience since 2020</p>
-            </div>
-          </div>
-          
-          <div className="p-6 flex flex-col md:flex-row items-center justify-between">
-            <div className="flex items-center mb-6 md:mb-0">
-              <div className="bg-blue-50 rounded-full p-4 ml-6">
-                <div className="text-5xl font-bold text-blue-600 px-3 pt-3">{averageRating}</div>
-                <div className="text-sm text-blue-500 text-center mt-1">out of 5</div>
-              </div>
-              
-              <div>
-                <div className="flex mb-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <FaStar  key={star}
-                    className={`fas fa-star text-2xl ${
-                      star <= Math.floor(averageRating) 
-                        ? 'text-yellow-400' 
-                        : star <= averageRating 
-                          ? 'text-yellow-300' 
-                          : 'text-gray-200'
-                    } ml-1`} />
-                  ))}
-                </div>
-                <p className="text-gray-600">Based on <span className="font-semibold">{totalReviews}</span> customer reviews</p>
-              </div>
-            </div>
-            
-            <div className="flex space-x-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">24/7</div>
-                <div className="text-sm text-gray-500">Support</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">100%</div>
-                <div className="text-sm text-gray-500">Satisfaction</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">Fast</div>
-                <div className="text-sm text-gray-500">Shipping</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Feedback Form */}
           <div className="lg:col-span-1">
@@ -175,12 +110,12 @@ const StoreFullComment = () => {
               <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
               
               <FaPenToSquare className="text-blue-500 ml-2" />    
-                Write a Review
+                ثبت بازخورد
               </h2>
               
               {/* Rating Input */}
               <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-2">Your Rating</label>
+                <label className="block text-gray-700 font-medium mb-2">امتیاز شما به فروشگاه</label>
                 <div className="flex items-center">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -203,22 +138,22 @@ const StoreFullComment = () => {
                 </div>
                 {userRating > 0 && (
                   <div className="mt-2 text-blue-600 font-medium">
-                    {userRating === 1 ? 'Poor' : 
-                     userRating === 2 ? 'Fair' : 
-                     userRating === 3 ? 'Good' : 
-                     userRating === 4 ? 'Very Good' : 'Excellent'}
+                    {userRating === 1 ? 'ضعیف' : 
+                     userRating === 2 ? 'متوسط' : 
+                     userRating === 3 ? 'خوب' : 
+                     userRating === 4 ? 'خیلی خوب' : 'عالی'}
                   </div>
                 )}
               </div>
               
               {/* Comment Input */}
               <div className="mb-6">
-                <label htmlFor="comment" className="block text-gray-700 font-medium mb-2">Your Review (optional)</label>
+                <label htmlFor="comment" className="block text-gray-700 font-medium mb-2">ثبت نظر (اختیاری)</label>
                 <textarea
                   id="comment"
                   rows={5}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 text-gray-700"
-                  placeholder="Share your experience with this store..."
+                  placeholder="تجربه‌ی خود را از این فروشگاه به اشتراک بگذارید..."
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                 ></textarea>
@@ -234,12 +169,12 @@ const StoreFullComment = () => {
                 {isSubmitting ? (
                   <>
                <FaSpinner className="inline ml-2 animate-spin text-lg" />
-                    Submitting...
+                    درحال انجام...
                   </>
                 ) : (
                   <>
                     <FaPaperPlane className="inline ml-2" />
-                    Submit Review
+                    ثبت بازخورد
                   </>
                 )}
               </button>
@@ -267,8 +202,8 @@ const StoreFullComment = () => {
             <div className="bg-white rounded-xl shadow-md p-6">
               <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
               <FaComments className="text-blue-500 ml-2" />
-                Customer Reviews
-                <span className="mr-2 text-sm bg-blue-100 text-blue-800 pt-1 px-2 rounded-full">{comments.length}</span>
+                نظرات مشتریان
+                <span className="mr-2 text-sm bg-blue-100 text-blue-800 pt-2 px-2 rounded-full">{comments.length}</span>
               </h2>
               
               {comments.length > 0 ? (
@@ -287,8 +222,6 @@ const StoreFullComment = () => {
                             <h3 className="font-semibold text-gray-800">{comment.user_name}</h3>
                             <p className="text-sm text-gray-500 mt-1 sm:mt-0">{formatDate(comment.date_added)}</p>
                           </div>
-                          
-                          {/* We don't have rating in the comment object, but in a real app we would show it here */}
                           <div className="flex my-2">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <FaStar
@@ -307,24 +240,12 @@ const StoreFullComment = () => {
                 </div>
               ) : (
                 <div className="text-center py-12 bg-blue-50 rounded-lg">
-                 <FaComments className="text-5xl text-blue-300 mb-4" />
-                  <h3 className="text-xl font-medium text-gray-800 mb-2">No Reviews Yet</h3>
-                  <p className="text-gray-600">Be the first to share your experience with this store!</p>
+                 <FaComments className="inline text-5xl text-blue-300 mb-4" />
+                  <h3 className="text-xl font-medium text-gray-800 mb-2">هنوز نظری وجود ندارد</h3>
+                  <p className="text-gray-600">اولین نفری باشید که تجربه خود را از این فروشگاه به اشتراک می‌گذارد!</p>
                 </div>
               )}
-              
-              {/* Load More Button */}
-              {comments.length > 0 && (
-                <div className="mt-8 text-center">
-                  <button 
-                    type="button"
-                    className="px-6 py-3 border border-blue-500 text-blue-600 font-medium rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200 cursor-pointer !rounded-button whitespace-nowrap"
-                  >
-                   <FaSpinner className=" inline ml-2 animate-spin" />
-                    Load More Reviews
-                  </button>
-                </div>
-              )}
+            
             </div>
           </div>
         </div>
