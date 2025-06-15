@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Sidebar from './AdminMenu/Sidebar';
 import TopHeader from './AdminMenu/TopHeader';
 import DashboardOverview from './AdminDashboard/DashboardOverview';
 import StoreManagement from './AdminStore/StoreManagement';
-
+import axiosInstance from '../axiosInstance';
 const AdminPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
+
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -19,7 +20,6 @@ const AdminPage = () => {
         setActiveTab={setActiveTab}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <TopHeader toggleMenu={toggleMenu} />
         <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
           {activeTab === 'dashboard' && <DashboardOverview />}
           {activeTab === 'stores' && <StoreManagement />}

@@ -22,10 +22,7 @@ import Navbar from './Component/landingPage/navbar';
 import ScrollToTop from './Component/ScrollToTop';
 import AddProduct from './Component/Store/AddProduct';
 import SelfStore from './Component/Store/selfStore';
-import ProductReview from './Component/Store/StoreProfile/ProductReview';
-import StoreComment from './Component/Store/StoreProfile/StoreComment';
 import StoreFullComment from './Component/Store/StoreProfile/StoreFullComment';
-
 
 function App() {
   return (
@@ -52,7 +49,8 @@ function App() {
             <Route path="/AllNotification" element={<AllNotifPage/>} />
             <Route path="/AddProduct" element={<AddProduct/>} />
             <Route path="/SelfStore" element={<SelfStore/>} />
-            <Route path="/test/:storeID" element={<StoreFullComment/>} />
+            <Route path="/storeComments/:storeID" element={<StoreFullComment/>} />
+         
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />

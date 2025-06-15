@@ -92,6 +92,9 @@ const Navbar = ()=>{
                   {role ? <li className="relative w-full text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
                     <Notifications/>
                   </li> : null }
+                  {role === 'superadmin' ? <li className="relative w-full text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
+                    پنل ادمین
+                  </li> : null }
                   
               </ul>
             </nav>

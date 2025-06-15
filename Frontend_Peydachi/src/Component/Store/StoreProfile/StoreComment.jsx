@@ -8,7 +8,7 @@ const RecentComments = ({storeID}) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const seeAll =()=>{
-    navigate(`/test/${storeID}`);
+    navigate(`/storeComments/${storeID}`);
   }
 
 
