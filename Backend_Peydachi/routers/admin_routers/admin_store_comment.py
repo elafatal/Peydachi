@@ -15,7 +15,7 @@ router = APIRouter(
 
 
 @router.delete('/admin_remove_store_comment', status_code=200)
-async def admin_remove_store_comment(store_comment_id: int, db: DB_DEPENDENCY):
+async def admin_remove_store_comment(store_comment_id: ID_BODY, db: DB_DEPENDENCY):
     return await store_comment_functions.admin_remove_store_comment(store_comment_id=store_comment_id, db=db)
 
 

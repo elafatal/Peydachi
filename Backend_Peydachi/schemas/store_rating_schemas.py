@@ -17,6 +17,3 @@ class StoreRatingDistributionModel(BaseSchema):
     rating: int
     count: int
 
-
-class StoreRatingDistributionDisplay(BaseSchema):
-    product_rating_distribution: list[StoreRatingDistributionModel]

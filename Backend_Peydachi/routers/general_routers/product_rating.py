@@ -6,7 +6,7 @@ from dependencies.access_dependencies import USER_DEPENDENCY
 from schemas.product_rating_schemas import (
     ProductRatingDisplayModel,
     AddProductRatingModel,
-    ProductRatingDistributionDisplay
+    ProductRatingDistributionModel
 )
 
 
@@ -21,6 +21,6 @@ async def rate_product(rating: AddProductRatingModel, db: DB_DEPENDENCY, user: U
     return await product_rating_functions.rate_product(rating=rating, db=db, user_id=user.id)
 
 
-@router.post('/get_product_rating_distribution', status_code=200, response_model=ProductRatingDistributionDisplay)
+@router.post('/get_product_rating_distribution', status_code=200, response_model=list[ProductRatingDistributionModel])
 async def get_product_rating_distribution(product_id: ID_BODY, db: DB_DEPENDENCY):
     return await product_rating_functions.get_product_rating_distribution(product_id=product_id, db=db)

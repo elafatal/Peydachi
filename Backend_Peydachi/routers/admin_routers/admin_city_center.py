@@ -19,8 +19,8 @@ async def add_city_center(city_center: AddCityCenterModel, db: DB_DEPENDENCY):
 
 
 @router.put('/update_city_center', status_code=200, response_model=CityCenterDisplay)
-async def update_city_center(city_center: AddCityCenterModel, db: DB_DEPENDENCY):
-    return await city_center_functions.update_city_center(city_center=city_center, db=db)
+async def update_city_center(new_city_center: AddCityCenterModel, db: DB_DEPENDENCY):
+    return await city_center_functions.update_city_center(new_city_center=new_city_center, db=db)
 
 
 @router.delete('/delete_city_center', status_code=200)
