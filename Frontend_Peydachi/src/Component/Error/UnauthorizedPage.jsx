@@ -10,7 +10,7 @@ function UnauthorizedPage() {
     return (
       <div class="mx-auto  px-4 sm:px-6 lg:px-8 relative">
 
-                <div class=" w-full mx-auto h-auto text-center mb-7">
+                <div class=" w-full mx-auto h-[59vh] text-center mb-7">
                     <div class="w-full h-auto mx-auto py-8 rounded-2xl">
                         <h1 class="font-serif font-black text-6xl leading-relaxed text-blue-600 text-center mb-6">
                             4<span class="text-blue-300">0</span>1</h1>
