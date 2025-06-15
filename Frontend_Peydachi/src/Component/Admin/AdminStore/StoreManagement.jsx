@@ -14,44 +14,12 @@ const StoreManagement= () => {
   const [showAddOwnerModal, setShowAddOwnerModal] = useState(false);
   const [selectedStore, setSelectedStore] = useState(null);
   
-  // New store form state
-  const [newStore, setNewStore] = useState({
-    name: '',
-    owner_id: 0,
-    contact_info: {},
-    description: '',
-    location_longitude: '',
-    location_latitude: '',
-    city_id: 0
-  });
-  
+
   // Contact info properties state
   const [contactProperties, setContactProperties] = useState([
     { key: '', value: '' }
   ]);
   
- const handleUnBanStore =async(id)=>{
-  try {
-    const response = await axiosInstance.put('/admin/store/unban_store', {
-      store_id: id
-    });
-    console.log(response);
-  } catch (error) {
-    console.log('comment error:', error);
-  }
- }
-
- const handleBanStore =async(id)=>{
-  try {
-    const response = await axiosInstance.put('/admin/store/ban_store', {
-      store_id: id
-    });
-    console.log(response);
-  } catch (error) {
-    console.log('comment error:', error);
-  }
- }
-
 
   useEffect(() => {
    const getAllStores = async()=>{
@@ -89,37 +57,33 @@ const StoreManagement= () => {
     return matchesSearch && matchesCity && matchesStatus;
   });
 
-  // Handler for adding a new store
-  const handleAddStore = () => {
-    // Convert contact properties to contact_info object
-    const contactInfo = {};
-    contactProperties.forEach(prop => {
-      if (prop.key.trim() !== '') {
-        contactInfo[prop.key] = prop.value;
-      }
-    });
-
-    const storeData = {
-      ...newStore,
-      contact_info: contactInfo
-    };
-
-    // In a real app, this would be an API call
-    console.log("Creating store with data:", storeData);
+  const handleAddStore = async (storeData) => {
+     const {
+       owner_id,
+       location_longitude,
+       location_latitude,
+       ...rest           
+     } = storeData;
+  
+     const payload = {
+       ...rest,
+       ...(owner_id ? { owner_id } : {}),
+         ...(location_longitude && location_latitude
+             ? { location_longitude, location_latitude }
+             : {}),
+       };
     
-    // Mock response
-    const newStoreWithId = {
-      ...storeData,
-      id: stores.length + 1,
-      average_rating: 0,
-      average_product_rating: 0,
-      is_banned: false
-    };
-    
-    setStores([...stores, newStoreWithId]);
-    setShowAddModal(false);
-    resetNewStoreForm();
-  };
+       try {
+         const { data } = await axiosInstance.post(
+           "/admin/store/create_store",
+           payload
+         );
+         setStores((prev) => [...prev, data]);
+         setShowAddModal(false);
+       } catch (err) {
+         console.log("create_store error:", err);
+       }
+     };
 
   // Handler for adding an owner to a store
   const handleAddOwner = (userId) => {
@@ -132,19 +96,16 @@ const StoreManagement= () => {
     setSelectedStore(null);
   };
   
-  // Handler for deleting a store
+
   const handleDeleteStore = (storeId) => {
     if (window.confirm("Are you sure you want to delete this store?")) {
-      // In a real app, this would be an API call
       console.log("Deleting store with ID:", storeId);
       
-      // Remove the store from the list
       const updatedStores = stores.filter(store => store.id !== storeId);
       setStores(updatedStores);
     }
   };
 
-  // Handler for banning/unbanning a store
   const handleToggleBan = async(store) => {
 if (store.is_banned) {
   try {
@@ -165,7 +126,7 @@ if (store.is_banned) {
     console.log('comment error:', error);
   }
 }
-    // Update the store's ban status
+
     const updatedStores = stores.map(s => 
       s.id === store.id ? { ...s, is_banned: !s.is_banned } : s
     );
@@ -188,18 +149,6 @@ if (store.is_banned) {
    }, []);
 
 
-  const resetNewStoreForm = () => {
-    setNewStore({
-      name: '',
-      owner_id: 0,
-      contact_info: {},
-      description: '',
-      location_longitude: '',
-      location_latitude: '',
-      city_id: 0
-    });
-    setContactProperties([{ key: '', value: '' }]);
-  };
 
 
   const getCityName = (cityId) => {
@@ -232,48 +181,48 @@ if (store.is_banned) {
       </div>
     </div>
 
-    {/* فیلترها و دکمه */}
-    <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-wrap gap-3">
-      
-      <select
-        className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
-        value={filterCity}
-        onChange={(e) => setFilterCity(e.target.value)}
-      >
-        <option value="">همه‌ی شهرها</option>
-        {cities.map(city => (
-          <option key={city.id} value={city.id.toString()}>{city.name}</option>
-        ))}
-      </select>
+      {/* فیلترها و دکمه */}
+      <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-wrap gap-3">
+        
+        <select
+          className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
+          value={filterCity}
+          onChange={(e) => setFilterCity(e.target.value)}
+        >
+          <option value="">همه‌ی شهرها</option>
+          {cities.map(city => (
+            <option key={city.id} value={city.id.toString()}>{city.name}</option>
+          ))}
+        </select>
 
-      <select
-        className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
-        value={filterStatus}
-        onChange={(e) => setFilterStatus(e.target.value)}
-      >
-        <option value="">همه</option>
-        <option value="active">فعال</option>
-        <option value="banned">مسدود شده</option>
-      </select>
+        <select
+          className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+        >
+          <option value="">همه</option>
+          <option value="active">فعال</option>
+          <option value="banned">مسدود شده</option>
+        </select>
 
-      <button
-        type="button"
-        className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-900 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900 whitespace-nowrap cursor-pointer"
-        onClick={() => setShowAddModal(true)}
-      >
-        <FaPlus className="mr-2" />
-        افزودن فروشگاه
-      </button>
+        <button
+          type="button"
+          className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-900 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900 whitespace-nowrap cursor-pointer"
+          onClick={() => setShowAddModal(true)}
+        >
+          <FaPlus className="mr-2" />
+          افزودن فروشگاه
+        </button>
 
+      </div>
     </div>
   </div>
-</div>
 
 
         {/* Stores Table */}
         <div className="bg-white rounded-lg shadow overflow-hidden" dir='rtl' >
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="overflow-x-auto max-h-2/3 overflow-scroll">
+            <table className="min-w-full divide-y  divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                 <th scope="col" className="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase tracking-wider">شماره</th>
