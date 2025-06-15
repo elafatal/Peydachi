@@ -6,6 +6,7 @@ import axiosInstance from '../../axiosInstance';
 import { formatDistanceToNow } from 'date-fns';
 import faIR from 'date-fns/locale/fa-IR';
 import ProductReview from './ProductReview';
+import StoreComment from './StoreComment';
 
 const StoreProfile = () => {
   const { id } = useParams(); 
@@ -195,7 +196,7 @@ useEffect(() => {
           </div>
         </div>
       </div>
-  
+      <StoreComment storeID={Number(id)}/>
       {/* Products Section */}
       <div className="container mx-auto px-4 py-12 w-11/12 m-auto" dir='ltr'>
         <div className="flex justify-between items-center mb-8">
