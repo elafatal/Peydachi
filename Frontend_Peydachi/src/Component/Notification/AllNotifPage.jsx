@@ -68,7 +68,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await axiosInstance.post(endpoint, {
+      const response = await axiosInstance.get(endpoint, {
         headers: { 'text-Type': 'multipart/form-data' }
       });
       setNotifications(response.data);
@@ -115,7 +115,7 @@ useEffect(() => {
         );
       }  
       try {
-        const response=await axiosInstance.post('/notification/review_notification', {
+        const response=await axiosInstance.put('/notification/review_notification', {
           notification_id: id,
         });
         console.log(`Notification ${id} marked as read on server.`);
