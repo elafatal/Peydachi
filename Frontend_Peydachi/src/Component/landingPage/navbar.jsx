@@ -3,13 +3,8 @@ import Swal from "sweetalert2";
 import { motion } from 'framer-motion'; 
 import { FaUniversity } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import { IoIosNotificationsOutline } from "react-icons/io";
-import { TbMapPinSearch } from "react-icons/tb";
 import { TbMapSearch } from "react-icons/tb";
-import { IoIosMenu } from "react-icons/io";
-
-import { RiMenu2Fill } from "react-icons/ri";
-import { IoMdClose } from "react-icons/io";
+import { IoIosMenu,IoMdClose } from "react-icons/io";
 import { useAuth } from '../AuthContext/AuthContext';
 import Cookies from 'js-cookie';
 import Notifications from "../Notification/Notification";
@@ -72,7 +67,7 @@ const Navbar = ()=>{
               )}
             </div>
             <nav className={`sm:flex ${isMenuOpen ? 'block fixed inset-x-0 top-full left-0 w-4/5 m-auto sm:w-auto sm:relative sm:bg-transparent bg-white shadow-lg' : 'hidden'} mt-3 rounded-lg p-6 sm:p-0 z-10`}>
-              <ul className="flex flex-col items-center sm:flex-row sm:space-x-4 gap-4">
+              <ul onClick={toggleMenu} className="flex flex-col items-center sm:flex-row sm:space-x-4 gap-4">
                   {!token ? 
                   ( <li id="r0-1" onClick={()=>handleLinks('login')} className="relative w-full text-center text-gray-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-900 hover:text-gray-800 hover:rounded-xl  px-2 py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300 sm:transition-all  sm:after:content-[''] sm:after:absolute sm:after:block sm:after:w-0 after:h-0.5 sm:after:bg-blue-600 sm:after:transition-all sm:after:duration-300 sm:after:left-1/2 sm:after:bottom-0 sm:hover:after:w-full sm:hover:after:left-0">
                   ورود/ثبت‌نام  
@@ -92,7 +87,7 @@ const Navbar = ()=>{
                   {role ? <li className="relative w-full text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
                     <Notifications/>
                   </li> : null }
-                  {role === 'superadmin' ? <li className="relative w-full text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
+                  {role === 'superadmin' ? <li onClick={()=>handleLinks('Admin')} className="relative w-full text-center text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
                     پنل ادمین
                   </li> : null }
                   

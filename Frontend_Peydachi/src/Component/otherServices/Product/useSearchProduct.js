@@ -60,11 +60,11 @@ const useSearchProduct = () => {
         product_id: product.id
       });
   
-      setComments(response.data); // فرض بر اینه که دیتا آرایه‌ای از کامنت‌هاست
+      setComments(response.data);
   
     } catch (error) {
       console.error('خطا در دریافت کامنت‌ها:', error);
-      setComments([]); // یا شاید پیام خطا نشان بدی
+      setComments([]); 
     }
   
     // chart rendering
@@ -106,22 +106,30 @@ const useSearchProduct = () => {
     setIsModalOpen(false);
     setSelectedProduct(null);
   };
- const handleSearch =async()=>{
-  try {
-    setLoading(true)
-    const response = await axiosInstance.post('/product/search_all_products', {
-      name: searchTerm,
-    });
-    setProducts(response.data);
-    console.log(response.data);
-   
-  } catch (err) {
-    console.error('خطا در دریافت اطلاعات محصول:', err);
-  } finally {
-    setLoading(false);
+
+
+ useEffect(() => {
+  const handleSearch = async()=>{
+    if (searchTerm != '') {
+      try {
+        setLoading(true)
+        const response = await axiosInstance.post('/product/search_all_products', {
+          name: searchTerm,
+        });
+        setProducts(response.data);
+        console.log(response.data);
+       
+      } catch (err) {
+        console.error('خطا در دریافت اطلاعات محصول:', err);
+      } finally {
+        setLoading(false);
+      }
+      
+    }
   }
-  
- }
+   handleSearch();
+ }, [searchTerm]);
+
 
  const [cityNames, setCityNames] = useState({});
 
@@ -183,7 +191,6 @@ const useSearchProduct = () => {
     getCityName,
     formatDate,
     clearFilters,
-    handleSearch,
     sortOption,
     setSortOption,
     favorites,

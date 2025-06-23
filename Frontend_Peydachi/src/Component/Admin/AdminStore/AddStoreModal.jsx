@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { FaPlus, FaTimes } from 'react-icons/fa';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import axiosInstance from '../../axiosInstance';
 import L from 'leaflet';
 import { v4 as uuidv4 } from 'uuid';
 const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] }) => {
@@ -12,13 +13,46 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
     location_latitude: '',
     city_id: 0,
   };
-
+ 
   const [newStore, setNewStore] = useState(initialStore);
   const [contactProperties, setContactProperties] = useState([
     { id: uuidv4(), key: '', value: '' }
   ]);
-  
+   /*------------------------owner--------------------------*/
+   const [userQuery, setUserQuery] = useState('');
+   const [selectedUserId, setSelectedUserId] = useState(0)
+   const [searchResult,setSearchResult]=useState([])
+   
+  useEffect(() => {
+    const searchUsers = async()=>{
+        if (userQuery != '') {
+          try {
+            const response = await axiosInstance.post('/admin/user/search_users', {
+              username: userQuery
+            });
+            console.log(response.data);
+            setSearchResult(response.data)
+          } catch (error) {
+            console.log('comment error:', error);
+          }
+        }
+     }
+      searchUsers();
+   }, [userQuery]);
+
+   useEffect(() => {
+console.log(newStore);
+
+   }, [selectedUserId]);
+
+  const selectedOwner=(ownerId)=>{
+    setSelectedUserId(ownerId)
+    setNewStore((prev) => ({
+      ...prev,
+    owner_id : Number(ownerId)
+    }));
     
+  }
   /* ------------------------- map ------------------------- */
   const [mapCenter, setMapCenter] = useState([35.6892, 51.3890]); // پیش‌فرض: تهران
   const [markerPos, setMarkerPos]   = useState(null);
@@ -39,10 +73,7 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
       location_longitude: lng.toFixed(6),
     }));
   };
-  
 
-
-  
   /* ------------------------- contact helpers ------------------------- */
   // افزودن
   const handleAddContactProperty = () => {
@@ -80,12 +111,12 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bg-black/40 backdrop-blur-sm inset-0 flex items-center justify-center overflow-y-auto z-50">
+    <div className="fixed bg-black/40 backdrop-blur-sm inset-0 flex items-center justify-center overflow-y-auto z-50 ">
       <div className="fixed inset-0 transition-opacity" aria-hidden="true">
         <div className="absolute inset-0  opacity-75" />
       </div>
 
-      <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl w-full">
+      <div className="relative inline-block align-bottom m-5 bg-white rounded-lg text-left overflow-scroll shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl w-full">
         {/* Body */}
         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4" dir='rtl'>
           <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">افزودن فروشگاه</h3>
@@ -108,17 +139,16 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
                     {/* owner */}
                     <div>
                     <label htmlFor="owner-id" className="text-start block text-sm font-medium text-gray-700">فروشنده</label>
-                    <select
-                        id="owner-id"
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        value={newStore.owner_id}
-                        onChange={(e) => setNewStore({ ...newStore, owner_id: Number(e.target.value) })}
-                    >
-                        <option value={0}>Select an owner</option>
-                        {users.map((user) => (
-                        <option key={user.id} value={user.id}>{user.name}</option>
-                        ))}
-                    </select>
+                    <input  
+                        onChange={(e) => setUserQuery(e.target.value)}
+                        className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'></input>
+                      {searchResult.length !=0 ?
+                        <div  className="mt-1 max-h-52 overflow-scroll z-50 block w-4/5  border border-gray-300 rounded-md shadow-sm py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                          {searchResult.map(user => (
+                          <span onClick={()=>selectedOwner(user.id)} className='block p-2 hover:bg-blue-100 transition-all duration-300' key={user.id} > {user.username}
+                          </span>
+                          ))}
+                      </div> : null}
                     </div>
 
                     {/* description */}
@@ -151,7 +181,7 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
                     {/* contact */}
                     <div>
                     <div className="flex justify-between items-center">
-                        <label className="block text-sm font-medium text-gray-700">Contact Information</label>
+                        <label className="block text-sm font-medium text-gray-700">اطلاعات تماس</label>
                         <button
                         type="button"
                         className="inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-blue-900 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
@@ -167,14 +197,14 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
                             <input
                             type="text"
                             className="flex-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            placeholder="Property Name"
+                            placeholder="عنوان فیلد"
                             value={prop.key}
                             onChange={(e) => handleContactPropertyChange(prop.id, 'key', e.target.value)}
                             />
                             <input
                             type="text"
                             className="flex-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            placeholder="Value"
+                            placeholder="مقدار"
                             value={prop.value}
                             onChange={(e) => handleContactPropertyChange(prop.id, 'value', e.target.value)}
                             />
@@ -192,7 +222,6 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
                 </div>
                 <div className="md:w-1/2 w-full">
                             {/* lat / long */}
-                    {/* === Map Picker === */}
                     <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                         انتخاب موقعیت روی نقشه
@@ -244,17 +273,17 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
         <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
           <button
             type="button"
-            className="w-full inline-flex justify-center rounded-button border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm whitespace-nowrap cursor-pointer"
+            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm whitespace-nowrap cursor-pointer"
             onClick={handleSubmit}
           >
-            Add Store
+            اضافه کردن
           </button>
           <button
             type="button"
-            className="mt-3 w-full inline-flex justify-center rounded-button border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm whitespace-nowrap cursor-pointer"
+            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm whitespace-nowrap cursor-pointer"
             onClick={onClose}
           >
-            Cancel
+            لغو
           </button>
         </div>
       </div>

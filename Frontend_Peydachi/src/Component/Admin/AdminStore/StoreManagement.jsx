@@ -1,6 +1,7 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import AddStoreModal from './AddStoreModal';
 import React, { useState, useEffect } from 'react';
+import Swal from "sweetalert2";  
 import AddOwnerModal from './AddOwnerModal';
 import axiosInstance from '../../axiosInstance';
 import {FaTrash, FaShieldAlt,FaBan ,FaUserPlus,FaStar,FaPlus,FaSearch ,FaTimes } from 'react-icons/fa';
@@ -14,13 +15,7 @@ const StoreManagement= () => {
   const [showAddOwnerModal, setShowAddOwnerModal] = useState(false);
   const [selectedStore, setSelectedStore] = useState(null);
   
-
-  // Contact info properties state
-  const [contactProperties, setContactProperties] = useState([
-    { key: '', value: '' }
-  ]);
-  
-
+const users=[{id:1 , username:'ali'}]
   useEffect(() => {
    const getAllStores = async()=>{
     try {
@@ -33,15 +28,6 @@ const StoreManagement= () => {
    }
     getAllStores();
   }, []);
-  // Mock users data
-  const users = [
-    { id: 101, name: "John Doe" },
-    { id: 102, name: "Jane Smith" },
-    { id: 103, name: "Robert Johnson" },
-    { id: 104, name: "Emily Davis" },
-    { id: 105, name: "Michael Brown" },
-    { id: 106, name: "Sarah Wilson" },
-  ];
 
   // Filter stores based on search term and filters
   const filteredStores = stores.filter(store => {
@@ -86,12 +72,40 @@ const StoreManagement= () => {
      };
 
   // Handler for adding an owner to a store
-  const handleAddOwner = (userId) => {
+  const handleAddOwner = async(userId) => {
     if (!selectedStore) return;
-    const updated = stores.map(s =>
-      s.id === selectedStore.id ? { ...s, owner_id: userId } : s
-    );
-    setStores(updated);
+    try {
+      const response = await axiosInstance.put('/admin/store/promote_user_to_seller', {
+        user_id : userId
+      });
+      if (response.status === 200) {
+          try {
+          const response = await axiosInstance.put('/admin/store/add_owner_to_store', {
+            store_id: selectedStore.id , user_id : userId
+          });
+          if (response.data === 200) {
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: " درخواست انجام شد",
+              showConfirmButton: false,
+              timer: 1500,
+              toast: true,
+              customClass: {
+                popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+                title: 'text-xs', 
+                content: 'text-xs',
+                icon : 'text-xs mb-2'
+              }
+          });
+          }
+        } catch (error) {
+          console.log('comment error:', error);
+        }
+      }
+    } catch (error) {
+      console.log('comment error:', error);
+    }
     setShowAddOwnerModal(false);
     setSelectedStore(null);
   };
@@ -158,7 +172,7 @@ if (store.is_banned) {
 
 
   return (
-    <div className="min-h-screen bg-gray-50" dir='ltr'>
+    <div className="max-h-screen bg-gray-50" dir='ltr'>
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Search and Filter Section */}
@@ -238,17 +252,17 @@ if (store.is_banned) {
                 {filteredStores.length > 0 ? (
                   filteredStores.map(store => (
                     <tr key={store.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{store.id}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{store.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{store.owner_id}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{getCityName(store.city_id)}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{store.id}</td>
+                      <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">{store.name}</td>
+                      <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">{store.owner_id}</td>
+                      <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">{getCityName(store.city_id)}</td>
+                      <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex items-center">
                           <span className="text-yellow-500 ml-1"><FaStar /></span>
                           {(store.average_rating ?? 0).toFixed(1)}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-6 py-3 whitespace-nowrap text-sm">
                         {store.is_banned ? (
                           <span className="px-2 py-1.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                             مسدود شده
@@ -327,7 +341,6 @@ if (store.is_banned) {
           setSelectedStore(null);
         }}
         store={selectedStore}
-        users={users}
         onAddOwner={handleAddOwner}
         />
       )}

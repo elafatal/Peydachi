@@ -1,22 +1,38 @@
-import React, { useState } from 'react';
-
-/**
- * Modal for assigning / changing a store owner.
- * Props:
- * - isOpen   : boolean — controls visibility
- * - onClose  : () => void — close handler
- * - store    : object    — the selected store (must contain at least id & name)
- * - users    : array     — list of user objects {id, name}
- * - onAddOwner: (userId:number) => void — callback when user confirms
- */
-const AddOwnerModal = ({ isOpen, onClose, store, users = [], onAddOwner }) => {
-  const [selectedUserId, setSelectedUserId] = useState(0);
-
+import React, { useState,useEffect } from 'react';
+import axiosInstance from '../../axiosInstance';
+const AddOwnerModal = ({ isOpen, onClose, store, onAddOwner }) => {
+  const [userQuery, setUserQuery] = useState('');
+  const [selectedUserId, setSelectedUserId] = useState(0)
+  const [searchResult,setSearchResult]=useState([])
   const handleSubmit = () => {
-    if (selectedUserId === 0) return; // no user chosen
+    if (userQuery === 0) return; 
     onAddOwner(selectedUserId);
-    setSelectedUserId(0); // reset for next time
+    setSelectedUserId(0)
+    setUserQuery('');
   };
+
+  useEffect(() => {
+    const searchUsers = async()=>{
+        if (userQuery != '') {
+          try {
+            const response = await axiosInstance.post('/admin/user/search_users', {
+              username: userQuery
+            });
+            console.log(response.data);
+            setSearchResult(response.data)
+          } catch (error) {
+            console.log('comment error:', error);
+          }
+        }
+     }
+      searchUsers();
+   }, [userQuery]);
+
+   useEffect(() => {
+console.log(selectedUserId)
+   }, [selectedUserId]);
+
+ 
 
   if (!isOpen || !store) return null;
 
@@ -30,36 +46,35 @@ const AddOwnerModal = ({ isOpen, onClose, store, users = [], onAddOwner }) => {
         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-              Add Owner to {store.name}
+              انتخاب فروشنده برای <span className='text-blue-700'>{store.name}</span>
             </h3>
-            <label htmlFor="new-owner" className="block text-sm font-medium text-gray-700">Select User</label>
-            <select
-              id="new-owner"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              value={selectedUserId}
-              onChange={(e) => setSelectedUserId(Number(e.target.value))}
-            >
-              <option value={0}>Select a user</option>
-              {users.map(user => (
-                <option key={user.id} value={user.id}>{user.name}</option>
+            <label htmlFor="new-owner" className="block text-sm font-medium text-gray-700">نام‌کاربری </label>
+            <input  
+            onChange={(e) => setUserQuery(e.target.value)}
+            className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'></input>
+           {searchResult.length !=0 ?
+            <div  className="mt-1 max-h-52 overflow-scroll z-50 block w-4/5  border border-gray-300 rounded-md shadow-sm py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+              {searchResult.map(user => (
+              <span onClick={()=>setSelectedUserId(user.id)} className='cursor-pointer block p-2 hover:bg-blue-100 transition-all duration-300' key={user.id} > {user.username}
+              </span>
               ))}
-            </select>
+           </div> : null}
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button
               type="button"
-              className="w-full inline-flex justify-center rounded-button border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm whitespace-nowrap"
+              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm whitespace-nowrap"
               onClick={handleSubmit}
-              disabled={selectedUserId === 0}
+              disabled={userQuery === 0}
             >
-              Add Owner
+              نگاشت فروشنده
             </button>
             <button
               type="button"
-              className="mt-3 w-full inline-flex justify-center rounded-button border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm whitespace-nowrap"
+              className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm whitespace-nowrap"
               onClick={onClose}
             >
-              Cancel
+              لغو 
             </button>
           </div>
         </div>

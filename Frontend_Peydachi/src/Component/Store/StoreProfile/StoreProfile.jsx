@@ -94,7 +94,7 @@ useEffect(() => {
       );
     } catch (err) {
       console.error('خطا در دریافت اطلاعات محصول:', err);
-      setError('مشکلی در بارگیری محصولات رخ داد.');
+   
     } finally {
       setLoading(false);
     }

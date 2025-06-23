@@ -43,7 +43,6 @@ const SearchProduct = () => {
     getCityName,
     formatDate,
     clearFilters,
-    handleSearch,
     sortOption,
     setSortOption,
     favorites,
@@ -156,7 +155,7 @@ if (sortOption === 'highestRated') {
                 className="w-full pr-15 pl-40 py-4 bg-white/80 backdrop-blur border-2 border-blue-100 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent text-base shadow-sm transition-all duration-300"
               />
               <div className="absolute inset-y-2 right-2 flex items-center">
-                <button onClick={handleSearch} className=" border-1 border-blue-500 px-2 py-2 rounded-full shadow-sm transition-colors flex items-center !rounded-button whitespace-nowrap cursor-pointer">
+                <button className=" border-1 border-blue-500 px-2 py-2 rounded-full shadow-sm transition-colors flex items-center !rounded-button whitespace-nowrap cursor-pointer">
                   <FaSearch className='text-blue-500' /> 
                 </button>
               </div>

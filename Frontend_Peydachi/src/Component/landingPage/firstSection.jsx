@@ -18,8 +18,7 @@ const FirstSection = () => {
   const [allCities, setAllCities] = useState([]);
   const [filteredCities, setFilteredCities] = useState([]);
   const [filteredRegions, setFilteredRegions] = useState([]);
-  const [t,setT]=useState(0)
-  const [c,setC]=useState(0)
+
   useEffect(() => {
     const handleRegions = async () => {
       try {
