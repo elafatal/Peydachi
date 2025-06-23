@@ -75,7 +75,7 @@ const users=[{id:1 , username:'ali'}]
   const handleAddOwner = async(userId) => {
     if (!selectedStore) return;
     try {
-      const response = await axiosInstance.put('/admin/store/promote_user_to_seller', {
+      const response = await axiosInstance.post('/admin/user/promote_user_to_seller', {
         user_id : userId
       });
       if (response.status === 200) {
