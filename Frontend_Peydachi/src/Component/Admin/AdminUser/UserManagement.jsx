@@ -15,18 +15,6 @@ const UserManagement = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isStatusFilterOpen, setIsStatusFilterOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {
-      const getAllUsers = async()=>{
-      try {
-        const response = await axiosInstance.get('admin/user/get_all_users');
-        console.log(response.data);
-        setUsers(response.data)
-      } catch (error) {
-        console.log('comment error:', error);
-      }
-      }
-      getAllUsers();
-    }, []);
 
   const handleActions =async(type , userId)=>{
     switch (type) {
@@ -144,44 +132,58 @@ const UserManagement = () => {
   { id: "banned", label: "کاربران مسدود" },
   ];
   // Handle search
-  const handleSearch = () => {
+  const handleSearch = async() => {
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
     let filteredUsers = [...users];
-
-    // UserManagemently search filter
     if (searchTerm) {
-    if (searchFilter === "username") {
-    filteredUsers = filteredUsers.filter(user =>
-    user.username.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    } else if (searchFilter === "phone_number") {
-    filteredUsers = filteredUsers.filter(user =>
-    user.phone_number.includes(searchTerm)
-    );
-    } else if (searchFilter === "id") {
-    filteredUsers = filteredUsers.filter(user =>
-    user.id.toString() === searchTerm
-    );
-    }
+      if (searchFilter === "username") {
+        try {
+          const response = await axiosInstance.post('/admin/user/search_users', {username : searchTerm});
+          console.log(response);
+          filteredUsers=response.data
+        } catch (error) {
+          console.log('search username error:', error);
+        }
+      } else if (searchFilter === "phone_number") {
+          try {
+            const response = await axiosInstance.post('/admin/user/get_user_by_phone_number', {phone_number : searchTerm});
+            console.log(response);
+            filteredUsers=[response.data]
+          } catch (error) {
+            console.log('search phoneNumber error:', error);
+          }
+      } else if (searchFilter === "id") {
+          try {
+            const response = await axiosInstance.post('/admin/user/get_user_by_id', {user_id : Number(searchTerm)});
+            console.log(response);
+            filteredUsers=[response.data]
+          } catch (error) {
+            console.log('search id error:', error);
+          }
+      }
     }
 
-    // UserManagemently status filter
-    if (statusFilter === "active") {
-    filteredUsers = filteredUsers.filter(user => !user.is_banned);
-    } else if (statusFilter === "banned") {
-    filteredUsers = filteredUsers.filter(user => user.is_banned);
+    if (statusFilter === "banned") {
+    if (searchTerm) {
+      if (searchFilter === "username") {
+        try {
+          const response = await axiosInstance.post('/admin/user/search_in_banned_users', {username : searchTerm});
+          console.log(response);
+          filteredUsers=response.data
+        } catch (error) {
+          console.log('search username error:', error);
+        }
+      }
     }
-
+    }
     setUsers(filteredUsers);
     setIsLoading(false);
-    }, 500);
+  
   };
 
   const resetSearch = () => {
   setSearchTerm("");
-  setUsers(users);
+  setUsers([]);
   };
 
   const handleKeyPress = (e) => {
