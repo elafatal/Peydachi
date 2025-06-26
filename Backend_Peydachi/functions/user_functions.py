@@ -244,6 +244,15 @@ async def demote_seller_to_user(user_id: int, db: Session):
     return user
 
 
+async def search_in_sellers(user_name: str, db: Session):
+    users = db.query(User).filter(and_(User.is_seller == True, User.username.contains(user_name))).all()
+
+    if not users:
+        raise NO_USER_FOUND_ERROR
+
+    return users
+
+
 async def is_username_available(username: str, db: Session):
     user = db.query(User).filter(User.username == username).first()
 
