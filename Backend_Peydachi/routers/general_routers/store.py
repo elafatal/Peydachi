@@ -16,9 +16,9 @@ async def get_all_stores(db: DB_DEPENDENCY):
     return await store_functions.get_all_stores(db=db)
 
 
-@router.post('/search_store', status_code=200, response_model=list[StoreDisplay])
-async def search_store(name: NAME_BODY, db: DB_DEPENDENCY):
-    return await store_functions.search_store(name=name, db=db)
+@router.post('/search_active_stores', status_code=200, response_model=list[StoreDisplay])
+async def search_active_stores(name: NAME_BODY, db: DB_DEPENDENCY):
+    return await store_functions.search_active_stores(name=name, db=db)
 
 
 @router.post('/get_store_by_id', status_code=200, response_model=StoreDisplay)

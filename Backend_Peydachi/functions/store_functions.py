@@ -222,6 +222,15 @@ async def search_store(name: str, db: Session):
     return stores
 
 
+
+async def search_active_stores(name: str, db: Session):
+    stores = db.query(Store).filter(and_(Store.name.contains(name), Store.is_banned == False)).all()
+    if not stores:
+        raise NO_STORE_FOUND_ERROR
+
+    return stores
+
+
 async def get_store_by_id(store_id: int, db: Session):
     store = db.query(Store).filter(Store.id == store_id).first()
     if not store:
@@ -239,7 +248,7 @@ async def get_all_banned_stores(db: Session):
 
 
 async def get_all_stores_of_city(city_id: int, db: Session):
-    stores = db.query(Store).filter(Store.city_id == city_id).all()
+    stores = db.query(Store).filter(and_(Store.city_id == city_id, Store.is_banned == False)).all()
     if not stores:
         raise NO_STORE_FOUND_ERROR
 
@@ -247,7 +256,7 @@ async def get_all_stores_of_city(city_id: int, db: Session):
 
 
 async def search_all_stores_of_city(city_id: int, name: str, db: Session):
-    stores = db.query(Store).filter(and_(Store.city_id == city_id, Store.name.contains(name))).all()
+    stores = db.query(Store).filter(and_(Store.city_id == city_id, Store.name.contains(name), Store.is_banned == False)).all()
     if not stores:
         raise NO_STORE_FOUND_ERROR
 

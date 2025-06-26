@@ -343,8 +343,15 @@ async def search_near_products(search: ProductSearchModels, redis_db: Redis, db:
 
     generated_key = ''.join(random.choice(ascii_letters) for _ in range(6))
 
+    for store in stores:
+        if store.is_banned:
+            stores.remove(store)
+        
+
 
     for store in stores:
+        if store.is_banned:
+            continue
         this_long = float(store.location_longitude)
         this_lat = float(store.location_latitude)
         redis_db.geoadd(generated_key, (this_long, this_lat, store.id))

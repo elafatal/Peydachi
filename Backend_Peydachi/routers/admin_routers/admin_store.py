@@ -18,6 +18,11 @@ async def create_store(request: StoreModel, db: DB_DEPENDENCY):
     return await store_functions.create_store(request=request, db=db)
 
 
+@router.post('/search_store', status_code=200, response_model=list[StoreDisplay])
+async def search_store(name: NAME_BODY, db: DB_DEPENDENCY):
+    return await store_functions.search_store(name=name, db=db)
+
+
 @router.put('/add_owner_to_store', status_code=200, response_model=StoreDisplay)
 async def add_owner_to_store(store_id: ID_BODY, user_id: ID_BODY, db: DB_DEPENDENCY):
     return await store_functions.add_owner_to_store(store_id=store_id, user_id=user_id, db=db)
