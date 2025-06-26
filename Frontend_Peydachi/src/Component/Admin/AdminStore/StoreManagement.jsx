@@ -8,7 +8,6 @@ import {FaTrash, FaShieldAlt,FaBan ,FaUserPlus,FaStar,FaPlus,FaSearch ,FaTimes }
 import { FaUserSlash } from "react-icons/fa";
 const StoreManagement= () => {
   // States for the application
-  const [haveOwner, setHaveOwner] = useState(false);
   const [stores, setStores] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCity, setFilterCity] = useState('');
@@ -25,12 +24,20 @@ const users=[{id:1 , username:'ali'}]
       console.log(response.data);
       setStores(response.data)
     } catch (error) {
-      console.log('comment error:', error);
+      console.log('all store error:', error);
     }
    }
     getAllStores();
   }, []);
 
+  const deleteOwner=async(store)=>{
+    try {
+      const response = await axiosInstance.put('/admin/store/remove_owner_from_store',{store_id: store.id});
+      console.log(response.data);
+    } catch (error) {
+      console.log('delete owner error:', error);
+    }    
+  }
   // Filter stores based on search term and filters
   const filteredStores = stores.filter(store => {
     const matchesSearch = store.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -277,7 +284,7 @@ if (store.is_banned) {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-start space-x-3">
-                          {store.owner_id ?                           
+                          {!store.owner_id ?                           
                           <button
                             type="button"
                             className="text-blue-600 hover:text-blue-900 cursor-pointer"
@@ -292,7 +299,7 @@ if (store.is_banned) {
                             type="button"
                             className="text-red-600 hover:text-red-900 cursor-pointer"
                             title="حذف فروشنده"
-                            onClick={() => setSelectedStore(store)
+                            onClick={() => deleteOwner(store)
                             }
                           >
                       <FaUserSlash />
