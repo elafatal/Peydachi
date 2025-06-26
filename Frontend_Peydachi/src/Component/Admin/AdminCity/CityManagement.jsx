@@ -165,9 +165,9 @@ useEffect(() => {
     }
     try {
         const response = await axiosInstance.put('/admin/city/update_city', {
-            id: cityID ,
+            city_id: cityID ,
             region_id: editingCityRegionId,
-            name: editingRegionName
+            name: editingCityName
         });
         console.log(response.data);
        if (response.status === 200 ) {
