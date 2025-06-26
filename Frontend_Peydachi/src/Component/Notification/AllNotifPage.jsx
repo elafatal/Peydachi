@@ -328,9 +328,9 @@ useEffect(() => {
                 <div className="text-blue-500 mb-4">
                 <FaBell className=" text-6xl opacity-30 inline"/>
                 </div>
-                <h3 className="text-xl font-medium text-gray-700 mb-2">No notifications</h3>
+                <h3 className="text-xl font-medium text-gray-700 mb-2">اعلانی ندارید! </h3>
                 <p className="text-gray-500 max-w-md mx-auto">
-                  When you receive notifications, they will appear here. Check back later or adjust your notification settings.
+                وقتی اعلان‌هایی دریافت می‌کنید، اینجا نمایش داده می‌شوند. بعداً دوباره بررسی کنید یا تنظیمات اعلان‌های خود را تغییر دهید.
                 </p>
               </div>
             )}
