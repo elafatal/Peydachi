@@ -1,4 +1,4 @@
-from database.models import User, StoreComment, ProductComment, StoreRating, ProductRating
+from database.models import User, StoreComment, ProductComment, StoreRating, ProductRating, Store
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
 from hash.hash import Hash
@@ -10,7 +10,8 @@ from errors.user_errors import (
     PHONE_NUMBER_DUPLICATE_ERROR,
     NO_USER_FOUND_ERROR,
     DONT_HAVE_ACCESS_ADMIN_ERROR,
-    USER_IS_ALREADY_SELLER_ERROR
+    USER_IS_ALREADY_SELLER_ERROR,
+    USER_IS_NOT_SELLER_ERROR
 )
 from functions.general_functions import (
     check_username_duplicate,
@@ -220,6 +221,24 @@ async def promote_user_to_seller(user_id: int, db: Session):
         raise USER_IS_ALREADY_SELLER_ERROR
 
     user.is_seller = True
+    db.commit()
+
+    return user
+
+
+async def demote_seller_to_user(user_id: int, db: Session):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise USER_NOT_FOUND_ERROR
+
+    if not user.is_seller:
+        raise USER_IS_NOT_SELLER_ERROR
+    
+    store = db.query(Store).filter(Store.owner_id == user_id).first()
+    if store:
+        store.owner_id = None
+
+    user.is_seller = False
     db.commit()
 
     return user

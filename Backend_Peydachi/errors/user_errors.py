@@ -93,3 +93,7 @@ USER_NOT_SELLER_ERROR = HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE
 
 USER_ALREADY_HAS_STORE = HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
                                        detail='This user already owns a store.')
+
+
+USER_IS_NOT_SELLER_ERROR = HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                                         detail="User is not a seller.")

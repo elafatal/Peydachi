@@ -66,3 +66,8 @@ async def search_in_banned_user(user_name: NAME_BODY, db: DB_DEPENDENCY):
 @router.post('/promote_user_to_seller', status_code=200, response_model=UserDisplay)
 async def promote_user_to_seller(user_id: ID_BODY, db: DB_DEPENDENCY):
     return await user_functions.promote_user_to_seller(user_id=user_id, db=db)
+
+
+@router.put('/demote_seller_to_user', status_code=200, response_model=UserDisplay)
+async def demote_seller_to_user(user_id: ID_BODY, db: DB_DEPENDENCY):
+    return await user_functions.demote_seller_to_user(user_id=user_id, db=db)
