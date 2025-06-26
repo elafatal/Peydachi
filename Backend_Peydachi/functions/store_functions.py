@@ -64,6 +64,29 @@ async def add_owner_to_store(user_id: int, store_id: int, db: Session):
     return store
 
 
+
+async def remove_owner_from_store(store_id: int, db: Session):
+    store = db.query(Store).filter(Store.id == store_id).first()
+    if not store:
+        raise STORE_NOT_FOUND_ERROR
+    
+
+    store.owner_id = None
+
+
+    if store.owner_id:
+        user = db.query(User).filter(User.id == store.owner_id).first()
+        if not user:
+            raise USER_NOT_FOUND_ERROR
+
+        user.is_seller = False
+
+
+    db.commit()
+
+    return store
+
+
 async def update_store_info(user_id: int, request: UpdateStoreModel, db: Session):
     store = db.query(Store).filter(Store.owner_id == user_id).first()
     if not store:
