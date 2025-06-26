@@ -1,4 +1,4 @@
-from database.models import Region
+from database.models import Region, City, Store
 from sqlalchemy.orm import Session
 from errors.region_errors import REGION_NOT_FOUND_ERROR, NO_REGION_FOUND_ERROR, REGION_ALREADY_EXISTS
 
@@ -50,11 +50,16 @@ async def delete_region(region_id: int, db: Session):
 
     if not region:
         raise REGION_NOT_FOUND_ERROR
+    
+    cities = db.query(City).filter(City.region_id == region_id).all()
+    for city in cities:
+        db.query(Store).filter(Store.city_id == city.id).update({"city_id": None})
+        db.delete(city)
 
     db.delete(region)
     db.commit()
 
-    return 'Region deleted'
+    return f'Region deleted'
 
 
 
