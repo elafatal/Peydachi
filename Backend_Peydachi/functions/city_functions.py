@@ -1,4 +1,4 @@
-from database.models import City, Region
+from database.models import City, Region, Store
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from errors.city_errors import NO_CITY_FOUND_ERROR, CITY_NOT_FOUND_ERROR, CITY_ALREADY_EXISTS_ERROR
@@ -71,11 +71,13 @@ async def delete_city(city_id: int, db: Session):
 
     if not city:
         raise CITY_NOT_FOUND_ERROR
+    
+    db.query(Store).filter(Store.city_id == city_id).update({"city_id": None})
 
     db.delete(city)
     db.commit()
 
-    return 'City deleted'
+    return f'City {city.name} deleted'
 
 
 async def update_city(info: CityUpdateModel, db: Session):
