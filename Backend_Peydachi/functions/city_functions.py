@@ -77,7 +77,7 @@ async def delete_city(city_id: int, db: Session):
     db.delete(city)
     db.commit()
 
-    return f'City {city.name} deleted'
+    return f'City {city.name} deleted.'
 
 
 async def update_city(info: CityUpdateModel, db: Session):
