@@ -222,6 +222,15 @@ async def search_store(name: str, db: Session):
     return stores
 
 
+
+async def search_active_stores(name: str, db: Session):
+    stores = db.query(Store).filter(and_(Store.name.contains(name), Store.is_banned == False)).all()
+    if not stores:
+        raise NO_STORE_FOUND_ERROR
+
+    return stores
+
+
 async def get_store_by_id(store_id: int, db: Session):
     store = db.query(Store).filter(Store.id == store_id).first()
     if not store:
