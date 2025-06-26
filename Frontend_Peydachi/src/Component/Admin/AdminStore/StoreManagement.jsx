@@ -335,7 +335,7 @@ if (store.is_banned) {
                           <button
                             type="button"
                             className={`${store.is_banned ? 'text-green-600 hover:text-green-900' : 'text-red-600 hover:text-red-900'} cursor-pointer`}
-                            title={store.is_banned ? "Unban Store" : "Ban Store"}
+                            title={store.is_banned ? "رفع مسدودیت" : "مسدود کردن "}
                             onClick={() => handleToggleBan(store)}
                           >
                            {store.is_banned ? <FaShieldAlt /> : <FaBan />}

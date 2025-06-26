@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../axiosInstance';
 import Swal from "sweetalert2"; 
+import { FaStoreAltSlash } from "react-icons/fa";
 import { FaSearch,FaChevronDown, FaEdit,FaEye,FaTrash } from "react-icons/fa";
 import { FaUserCheck ,FaUserSlash  } from "react-icons/fa6";
 import { LiaStoreAltSolid } from "react-icons/lia";
@@ -58,28 +59,39 @@ const UserManagement = () => {
         }
         break;
       case 'promote':
-              try {
-                const response = await axiosInstance.post('/admin/user/promote_user_to_seller', {user_id : userId});
-                if (response.status === 200) {
-                  showToast("تغییر دسترسی انجام شد");
-                  await handleSearch();
-                }
-              } catch (error) {
-                console.log('comment error:', error);
-              }
-              break;
+        try {
+          const response = await axiosInstance.post('/admin/user/promote_user_to_seller', {user_id : userId});
+          if (response.status === 200) {
+            showToast("تغییر دسترسی انجام شد");
+            await handleSearch();
+          }
+        } catch (error) {
+          console.log('comment error:', error);
+        }
+        break;
+      case 'demote':
+        try {
+          const response = await axiosInstance.put('/admin/user/demote_seller_to_user', {user_id : userId});
+          if (response.status === 200) {
+            showToast("تغییر دسترسی انجام شد");
+            await handleSearch();
+          }
+        } catch (error) {
+          console.log('comment error:', error);
+        }
+        break;
       case 'delete':
-              try {
-                const response = await axiosInstance.delete('/admin/user/delete_user', {data:{user_id : userId}});
-                console.log(response);
-                if (response.status === 200) {
-                  showToast("کاربر حذف شد");
-                  await handleSearch();
-                }
-              } catch (error) {
-                console.log('comment error:', error);
-              }
-              break;   
+        try {
+          const response = await axiosInstance.delete('/admin/user/delete_user', {data:{user_id : userId}});
+          console.log(response);
+          if (response.status === 200) {
+            showToast("کاربر حذف شد");
+            await handleSearch();
+          }
+        } catch (error) {
+            console.log('comment error:', error);
+          }
+          break;   
       default:
         break;
     }
@@ -90,13 +102,13 @@ const UserManagement = () => {
   { id: "username", label: "جستجو با نام کاربری" },
   { id: "phone_number", label: "جستجو با شماره‌ تماس" },
   { id: "id", label: "جستجو با آیدی" },
-  { id: "all", label: "همه‌ی کاربران" },
   ];
 
   const statusFilterOptions = [
   { id: "all", label: "همه" },
   { id: "active", label: "کاربران فعال" },
   { id: "banned", label: "کاربران مسدود" },
+  { id: "sellers", label: "فروشنده‌ها" },
   ];
   // Handle search
   const handleSearch = async() => {
@@ -113,13 +125,24 @@ const UserManagement = () => {
       }
     }else if (searchTerm) {
       if (searchFilter === "username") {
-        try {
-          const response = await axiosInstance.post('/admin/user/search_users', {username : searchTerm});
-          console.log(response);
-          filteredUsers=response.data
-        } catch (error) {
-          console.log('search username error:', error);
-        }
+       if (statusFilter === 'sellers') {
+          try {
+            const response = await axiosInstance.post('/admin/user/search_in_sellers', {user_name : searchTerm});
+            console.log(response);
+            filteredUsers=response.data
+          } catch (error) {
+            console.log('search username error:', error);
+          }
+       }else{
+          try {
+            const response = await axiosInstance.post('/admin/user/search_users', {username : searchTerm});
+            console.log(response);
+            filteredUsers=response.data
+          } catch (error) {
+            console.log('search username error:', error);
+          }
+       }
+
       } else if (searchFilter === "phone_number") {
           try {
             const response = await axiosInstance.post('/admin/user/get_user_by_phone_number', {phone_number : searchTerm});
@@ -143,6 +166,10 @@ const UserManagement = () => {
     setIsLoading(false);
   
   };
+
+  useEffect(() => {
+     handleSearch();
+   }, [searchFilter,statusFilter]);
 
   const resetSearch = () => {
   setSearchTerm("");
@@ -400,11 +427,12 @@ users.map((user) => (
       {user.is_banned ? <FaUserCheck/> :<FaUserSlash /> }
     </button>
     <button
-      onClick={() =>handleActions('promote' , user.id) }
+      onClick={() =>handleActions(user.is_seller ? 'demote' : 'promote' , user.id) }
       className="w-8 h-8 flex items-center justify-center rounded-full bg-indigo-100 text-[#191970] hover:bg-indigo-200 transition-colors cursor-pointer"
-      title="Promote to Seller"
+      title={user.is_seller ? "Demote to User" : "Promote to Seller"}
       >
-      <LiaStoreAltSolid  className="inline" />
+      {user.is_seller ? <FaStoreAltSlash className="inline" /> : <LiaStoreAltSolid  className="inline" /> }
+      
     </button>
     <button aria-label="حذف کاربر"
       onClick={() =>handleActions('delete' , user.id)}
@@ -426,12 +454,6 @@ users.map((user) => (
 </div>
 <h3 className="text-lg font-medium text-gray-900">کاربری یافت نشد</h3>
 <p className="text-gray-500 mt-1">سعی کنید جستجو یا فیلتر خود را برای یافتن آنچه به دنبالش هستید تنظیم کنید.</p>
-<button
-className="mt-4 px-4 py-2 bg-[#191970] text-white rounded-lg hover:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors !rounded-button cursor-pointer whitespace-nowrap"
-onClick={resetSearch}
->
-نمایش تمام کاربران
-</button>
 </div>
 </td>
 </tr>
