@@ -13,6 +13,6 @@ class CityDisplay(BaseSchema):
 
 
 class CityUpdateModel(BaseSchema):
-    id: int
+    city_id: int
     region_id: int | None = None
     name: str | None = None

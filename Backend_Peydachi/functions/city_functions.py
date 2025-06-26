@@ -1,7 +1,8 @@
-from database.models import City
+from database.models import City, Region
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from errors.city_errors import NO_CITY_FOUND_ERROR, CITY_NOT_FOUND_ERROR, CITY_ALREADY_EXISTS_ERROR
+from errors.region_errors import REGION_NOT_FOUND_ERROR
 from schemas.city_schemas import CityModel, CityUpdateModel
 
 
@@ -78,7 +79,7 @@ async def delete_city(city_id: int, db: Session):
 
 
 async def update_city(info: CityUpdateModel, db: Session):
-    city = db.query(City).filter(City.id == info.id).first()
+    city = db.query(City).filter(City.id == info.city_id).first()
 
     if not city:
         raise CITY_NOT_FOUND_ERROR
@@ -87,6 +88,11 @@ async def update_city(info: CityUpdateModel, db: Session):
         city.name = info.name
 
     if info.region_id:
+        region = db.query(Region).filter(Region.id == info.region_id).first()
+
+        if not region:
+            raise REGION_NOT_FOUND_ERROR
+        
         city.region_id = info.region_id
 
     db.commit()
