@@ -2,7 +2,7 @@
 import axiosInstance from '../axiosInstance';
 import React, { useState, useEffect, useRef } from 'react';
 import Swal from "sweetalert2"; 
-import { FaSearch,FaChevronDown, FaEdit,FaEye,FaTrash } from "react-icons/fa";
+import { FaCircleNotch, FaChevronDown, FaChevronRight,FaInfoCircle,FaTrash,FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 const SendReport= () => {
   const [title, setTitle] = useState('');
   const [text, settext] = useState('');
@@ -199,7 +199,7 @@ const SendReport= () => {
               >
                 {isSubmitting ? (
                   <>
-                    <i className="fas fa-circle-notch fa-spin ml-2"></i>
+                    <FaCircleNotch className="fa-spin ml-2" />
                     درحال ارسال...
                   </>
                 ) : 'ارسال درخواست'}
@@ -214,14 +214,18 @@ const SendReport= () => {
             onClick={() => setShowDrafts(!showDrafts)}
             className="flex items-center text-blue-600 hover:text-blue-800 mb-4 cursor-pointer"
           >
-            <i className={`fas fa-chevron-${showDrafts ? 'down' : 'right'} ml-2`}></i>
+            {showDrafts ? (
+              <FaChevronDown className="ml-2" />
+            ) : (
+              <FaChevronRight className="ml-2" />
+            )}
             {drafts.length > 0 ? `پیش‌نویس ذخیره شده (${drafts.length})` : 'پیش‌نویسی ذخیره نشده'}
           </button>
 
           {showDrafts && drafts.length > 0 && (
             <div className="bg-blue-50 rounded-lg p-4 transition-all duration-300">
               <div className="text-sm text-blue-800 mb-2">
-                <i className="fas fa-info-circle mr-2"></i>
+              <FaInfoCircle className="inline ml-2" />
                 برای بارگذاری پیش‌نویس، روی آن کلیک کنید. پیش‌نویس‌ها هر 30 ثانیه به‌طور خودکار ذخیره می‌شوند.
               </div>
               <ul className="space-y-2">
@@ -264,7 +268,11 @@ const SendReport= () => {
         }`}
       >
         <div className={`px-4 py-3 flex items-center ${notification.type === 'success' ? 'bg-blue-500' : 'bg-red-500'}`}>
-          <i className={`fas fa-${notification.type === 'success' ? 'check-circle' : 'exclamation-circle'} text-white mr-2`}></i>
+        {notification.type === 'success' ? (
+          <FaCheckCircle className="text-white mr-2" />
+        ) : (
+          <FaExclamationCircle className="text-white mr-2" />
+        )}
           <span className="text-white font-medium">
             {notification.type === 'Success' ? 'اعلان' : 'خطا'}
           </span>
