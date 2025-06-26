@@ -256,7 +256,7 @@ async def get_all_stores_of_city(city_id: int, db: Session):
 
 
 async def search_all_stores_of_city(city_id: int, name: str, db: Session):
-    stores = db.query(Store).filter(and_(Store.city_id == city_id, Store.name.contains(name))).all()
+    stores = db.query(Store).filter(and_(Store.city_id == city_id, Store.name.contains(name), Store.is_banned == False)).all()
     if not stores:
         raise NO_STORE_FOUND_ERROR
 
