@@ -52,6 +52,10 @@ async def add_owner_to_store(user_id: int, store_id: int, db: Session):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise USER_NOT_FOUND_ERROR
+    
+    already_owner_check = db.query(Store).filter(Store.owner_id == user_id).first()
+    if already_owner_check:
+        raise USER_ALREADY_HAS_STORE
 
     store.owner_id = user_id
     user.is_seller = True
