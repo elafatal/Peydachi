@@ -23,6 +23,7 @@ import ScrollToTop from './Component/ScrollToTop';
 import AddProduct from './Component/Store/AddProduct';
 import SelfStore from './Component/Store/selfStore';
 import StoreFullComment from './Component/Store/StoreProfile/StoreFullComment';
+import SendReport from './Component/Report/SendReport';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
             <Route path="/AddProduct" element={<AddProduct/>} />
             <Route path="/SelfStore" element={<SelfStore/>} />
             <Route path="/storeComments/:storeID" element={<StoreFullComment/>} />
+            <Route path="/Report" element={<SendReport/>} />
          
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>

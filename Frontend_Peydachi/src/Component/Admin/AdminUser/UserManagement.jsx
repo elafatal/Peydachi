@@ -15,7 +15,23 @@ const UserManagement = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isStatusFilterOpen, setIsStatusFilterOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const showToast = (title, icon = "success") => {
+    Swal.fire({
+      position: "top-end",
+      icon,
+      title,
+      showConfirmButton: false,
+      timer: 1500,
+      toast: true,
+      customClass: {
+        popup: 'w-2 h-15 text-sm flex items-center justify-center',
+        title: 'text-xs',
+        content: 'text-xs',
+        icon: 'text-xs mb-2'
+      }
+    });
+  };
+  
   const handleActions =async(type , userId)=>{
     switch (type) {
       case 'ban':
@@ -23,20 +39,8 @@ const UserManagement = () => {
           const response = await axiosInstance.put('admin/user/ban_user',{user_id :userId});
           console.log(response);
           if (response.status === 200) {
-                    Swal.fire({
-                      position: "top-end",
-                      icon: "success",
-                      title: " کاربر محدود شد",
-                      showConfirmButton: false,
-                      timer: 1500,
-                      toast: true,
-                      customClass: {
-                        popup: 'w-2 h-15 text-sm flex items-center justify-center', 
-                        title: 'text-xs', 
-                        content: 'text-xs',
-                        icon : 'text-xs mb-2'
-                      }
-                  });
+            showToast("کاربر محدود شد");
+            await handleSearch();
           }
         } catch (error) {
           console.log('comment error:', error);
@@ -46,20 +50,8 @@ const UserManagement = () => {
         try {
           const response = await axiosInstance.put('admin/user/unban_user',{user_id : userId});
           if (response.status === 200) {
-            Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "محدودیت کاربر برداشته شد ",
-              showConfirmButton: false,
-              timer: 1500,
-              toast: true,
-              customClass: {
-                popup: 'w-2 h-15 text-sm flex items-center justify-center', 
-                title: 'text-xs', 
-                content: 'text-xs',
-                icon : 'text-xs mb-2'
-              }
-          });
+            showToast("محدودیت کاربر برداشته شد");
+            await handleSearch();
           }
         } catch (error) {
           console.log('comment error:', error);
@@ -69,20 +61,8 @@ const UserManagement = () => {
               try {
                 const response = await axiosInstance.post('/admin/user/promote_user_to_seller', {user_id : userId});
                 if (response.status === 200) {
-                  Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "تغییر دسترسی انجام شد",
-                    showConfirmButton: false,
-                    timer: 1500,
-                    toast: true,
-                    customClass: {
-                      popup: 'w-2 h-15 text-sm flex items-center justify-center', 
-                      title: 'text-xs', 
-                      content: 'text-xs',
-                      icon : 'text-xs mb-2'
-                    }
-                });
+                  showToast("تغییر دسترسی انجام شد");
+                  await handleSearch();
                 }
               } catch (error) {
                 console.log('comment error:', error);
@@ -92,22 +72,9 @@ const UserManagement = () => {
               try {
                 const response = await axiosInstance.delete('/admin/user/delete_user', {data:{user_id : userId}});
                 console.log(response);
-                
                 if (response.status === 200) {
-                  Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "تغییر دسترسی انجام شد",
-                    showConfirmButton: false,
-                    timer: 1500,
-                    toast: true,
-                    customClass: {
-                      popup: 'w-2 h-15 text-sm flex items-center justify-center', 
-                      title: 'text-xs', 
-                      content: 'text-xs',
-                      icon : 'text-xs mb-2'
-                    }
-                });
+                  showToast("کاربر حذف شد");
+                  await handleSearch();
                 }
               } catch (error) {
                 console.log('comment error:', error);
@@ -135,7 +102,16 @@ const UserManagement = () => {
   const handleSearch = async() => {
     setIsLoading(true);
     let filteredUsers = [...users];
-    if (searchTerm) {
+    if (statusFilter === "banned") {
+      try {
+        const response = await axiosInstance.post('/admin/user/search_in_banned_users', {
+          user_name: searchTerm
+        });
+        filteredUsers = response.data;
+      } catch (error) {
+        console.log('search banned username error:', error);
+      }
+    }else if (searchTerm) {
       if (searchFilter === "username") {
         try {
           const response = await axiosInstance.post('/admin/user/search_users', {username : searchTerm});
@@ -163,19 +139,6 @@ const UserManagement = () => {
       }
     }
 
-    if (statusFilter === "banned") {
-    if (searchTerm) {
-      if (searchFilter === "username") {
-        try {
-          const response = await axiosInstance.post('/admin/user/search_in_banned_users', {username : searchTerm});
-          console.log(response);
-          filteredUsers=response.data
-        } catch (error) {
-          console.log('search username error:', error);
-        }
-      }
-    }
-    }
     setUsers(filteredUsers);
     setIsLoading(false);
   
@@ -443,7 +406,7 @@ users.map((user) => (
       >
       <LiaStoreAltSolid  className="inline" />
     </button>
-    <button
+    <button aria-label="حذف کاربر"
       onClick={() =>handleActions('delete' , user.id)}
       className="w-8 h-8 flex items-center justify-center rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition-colors cursor-pointer"
       title="پاک کردن کاربر"
