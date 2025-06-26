@@ -110,10 +110,38 @@ const users=[{id:1 , username:'ali'}]
           }
         } catch (error) {
           console.log('add owner error:', error);
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: " درخواست انجام نشد",
+            showConfirmButton: false,
+            timer: 1500,
+            toast: true,
+            customClass: {
+              popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+              title: 'text-xs', 
+              content: 'text-xs',
+              icon : 'text-xs mb-2'
+            }
+        });
         }
       }
     } catch (error) {
       console.log('promote to seller error:', error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: " درخواست انجام نشد",
+        showConfirmButton: false,
+        timer: 1500,
+        toast: true,
+        customClass: {
+          popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+          title: 'text-xs', 
+          content: 'text-xs',
+          icon : 'text-xs mb-2'
+        }
+    });
     }
     setShowAddOwnerModal(false);
     setSelectedStore(null);
