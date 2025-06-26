@@ -5,8 +5,10 @@ import Swal from "sweetalert2";
 import AddOwnerModal from './AddOwnerModal';
 import axiosInstance from '../../axiosInstance';
 import {FaTrash, FaShieldAlt,FaBan ,FaUserPlus,FaStar,FaPlus,FaSearch ,FaTimes } from 'react-icons/fa';
+import { FaUserSlash } from "react-icons/fa";
 const StoreManagement= () => {
   // States for the application
+  const [haveOwner, setHaveOwner] = useState(false);
   const [stores, setStores] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCity, setFilterCity] = useState('');
@@ -100,11 +102,11 @@ const users=[{id:1 , username:'ali'}]
           });
           }
         } catch (error) {
-          console.log('comment error:', error);
+          console.log('add owner error:', error);
         }
       }
     } catch (error) {
-      console.log('comment error:', error);
+      console.log('promote to seller error:', error);
     }
     setShowAddOwnerModal(false);
     setSelectedStore(null);
@@ -275,18 +277,26 @@ if (store.is_banned) {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-start space-x-3">
+                          {store.owner_id ?                           
                           <button
                             type="button"
                             className="text-blue-600 hover:text-blue-900 cursor-pointer"
-                            title="Add Owner"
+                            title="افزودن فروشنده"
                             onClick={() => {
                               setSelectedStore(store);
                               setShowAddOwnerModal(true);
                             }}
                           >
                          <FaUserPlus />
-                          </button>
-                          
+                          </button> :                           <button
+                            type="button"
+                            className="text-red-600 hover:text-red-900 cursor-pointer"
+                            title="حذف فروشنده"
+                            onClick={() => setSelectedStore(store)
+                            }
+                          >
+                      <FaUserSlash />
+                          </button>}
                           <button
                             type="button"
                             className={`${store.is_banned ? 'text-green-600 hover:text-green-900' : 'text-red-600 hover:text-red-900'} cursor-pointer`}
@@ -299,7 +309,7 @@ if (store.is_banned) {
                           <button
                             type="button"
                             className="text-red-600 hover:text-red-900 cursor-pointer"
-                            title="Delete Store"
+                            title="پاک کردن فروشگاه"
                             onClick={() => handleDeleteStore(store.id)}
                           >
                             <FaTrash />
