@@ -15,20 +15,9 @@ const StoreManagement= () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showAddOwnerModal, setShowAddOwnerModal] = useState(false);
   const [selectedStore, setSelectedStore] = useState(null);
-  
+  const [isLoading, setIsLoading] = useState(false);
+
 const users=[{id:1 , username:'ali'}]
-  useEffect(() => {
-   const getAllStores = async()=>{
-    try {
-      const response = await axiosInstance.get('/store/get_all_stores');
-      console.log(response.data);
-      setStores(response.data)
-    } catch (error) {
-      console.log('all store error:', error);
-    }
-   }
-    getAllStores();
-  }, []);
 
   const deleteOwner=async(store)=>{
     try {
@@ -38,19 +27,7 @@ const users=[{id:1 , username:'ali'}]
       console.log('delete owner error:', error);
     }    
   }
-  // Filter stores based on search term and filters
-  const filteredStores = stores.filter(store => {
-    const matchesSearch = store.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          store.id.toString().includes(searchTerm);
-    
-    const matchesCity = filterCity ? store.city_id.toString() === filterCity : true;
-    
-    const matchesStatus = filterStatus === 'banned' ? store.is_banned : 
-                          filterStatus === 'active' ? !store.is_banned : 
-                          true;
-    
-    return matchesSearch && matchesCity && matchesStatus;
-  });
+
 
   const handleAddStore = async (storeData) => {
      const {
@@ -146,7 +123,62 @@ const users=[{id:1 , username:'ali'}]
     setShowAddOwnerModal(false);
     setSelectedStore(null);
   };
+  const handleSearch = async () => {
+    setIsLoading(true);
   
+    try {
+      let apiUrl = '';
+      let payload = {};
+  
+      // حالت فروشگاه‌های مسدود شده
+      if (filterStatus === 'banned') {
+        apiUrl = '/admin/store/search_in_banned_stores';
+        payload = { name: searchTerm || '' };
+      }
+      // حالت جستجو در فروشگاه‌های شهر خاص
+      else if (filterCity) {
+        apiUrl = '/store/search_all_stores_of_city';
+        payload = {
+          name: searchTerm || '',
+          city_id: Number(filterCity),
+        };
+      }
+      // حالت پیش‌فرض: جستجوی فروشگاه‌های فعال در تمام شهرها
+      else {
+        apiUrl = '/admin/store/search_store';
+        payload = { name: searchTerm || '' };
+      }
+  
+      const response = await axiosInstance.post(apiUrl, payload);
+      const result = response.data;
+  
+      // فیلتر وضعیت "active" برای زمانی که از API عمومی یا city استفاده می‌کنیم
+      const finalFiltered = filterStatus === 'active'
+        ? result.filter(store => !store.is_banned)
+        : result;
+  
+      setStores(finalFiltered);
+    } catch (error) {
+      console.log('store search error:', error);
+      setStores([]);
+    }
+  
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (searchTerm !== '') {
+      handleSearch();
+    }
+  }, [filterCity, filterStatus]);
+  
+  const resetSearch = () => {
+    setSearchTerm('');
+    setFilterCity('');
+    setFilterStatus('');
+    setStores([]);
+  };
+
 
   const handleDeleteStore = (storeId) => {
     if (window.confirm("Are you sure you want to delete this store?")) {
@@ -213,66 +245,81 @@ if (store.is_banned) {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Search and Filter Section */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-    
-    {/* فیلد جستجو */}
-    <div className="w-full md:flex-1">
-      <div className="relative" dir="rtl">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <FaSearch className="text-gray-400" />
+  <div className="bg-white rounded-lg shadow p-6 mb-6">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <button
+            type="button"
+            onClick={handleSearch}
+            className="inline-flex items-center px-3 py-2 border border-blue-900 text-white bg-blue-900 hover:bg-blue-800 text-sm rounded-md"
+          >
+            <FaSearch className="mr-2" />
+            جستجو
+          </button>
+        {/* فیلد جستجو */}
+        <div className="w-full md:flex-1">
+      
+          <div className="relative" dir="rtl">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FaSearch onClick={handleSearch} className="text-gray-400" />
+            </div>
+            <input
+              type="text"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm"
+              placeholder="جستجوی فروشگاه‌ها بر اساس نام یا شناسه..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            />
+          </div>
         </div>
-        <input
-          type="text"
-          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm"
-          placeholder="جستجوی فروشگاه‌ها بر اساس نام یا شناسه..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-    </div>
+     </div>
+          {/* فیلترها و دکمه */}
+          <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-wrap gap-3 mt-3">
+            <select
+              className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
+              value={filterCity}
+              onChange={(e) => setFilterCity(e.target.value)}
+            >
+              <option value="">همه‌ی شهرها</option>
+              {cities.map(city => (
+                <option key={city.id} value={city.id.toString()}>{city.name}</option>
+              ))}
+            </select>
 
-      {/* فیلترها و دکمه */}
-      <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-wrap gap-3">
-        
-        <select
-          className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
-          value={filterCity}
-          onChange={(e) => setFilterCity(e.target.value)}
-        >
-          <option value="">همه‌ی شهرها</option>
-          {cities.map(city => (
-            <option key={city.id} value={city.id.toString()}>{city.name}</option>
-          ))}
-        </select>
+            <select
+              className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+            >
+              <option value="">همه</option>
+              <option value="active">فعال</option>
+              <option value="banned">مسدود شده</option>
+            </select>
 
-        <select
-          className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-        >
-          <option value="">همه</option>
-          <option value="active">فعال</option>
-          <option value="banned">مسدود شده</option>
-        </select>
+            <button
+              type="button"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-900 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900 whitespace-nowrap cursor-pointer"
+              onClick={() => setShowAddModal(true)}
+            >
+              <FaPlus className="mr-2" />
+              افزودن فروشگاه
+            </button>
 
-        <button
-          type="button"
-          className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-900 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900 whitespace-nowrap cursor-pointer"
-          onClick={() => setShowAddModal(true)}
-        >
-          <FaPlus className="mr-2" />
-          افزودن فروشگاه
-        </button>
-
-      </div>
-    </div>
+            </div>
   </div>
 
 
         {/* Stores Table */}
         <div className="bg-white rounded-lg shadow overflow-hidden" dir='rtl' >
           <div className="overflow-x-auto max-h-2/3 overflow-scroll">
+          {isLoading && (
+            <div className="flex justify-center items-center py-6">
+              <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
+              <span className="mr-3 text-blue-700 text-sm">در حال بارگذاری فروشگاه‌ها...</span>
+            </div>
+          )}
+
+
             <table className="min-w-full divide-y  divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -286,8 +333,8 @@ if (store.is_banned) {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredStores.length > 0 ? (
-                  filteredStores.map(store => (
+                {stores.length > 0 ? (
+                  stores.map(store => (
                     <tr key={store.id} className="hover:bg-gray-50">
                       <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{store.id}</td>
                       <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">{store.name}</td>
