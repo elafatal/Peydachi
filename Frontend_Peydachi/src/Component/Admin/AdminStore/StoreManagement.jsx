@@ -1,13 +1,16 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import AddStoreModal from './AddStoreModal';
+import StoreCommentManagement from '../AdminCommet/StoreCommentManagement'
 import React, { useState, useEffect } from 'react';
 import Swal from "sweetalert2";  
+import { useNavigate } from 'react-router-dom';
 import AddOwnerModal from './AddOwnerModal';
 import axiosInstance from '../../axiosInstance';
 import {FaTrash, FaShieldAlt,FaBan ,FaUserPlus,FaStar,FaPlus,FaSearch ,FaTimes,FaComment   } from 'react-icons/fa';
 import { FaUserSlash } from "react-icons/fa";
 const StoreManagement= () => {
-  // States for the application
+  const navigate = useNavigate();
+  const [showComment, setShowComment] = useState(false);
   const [stores, setStores] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCity, setFilterCity] = useState('');
@@ -16,6 +19,7 @@ const StoreManagement= () => {
   const [showAddOwnerModal, setShowAddOwnerModal] = useState(false);
   const [selectedStore, setSelectedStore] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [commentStoreId, setCommentStoreId] = useState(null);
 
 const users=[{id:1 , username:'ali'}]
 
@@ -236,12 +240,13 @@ if (store.is_banned) {
   };
 
 
-  return (
-    <div className="max-h-screen bg-gray-50" dir='ltr'>
+  return ( showComment?
+   <StoreCommentManagement storeId={commentStoreId} /> : 
+   <div className="max-h-screen bg-gray-50" dir='ltr'>
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Search and Filter Section */}
-  <div className="bg-white rounded-lg shadow p-6 mb-6">
+   <div className="bg-white rounded-lg shadow p-6 mb-6">
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <button
             type="button"
@@ -404,7 +409,11 @@ if (store.is_banned) {
                             type="button"
                             className="text-blue-600 hover:text-blue-900 cursor-pointer"
                             title="نظرات فروشگاه"
-                            onClick={() => handleDeleteStore(store.id)}
+                            onClick={() => {
+                              setCommentStoreId(store.id);
+                              setShowComment(true);
+                            }}
+                            
                           >
                             <FaComment   />
                           </button>
@@ -448,7 +457,7 @@ if (store.is_banned) {
         onAddOwner={handleAddOwner}
         />
       )}
-    </div>
+    </div> 
   );
 };
 
