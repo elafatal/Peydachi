@@ -1,4 +1,5 @@
 import React, { useState,useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import Sidebar from './AdminMenu/Sidebar';
 import TopHeader from './AdminMenu/TopHeader';
 import DashboardOverview from './AdminDashboard/DashboardOverview';
@@ -18,21 +19,12 @@ const AdminPage = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-   <>{role === 'admin' || role=== 'superadmin' ?  <div className="flex h-screen bg-gray-50" dir="rtl">
-    <Sidebar
-      isMenuOpen={isMenuOpen}
-      setIsMenuOpen={setIsMenuOpen}
-      toggleMenu={toggleMenu}
-      activeTab={activeTab}
-      setActiveTab={setActiveTab}
-    />
+   <>{role === 'admin' || role=== 'superadmin' ?    <div className="flex h-screen bg-gray-50" dir="rtl">
+    <Sidebar />
     <div className="flex-1 flex flex-col overflow-hidden">
+
       <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
-        {activeTab === 'dashboard' && <DashboardOverview />}
-        {activeTab === 'stores' && <StoreManagement />}
-        {activeTab === 'cities' && <CityManagement/>}
-        {activeTab === 'users' && <UserManagement/>}
-        {activeTab === 'comments' && <StoreCommentManagement/>}
+        <Outlet />
       </main>
     </div>
   </div> : <UnauthorizedPage/>}</>

@@ -24,6 +24,11 @@ import AddProduct from './Component/Store/AddProduct';
 import SelfStore from './Component/Store/selfStore';
 import StoreFullComment from './Component/Store/StoreProfile/StoreFullComment';
 import SendReport from './Component/Report/SendReport';
+import DashboardOverview from './Component/Admin/AdminDashboard/DashboardOverview';
+import StoreManagement from './Component/Admin/AdminStore/StoreManagement';
+import CityManagement from './Component/Admin/AdminCity/CityManagement';
+import UserManagement from './Component/Admin/AdminUser/UserManagement';
+import StoreCommentManagement from './Component/Admin/AdminCommet/StoreCommentManagement';
 
 function App() {
   return (
@@ -40,7 +45,6 @@ function App() {
             <Route path="/footer" element={<Footer />} />
             <Route path="*" element={<ErrorPage />} />
             <Route path="/userInfo" element={<UserInfo />} />
-            <Route path="/Admin" element={<AdminPage/>} />
             <Route path="/AddStoreRequest" element={<AddStore/>} />
             <Route path="/UserCommentReport" element={<UserComment/>} />
             <Route path="/SearchStore" element={<SearchStore/>} />
@@ -52,7 +56,14 @@ function App() {
             <Route path="/SelfStore" element={<SelfStore/>} />
             <Route path="/storeComments/:storeID" element={<StoreFullComment/>} />
             <Route path="/Report" element={<SendReport/>} />
-         
+            <Route path="/Admin" element={<AdminPage/>} />
+            <Route path="/admin" element={<AdminPage />}>
+              <Route index element={<DashboardOverview/>} />
+              <Route path="stores" element={<StoreManagement/>} />
+              <Route path="cities" element={<CityManagement/>} />
+              <Route path="users" element={<UserManagement/>} />
+              <Route path="/admin/comments/:storeId" element={<StoreCommentManagement />} />
+            </Route>
             {/* مسیرهای محافظت شده */}
             {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
               <Route path="/userInfo" element={<UserInfo />} />

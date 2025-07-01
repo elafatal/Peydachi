@@ -1,7 +1,8 @@
 import {FaCheckCircle, FaExclamationCircle, FaSearch, FaUser,FaPhone , FaTag ,FaUserSlash , FaTrashAlt,FaRegClock, FaRegCommentDots} from 'react-icons/fa';
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
-const StoreCommentManagement= ({storeId}) => {
+const StoreCommentManagement= () => {
 const [activeTab, setActiveTab] = useState('text');
 const [searchQuery, setSearchQuery] = useState('');
 const [searchResults, setSearchResults] = useState([]);
@@ -16,6 +17,8 @@ show: false,
 message: '',
 type: 'success'
 });
+  const { storeـid } = useParams();
+  const storeId = Number(storeـid);
 const searchByText = async () => {
     if (!searchQuery.trim()) return;
     setIsLoading(true);
