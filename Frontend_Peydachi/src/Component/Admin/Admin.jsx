@@ -8,6 +8,7 @@ import { useAuth } from '../AuthContext/AuthContext';
 import UnauthorizedPage from '../Error/UnauthorizedPage';
 import CityManagement from './AdminCity/CityManagement';
 import UserManagement from './AdminUser/UserManagement';
+import StoreCommentManagement from './AdminCommet/StoreCommentManagement';
 const AdminPage = () => {
   const { role } = useAuth(); 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,6 +32,7 @@ const AdminPage = () => {
         {activeTab === 'stores' && <StoreManagement />}
         {activeTab === 'cities' && <CityManagement/>}
         {activeTab === 'users' && <UserManagement/>}
+        {activeTab === 'comments' && <StoreCommentManagement/>}
       </main>
     </div>
   </div> : <UnauthorizedPage/>}</>

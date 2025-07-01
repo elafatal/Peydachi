@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from "sweetalert2";  
 import AddOwnerModal from './AddOwnerModal';
 import axiosInstance from '../../axiosInstance';
-import {FaTrash, FaShieldAlt,FaBan ,FaUserPlus,FaStar,FaPlus,FaSearch ,FaTimes } from 'react-icons/fa';
+import {FaTrash, FaShieldAlt,FaBan ,FaUserPlus,FaStar,FaPlus,FaSearch ,FaTimes,FaComment   } from 'react-icons/fa';
 import { FaUserSlash } from "react-icons/fa";
 const StoreManagement= () => {
   // States for the application
@@ -57,7 +57,7 @@ const users=[{id:1 , username:'ali'}]
        }
      };
 
-  // Handler for adding an owner to a store
+
   const handleAddOwner = async(userId) => {
     if (!selectedStore) return;
     try {
@@ -130,12 +130,10 @@ const users=[{id:1 , username:'ali'}]
       let apiUrl = '';
       let payload = {};
   
-      // حالت فروشگاه‌های مسدود شده
       if (filterStatus === 'banned') {
         apiUrl = '/admin/store/search_in_banned_stores';
         payload = { name: searchTerm || '' };
       }
-      // حالت جستجو در فروشگاه‌های شهر خاص
       else if (filterCity) {
         apiUrl = '/store/search_all_stores_of_city';
         payload = {
@@ -143,7 +141,6 @@ const users=[{id:1 , username:'ali'}]
           city_id: Number(filterCity),
         };
       }
-      // حالت پیش‌فرض: جستجوی فروشگاه‌های فعال در تمام شهرها
       else {
         apiUrl = '/admin/store/search_store';
         payload = { name: searchTerm || '' };
@@ -152,7 +149,6 @@ const users=[{id:1 , username:'ali'}]
       const response = await axiosInstance.post(apiUrl, payload);
       const result = response.data;
   
-      // فیلتر وضعیت "active" برای زمانی که از API عمومی یا city استفاده می‌کنیم
       const finalFiltered = filterStatus === 'active'
         ? result.filter(store => !store.is_banned)
         : result;
@@ -247,7 +243,15 @@ if (store.is_banned) {
         {/* Search and Filter Section */}
   <div className="bg-white rounded-lg shadow p-6 mb-6">
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <button
+          <button
+            type="button"
+            className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 whitespace-nowrap"
+            onClick={resetSearch}
+          >
+            <FaTimes className="mr-2" />
+            پاک کردن فیلتر
+          </button>
+          <button
             type="button"
             onClick={handleSearch}
             className="inline-flex items-center px-3 py-2 border border-blue-900 text-white bg-blue-900 hover:bg-blue-800 text-sm rounded-md"
@@ -274,7 +278,7 @@ if (store.is_banned) {
         </div>
      </div>
           {/* فیلترها و دکمه */}
-          <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-wrap gap-3 mt-3">
+          <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-wrap gap-3 mt-3" dir='rtl'>
             <select
               className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
               value={filterCity}
@@ -301,7 +305,7 @@ if (store.is_banned) {
               className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-900 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900 whitespace-nowrap cursor-pointer"
               onClick={() => setShowAddModal(true)}
             >
-              <FaPlus className="mr-2" />
+              <FaPlus className="ml-2" />
               افزودن فروشگاه
             </button>
 
@@ -370,14 +374,15 @@ if (store.is_banned) {
                             }}
                           >
                          <FaUserPlus />
-                          </button> :                           <button
+                          </button> :                          
+                           <button
                             type="button"
                             className="text-red-600 hover:text-red-900 cursor-pointer"
                             title="حذف فروشنده"
                             onClick={() => deleteOwner(store)
                             }
                           >
-                      <FaUserSlash />
+                          <FaUserSlash />
                           </button>}
                           <button
                             type="button"
@@ -387,7 +392,6 @@ if (store.is_banned) {
                           >
                            {store.is_banned ? <FaShieldAlt /> : <FaBan />}
                           </button>
-                          
                           <button
                             type="button"
                             className="text-red-600 hover:text-red-900 cursor-pointer"
@@ -395,6 +399,14 @@ if (store.is_banned) {
                             onClick={() => handleDeleteStore(store.id)}
                           >
                             <FaTrash />
+                          </button>
+                          <button
+                            type="button"
+                            className="text-blue-600 hover:text-blue-900 cursor-pointer"
+                            title="نظرات فروشگاه"
+                            onClick={() => handleDeleteStore(store.id)}
+                          >
+                            <FaComment   />
                           </button>
                         </div>
                       </td>
