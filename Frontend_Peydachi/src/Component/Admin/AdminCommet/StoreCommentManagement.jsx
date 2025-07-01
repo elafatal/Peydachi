@@ -28,7 +28,7 @@ const searchByText = async () => {
     setSearchResults(data);
     } catch (error) {
     console.error('Error searching comments:', error);
-    showNotification('Failed to search comments', 'error');
+    showNotification('جستجوی نظرات ناموفق بود', 'error');
     } finally {
     setIsLoading(false);
     }
@@ -45,7 +45,7 @@ setSelectedUsers(data);
 setShowUserResults(true);
 } catch (error) {
 console.error('Error searching users:', error);
-showNotification('Failed to search users', 'error');
+showNotification('جستجوی کاربران ناموفق بود', 'error');
 } finally {
 setIsLoading(false);
 }
@@ -53,56 +53,28 @@ setIsLoading(false);
 const getUserComments = async (userId) => {
 setIsLoading(true);
 try {
-// Mock API call for getting user comments
-// const response = await fetch('/api/user-comments', {
-//   method: 'POST',
-//   headers: { 'Content-Type': 'application/json' },
-//   body: JSON.stringify({ user_id: userId })
-// });
-// const data = await response.json();
-// Mock user comments data
-const data = [
-{
-store_id: storeId,
-text: "This store has amazing products and excellent customer service!",
-id: 1,
-user_id: userId,
-user_name: "JohnDoe",
-date_added: "2025-06-25T14:30:00.000Z"
-},
-{
-store_id: storeId,
-text: "I had a great experience shopping here. The staff was very helpful.",
-id: 6,
-user_id: userId,
-user_name: "JohnDoe",
-date_added: "2025-06-20T10:15:00.000Z"
-}
-];
-setSearchResults(data);
-setShowUserResults(false);
+    const response = await axiosInstance.post('/admin/store_comment/get_user_store_comments', {
+        user_id: userId
+      });
+      console.log(response);
+    setSearchResults(response.data);
+    setShowUserResults(false);
 } catch (error) {
-console.error('Error fetching user comments:', error);
-showNotification('Failed to fetch user comments', 'error');
+    console.error('Error fetching user comments:', error);
+    showNotification('دریافت نظرات کاربران ناموفق بود', 'error');
 } finally {
 setIsLoading(false);
 }
 };
 const deleteComment = async (commentId) => {
 try {
-// Mock API call for deleting a comment
-// const response = await fetch('/api/delete-comment', {
-//   method: 'POST',
-//   headers: { 'Content-Type': 'application/json' },
-//   body: JSON.stringify({ store_comment_id: commentId.toString() })
-// });
-// const data = await response.json();
-// Update the UI by removing the deleted comment
+    const response = await axiosInstance.delete('/admin/store_comment/admin_remove_store_comment',{data:  {store_comment_id: Number(commentId)}});
+      console.log(response);
 setSearchResults(prevResults => prevResults.filter(comment => comment.id !== commentId));
-showNotification('Comment deleted successfully', 'success');
+showNotification('کامنت حذف شد', 'success');
 } catch (error) {
 console.error('Error deleting comment:', error);
-showNotification('Failed to delete comment', 'error');
+showNotification('کامنت حذف نشد', 'error');
 } finally {
 setShowDeleteModal(false);
 setCommentToDelete(null);
@@ -110,17 +82,12 @@ setCommentToDelete(null);
 };
 const resetStoreRating = async () => {
     try {
-        // Mock API call for resetting store rating
-        // const response = await fetch('/api/reset-rating', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({ store_id: storeId })
-        // });
-        // const data = await response.json();
-        showNotification('Store rating has been reset successfully', 'success');
+        const response = await axiosInstance.delete('/admin/store_rating/reset_all_ratings_of_store',{data:  {store_id: Number(storeId)}});
+        console.log(response);
+        showNotification('امتیاز فروشگاه پاک شد', 'success');
     } catch (error) {
         console.error('Error resetting store rating:', error);
-        showNotification('Failed to reset store rating', 'error');
+        showNotification('درخواست انجام نشد', 'error');
     } finally {
         setShowResetModal(false);
     }
@@ -147,19 +114,25 @@ setNotification(prev => ({ ...prev, show: false }));
 }, 3000);
 };
 const formatDate = (dateString) => {
-    const date = new Date(dateString);
     const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays === 0) {
-      return 'امروز';
-    } else if (diffDays === 1) {
-      return 'دیروز';
-    } else if (diffDays < 7) {
-      return `${diffDays} روز قبل`;
-    } else {
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
+    const addedDate = new Date(dateString);
+    
+    const diffInMilliseconds = now - addedDate;
+    const seconds = Math.floor(diffInMilliseconds / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+  
+    if (seconds < 60) return 'لحظاتی پیش';
+    if (minutes < 60) return `${minutes} دقیقه قبل`;
+    if (hours < 24) return `${hours} ساعت قبل`;
+    if (days < 7) return `${days} روز قبل`;
+    if (weeks < 4) return `${weeks} هفته قبل`;
+    if (months < 12) return `${months} ماه قبل`;
+    return `${years} سال${years > 1 ? 's' : ''} گذشته`;
 };
 useEffect(() => {
     setSearchResults([]);
@@ -167,7 +140,7 @@ useEffect(() => {
     setShowUserResults(false);
 }, [activeTab]);
 return (
-<div className="min-h-screen bg-gray-50">
+<div className=" bg-gray-50">
 {/* Main Content */}
 <main className="container mx-auto px-4 py-8">
 {/* Search Section */}
@@ -278,12 +251,12 @@ onClick={() => getUserComments(user.id)}
 <div className="w-8 h-8 rounded-full bg-blue-800 text-white flex items-center justify-center">
 <FaUser className='text-xs inline' />
 </div>
-<span className="ml-2 font-medium">{comment.user_name}</span>
+<span className="mr-2 font-medium">{comment.user_name}</span>
 </div>
 <button
 onClick={() => confirmDeleteComment(comment.id)}
 className="text-red-500 hover:text-red-700 transition-colors cursor-pointer"
-aria-label="Delete comment"
+aria-label="حذف نظر"
 >
 <FaTrashAlt className='inline' />
 </button>
@@ -308,7 +281,7 @@ aria-label="Delete comment"
 </main>
 {/* Delete Confirmation Modal */}
 {showDeleteModal && (
-<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
 <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 mx-4">
 <h3 className="text-xl font-semibold mb-4">تایید حذف</h3>
 <p className="text-gray-600 mb-6">آیا مطمئن هستید که می‌خواهید این نظر را حذف کنید؟ این اقدام قابل بازگشت نیست.</p>
@@ -331,22 +304,22 @@ className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transitio
 )}
 {/* Reset Rating Confirmation Modal */}
 {showResetModal && (
-<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
 <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 mx-4">
-<h3 className="text-xl font-semibold mb-4">Reset Store Rating</h3>
-<p className="text-gray-600 mb-6">Are you sure you want to reset the rating for this store? This will clear all rating data and cannot be undone.</p>
+<h3 className="text-xl font-semibold mb-4">بازنشانی رتبه فروشگاه</h3>
+<p className="text-gray-600 mb-6">آیا مطمئن هستید که می‌خواهید رتبه‌بندی این فروشگاه را مجدداً تنظیم کنید؟ این کار قابل بازگشت نیست.</p>
 <div className="flex justify-end space-x-3">
 <button
 onClick={() => setShowResetModal(false)}
 className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
 >
-Cancel
+لغو
 </button>
 <button
 onClick={resetStoreRating}
 className="px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
 >
-Reset Rating
+بازنشانی امتیاز
 </button>
 </div>
 </div>
