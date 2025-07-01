@@ -1,5 +1,5 @@
 import {FaCheckCircle, FaExclamationCircle, FaSearch, FaUser,FaPhone , FaTag ,FaUserSlash , FaTrashAlt,FaRegClock, FaRegCommentDots} from 'react-icons/fa';
-import React, { useState, useEffect, useSyncExternalStore } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../axiosInstance';
 const StoreCommentManagement= ({storeId}) => {
 const [activeTab, setActiveTab] = useState('text');
@@ -16,8 +16,6 @@ show: false,
 message: '',
 type: 'success'
 });
-// Mock store ID (would come from props or context in a real app)
-const storeName = "Tech Galaxy Store";
 const searchByText = async () => {
     if (!searchQuery.trim()) return;
     setIsLoading(true);
@@ -26,8 +24,6 @@ const searchByText = async () => {
             store_id : storeId,
             search : searchQuery
           });
-    console.log(response);
-    
     const data = response.data.filter(item => item.text.toLowerCase().includes(searchQuery.toLowerCase()));
     setSearchResults(data);
     } catch (error) {
@@ -41,96 +37,10 @@ const searchByUsername = async () => {
 if (!searchQuery.trim()) return;
 setIsLoading(true);
 try {
-// Mock API call for searching users
-// const response = await fetch('/api/search-users', {
-//   method: 'POST',
-//   headers: { 'Content-Type': 'application/json' },
-//   body: JSON.stringify({ username: searchQuery })
-// });
-// const data = await response.json();
-// Mock user search results
-const data = [
-{
-id: 101,
-username: "JohnDoe",
-phone_number: "+1234567890",
-email: "john.doe@example.com",
-is_seller: false,
-is_admin: false,
-is_super_admin: false,
-is_banned: false
-},
-{
-id: 102,
-username: "AliceSmith",
-phone_number: "+1987654321",
-email: "alice.smith@example.com",
-is_seller: true,
-is_admin: false,
-is_super_admin: false,
-is_banned: false
-},
-{
-id: 103,
-username: "RobertJones",
-phone_number: "+1122334455",
-email: "robert.jones@example.com",
-is_seller: false,
-is_admin: true,
-is_super_admin: false,
-is_banned: false
-},
-{
-id: 104,
-username: "EmmaWilson",
-phone_number: "+1555666777",
-email: "emma.wilson@example.com",
-is_seller: false,
-is_admin: false,
-is_super_admin: false,
-is_banned: false
-},
-{
-id: 105,
-username: "MichaelBrown",
-phone_number: "+1777888999",
-email: "michael.brown@example.com",
-is_seller: true,
-is_admin: false,
-is_super_admin: false,
-is_banned: false
-},
-{
-id: 106,
-username: "SarahParker",
-phone_number: "+1444555666",
-email: "sarah.parker@example.com",
-is_seller: false,
-is_admin: false,
-is_super_admin: false,
-is_banned: true
-},
-{
-id: 107,
-username: "DavidClark",
-phone_number: "+1333444555",
-email: "david.clark@example.com",
-is_seller: false,
-is_admin: false,
-is_super_admin: false,
-is_banned: false
-},
-{
-id: 108,
-username: "LisaWong",
-phone_number: "+1666777888",
-email: "lisa.wong@example.com",
-is_seller: true,
-is_admin: true,
-is_super_admin: false,
-is_banned: false
-}
-].filter(user => user.username.toLowerCase().includes(searchQuery.toLowerCase()));
+    const response = await axiosInstance.post('/admin/user/search_users', {
+        username: searchQuery
+      });
+const data = response.data.filter(user => user.username.toLowerCase().includes(searchQuery.toLowerCase()));
 setSelectedUsers(data);
 setShowUserResults(true);
 } catch (error) {
@@ -266,13 +176,13 @@ return (
     
         <div className="">
             <button
-            className={`px-4 py-2 font-medium text-sm mr-4 border-b-2 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer ${activeTab === 'text' ? 'border-[#191970] text-[#191970]' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+            className={`px-4 py-2 font-medium text-sm mr-4 border-b-2 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer ${activeTab === 'text' ? 'border-blue-800 text-blue-800' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
             onClick={() => setActiveTab('text')}
             >
            جستجو با متن کامنت
             </button>
             <button
-            className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer ${activeTab === 'username' ? 'border-[#191970] text-[#191970]' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+            className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer ${activeTab === 'username' ? 'border-blue-800 text-blue-800' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
             onClick={() => setActiveTab('username')}
             >
            جستجو با نام‌کاربری
@@ -294,19 +204,13 @@ type="text"
 placeholder={activeTab === 'text' ? "جستجو در کامنت‌ها" : "نام‌کاربری را وارد کنید"}
 value={searchQuery}
 onChange={(e) => setSearchQuery(e.target.value)}
-className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#191970] focus:border-[#191970] outline-none text-sm"
+className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-800 focus:border-blue-800 outline-none text-sm"
 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
 />
-{/* <button 
-className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#191970] cursor-pointer"
-onClick={handleSearch}
->
-<FaSearch className="inline" />
-</button> */}
 </div>
 <button
 onClick={handleSearch}
-className="mr-4 bg-[#191970] hover:bg-blue-900 text-white px-6 py-3 rounded-lg transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer"
+className="mr-4 bg-blue-800 hover:bg-blue-900 text-white px-6 py-3 rounded-lg transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer"
 >
 جستجو
 </button>
@@ -315,7 +219,7 @@ className="mr-4 bg-[#191970] hover:bg-blue-900 text-white px-6 py-3 rounded-lg t
 {/* User Results (for username search) */}
 {showUserResults && (
 <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-<h2 className="text-lg font-semibold mb-4">Users Found</h2>
+<h2 className="text-lg font-semibold mb-4">کاربران پیدا شده</h2>
 {selectedUsers.length > 0 ? (
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 {selectedUsers.map(user => (
@@ -325,10 +229,10 @@ className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shad
 onClick={() => getUserComments(user.id)}
 >
 <div className="flex items-center">
-<div className="w-10 h-10 rounded-full bg-[#191970] text-white flex items-center justify-center">
+<div className="w-10 h-10 rounded-full bg-blue-800 text-white flex items-center justify-center">
 <FaUser className='inline' />
 </div>
-<div className="ml-3">
+<div className="mr-3">
 <h3 className="font-medium">{user.username}</h3>
 <p className="text-sm text-gray-500">{user.email}</p>
 </div>
@@ -339,11 +243,11 @@ onClick={() => getUserComments(user.id)}
 {user.phone_number}
 </p>
 <p className="mt-1">
-<FaTag className="mr-2 inline" />
-{user.is_seller ? 'Seller' : 'Customer'}
-{user.is_admin && ', Admin'}
-{user.is_super_admin && ', Super Admin'}
-{user.is_banned && ', Banned'}
+<FaTag className="ml-2 inline" />
+{user.is_seller ? 'فروشنده' : 'کاربر'}
+{user.is_admin && '، ادمین'}
+{user.is_super_admin && '، سوپر ادمین '}
+{user.is_banned && '، مسدود شده'}
 </p>
 </div>
 </div>
@@ -352,17 +256,17 @@ onClick={() => getUserComments(user.id)}
 ) : (
 <div className="text-center py-8 text-gray-500">
 <FaUserSlash className="text-4xl mb-3 inline" />
-<p>No users found matching your search criteria</p>
+<p>هیچ کاربری مطابق با معیارهای جستجوی شما یافت نشد</p>
 </div>
 )}
 </div>
 )}
 {/* Comments Results */}
 <div className="bg-white rounded-lg shadow-md p-6">
-<h2 className="text-lg font-semibold mb-4">Comments</h2>
+<h2 className="text-lg font-semibold mb-4">نظرات</h2>
 {isLoading ? (
 <div className="flex justify-center items-center py-12">
-<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#191970]"></div>
+<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-800"></div>
 </div>
 ) : searchResults.length > 0 ? (
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -371,7 +275,7 @@ onClick={() => getUserComments(user.id)}
 <div className="p-5">
 <div className="flex justify-between items-start mb-3">
 <div className="flex items-center">
-<div className="w-8 h-8 rounded-full bg-[#191970] text-white flex items-center justify-center">
+<div className="w-8 h-8 rounded-full bg-blue-800 text-white flex items-center justify-center">
 <FaUser className='text-xs inline' />
 </div>
 <span className="ml-2 font-medium">{comment.user_name}</span>
@@ -396,8 +300,8 @@ aria-label="Delete comment"
 ) : (
 <div className="text-center py-12 text-gray-500">
 <FaRegCommentDots className="text-5xl mb-3 inline" />
-<p>No comments found</p>
-<p className="text-sm mt-2">Try adjusting your search criteria</p>
+<p>نظری یافت نشد</p>
+<p className="text-sm mt-2">سعی کنید معیارهای جستجوی خود را تنظیم کنید</p>
 </div>
 )}
 </div>
@@ -406,20 +310,20 @@ aria-label="Delete comment"
 {showDeleteModal && (
 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
 <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 mx-4">
-<h3 className="text-xl font-semibold mb-4">Confirm Deletion</h3>
-<p className="text-gray-600 mb-6">Are you sure you want to delete this comment? This action cannot be undone.</p>
+<h3 className="text-xl font-semibold mb-4">تایید حذف</h3>
+<p className="text-gray-600 mb-6">آیا مطمئن هستید که می‌خواهید این نظر را حذف کنید؟ این اقدام قابل بازگشت نیست.</p>
 <div className="flex justify-end space-x-3">
 <button
 onClick={() => setShowDeleteModal(false)}
 className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
 >
-Cancel
+لغو
 </button>
 <button
 onClick={() => commentToDelete !== null && deleteComment(commentToDelete)}
 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
 >
-Delete
+حذف
 </button>
 </div>
 </div>
@@ -440,7 +344,7 @@ Cancel
 </button>
 <button
 onClick={resetStoreRating}
-className="px-4 py-2 bg-[#191970] text-white rounded-lg hover:bg-blue-900 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
+className="px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
 >
 Reset Rating
 </button>
