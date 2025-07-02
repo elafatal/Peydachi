@@ -95,7 +95,7 @@ const useSearchStore = () => {
             name: String(query),
           });
         } else if (query) {
-          response = await axiosInstance.post('/store/search_store', {
+          response = await axiosInstance.post('/store/search_active_stores', {
             name: String(query),
           });
         } else if (city) {

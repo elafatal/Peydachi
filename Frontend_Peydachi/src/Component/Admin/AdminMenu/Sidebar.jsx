@@ -1,42 +1,75 @@
-import React from 'react';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { FaArrowLeftLong } from "react-icons/fa6";
+const Sidebar = () => {
+  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-const Sidebar = ({ isMenuOpen,setIsMenuOpen, toggleMenu, activeTab, setActiveTab }) => {
-  const manageTab=(key)=>{
-    setActiveTab(key)
-    setIsMenuOpen(false)
-  }
+  const tabs = [
+    { path: '/admin', label: 'داشبورد' },
+    { path: '/admin/stores', label: 'مدیریت فروشگاه‌ها' },
+    { path: '/admin/users', label: 'مدیریت کاربران' },
+    { path: '/admin/notifications', label: 'مدیریت اعلان‌ها' },
+    { path: '/admin/cities', label: 'شهر و استان' },
+  ];
+
+  const handleLinkClick = () => {
+    if (window.innerWidth < 640) setIsMenuOpen(false);
+  };
+
   return (
-    <div className="flex">
-      <div className="sm:hidden fixed top-4 right-4 z-50">
-        <button onClick={toggleMenu} className="text-gray-500 p-2 rounded-md">
-          {isMenuOpen ? <FaTimes className="h-4 w-4" /> : <FaBars className="h-4 w-4" />}
-        </button>
-      </div>
-      <div className={`fixed sm:relative z-40 w-64 bg-gray-900 text-white h-screen transform transition-transform duration-300 ease-in-out ${isMenuOpen ? '-translate-x-0' : 'translate-x-full'} sm:translate-x-0`}>
+    <>
 
-        <nav className="mt-6" dir='rtl'>
+      {!isMenuOpen && (
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          className="fixed right-2 top-1/2 transform -translate-y-1/2 z-50 sm:hidden bg-gray-800 text-white p-2 rounded-l-md shadow-lg hover:bg-gray-700"
+          title="باز کردن منو"
+        >
+          <FaArrowLeftLong />
+        </button>
+      )}
+
+      <div
+        className={`fixed sm:relative top-[5rem] sm:top-0  right-0 z-40 w-64 bg-gray-900 text-white overflow-y-auto transition-transform duration-300 ease-in-out
+          ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} sm:translate-x-0`}
+        style={{ height: 'calc(100vh - 5rem)' }}
+      >
+        {isMenuOpen && (
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute -left-0 top-1/2 z-50 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-r-md shadow-md hover:bg-gray-700 sm:hidden"
+            title="بستن منو"
+          >
+           <FaArrowLeftLong className="rotate-180" />
+          </button>
+        )}
+
+        <nav className="mt-6" dir="rtl">
           <ul>
-            {[
-              { key: 'dashboard', label: 'داشبورد' },
-              { key: 'stores', label: 'مدیریت فروشگاه‌ها' },
-              { key: 'users', label: 'مدیریت کاربران' },
-              { key: 'notifications', label: ' اعلان‌ها و درخواست' },
-              { key: 'comments', label: 'مدیریت بازخوردها' },
-              { key: 'cities', label: 'شهر و استان' },
-            ].map(item => (
-              <li
-                key={item.key}
-                className={`flex items-center px-4 py-3 cursor-pointer ${activeTab === item.key ? 'bg-gray-800 border-l-4 border-blue-500' : 'hover:bg-blue-900'}`}
-                onClick={() => manageTab(item.key)}
-              >
-                <span className="mx-3">{item.label}</span>
+            {tabs.map(tab => (
+              <li key={tab.path}>
+                <Link
+                  to={tab.path}
+                  onClick={handleLinkClick}
+                  className={`block px-4 py-3 ${location.pathname === tab.path ? 'bg-gray-800 border-l-4 border-blue-500' : 'hover:bg-blue-900'}`}
+                >
+                  {tab.label}
+                </Link>
               </li>
             ))}
           </ul>
         </nav>
       </div>
-    </div>
+
+      {/* بک‌دراپ برای کلیک بیرون از منو در موبایل */}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-40 z-30 sm:hidden"
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
+    </>
   );
 };
 
