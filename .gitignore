@@ -3,5 +3,6 @@ node_moudules
 package.json
 node_modules
 
+*cache*
 
 .VSCodeCounter/
