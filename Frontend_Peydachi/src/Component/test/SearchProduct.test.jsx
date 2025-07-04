@@ -17,6 +17,14 @@ const mockProduct = {
 jest.mock('../axiosInstance', () => ({
   post: jest.fn().mockResolvedValue({ data: [] }),
 }));
+beforeAll(() => {
+  jest.spyOn(console, 'log').mockImplementation(() => {});
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterAll(() => {
+  console.log.mockRestore();
+  console.error.mockRestore();
+});
 
 describe('SearchProduct Component - Custom Tests', () => {
   let mockHookValues;
