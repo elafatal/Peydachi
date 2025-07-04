@@ -41,15 +41,36 @@ describe('StoreComment and StoreFullComment', () => {
     expect(await screen.findByText(mockComments.length.toString())).toBeInTheDocument();
   });
   test('does not show ellipsis card when loading', () => {
-    axios.post.mockImplementation(() => new Promise(() => {})); // simulate long loading
+    axios.post.mockImplementation(() => new Promise(() => {}));
   
     render(<BrowserRouter><StoreComment storeID={1} /></BrowserRouter>);
   
     const ellipsis = screen.queryByRole('button', { name: /ellipsis/i });
-    expect(ellipsis).not.toBeInTheDocument(); // باید وجود نداشته باشد چون هنوز لود نشده
+    expect(ellipsis).not.toBeInTheDocument(); 
+  });
+  test('submits both rating and comment and shows success message', async () => {
+    axios.post.mockResolvedValue({ data: {} });
+  
+    render(
+      <MemoryRouter initialEntries={['/storeComments/1']}>
+        <Routes>
+          <Route path="/storeComments/:storeID" element={<StoreFullComment />} />
+        </Routes>
+      </MemoryRouter>
+    );
+  
+    const stars = await screen.findAllByRole('button', { name: '' });
+    fireEvent.click(stars[3]);
+  
+    const textareas = screen.getAllByRole('textbox');
+    fireEvent.change(textareas[0], { target: { value: 'فروشگاه خوبی بود' } });
+
+    const submitButton = screen.getAllByText('ثبت بازخورد').find((el) => el.tagName === 'BUTTON');
+    fireEvent.click(submitButton);
+    expect(await screen.findByText('بازخورد شما با موفقیت ارسال شد!')).toBeInTheDocument();
   });
   
-
+  
   test('renders loading skeletons before data loads', () => {
     axios.post.mockImplementation(() => new Promise(() => {}));
     render(<BrowserRouter><StoreComment storeID={1} /></BrowserRouter>);
