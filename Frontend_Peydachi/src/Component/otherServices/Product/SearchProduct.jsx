@@ -276,6 +276,7 @@ if (sortOption === 'highestRated') {
                   <div className="flex items-center mb-2">
                     <h3 className="text-lg font-bold text-gray-900 flex-1">{p.name}</h3>
                     <button
+                    data-testid={`favorite-button-${p.id}`}
                     className={`text-xl transition-colors ${
                       favorites.includes(p.id) ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
                     }`}

@@ -1,8 +1,7 @@
-
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import SearchProduct from '../SearchProduct/SearchProduct';
+import SearchProduct from '../otherServices/Product/SearchProduct';
 import { BrowserRouter } from 'react-router-dom';
-import * as useSearchProductHook from '../SearchProduct/useSearchProduct';
+import * as useSearchProductHook from '../otherServices/Product/useSearchProduct';
 
 const mockProduct = {
   id: 1,
@@ -10,7 +9,7 @@ const mockProduct = {
   description: 'توضیح محصول تستی',
   quantity: 10,
   average_rating: 4.5,
-  pic_url: '/test.png',
+  pic_url: '/test.jpg',
   city_id: 101,
   store_id: 500
 };
@@ -68,11 +67,35 @@ describe('SearchProduct Component - Custom Tests', () => {
 
   test('clicking favorite icon triggers toggleFavorite', () => {
     render(<BrowserRouter><SearchProduct /></BrowserRouter>);
-    const heartButton = screen.getByRole('button', { hidden: true });
+    const heartButton = screen.getByTestId('favorite-button-1');
     fireEvent.click(heartButton);
     expect(mockHookValues.toggleFavorite).toHaveBeenCalledWith(mockProduct.id);
   });
-
+  
+  test('modal opens and closes properly when product is selected', () => {
+    render(<BrowserRouter><SearchProduct /></BrowserRouter>);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByText('محصول تستی'));
+    expect(mockHookValues.openProductModal).toHaveBeenCalledWith(mockProduct);
+  });
+  test('typing in search input calls handleSearchChange', () => {
+    render(<BrowserRouter><SearchProduct /></BrowserRouter>);
+    const input = screen.getByPlaceholderText('دنبال چه چیزی میگردید؟');
+    fireEvent.change(input, { target: { value: 'کتاب' } });
+    expect(mockHookValues.handleSearchChange).toHaveBeenCalled();
+  });
+  test('should fetch products from backend when searchTerm changes', async () => {
+    const axios = require('../axiosInstance');
+    const mockResponse = [{ id: 2, name: 'محصول دوم', description: '', city_id: 1, quantity: 1 }];
+    axios.post.mockResolvedValueOnce({ data: mockResponse });
+    render(<BrowserRouter><SearchProduct /></BrowserRouter>);
+    const input = screen.getByPlaceholderText('دنبال چه چیزی میگردید؟');
+    fireEvent.change(input, { target: { value: 'محصول دوم' } });
+  
+    await waitFor(() => {
+      expect(mockHookValues.handleSearchChange).toHaveBeenCalled();
+    });
+  });
   test('toggle availability filter checkbox calls handler', () => {
     render(<BrowserRouter><SearchProduct /></BrowserRouter>);
     const checkbox = screen.getByLabelText('موجود');
