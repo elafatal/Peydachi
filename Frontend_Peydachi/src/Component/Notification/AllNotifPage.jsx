@@ -185,11 +185,28 @@ useEffect(() => {
     unhas_seen: notificationsCache.unread ? notificationsCache.unread.length : 0
   };
   
-  // Mark all as has_seen
-  const markAllAsRead = () => {
-    setNotifications(notifications.map(notification => ({ ...notification, has_seen: true })));
+  const markAllAsRead = async () => {
+    try {
+       const response =await axiosInstance.put('/notification/mark_all_notifs_as_seen');
+       Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: " انجام شد",
+        showConfirmButton: false,
+        timer: 1500,
+        toast: true,
+        customClass: {
+          popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+          title: 'text-xs', 
+          content: 'text-xs',
+          icon : 'text-xs mb-2'
+        }
+    });
+    } catch (err) {
+      console.error('خطا در خواندن اعلان:', err);
+    }
   };
-
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-gray-900 flex flex-col" dir='rtl'>
       {/* Header */}
@@ -223,7 +240,7 @@ useEffect(() => {
             </div>
         ))}
             </div>
-            <button className="text-xs px-3 py-3 bg-white text-blue-700 border-2 border-blue-700 rounded hover:bg-blue-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+            <button onClick={markAllAsRead} className="text-xs px-3 py-3 bg-white text-blue-700 border-2 border-blue-700 rounded hover:bg-blue-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
              <FaCheckDouble className='ml-1 inline' />
              خواندن همه‌ی اعلان‌ها
             </button>

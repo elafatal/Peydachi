@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Notifications from '../Notification/Notification'; // مسیرت رو تنظیم کن
+import Notifications from '../Notification/Notification'; 
 import axiosInstance from '../axiosInstance';
 import { BrowserRouter } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -38,10 +38,7 @@ describe('Notifications Component', () => {
       </BrowserRouter>
     );
 
-    // آیکون نمایش داده میشه
-    const icon = await screen.findByRole('img'); // چون آیکون به صورت SVG یا FontAwesome رندر میشه
-
-    // کلیک برای باز شدن Dropdown
+    const icon = await screen.findByTestId('notif-icon');
     fireEvent.click(icon);
 
     // انتظار داریم که عناوین نوتیفیکیشن بیاد

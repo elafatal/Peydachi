@@ -53,9 +53,9 @@ const Notifications=()=>{
       return (
         <div className="relative w-fit m-auto">
             {unreadNotif.notif_count > 0 ? (
-                <IoIosNotifications onClick={toggleDropdown} className="text-3xl" />
+               <IoIosNotifications onClick={toggleDropdown} data-testid="notif-icon" className="text-3xl" />
             ) : (
-                <IoIosNotificationsOutline  onClick={toggleDropdown} className="text-3xl" />
+              <IoIosNotificationsOutline onClick={toggleDropdown} data-testid="notif-icon" className="text-3xl" />
             )}
             {unreadNotif.notif_count > 0 && (
                 <span className="absolute -top-0 -right-0 bg-red-600 text-white text-xs font-bold rounded-full h-3 w-3 flex items-center justify-center">
