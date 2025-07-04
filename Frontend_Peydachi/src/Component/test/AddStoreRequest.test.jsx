@@ -6,7 +6,7 @@ jest.mock('../axiosInstance', () => ({
   get: jest.fn().mockResolvedValue({ data: [{ id: 1, name: 'تهران' }] }),
   post: jest.fn().mockResolvedValue({ data: {} }),
 }));
-// Silence console output during test
+
 beforeAll(() => {
     jest.spyOn(console, 'log').mockImplementation(() => {});
     jest.spyOn(console, 'error').mockImplementation(() => {});
