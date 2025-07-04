@@ -25,6 +25,22 @@ async def admin_send_notification(notif_info: SendNotificationModel, admin_id: i
     return notif
 
 
+async def get_sent_notifications_of_admin(admin_id: int, db: Session):
+    notifications = db.query(Notification).filter(Notification.admin_id == admin_id).order_by(Notification.date_added.desc()).all()
+    if not notifications:
+        raise NO_NOTIFICATION_FOUND_ERROR
+
+    return notifications
+
+
+async def get_last_n_sent_notifications_of_admin(admin_id: int, db: Session, n: int | None = 10):
+    notifications = db.query(Notification).filter(Notification.admin_id == admin_id).order_by(Notification.date_added.desc()).limit(n).all()
+    if not notifications:
+        raise NO_NOTIFICATION_FOUND_ERROR
+
+    return notifications
+
+
 async def get_all_self_notifications(user_id: int, db: Session):
     notifications = db.query(Notification).filter(Notification.user_id == user_id).order_by(Notification.date_added.desc()).all()
     if not notifications:
@@ -64,6 +80,14 @@ async def get_all_sent_notifications(db: Session):
     return notifs
 
 
+async def get_last_n_sent_notifications(db: Session, n: int | None = 10):
+    notifs = db.query(Notification).order_by(Notification.date_added.desc()).limit(n).all()
+    if not notifs:
+        raise NO_NOTIFICATION_FOUND_ERROR
+
+    return notifs
+
+
 async def get_all_seen_notifications(db: Session):
     notifs = db.query(Notification).filter(Notification.has_seen == True).order_by(Notification.date_added.desc()).all()
     if not notifs:
@@ -72,8 +96,24 @@ async def get_all_seen_notifications(db: Session):
     return notifs
 
 
+async def get_last_n_seen_notifications(db: Session, n: int | None = 10):
+    notifs = db.query(Notification).filter(Notification.has_seen == True).order_by(Notification.date_added.desc()).limit(n).all()
+    if not notifs:
+        raise NO_NOTIFICATION_FOUND_ERROR
+
+    return notifs
+
+
 async def get_all_unseen_notifications(db: Session):
     notifs = db.query(Notification).filter(Notification.has_seen == False).order_by(Notification.date_added.desc()).all()
+    if not notifs:
+        raise NO_NOTIFICATION_FOUND_ERROR
+
+    return notifs
+
+
+async def get_last_n_unseen_notifications(db: Session, n: int | None = 10):
+    notifs = db.query(Notification).filter(Notification.has_seen == False).order_by(Notification.date_added.desc()).limit(n).all()
     if not notifs:
         raise NO_NOTIFICATION_FOUND_ERROR
 
@@ -212,3 +252,6 @@ async def user_delete_self_notif(notif_id: int, user_id: int, db: Session):
     db.commit()
 
     return 'Notification Deleted Successfully.'
+
+
+
