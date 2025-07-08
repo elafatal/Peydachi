@@ -103,6 +103,7 @@ async def get_current_seller(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
 
 
 async def get_current_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
+    print(f'received token: {token}')
     try:
         _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
         username = _dict.get('sub')
@@ -112,11 +113,9 @@ async def get_current_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
             raise ACCESS_TOKEN_DEMAND_ERROR
 
         if not username:
-            print("No username jwt lalalall")
             raise ERROR_CREDENTIAL
 
-    except JWTError as e:
-        print(f'JWTError: {e} lalalla')
+    except JWTError:
         raise ERROR_CREDENTIAL
 
     user = await get_user_by_username(username, db)
