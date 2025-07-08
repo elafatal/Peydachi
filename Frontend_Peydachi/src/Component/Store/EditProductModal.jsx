@@ -1,4 +1,3 @@
-// components/EditProductModal.jsx
 import React from 'react';
 import { FaTrashAlt, FaTimes, FaPlus } from 'react-icons/fa';
 
@@ -14,16 +13,19 @@ const EditProductModal = ({
   onRemovePic,
   onSave,
   clearSelectedFile,
-  handleUploadProductPic
+  handleUploadProductPic,
 }) => {
-  
   return (
-    <div  className="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl mx-4 overflow-hidden">
         <div className="p-4">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-bold text-gray-800">ویرایش محصول</h3>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 cursor-pointer">
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 cursor-pointer"
+              data-testid="close-button"
+            >
               <FaTimes />
             </button>
           </div>
@@ -31,8 +33,14 @@ const EditProductModal = ({
             {/* Basic Info */}
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">نام محصول</label>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-600 mb-1"
+                >
+                  نام محصول
+                </label>
                 <input
+                  id="name"
                   name="name"
                   value={productEditData.name}
                   onChange={onChange}
@@ -40,8 +48,14 @@ const EditProductModal = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">توضیحات</label>
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-600 mb-1"
+                >
+                  توضیحات
+                </label>
                 <textarea
+                  id="description"
                   name="description"
                   rows={4}
                   value={productEditData.description}
@@ -53,9 +67,15 @@ const EditProductModal = ({
 
             {/* Quantity */}
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-3">مدیریت انبار</h4>
+              <label
+                htmlFor="quantity"
+                className="text-sm font-medium text-gray-700 mb-3 block"
+              >
+                مدیریت انبار
+              </label>
               <div className="flex items-center space-x-4">
                 <input
+                  id="quantity"
                   type="number"
                   name="quantity"
                   value={productEditData.quantity}
@@ -73,17 +93,16 @@ const EditProductModal = ({
             </div>
 
             {/* Image */}
-            <div dir='ltr'>
-            {selectedFile && (
+            <div dir="ltr">
+              {selectedFile && (
                 <button
                   onClick={handleUploadProductPic}
                   className="my-2 inline-flex items-center px-3 py-2 text-xs font-medium text-green-600 border-2 border-green-600 rounded-md hover:bg-green-100 transition"
                 >
-                
                   آپلود تصویر
                 </button>
               )}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 ">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {/* current image */}
                 <div className="relative group w-full h-full">
                   <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 border-2 border-gray-200">
@@ -96,6 +115,7 @@ const EditProductModal = ({
                       <button
                         onClick={onRemovePic}
                         className="w-8 h-8 bg-white rounded-full text-red-600 flex items-center justify-center"
+                        data-testid="remove-pic-button"
                       >
                         <FaTrashAlt />
                       </button>
@@ -135,6 +155,7 @@ const EditProductModal = ({
                         <button
                           onClick={clearSelectedFile}
                           className="w-8 h-8 bg-white rounded-full text-red-600 flex items-center justify-center"
+                          data-testid="clear-preview-button"
                         >
                           <FaTimes />
                         </button>
@@ -151,7 +172,7 @@ const EditProductModal = ({
                 onClick={onDelete}
                 className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100"
               >
-               حذف محصول
+                حذف محصول
               </button>
               <div className="space-x-3">
                 <button
@@ -164,7 +185,7 @@ const EditProductModal = ({
                   onClick={onSave}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                 >
-                 ذخیره تغییرات
+                  ذخیره تغییرات
                 </button>
               </div>
             </div>
