@@ -115,6 +115,7 @@ async def get_current_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
             raise ERROR_CREDENTIAL
 
     except JWTError:
+        print(f'token: {token}', f'JWTError: {JWTError}')
         raise ERROR_CREDENTIAL
 
     user = await get_user_by_username(username, db)
@@ -141,7 +142,6 @@ async def get_current_super_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
             raise ERROR_CREDENTIAL
 
     except JWTError:
-        print(f'token: {token}', f'JWTError: {JWTError}')
         raise ERROR_CREDENTIAL
 
     user = await get_user_by_username(username, db)
