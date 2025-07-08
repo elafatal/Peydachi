@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { TbReportAnalytics } from "react-icons/tb";
 import { AiOutlineAppstoreAdd } from "react-icons/ai";
-import { FaMapLocationDot } from "react-icons/fa6";
 import { RiProductHuntLine } from "react-icons/ri";
-import { FaProductHunt } from "react-icons/fa";
 import { FaStore } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 const Features = () => {

@@ -3,8 +3,6 @@ import { FaAllergies, FaSearch } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { FaLocationDot } from "react-icons/fa6";
 import { motion } from "framer-motion";
-import Cookies from 'js-cookie';
-import axios from 'axios';
 import axiosInstance from '../axiosInstance';
 import backgroundImage from '../../../public/backgroundImage.jpg' 
 const FirstSection = () => {

@@ -1,13 +1,10 @@
 import React , { useState ,useEffect } from "react";
 import Swal from "sweetalert2";  
-import { motion } from 'framer-motion'; 
-import { FaUniversity } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { TbMapSearch } from "react-icons/tb";
 import { IoIosMenu,IoMdClose } from "react-icons/io";
 import { useAuth } from '../AuthContext/AuthContext';
 import { useLocation } from 'react-router-dom';
-
 import Cookies from 'js-cookie';
 import Notifications from "../Notification/Notification";
 const Navbar = ()=>{
@@ -52,7 +49,6 @@ const Navbar = ()=>{
                   icon : 'text-xs mb-2'
                 }
             });
-      console.log(Cookies.get('auth_token'));
       
   };
 

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import FirstSection from './firstSection';
-import Navbar from './navbar';
-import Footer from '../Footer/footer';
 import HowItWorks from './secondSection';
 import Features from './lastSection';
 
