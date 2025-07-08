@@ -5,10 +5,9 @@ import { IoIosNotifications } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from "framer-motion";
 import Cookies from 'js-cookie';
-
+import { isLoggedIn } from '../auth';
 const Notifications=()=>{
     const navigate = useNavigate();
-    const [notif , setNotif] = useState([])
     const [unreadNotif , setUnreadNotif] = useState({})
     const [isUnreadNotif,setisUnreadNotif]=useState(false)
     const [showDropdown, setShowDropdown] = useState(false);
@@ -17,16 +16,7 @@ const Notifications=()=>{
 
       useEffect(() => {
         const GetUnreadNotif = async () => {
-          let accessToken = null;
-
-          try {
-            const rawToken = Cookies.get("auth_token");
-            const parsed = JSON.parse(rawToken);
-            accessToken = parsed?.access_token;
-          } catch {
-            accessToken = Cookies.get("auth_token"); // fallback اگه فقط یه رشته باشه
-          }
-          if (accessToken){
+          if (isLoggedIn()){
             try {
               const response = await axiosInstance.get('/notification/get_notif_count_and_first_three_notifs', {
                 headers: {
