@@ -103,8 +103,6 @@ async def get_current_seller(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
 
 
 async def get_current_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
-    print(f"Full token received: {token}")
-    print(f"Token is type: {type(token)}")
     try:
         _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
         username = _dict.get('sub')
@@ -117,7 +115,6 @@ async def get_current_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
             raise ERROR_CREDENTIAL
 
     except JWTError as e:
-        print(f'token: {token}', f'JWTError: {e}')
         raise ERROR_CREDENTIAL
 
     user = await get_user_by_username(username, db)
