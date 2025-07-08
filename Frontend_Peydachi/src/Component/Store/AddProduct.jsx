@@ -16,19 +16,19 @@ const AddProduct = () => {
     quantity: 0,
     pic_url: '',
   });
-  useEffect(() => {
-    const draft = localStorage.getItem('productDraft');
-    if (draft) {
-      const parsed = JSON.parse(draft);
-      if (parsed.formData) {
-        setFormData(parsed.formData);
-      }
-      if (parsed.previewImage) {
-        setPreviewImage(parsed.previewImage);
-      }
-      setHasDraft(true); // ✅ اینجا مشخص می‌کنیم پیش‌نویس هست
-    }
-  }, []);
+  // useEffect(() => {
+  //   const draft = localStorage.getItem('productDraft');
+  //   if (draft) {
+  //     const parsed = JSON.parse(draft);
+  //     if (parsed.formData) {
+  //       setFormData(parsed.formData);
+  //     }
+  //     if (parsed.previewImage) {
+  //       setPreviewImage(parsed.previewImage);
+  //     }
+  //     setHasDraft(true);
+  //   }
+  // }, []);
   
   const [errors, setErrors] = useState({
     name: '',
@@ -50,29 +50,27 @@ const AddProduct = () => {
       ...formData,
       [name]: value,
     });
-    // Clear error when user types
-    if (errors) {
-      setErrors({
-        ...errors,
-        [name]: '',
-      });
-    }
+    setErrors({
+      ...errors,
+      [name]: '',
+    });
+    
   };
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
   
-    if (!file.type.match('image.*')) {
-      setErrors({ ...errors, pic_url: 'Please upload an image file (JPEG, PNG, etc.)' });
-      return;
-    }
+   if (!file.type.match('image.*')) {
+    setErrors({ ...errors, pic_url: 'لطفاً یک فایل تصویری (JPEG، PNG و غیره) آپلود کنید' });
+    return;
+}
   
     if (file.size > 5 * 1024 * 1024) {
-      setErrors({ ...errors, pic_url: 'File size should be less than 5MB' });
+      setErrors({ ...errors, pic_url: 'حجم فایل باید کمتر از ۵ مگابایت باشد' });
       return;
     }
   
-    setSelectedFile(file); // ✅ فایل را ذخیره کن
+    setSelectedFile(file); 
     setErrors({ ...errors, pic_url: '' });
   
     const reader = new FileReader();
@@ -122,7 +120,7 @@ const AddProduct = () => {
     };
     let isValid = true;
     if (!formData.name.trim()) {
-      newErrors.name = 'Product name is required';
+      newErrors.name = 'نام محصول الزامی‌ است';
       isValid = false;
     } else if (formData.name.length > 100) {
       newErrors.name = 'نام محصول باید کمتر از ۱۰۰ کاراکتر باشد';
@@ -137,7 +135,7 @@ const AddProduct = () => {
       isValid = false;
     }
     if (!selectedFile) {
-      newErrors.pic_url = 'Product image is required';
+      newErrors.pic_url = 'تصویر محصول الزامی است';
       isValid = false;
     }    
     setErrors(newErrors);
@@ -150,7 +148,7 @@ const handleSubmit = async (e) => {
   if (!validateForm()) return;
 
   if (!selectedFile) {
-    setErrors((prev) => ({ ...prev, pic_url: 'Product image is required' }));
+    setErrors((prev) => ({ ...prev, pic_url: 'تصویر محصول الزامی است' }));
     return;
   }
 
@@ -353,6 +351,7 @@ useEffect(() => {
                   </label>
                   <div className="flex items-center">
                   <button
+                    data-testid="increment-quantity"
                       type="button"
                       onClick={incrementQuantity}
                       className="px-4 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-r-xl border border-gray-300 cursor-pointer whitespace-nowrap transition-colors"
@@ -369,6 +368,7 @@ useEffect(() => {
                       className={`w-24 text-center py-3 border-y border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${errors.quantity ? 'border-red-500' : ''} bg-white/80 backdrop-blur-sm`}
                     />
                     <button
+                    data-testid="decrement-quantity"
                       type="button"
                       onClick={decrementQuantity}
                       className="px-4 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-l-xl border border-gray-300 cursor-pointer whitespace-nowrap transition-colors"
@@ -398,6 +398,7 @@ useEffect(() => {
                 </h2>
                 
                 <div
+                data-testid="file-upload-container"
                   onClick={triggerFileInput}
                   className={`flex flex-col justify-center px-6 pt-5 pb-6 border-3 ${
                     errors.pic_url
@@ -458,6 +459,7 @@ useEffect(() => {
                   accept="image/*"
                   onChange={handleFileChange}
                   className="hidden"
+                  data-testid="file-input"
                 />
                 {errors.pic_url && (
                   <p className="mt-2 text-sm text-red-500 flex items-center">
