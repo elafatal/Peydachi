@@ -19,10 +19,9 @@ const AdminPage = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-   <>{role === 'admin' || role=== 'superadmin' ?    <div className="flex h-screen bg-gray-50" dir="rtl">
+   <>{role === 'admin' || role=== 'superadmin' ? <div className="flex max-h-screen bg-gray-50" dir="rtl">
     <Sidebar />
     <div className="flex-1 flex flex-col overflow-hidden">
-
       <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
         <Outlet />
       </main>
