@@ -14,14 +14,19 @@ const Notifications=()=>{
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedNotification, setSelectedNotification] = useState(null);
 
-      const goToNotifPage =()=>{
-        navigate('/', { replace: true });
-      }
 
       useEffect(() => {
         const GetUnreadNotif = async () => {
-          const authToken = Cookies.get('auth_token');
-          if (authToken){
+          let accessToken = null;
+
+          try {
+            const rawToken = Cookies.get("auth_token");
+            const parsed = JSON.parse(rawToken);
+            accessToken = parsed?.access_token;
+          } catch {
+            accessToken = Cookies.get("auth_token"); // fallback اگه فقط یه رشته باشه
+          }
+          if (accessToken){
             try {
               const response = await axiosInstance.get('/notification/get_notif_count_and_first_three_notifs', {
                 headers: {

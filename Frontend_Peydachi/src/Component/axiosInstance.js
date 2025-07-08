@@ -15,18 +15,28 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = Cookies.get('auth_token');
+    let token = null;
 
-    if (config.headers && config.headers.Authorization === null) {
-      delete config.headers.Authorization;
-    } else if (token) {
+    try {
+      const rawToken = Cookies.get("auth_token");
+      const parsed = JSON.parse(rawToken);
+      token = parsed?.access_token || null;
+    } catch (e) {
+      // اگر کوکی رشته‌ای بود و قابل JSON.parse نبود، خودش همون توکن هست
+      token = Cookies.get("auth_token");
+    }
+
+    if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    } else if (config.headers && config.headers.Authorization === null) {
+      delete config.headers.Authorization;
     }
 
     return config;
   },
   (error) => Promise.reject(error)
 );
+
 
 
 axiosInstance.interceptors.response.use(
@@ -53,8 +63,12 @@ axiosInstance.interceptors.response.use(
 
         if (res.status === 200) {
           const newAccessToken = res.data;
-          Cookies.set('auth_token', newAccessToken, { expires: 3, secure: true, sameSite: 'Strict' });
-
+          Cookies.set('auth_token', JSON.stringify(newAccessToken), {
+            expires: 3,
+            secure: true,
+            sameSite: 'Strict',
+          });
+          
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
           return axiosInstance(originalRequest);
