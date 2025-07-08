@@ -30,11 +30,11 @@ const SelfProductModal = ({
   <>{isModalOpen && selectedProduct && (
     <div dir="ltr" className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm bg-opacity-75 transition-opacity" aria-hidden="true" onClick={closeProductModal} />
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm bg-opacity-75 transition-opacity" aria-hidden="true" data-testid="overlay" onClick={closeProductModal} />
         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
           <div className="absolute top-0 right-0 pt-4 pr-4">
-            <button type="button" className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none !rounded-button whitespace-nowrap cursor-pointer" onClick={closeProductModal}>
+            <button data-testid="close-button" type="button" className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none !rounded-button whitespace-nowrap cursor-pointer" onClick={closeProductModal}>
               <span className="sr-only">بستن</span>
               <FaTimes className="text-xl" />
             </button>
@@ -48,7 +48,7 @@ const SelfProductModal = ({
                   <img src={selectedProduct.pic_url} alt={selectedProduct.name} className="w-full h-auto object-cover" />
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="text-sm font-medium text-gray-900 mb-2">Product Details</h4>
+                  <h4 className="text-sm font-medium text-gray-900 mb-2">جزئیات محصول</h4>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div className="text-gray-600">موجودی:</div>
                     <div className={`font-medium ${selectedProduct.quantity>0?'text-green-600':'text-red-600'}`}>
