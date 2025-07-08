@@ -3,7 +3,6 @@ import React, { useState } from 'react';
  import Cookies from 'js-cookie';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../AuthContext/AuthContext';
 
@@ -81,8 +80,6 @@ const SignIn= ({showComponent,setshowComponent, setusername , username }) => {
             icon : 'text-xs mb-2'
           }
       });
-      console.log(Cookies.get('auth_token'));
-      
       navigate('/', { replace: true });
       }
     }

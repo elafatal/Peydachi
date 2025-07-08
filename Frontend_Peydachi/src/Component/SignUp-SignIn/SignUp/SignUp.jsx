@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from "framer-motion";
-import axios from 'axios';
+import Cookies from 'js-cookie';
 import Swal from "sweetalert2"; 
 import { useNavigate } from 'react-router-dom';
-
+import axiosInstance from '../../axiosInstance';
+import { useAuth } from '../../AuthContext/AuthContext';
 
 const SignUp= ({showComponent,setshowComponent}) => {
+  const { login } = useAuth()
   const [username, setUsername] = useState('');
   const [phone_number, setphone_number] = useState('');
   const [password, setPassword] = useState('');
@@ -18,19 +20,61 @@ const SignUp= ({showComponent,setshowComponent}) => {
     // console.log({ username, phone_number, password, rememberMe });
     if (password == password2) {
       try {
-        const response = await axios.post(
-          'http://127.0.0.1:8000/user/create_user',
-          { username: username, password: password, phone_number: phone_number },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
-          }
+        // const response = await axios.post(
+        //   'http://127.0.0.1:8000/user/create_user',
+        //   { username: username, password: password, phone_number: phone_number },
+        //   {
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //       'Accept': 'application/json',
+        //     },
+        //   }
+        // );
+        const response = await axiosInstance.post(
+          '/user/create_user',
+          { username, password, phone_number },
+          { headers: { 'Content-Type': 'application/json' } }
         );
         console.log(response);
     
         if (response.status === 201) {
+          try{
+            const loginResponse  = await axiosInstance.post('/authentication/token', 
+              { username, password }, 
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                }
+              }
+            );
+                  if (loginResponse .status === 200) {
+                    if (rememberMe) {
+                      Cookies.set('auth_token', loginResponse.data.access_token, { expires: 3, secure: true, sameSite: 'Strict' });
+                      Cookies.set('refresh_token', loginResponse.data.refresh_token, { expires: 3, secure: true, sameSite: 'Strict' });
+                    } else {
+                      Cookies.set('auth_token', loginResponse.data.access_token, { secure: true, sameSite: 'Strict' });
+                      Cookies.set('refresh_token', loginResponse.data.refresh_token, { secure: true, sameSite: 'Strict' });
+                    }
+            
+            
+                    const userData = {
+                      userID: loginResponse.data.userID,
+                      username: loginResponse.data.username,
+                      role: loginResponse.data.is_super_admin
+                        ? 'superadmin'
+                        : loginResponse.data.is_admin
+                        ? 'admin'
+                        : loginResponse.data.is_seller
+                        ? 'seller'
+                        : 'user',
+                    };
+                   login(userData);
+                   navigate('/', { replace: true });
+                   }
+          }catch(err){
+console.log(err);
+
+          }
           Swal.fire({
             position: "top-end",
             icon: "success",
@@ -45,7 +89,8 @@ const SignUp= ({showComponent,setshowComponent}) => {
               icon: 'text-xs mb-2',
             },
           });
-          navigate('/', { replace: true });
+         
+          
         }
       } catch (error) {
         Swal.fire({
