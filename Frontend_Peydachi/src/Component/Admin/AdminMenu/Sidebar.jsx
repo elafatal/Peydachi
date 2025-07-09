@@ -31,9 +31,9 @@ const Sidebar = () => {
       )}
 
       <div
-        className={`fixed sm:relative top-[5rem] sm:top-0  right-0 z-40 w-64 bg-gray-900 text-white overflow-y-auto transition-transform duration-300 ease-in-out
+        className={` min-h-[calc(100vh-5rem)] fixed sm:relative top-[5rem] sm:top-0  right-0 z-40 w-64 bg-gray-900 text-white overflow-y-auto transition-transform duration-300 ease-in-out
           ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} sm:translate-x-0`}
-        style={{ height: 'calc(100vh - 5rem)' }}
+        
       >
         {isMenuOpen && (
           <button
