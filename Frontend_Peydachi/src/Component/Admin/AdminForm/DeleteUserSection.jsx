@@ -22,14 +22,8 @@ const DeleteUserSection = () => {
 
   const handleDelete = async () => {
     try {
-      const res = await fetch('/super_admin/admin/delete_user', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: selectedUserId }),
-      });
-      const result = await res.json();
-      console.log(result);
-      alert('کاربر با موفقیت حذف شد');
+        const response = await axiosInstance.delete('/super_admin/admin/delete_user',{data:  {user_id: Number(selectedUserId)}});
+        console.log(response);
       setSearchUsername('');
       setSearchResults([]);
       setSelectedUserId(null);
@@ -41,14 +35,10 @@ const DeleteUserSection = () => {
   };
   const handlePromote = async () => {
     try {
-      const res = await fetch('/super_admin/admin/promote_user_to_admin', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: selectedUserId }),
-      });
-      const result = await res.json();
-      console.log(result);
-      alert('کاربر با موفقیت به ادمین ارتقا یافت');
+        const response = await axiosInstance.put('/super_admin/admin/promote_user_to_admin', {
+            user_id: selectedUserId
+        });
+        console.log(response);
       setPromoteModal(false);
       setSelectedUserId(null);
       setSearchResults([]);
