@@ -1,4 +1,4 @@
-from database.models import User, StoreComment, ProductComment, StoreRating, ProductRating
+from database.models import User, StoreComment, ProductComment, StoreRating, ProductRating, Notification
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
 from hash.hash import Hash
@@ -51,11 +51,13 @@ async def delete_user_admin(user_id: int, db: Session):
     delete_product_comments = delete(ProductComment).where(ProductRating.user_id == user_id)
     delete_store_ratings = delete(StoreRating).where(StoreRating.user_id == user_id)
     delete_product_ratings = delete(ProductRating).where(ProductRating.user_id == user_id)
+    delete_notification = delete(Notification).where(Notification.user_id == user_id)
 
     db.execute(delete_store_comments)
     db.execute(delete_product_comments)
     db.execute(delete_store_ratings)
     db.execute(delete_product_ratings)
+    db.execute(delete_notification)
 
     db.delete(user)
     db.commit()
