@@ -14,8 +14,6 @@ const AdminPage = () => {
   const { role } = useAuth(); 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
-
-
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (

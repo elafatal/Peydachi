@@ -92,6 +92,9 @@ axiosInstance.interceptors.response.use(
 function forceLogout() {
   Cookies.remove('auth_token');
   Cookies.remove('refresh_token');
-}
+  localStorage.removeItem('user'); 
+  localStorage.removeItem('role');
+  window.location.href = '/login';}
+
 
 export default axiosInstance;

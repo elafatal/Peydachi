@@ -3,8 +3,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // اطلاعات یوزر
-  const [role, setRole] = useState(null); // نقش یوزر
+  const [user, setUser] = useState(null); 
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
