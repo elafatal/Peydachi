@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import axiosInstance from '../../axiosInstance';
+import Swal from "sweetalert2";  
 const CreateAdminSection = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -11,15 +12,25 @@ const CreateAdminSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/super_admin/admin/create_admin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const result = await res.json();
-      console.log(result);
-      alert('ادمین با موفقیت اضافه شد');
-      setFormData({ username: '', password: '', phone_number: '', email: '' });
+        const response = await axiosInstance.post('/super_admin/admin/create_admin',formData);
+          console.log(response);
+          if (response.status === 201) {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: " ادمین اضافه شد",
+                showConfirmButton: false,
+                timer: 1500,
+                toast: true,
+                customClass: {
+                  popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+                  title: 'text-xs', 
+                  content: 'text-xs',
+                  icon : 'text-xs mb-2'
+                }
+            });
+            setFormData({ username: '', password: '', phone_number: '', email: '' });
+          }
     } catch (err) {
       console.error('Create admin failed', err);
     }
@@ -45,7 +56,7 @@ const CreateAdminSection = () => {
           className="w-full p-2 border rounded text-right"
         />
       ))}
- <button type="submit" className="w-full border-2 border-indigo-500 text-indigo-600 px-4 py-2 rounded hover:bg-indigo-100 transition-all duration-300">
+      <button type="submit" className="w-full border-2 border-indigo-500 text-indigo-600 px-4 py-2 rounded hover:bg-indigo-100 transition-all duration-300">
         ارسال
       </button>
     </form>
