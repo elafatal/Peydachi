@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-
+import DeleteUserSection from './DeleteUserSection';
+import CreateAdminSection from './CreateAdminSection';
+import AddSuperAdminSection from './AddSuperAdminSection';
 const AdminFormsPage = () => {
   const [superAdminData, setSuperAdminData] = useState({
     username: '',
@@ -50,55 +52,9 @@ const AdminFormsPage = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* Add Super Admin */}
-      <form onSubmit={handleSuperAdminSubmit} className="bg-white p-6 rounded shadow space-y-4">
-        <h3 className="text-lg font-semibold text-gray-800 text-center">افزودن سوپر ادمین</h3>
-        {['username', 'password', 'phone_number', 'email'].map((field) => (
-          <input
-            key={field}
-            type="text"
-            placeholder={field}
-            value={superAdminData[field]}
-            onChange={(e) => setSuperAdminData({ ...superAdminData, [field]: e.target.value })}
-            className="w-full p-2 border rounded"
-          />
-        ))}
-        <button type="submit" className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-          ارسال
-        </button>
-      </form>
-
-      {/* Create Admin */}
-      <form onSubmit={handleAdminSubmit} className="bg-white p-6 rounded shadow space-y-4">
-        <h3 className="text-lg font-semibold text-gray-800 text-center">ایجاد ادمین</h3>
-        {['username', 'password', 'phone_number', 'email'].map((field) => (
-          <input
-            key={field}
-            type="text"
-            placeholder={field}
-            value={adminData[field]}
-            onChange={(e) => setAdminData({ ...adminData, [field]: e.target.value })}
-            className="w-full p-2 border rounded"
-          />
-        ))}
-        <button type="submit" className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          ارسال
-        </button>
-      </form>
-
-      {/* Delete User */}
-      <form onSubmit={handleDeleteUser} className="bg-white p-6 rounded shadow space-y-4">
-        <h3 className="text-lg font-semibold text-gray-800 text-center">حذف کاربر</h3>
-        <input
-          type="number"
-          placeholder="شناسه کاربر"
-          value={deleteUserId}
-          onChange={(e) => setDeleteUserId(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-        <button type="submit" className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-          حذف
-        </button>
-      </form>
+      <AddSuperAdminSection/>
+      <CreateAdminSection/>
+      <DeleteUserSection />
     </div>
   );
 };
