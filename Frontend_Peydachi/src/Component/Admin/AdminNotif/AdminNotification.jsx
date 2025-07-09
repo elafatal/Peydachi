@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import * as echarts from 'echarts';
+import SendNotificationModal from './SendNotificationModal';
 
 const AdminNotification = () => {
   const [notifications, setNotifications] = useState([]);
@@ -290,12 +291,12 @@ const AdminNotification = () => {
 
   const handleSendNotification = () => {
     if (!selectedUser) {
-      showToastMessage('Please select a user', 'error');
+      showToastMessage('یک کاربر را انتخاب کنید', 'error');
       return;
     }
     
     if (!notificationTitle.trim() || !notificationText.trim()) {
-      showToastMessage('Please fill all fields', 'error');
+      showToastMessage('تمام فیلدها را پر کنید', 'error');
       return;
     }
     
@@ -335,14 +336,25 @@ const AdminNotification = () => {
   };
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    const now = new Date();
+    const addedDate = new Date(dateString);
+    
+    const diffInMilliseconds = now - addedDate;
+    const seconds = Math.floor(diffInMilliseconds / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+  
+    if (seconds < 60) return 'لحظاتی پیش';
+    if (minutes < 60) return `${minutes} دقیقه قبل`;
+    if (hours < 24) return `${hours} ساعت قبل`;
+    if (days < 7) return `${days} روز قبل`;
+    if (weeks < 4) return `${weeks} هفته قبل`;
+    if (months < 12) return `${months} ماه قبل`;
+    return `${years} سال${years > 1 ? 's' : ''} گذشته`;
   };
 
   return (
@@ -367,7 +379,7 @@ const AdminNotification = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" dir='rtl'>
         {/* Search and Filter Section */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex flex-col md:flex-row md:items-center gap-4">
@@ -377,7 +389,7 @@ const AdminNotification = () => {
               </div>
               <input
                 type="text"
-                placeholder="Search notifications..."
+                placeholder="جستجوی اعلان‌ها"
                 className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-[#191970] focus:border-[#191970] text-sm"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -390,8 +402,8 @@ const AdminNotification = () => {
                 className="px-4 py-2 border border-gray-300 rounded-lg flex items-center bg-white hover:bg-gray-50 text-sm !rounded-button whitespace-nowrap cursor-pointer"
               >
                 <i className="fas fa-filter mr-2 text-[#191970]"></i>
-                {filterType === 'all' ? 'All Notifications' : 
-                 filterType === 'seen' ? 'Seen Notifications' : 'Unseen Notifications'}
+                {filterType === 'all' ? 'تمام اعلان‌ها' : 
+                 filterType === 'seen' ? 'دیده شده‌ها' : 'دیده نشده‌ها '}
                 <i className="fas fa-chevron-down ml-2 text-gray-500"></i>
               </button>
               
@@ -402,19 +414,19 @@ const AdminNotification = () => {
                       onClick={() => handleFilterChange('all')}
                       className={`block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 ${filterType === 'all' ? 'bg-gray-100 text-[#191970]' : 'text-gray-700'} cursor-pointer`}
                     >
-                      All Notifications
+                      تمام اعلان‌ها
                     </button>
                     <button
                       onClick={() => handleFilterChange('seen')}
                       className={`block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 ${filterType === 'seen' ? 'bg-gray-100 text-[#191970]' : 'text-gray-700'} cursor-pointer`}
                     >
-                      Seen Notifications
+                      ‌دیده شده‌ها
                     </button>
                     <button
                       onClick={() => handleFilterChange('unseen')}
                       className={`block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 ${filterType === 'unseen' ? 'bg-gray-100 text-[#191970]' : 'text-gray-700'} cursor-pointer`}
                     >
-                      Unseen Notifications
+                      دیده نشده‌ها
                     </button>
                   </div>
                 </div>
@@ -428,7 +440,7 @@ const AdminNotification = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder="Search by username..."
+                  placeholder="جستحو نام کاربری"
                   className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-[#191970] focus:border-[#191970] text-sm"
                   value={userSearchQuery}
                   onChange={(e) => setUserSearchQuery(e.target.value)}
@@ -457,16 +469,16 @@ const AdminNotification = () => {
               className="bg-[#191970] hover:bg-[#0F0F4B] text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
             >
               <i className="fas fa-search mr-2"></i>
-              Search
+              جستجو
             </button>
-            
+{/*             
             <button
               onClick={handleClearFilters}
               className="border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
             >
               <i className="fas fa-times mr-2"></i>
               Clear
-            </button>
+            </button> */}
 
           </div>
         </div>
@@ -537,11 +549,11 @@ const AdminNotification = () => {
       </main>
 
       {/* Send Notification Modal */}
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-[#191970]">Send New Notification</h2>
+              <h2 className="text-xl font-semibold text-[#191970]">ارسال اعلان جدید</h2>
               <button 
                 onClick={() => setIsModalOpen(false)}
                 className="text-gray-400 hover:text-gray-600 cursor-pointer"
@@ -647,8 +659,23 @@ const AdminNotification = () => {
             </div>
           </div>
         </div>
-      )}
-
+      )} */}
+<SendNotificationModal
+  isOpen={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+  onSend={handleSendNotification}
+  userSearchQuery={userSearchQuery}
+  setUserSearchQuery={setUserSearchQuery}
+  userSuggestions={userSuggestions}
+  isUserDropdownOpen={isUserDropdownOpen}
+  handleUserSelect={handleUserSelect}
+  selectedUser={selectedUser}
+  setSelectedUser={setSelectedUser}
+  notificationTitle={notificationTitle}
+  setNotificationTitle={setNotificationTitle}
+  notificationText={notificationText}
+  setNotificationText={setNotificationText}
+/>
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
