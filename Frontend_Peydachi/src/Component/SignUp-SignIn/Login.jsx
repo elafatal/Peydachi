@@ -7,19 +7,9 @@ import SignUp from './SignUp/SignUp';
 import SignIn from './SignIn/SignIn';
 import OTPVerification from './Verify/Verification';
 const Login= () => {
-  // const location = useLocation();
-  // const from = location.state?.from?.pathname || '/';
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+
   const [showComponent, setshowComponent] = useState("Signin");
 const [username, setusername] = useState('');
-  const handleSubmit = (e) => {
- 
-    e.preventDefault();
-    console.log({ email, password, rememberMe });
-  };
 
   const renderContent = () => {
     switch (showComponent) {

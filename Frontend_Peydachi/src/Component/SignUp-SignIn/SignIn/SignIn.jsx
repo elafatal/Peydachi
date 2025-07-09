@@ -156,8 +156,7 @@ const SignIn= ({showComponent,setshowComponent, setusername , username }) => {
             className="h-4 w-4 text-blue-500 border-gray-300 rounded cursor-pointer"
           />
           <label htmlFor="remember" className="mr-2 text-[13px] text-gray-600 cursor-pointer">مرا به خاطر بسپار</label></div>
-          <div className="text-xs text-gray-500" onClick={() => {
-       
+          <div  className="cursor-pointer text-xs text-gray-500" onClick={() => {
             user_forget_password();
           }}
           >فراموشی رمز عبور</div>

@@ -143,7 +143,7 @@ const OTPVerification = ({ showComponent,setshowComponent ,username }) => {
               type="text"
               maxLength="1"
               ref={(el) => (inputsRef.current[index] = el)}
-              className="w-12 h-12 text-center text-xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+              className="w-12 h-12 text-center text-xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
               onKeyDown={(e) => handleKeyDown(e, index)}
               onInput={(e) => handleInput(e, index)}
               onFocus={handleFocus}
@@ -155,19 +155,23 @@ const OTPVerification = ({ showComponent,setshowComponent ,username }) => {
         <div className="max-w-[260px] mx-auto mt-4">
           <button
             type="submit"
-            className="w-full inline-flex justify-center whitespace-nowrap rounded-lg bg-indigo-500 px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150"
+            className="w-full inline-flex justify-center whitespace-nowrap rounded-lg bg-blue-500 px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-blue-950/10 hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-blue-300 transition-colors duration-150"
           >
-            Verify Account
+             تایید کد/ ورود
           </button>
         </div>
       </form>
 
       <div className="text-sm text-slate-500 mt-4">
-        Didn't receive code?{' '}
-        <a className="font-medium text-indigo-500 hover:text-indigo-600" href="#0">
-          Resend
+        کد را دریافت نکرده‌اید؟{' '}
+        <a className="font-medium text-blue-500 hover:text-blue-600" href="#0">
+          ارسال دوباره
         </a>
       </div>
+      <div onClick={()=>setshowComponent("sign")} className="font-medium pt-2 border-b-2 text-blue-800 text-xs hover:text-blue-600" href="#0">
+         بازگشت
+        </div>
+
     </div>
   );
 };
