@@ -5,22 +5,17 @@ import { TbMapSearch } from "react-icons/tb";
 import { IoIosMenu,IoMdClose } from "react-icons/io";
 import { useAuth } from '../AuthContext/AuthContext';
 import { useLocation } from 'react-router-dom';
+import { isLoggedIn, getAccessToken } from '../auth';
 import Cookies from 'js-cookie';
 import Notifications from "../Notification/Notification";
 const Navbar = ()=>{
+  
   const { logout } = useAuth();
    const { role } = useAuth(); 
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-    const [token, setToken] = useState(Cookies.get('auth_token'));
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setToken(Cookies.get('auth_token'));
-      }, 1000);
 
-      return () => clearInterval(interval);
-    }, []);
     const location = useLocation();
 
     useEffect(() => {
@@ -30,6 +25,15 @@ const Navbar = ()=>{
     const handleLinks=(link)=>{
       navigate(link)
     }
+
+    const [isLogged, setIsLogged] = useState(isLoggedIn());
+
+      useEffect(() => {
+        const interval = setInterval(() => {
+          setIsLogged(isLoggedIn());
+        }, 1000);
+        return () => clearInterval(interval);
+      }, []);
 
     const handleLogOut = () => {
       Cookies.remove('auth_token'); 
@@ -69,9 +73,20 @@ const Navbar = ()=>{
                 <IoIosMenu onClick={toggleMenu} className="h-6 w-6 cursor-pointer text-blue-800" strokeWidth={2} />
               )}
             </div>
-            <nav className={`sm:flex ${isMenuOpen ? 'block fixed inset-x-0 top-full left-0 w-4/5 m-auto sm:w-auto sm:relative sm:bg-transparent bg-white shadow-lg' : 'hidden'} mt-3 rounded-lg p-6 sm:p-0 z-10`}>
-              <ul onClick={toggleMenu} className="flex flex-col items-center sm:flex-row sm:space-x-4 gap-4">
-                  {!token ? 
+            <nav className={`${
+                  isMenuOpen
+                    ? 'block sm:hidden fixed inset-x-0 top-full left-0 w-4/5 m-auto bg-white shadow-lg mt-3 rounded-lg p-6 z-10'
+                    : 'hidden sm:flex mt-3 rounded-lg p-6 sm:p-0 z-10'
+                }
+              `}
+            >          
+                <ul
+                    onClick={() => {
+                      if (window.innerWidth < 640) toggleMenu(); 
+                    }}
+                    className="flex flex-col items-center sm:flex-row sm:space-x-4 gap-4"
+                  >                 
+                  {!isLogged ? 
                   ( <li id="r0-1" onClick={()=>handleLinks('login')} className="relative w-full text-center text-gray-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-900 hover:text-gray-800 hover:rounded-xl  px-2 py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300 sm:transition-all  sm:after:content-[''] sm:after:absolute sm:after:block sm:after:w-0 after:h-0.5 sm:after:bg-blue-600 sm:after:transition-all sm:after:duration-300 sm:after:left-1/2 sm:after:bottom-0 sm:hover:after:w-full sm:hover:after:left-0">
                   ورود/ثبت‌نام  
                   </li>):
@@ -86,10 +101,10 @@ const Navbar = ()=>{
                   <li onClick={()=>handleLinks('Report')} className="relative w-full text-center text-gray-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-900 hover:text-gray-800 hover:rounded-xl px-2 py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300 sm:transition-all  sm:after:content-[''] sm:after:absolute sm:after:block sm:after:w-0 after:h-0.5 sm:after:bg-blue-600 sm:after:transition-all sm:after:duration-300 sm:after:left-1/2 sm:after:bottom-0 sm:hover:after:w-full sm:hover:after:left-0">
                     ثبت درخواست
                   </li>
-                  { token && role ? <li className="relative w-full text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
+                  { isLogged && role ? <li className="relative w-full text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
                     <Notifications/>
                   </li> : null }
-                  {token && role === 'superadmin' ? <li onClick={()=>handleLinks('Admin')} className="relative w-full text-center text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
+                  {isLogged && role === 'superadmin' ? <li onClick={()=>handleLinks('Admin')} className="relative w-full text-center text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
                     پنل ادمین
                   </li> : null }
                   
