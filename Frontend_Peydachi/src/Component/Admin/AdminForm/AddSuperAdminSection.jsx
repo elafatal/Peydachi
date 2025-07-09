@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import axiosInstance from '../../axiosInstance';
+import Swal from "sweetalert2";  
 const AddSuperAdminSection = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -11,15 +12,25 @@ const AddSuperAdminSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/super_admin/add_super_admin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const result = await res.json();
-      console.log(result);
-      alert('سوپر ادمین با موفقیت اضافه شد');
-      setFormData({ username: '', password: '', phone_number: '', email: '' });
+        const response = await axiosInstance.post('/super_admin/add_super_admin',formData);
+          console.log(response);
+          if (response.status === 201) {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "  سوپر ادمین اضافه شد",
+                showConfirmButton: false,
+                timer: 1500,
+                toast: true,
+                customClass: {
+                  popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+                  title: 'text-xs', 
+                  content: 'text-xs',
+                  icon : 'text-xs mb-2'
+                }
+            });
+            setFormData({ username: '', password: '', phone_number: '', email: '' });
+          }
     } catch (err) {
       console.error('Add super admin failed', err);
     }
