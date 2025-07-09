@@ -42,7 +42,7 @@ const [username, setusername] = useState('');
 
   return (
     
-    <div className=" min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className=" py-8 bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-lg w-11/12 max-w-4xl flex overflow-hidden" dir='ltr'>
         {/* Left side */}
         <div className="hidden md:block w-1/2 p-6 relative">
