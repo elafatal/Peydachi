@@ -7,6 +7,7 @@ const DeleteUserSection = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [selectedUserInfo, setSelectedUserInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [promoteModal, setPromoteModal] = useState(false);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -38,7 +39,26 @@ const DeleteUserSection = () => {
       console.error('Delete failed', err);
     }
   };
-
+  const handlePromote = async () => {
+    try {
+      const res = await fetch('/super_admin/admin/promote_user_to_admin', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: selectedUserId }),
+      });
+      const result = await res.json();
+      console.log(result);
+      alert('کاربر با موفقیت به ادمین ارتقا یافت');
+      setPromoteModal(false);
+      setSelectedUserId(null);
+      setSearchResults([]);
+      setSearchUsername('');
+    } catch (err) {
+      console.error('Promote failed', err);
+      alert('ارتقا با خطا مواجه شد');
+    }
+  };
+  
   const handleConfirmClick = () => {
     const user = searchResults.find((u) => u.id === selectedUserId);
     setSelectedUserInfo(user);
@@ -92,15 +112,52 @@ const DeleteUserSection = () => {
 
 
         {selectedUserId && (
-        <button
-          onClick={handleConfirmClick}
-          className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          حذف کاربر
-        </button>
+            <>
+                <button
+                onClick={handleConfirmClick}
+                className="w-full border-1 border-red-600 text-red-600 hover:bg-red-100 px-4 py-2 rounded "
+                >
+                حذف کاربر
+                </button>
+                <button
+                onClick={() => setPromoteModal(true)}
+                className="w-full border-1 border-green-800 text-green-800 hover:bg-green-100 px-4 py-2 rounded"
+                >
+                ارتقا به ادمین
+                </button>
+
+
+            </>
+
+        
       )}
-      
       {/* مودال تأیید */}
+      {promoteModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h4 className="text-lg font-semibold text-gray-800 mb-4">تأیید ارتقا</h4>
+            <p className="text-sm text-gray-700 mb-4">
+                آیا مطمئن هستید که می‌خواهید این کاربر را به ادمین ارتقا دهید؟
+            </p>
+
+            <div className="flex justify-end gap-3">
+                <button
+                onClick={() => setPromoteModal(false)}
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+                >
+                انصراف
+                </button>
+                <button
+                onClick={handlePromote}
+                className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700"
+                >
+                تأیید و ارتقا
+                </button>
+            </div>
+            </div>
+        </div>
+        )}
+
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">

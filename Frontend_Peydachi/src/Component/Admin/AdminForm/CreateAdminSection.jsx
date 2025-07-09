@@ -25,20 +25,27 @@ const CreateAdminSection = () => {
     }
   };
 
+  const placeholders = {
+    username: 'نام کاربری',
+    password: 'رمز عبور',
+    phone_number: 'شماره موبایل',
+    email: 'ایمیل',
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow space-y-4">
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow space-y-4" dir="rtl">
       <h3 className="text-lg font-semibold text-gray-800 text-center">ایجاد ادمین</h3>
-      {['username', 'password', 'phone_number', 'email'].map((field) => (
+      {Object.keys(formData).map((field) => (
         <input
           key={field}
-          type="text"
-          placeholder={field}
+          type={field === 'password' ? 'password' : 'text'}
+          placeholder={placeholders[field]}
           value={formData[field]}
           onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded text-right"
         />
       ))}
-      <button type="submit" className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+ <button type="submit" className="w-full border-2 border-indigo-500 text-indigo-600 px-4 py-2 rounded hover:bg-indigo-100 transition-all duration-300">
         ارسال
       </button>
     </form>
