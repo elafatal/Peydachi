@@ -10,7 +10,9 @@ const Sidebar = () => {
     { path: '/admin/stores', label: 'مدیریت فروشگاه‌ها' },
     { path: '/admin/users', label: 'مدیریت کاربران' },
     { path: '/admin/notifications', label: 'مدیریت اعلان‌ها' },
+    { path: '/admin/reports', label: 'مدیریت درخواست‌ها' },
     { path: '/admin/cities', label: 'شهر و استان' },
+    { path: '/admin/adminManagement', label: 'ادمین‌ها' },
   ];
 
   const handleLinkClick = () => {

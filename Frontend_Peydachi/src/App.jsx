@@ -30,6 +30,7 @@ import CityManagement from './Component/Admin/AdminCity/CityManagement';
 import UserManagement from './Component/Admin/AdminUser/UserManagement';
 import StoreCommentManagement from './Component/Admin/AdminCommet/StoreCommentManagement';
 import AdminNotification from './Component/Admin/AdminNotif/AdminNotification';
+import AdminFormsPage from './Component/Admin/AdminForm/AdminForm';
 
 function App() {
   return (
@@ -63,14 +64,11 @@ function App() {
               <Route path="stores" element={<StoreManagement/>} />
               <Route path="cities" element={<CityManagement/>} />
               <Route path="users" element={<UserManagement/>} />
+              <Route path="reports" element={<UserManagement/>} />
               <Route path="notifications" element={<AdminNotification/>} />
+              <Route path="adminManagement" element={<AdminFormsPage/>} />
               <Route path="/admin/comments/:storeId" element={<StoreCommentManagement />} />
             </Route>
-            {/* مسیرهای محافظت شده */}
-            {/* <Route element={<PrivateRoute allowedRoles={['user', 'admin', 'seller', 'superadmin']} />}>
-              <Route path="/userInfo" element={<UserInfo />} />
-            </Route> */}
-
           </Routes>
           </div>     
            <Footer/>
