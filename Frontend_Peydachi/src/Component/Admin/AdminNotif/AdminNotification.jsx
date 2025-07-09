@@ -349,27 +349,25 @@ const AdminNotification = () => {
     <div className="min-h-screen bg-gray-50" dir='ltr'>
       {/* Header */}
       <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-           
+        <div className="flex justify-between w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <button 
               onClick={() => setIsModalOpen(true)}
               className="bg-[#191970] hover:bg-[#0F0F4B] text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
             >
               <i className="fas fa-plus mr-2"></i>
-              Send New Notification
+              ارسال پیغام جدید
+            </button>          
+            <button
+              onClick={handleDeleteAllSeen}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out ml-auto !rounded-button whitespace-nowrap cursor-pointer"
+            >
+              <i className="fas fa-trash-alt mr-2"></i>
+              پاک کردن خوانده شده‌ها
             </button>
-          </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Section */}
-        {/* <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-xl font-semibold text-[#191970] mb-4">Notification Overview</h2>
-          <div className="h-64" id="notificationStatsChart"></div>
-        </div> */}
-        
         {/* Search and Filter Section */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex flex-col md:flex-row md:items-center gap-4">
@@ -469,14 +467,7 @@ const AdminNotification = () => {
               <i className="fas fa-times mr-2"></i>
               Clear
             </button>
-            
-            <button
-              onClick={handleDeleteAllSeen}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out ml-auto !rounded-button whitespace-nowrap cursor-pointer"
-            >
-              <i className="fas fa-trash-alt mr-2"></i>
-              Delete All Seen
-            </button>
+
           </div>
         </div>
         
@@ -547,7 +538,7 @@ const AdminNotification = () => {
 
       {/* Send Notification Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 mx-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-[#191970]">Send New Notification</h2>
@@ -644,14 +635,14 @@ const AdminNotification = () => {
                 onClick={() => setIsModalOpen(false)}
                 className="border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
               >
-                Cancel
+                لغو
               </button>
               <button
                 onClick={handleSendNotification}
                 className="bg-[#191970] hover:bg-[#0F0F4B] text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
               >
                 <i className="fas fa-paper-plane mr-2"></i>
-                Send Notification
+                ارسال اعلان
               </button>
             </div>
           </div>
@@ -660,15 +651,15 @@ const AdminNotification = () => {
 
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 mx-4">
             <div className="text-center">
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
                 <i className="fas fa-exclamation-triangle text-red-500 text-xl"></i>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Delete All Seen Notifications</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">حذف همه اعلان‌های مشاهده‌شده</h3>
               <p className="text-sm text-gray-500">
-                Are you sure you want to delete all seen notifications? This action cannot be undone.
+              آیا مطمئن هستید که می‌خواهید همه اعلان‌های دیده‌شده را حذف کنید؟ این اقدام قابل بازگشت نیست.
               </p>
             </div>
             
@@ -677,14 +668,14 @@ const AdminNotification = () => {
                 onClick={() => setIsDeleteModalOpen(false)}
                 className="border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
               >
-                Cancel
+                لغو
               </button>
               <button
                 onClick={confirmDeleteAllSeen}
                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
               >
                 <i className="fas fa-trash-alt mr-2"></i>
-                Delete All
+                پاک کردن همه
               </button>
             </div>
           </div>
