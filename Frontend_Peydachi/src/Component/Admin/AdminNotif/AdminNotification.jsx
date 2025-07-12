@@ -1,10 +1,12 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
-
+import axiosInstance from '../../axiosInstance';
 import React, { useState, useEffect } from 'react';
 import * as echarts from 'echarts';
 import SendNotificationModal from './SendNotificationModal';
-
+import Swal from "sweetalert2";
 const AdminNotification = () => {
+  const [userSuggestions, setUserSuggestions] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [filteredNotifications, setFilteredNotifications] = useState([]);
   const [filterType, setFilterType] = useState('all');
@@ -12,7 +14,6 @@ const AdminNotification = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [userSearchQuery, setUserSearchQuery] = useState('');
-  const [selectedUser, setSelectedUser] = useState(null);
   const [notificationTitle, setNotificationTitle] = useState('');
   const [notificationText, setNotificationText] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -21,150 +22,61 @@ const AdminNotification = () => {
   const [toastType, setToastType] = useState('success');
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [userSuggestions, setUserSuggestions] = useState([]);
-
+  const [selectedUserId, setSelectedUserId] = useState(0);
+    const [searchResult,setSearchResult]=useState([])
   // Mock data for demonstration
-  const mockNotifications = [
-    {
-      user_id: 1,
-      title: "New Feature Announcement",
-      text: "We've just launched a new dashboard feature. Check it out!",
-      id: 1,
-      date_added: "2025-06-30T10:15:00.000Z",
-      has_seen: true,
-      admin_id: 101
-    },
-    {
-      user_id: 2,
-      title: "Account Verification Required",
-      text: "Please verify your account details to continue using all features.",
-      id: 2,
-      date_added: "2025-06-29T14:30:00.000Z",
-      has_seen: false,
-      admin_id: 102
-    },
-    {
-      user_id: 3,
-      title: "Weekly Report Available",
-      text: "Your weekly performance report is now available for review.",
-      id: 3,
-      date_added: "2025-06-28T09:45:00.000Z",
-      has_seen: true,
-      admin_id: 101
-    },
-    {
-      user_id: 4,
-      title: "Security Alert",
-      text: "Unusual login detected from a new device. Please confirm if this was you.",
-      id: 4,
-      date_added: "2025-06-27T22:10:00.000Z",
-      has_seen: false,
-      admin_id: 103
-    },
-    {
-      user_id: 5,
-      title: "Maintenance Scheduled",
-      text: "System maintenance scheduled for July 5th from 2-4 AM UTC.",
-      id: 5,
-      date_added: "2025-06-26T11:20:00.000Z",
-      has_seen: true,
-      admin_id: 102
-    },
-    {
-      user_id: 1,
-      title: "Payment Processed",
-      text: "Your recent payment has been successfully processed.",
-      id: 6,
-      date_added: "2025-06-25T16:40:00.000Z",
-      has_seen: true,
-      admin_id: 101
-    }
-  ];
 
-  const mockUsers = [
-    {
-      id: 1,
-      username: "john_doe",
-      phone_number: "+1234567890",
-      email: "john@example.com",
-      is_seller: true,
-      is_admin: false,
-      is_super_admin: false,
-      is_banned: false
-    },
-    {
-      id: 2,
-      username: "jane_smith",
-      phone_number: "+1987654321",
-      email: "jane@example.com",
-      is_seller: false,
-      is_admin: true,
-      is_super_admin: false,
-      is_banned: false
-    },
-    {
-      id: 3,
-      username: "alex_wilson",
-      phone_number: "+1122334455",
-      email: "alex@example.com",
-      is_seller: true,
-      is_admin: false,
-      is_super_admin: false,
-      is_banned: false
-    },
-    {
-      id: 4,
-      username: "sarah_johnson",
-      phone_number: "+1567890123",
-      email: "sarah@example.com",
-      is_seller: false,
-      is_admin: false,
-      is_super_admin: false,
-      is_banned: true
-    },
-    {
-      id: 5,
-      username: "mike_brown",
-      phone_number: "+1456789012",
-      email: "mike@example.com",
-      is_seller: true,
-      is_admin: false,
-      is_super_admin: false,
-      is_banned: false
-    }
-  ];
-
-  // Initialize chart
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setNotifications(mockNotifications);
-      setFilteredNotifications(mockNotifications);
-      setIsLoading(false);
-    }, 1000);
+    const fetchLastNotifSent = async () => {
+        try {
+          const response = await axiosInstance.post('/admin/notification/get_last_n_sent_notifications_of_admin?n=12');
+          console.log(response)
+          setNotifications(response.data);
+          setFilteredNotifications(response.data);
+          setIsLoading(false);
+        } catch (error) {
+          console.log('last 12 notif sent errors:', error);
+        }  
+    };
+  
+    fetchLastNotifSent();
   }, []);
 
-  // Update filtered notifications when filter type or search query changes
+
   useEffect(() => {
-    let filtered = [...notifications];
-    
-    // Filter by type
-    if (filterType === 'seen') {
-      filtered = filtered.filter(notif => notif.has_seen);
-    } else if (filterType === 'unseen') {
-      filtered = filtered.filter(notif => !notif.has_seen);
-    }
-    
-    // Filter by search query
-    if (searchQuery) {
-      filtered = filtered.filter(
-        notif => 
-          notif.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-          notif.text.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    const fetchLastNotifSent = async () => {
+      let filtered = [...notifications];
+      // Filter by type
+      if (filterType === 'seen') {
+        try {
+          const response = await axiosInstance.post('/admin/notification/get_last_n_seen_notifications?n=12');
+          filtered=response.data
+        } catch (error) {
+          console.log('last 9 seen notif errors:', error);
+        }  
+      } else if (filterType === 'unseen') {
+        try {
+          const response = await axiosInstance.post('/admin/notification/get_last_n_unseen_notifications?n=12');
+          filtered=response.data
+        } catch (error) {
+          console.log('last 9 seen notif errors:', error);
+        }  
+      }
+      
+      // Filter by search query
+      if (searchQuery) {
+        filtered = filtered.filter(
+          notif => 
+            notif.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+            notif.text.toLowerCase().includes(searchQuery.toLowerCase())
+        );
     }
     
     setFilteredNotifications(filtered);
+  };
+
+  fetchLastNotifSent();
+   
   }, [filterType, searchQuery, notifications]);
 
   // Initialize notification stats chart
@@ -232,20 +144,25 @@ const AdminNotification = () => {
     }
   }, [notifications, isLoading]);
 
-  // Handle user search
   useEffect(() => {
-    if (userSearchQuery.length > 1) {
-      // Simulate API call for user search
-      const filteredUsers = mockUsers.filter(
-        user => user.username.toLowerCase().includes(userSearchQuery.toLowerCase())
-      );
-      setUserSuggestions(filteredUsers);
-      setIsUserDropdownOpen(true);
-    } else {
-      setUserSuggestions([]);
-      setIsUserDropdownOpen(false);
-    }
+    const fetchUserSuggestions = async () => {
+      if (userSearchQuery.length > 1) {
+        try {
+          const response = await axiosInstance.post('/admin/user/search_users', { username: userSearchQuery });
+          setIsUserDropdownOpen(true);
+          setUserSuggestions(response.data);
+        } catch (error) {
+          console.log('search username error:', error);
+        }
+      } else {
+        setUserSuggestions([]);
+        setIsUserDropdownOpen(false);
+      }
+    };
+  
+    fetchUserSuggestions();
   }, [userSearchQuery]);
+  
 
   const handleFilterChange = (type) => {
     setFilterType(type);
@@ -257,15 +174,24 @@ const AdminNotification = () => {
     showToastMessage('Search completed', 'success');
   };
 
-  const handleClearFilters = () => {
-    setFilterType('all');
-    setSearchQuery('');
-    setUserSearchQuery('');
-    setSelectedUser(null);
-    setFilteredNotifications(notifications);
-    showToastMessage('Filters cleared', 'success');
-  };
+  // const handleClearFilters = () => {
+  //   setFilterType('all');
+  //   setSearchQuery('');
+  //   setUserSearchQuery('');
+  //   setSelectedUser(null);
+  //   setFilteredNotifications(notifications);
+  //   showToastMessage('Filters cleared', 'success');
+  // };
 
+  const handleSearchUser=async()=>{
+    try {
+      const response = await axiosInstance.post('/admin/user/search_users', {username : userSearchQuery});
+      console.log(response);
+      setSearchResult(response.data)
+    } catch (error) {
+      console.log('search username error:', error);
+    }
+  }
   const handleDeleteNotification = (id) => {
     // Simulate API call
     setTimeout(() => {
@@ -289,37 +215,57 @@ const AdminNotification = () => {
     }, 500);
   };
 
-  const handleSendNotification = () => {
-    if (!selectedUser) {
+  const handleSendNotification = async() => {
+    if (!selectedUserId) {
       showToastMessage('یک کاربر را انتخاب کنید', 'error');
       return;
     }
+    
     
     if (!notificationTitle.trim() || !notificationText.trim()) {
       showToastMessage('تمام فیلدها را پر کنید', 'error');
       return;
     }
     
-    // Simulate API call
-    setTimeout(() => {
-      const newNotification = {
-        user_id: selectedUser.id,
-        title: notificationTitle,
-        text: notificationText,
-        id: Math.max(...notifications.map(n => n.id)) + 1,
-        date_added: new Date().toISOString(),
-        has_seen: false,
-        admin_id: 101 // Mock admin ID
-      };
-      
-      setNotifications([newNotification, ...notifications]);
+    try {
+      const response = await axiosInstance.post('/admin/notification/admin_send_notification', {user_id : selectedUserId , title:notificationTitle , text: notificationText});
+      if (response.status === 201) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "خوش آمدید",
+          showConfirmButton: false,
+          timer: 1500,
+          toast: true,
+          customClass: {
+            popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+            title: 'text-xs', 
+            content: 'text-xs',
+            icon : 'text-xs mb-2'
+          }
+      });
       setIsModalOpen(false);
       setNotificationTitle('');
       setNotificationText('');
-      setSelectedUser(null);
+      setSelectedUserId(null);
       setUserSearchQuery('');
-      showToastMessage('Notification sent successfully', 'success');
-    }, 500);
+    }
+    } catch (error) {
+       Swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: "خطا در ارسال پیغام",
+              showConfirmButton: false,
+              timer: 1500,
+              toast: true,
+              customClass: {
+                popup: 'w-2 h-15 text-sm flex items-center justify-center',
+                title: 'text-xs', 
+                content: 'text-xs', 
+                icon : 'text-xs mb-2'
+              }
+          });
+    }
   };
 
   const handleUserSelect = (user) => {
@@ -456,7 +402,7 @@ const AdminNotification = () => {
                         onClick={() => handleUserSelect(user)}
                         className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 text-gray-700 cursor-pointer"
                       >
-                        {user.username} ({user.email})
+                        {user.username}
                       </button>
                     ))}
                   </div>
@@ -471,14 +417,6 @@ const AdminNotification = () => {
               <i className="fas fa-search mr-2"></i>
               جستجو
             </button>
-{/*             
-            <button
-              onClick={handleClearFilters}
-              className="border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
-            >
-              <i className="fas fa-times mr-2"></i>
-              Clear
-            </button> */}
 
           </div>
         </div>
@@ -547,135 +485,21 @@ const AdminNotification = () => {
           )}
         </div>
       </main>
-
-      {/* Send Notification Modal */}
-      {/* {isModalOpen && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 mx-4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-[#191970]">ارسال اعلان جدید</h2>
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600 cursor-pointer"
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Select User
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i className="fas fa-user text-gray-400"></i>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search username..."
-                    className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-[#191970] focus:border-[#191970]"
-                    value={userSearchQuery}
-                    onChange={(e) => setUserSearchQuery(e.target.value)}
-                  />
-                </div>
-                
-                {isUserDropdownOpen && userSuggestions.length > 0 && (
-                  <div className="mt-1 w-full bg-white rounded-md shadow-lg max-h-60 overflow-auto border border-gray-200">
-                    <div className="py-1">
-                      {userSuggestions.map(user => (
-                        <button
-                          key={user.id}
-                          onClick={() => handleUserSelect(user)}
-                          className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 text-gray-700 cursor-pointer"
-                        >
-                          {user.username} ({user.email})
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {selectedUser && (
-                  <div className="mt-2 p-2 bg-gray-50 rounded-lg flex justify-between items-center">
-                    <div>
-                      <span className="font-medium">{selectedUser.username}</span>
-                      <span className="text-sm text-gray-500 ml-2">{selectedUser.email}</span>
-                    </div>
-                    <button 
-                      onClick={() => {
-                        setSelectedUser(null);
-                        setUserSearchQuery('');
-                      }}
-                      className="text-gray-400 hover:text-gray-600 cursor-pointer"
-                    >
-                      <i className="fas fa-times"></i>
-                    </button>
-                  </div>
-                )}
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Notification Title
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter title..."
-                  className="px-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-[#191970] focus:border-[#191970]"
-                  value={notificationTitle}
-                  onChange={(e) => setNotificationTitle(e.target.value)}
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Notification Message
-                </label>
-                <textarea
-                  placeholder="Enter message..."
-                  rows={4}
-                  className="px-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-[#191970] focus:border-[#191970]"
-                  value={notificationText}
-                  onChange={(e) => setNotificationText(e.target.value)}
-                ></textarea>
-              </div>
-            </div>
-            
-            <div className="mt-6 flex justify-end space-x-3">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
-              >
-                لغو
-              </button>
-              <button
-                onClick={handleSendNotification}
-                className="bg-[#191970] hover:bg-[#0F0F4B] text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
-              >
-                <i className="fas fa-paper-plane mr-2"></i>
-                ارسال اعلان
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
-<SendNotificationModal
+      <SendNotificationModal
   isOpen={isModalOpen}
   onClose={() => setIsModalOpen(false)}
   onSend={handleSendNotification}
   userSearchQuery={userSearchQuery}
   setUserSearchQuery={setUserSearchQuery}
-  userSuggestions={userSuggestions}
-  isUserDropdownOpen={isUserDropdownOpen}
-  handleUserSelect={handleUserSelect}
-  selectedUser={selectedUser}
-  setSelectedUser={setSelectedUser}
   notificationTitle={notificationTitle}
   setNotificationTitle={setNotificationTitle}
   notificationText={notificationText}
   setNotificationText={setNotificationText}
+  handleSearchUser={handleSearchUser}
+  searchResult={searchResult}
+  setSelectedUserId={setSelectedUserId}
 />
+
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">

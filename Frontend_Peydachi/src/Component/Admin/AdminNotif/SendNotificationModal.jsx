@@ -6,15 +6,15 @@ const SendNotificationModal = ({
   onSend,
   userSearchQuery,
   setUserSearchQuery,
-  userSuggestions,
-  isUserDropdownOpen,
-  handleUserSelect,
   selectedUser,
   setSelectedUser,
   notificationTitle,
   setNotificationTitle,
   notificationText,
-  setNotificationText
+  setNotificationText,
+  handleSearchUser,
+  searchResult,
+  setSelectedUserId
 }) => {
   if (!isOpen) return null;
 
@@ -37,34 +37,31 @@ const SendNotificationModal = ({
             <label className="block text-sm font-medium text-gray-700 mb-1">
               انتخاب کاربر
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i className="fas fa-user text-gray-400"></i>
-              </div>
-              <input
-                type="text"
-                placeholder="جستجوی نام کاربری..."
-                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-[#191970] focus:border-[#191970]"
-                value={userSearchQuery}
-                onChange={(e) => setUserSearchQuery(e.target.value)}
-              />
-            </div>
+      {/* فیلد جستجو */}
+      <div className="flex gap-2">
+        <input
+          type="text"
+          placeholder="نام کاربری"
+          value={userSearchQuery}
+          onChange={(e) => setUserSearchQuery(e.target.value)}
+          className="flex-1 p-2 border rounded"
+        />
+        <button
+          onClick={handleSearchUser}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          جستجو
+        </button>
 
-            {isUserDropdownOpen && userSuggestions.length > 0 && (
-              <div className="mt-1 w-full bg-white rounded-md shadow-lg max-h-60 overflow-auto border border-gray-200">
-                <div className="py-1">
-                  {userSuggestions.map(user => (
-                    <button
-                      key={user.id}
-                      onClick={() => handleUserSelect(user)}
-                      className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 text-gray-700 cursor-pointer"
-                    >
-                      {user.username} ({user.email})
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+      </div>
+      {searchResult.length !=0 ?
+            <div  className="mt-1 max-h-40 overflow-scroll z-50 block w-4/5  border border-gray-300 rounded-md shadow-sm py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+              {searchResult.map(user => (
+              <span onClick={()=>{setSelectedUserId(user.id) , setUserSearchQuery(user.username)}} className='cursor-pointer block p-2 hover:bg-blue-100 transition-all duration-300' key={user.id} > {user.username}
+              </span>
+              ))}
+        </div> : null}
+
 
             {selectedUser && (
               <div className="mt-2 p-2 bg-gray-50 rounded-lg flex justify-between items-center">
