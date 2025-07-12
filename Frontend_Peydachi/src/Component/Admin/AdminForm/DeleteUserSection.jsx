@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axiosInstance from '../../axiosInstance';
-
+import Swal from "sweetalert2";  
 const DeleteUserSection = () => {
   const [searchUsername, setSearchUsername] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -23,14 +23,43 @@ const DeleteUserSection = () => {
   const handleDelete = async () => {
     try {
         const response = await axiosInstance.delete('/super_admin/admin/delete_user',{data:  {user_id: Number(selectedUserId)}});
-        console.log(response);
-      setSearchUsername('');
-      setSearchResults([]);
-      setSelectedUserId(null);
-      setSelectedUserInfo(null);
-      setShowModal(false);
+        if (response.status ===200) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "کاربر حذف شد",
+            showConfirmButton: false,
+            timer: 1500,
+            toast: true,
+            customClass: {
+              popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+              title: 'text-xs', 
+              content: 'text-xs',
+              icon : 'text-xs mb-2'
+            }
+        });
+        setSearchUsername('');
+        setSearchResults([]);
+        setSelectedUserId(null);
+        setSelectedUserInfo(null);
+        setShowModal(false);
+        }
+
     } catch (err) {
-      console.error('Delete failed', err);
+       Swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: "حذف کاربر با خطا مواجه شد",
+              showConfirmButton: false,
+              timer: 1500,
+              toast: true,
+              customClass: {
+                popup: 'w-2 h-15 text-sm flex items-center justify-center',
+                title: 'text-xs', 
+                content: 'text-xs', 
+                icon : 'text-xs mb-2'
+              }
+          });
     }
   };
   const handlePromote = async () => {
@@ -38,14 +67,42 @@ const DeleteUserSection = () => {
         const response = await axiosInstance.put('/super_admin/admin/promote_user_to_admin', {
             user_id: selectedUserId
         });
-        console.log(response);
-      setPromoteModal(false);
-      setSelectedUserId(null);
-      setSearchResults([]);
-      setSearchUsername('');
+        if (response.status ===200) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: " ارتقای کاربر انجام شد",
+            showConfirmButton: false,
+            timer: 1500,
+            toast: true,
+            customClass: {
+              popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+              title: 'text-xs', 
+              content: 'text-xs',
+              icon : 'text-xs mb-2'
+            }
+        });
+        setPromoteModal(false);
+        setSelectedUserId(null);
+        setSearchResults([]);
+        setSearchUsername('');
+        }
+
     } catch (err) {
-      console.error('Promote failed', err);
-      alert('ارتقا با خطا مواجه شد');
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title:'ارتقا با خطا مواجه شد',
+        showConfirmButton: false,
+        timer: 1500,
+        toast: true,
+        customClass: {
+          popup: 'w-2 h-15 text-sm flex items-center justify-center',
+          title: 'text-xs', 
+          content: 'text-xs', 
+          icon : 'text-xs mb-2'
+        }
+    });
     }
   };
   
