@@ -127,7 +127,7 @@ const DeleteUserSection = () => {
         />
         <button
           onClick={handleSearch}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="border border-blue-800 text-blue-800 px-4 py-2 rounded hover:bg-blue-100"
         >
           جستجو
         </button>
