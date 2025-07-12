@@ -1,4 +1,4 @@
-from database.models import User, StoreComment, ProductComment, StoreRating, ProductRating, Store
+from database.models import User, StoreComment, ProductComment, StoreRating, ProductRating, Store, Notification
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_
 from hash.hash import Hash
@@ -120,11 +120,13 @@ async def delete_user(user_id: int, db: Session):
     delete_product_comments = delete(ProductComment).where(ProductRating.user_id == user_id)
     delete_store_ratings = delete(StoreRating).where(StoreRating.user_id == user_id)
     delete_product_ratings = delete(ProductRating).where(ProductRating.user_id == user_id)
+    delete_notification = delete(Notification).where(Notification.user_id == user_id)
 
     db.execute(delete_store_comments)
     db.execute(delete_product_comments)
     db.execute(delete_store_ratings)
     db.execute(delete_product_ratings)
+    db.execute(delete_notification)
 
     db.delete(user)
     db.commit()
@@ -137,18 +139,20 @@ async def admin_delete_user(user_id: int, db: Session):
     if not user:
         raise USER_NOT_FOUND_ERROR
 
-    if user.is_admin and user.is_super_admin:
+    if user.is_admin or user.is_super_admin:
         raise DONT_HAVE_ACCESS_ADMIN_ERROR
 
     delete_store_comments = delete(StoreComment).where(StoreComment.user_id == user_id)
     delete_product_comments = delete(ProductComment).where(ProductRating.user_id == user_id)
     delete_store_ratings = delete(StoreRating).where(StoreRating.user_id == user_id)
     delete_product_ratings = delete(ProductRating).where(ProductRating.user_id == user_id)
+    delete_notification = delete(Notification).where(Notification.user_id == user_id)
 
     db.execute(delete_store_comments)
     db.execute(delete_product_comments)
     db.execute(delete_store_ratings)
     db.execute(delete_product_ratings)
+    db.execute(delete_notification)
 
     db.delete(user)
     db.commit()
