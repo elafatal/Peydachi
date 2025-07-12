@@ -505,6 +505,7 @@ const AdminNotification = () => {
   setNotificationText={setNotificationText}
   handleSearchUser={handleSearchUser}
   searchResult={searchResult}
+  setSearchResult={setSearchResult}
   setSelectedUserId={setSelectedUserId}
 />
 

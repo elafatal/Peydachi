@@ -1,19 +1,18 @@
 import React from 'react';
-
+import { FaTimes,FaPaperPlane } from 'react-icons/fa';
 const SendNotificationModal = ({
   isOpen,
   onClose,
   onSend,
   userSearchQuery,
   setUserSearchQuery,
-  selectedUser,
-  setSelectedUser,
   notificationTitle,
   setNotificationTitle,
   notificationText,
   setNotificationText,
   handleSearchUser,
   searchResult,
+  setSearchResult,
   setSelectedUserId
 }) => {
   if (!isOpen) return null;
@@ -27,7 +26,7 @@ const SendNotificationModal = ({
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 cursor-pointer"
           >
-            <i className="fas fa-times"></i>
+          <FaTimes className='inline' />
           </button>
         </div>
 
@@ -48,38 +47,21 @@ const SendNotificationModal = ({
         />
         <button
           onClick={handleSearchUser}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="border border-blue-800 text-blue-800 px-4 py-2 rounded hover:bg-blue-100"
         >
           جستجو
         </button>
 
       </div>
-      {searchResult.length !=0 ?
-            <div  className="mt-1 max-h-40 overflow-scroll z-50 block w-4/5  border border-gray-300 rounded-md shadow-sm py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-              {searchResult.map(user => (
-              <span onClick={()=>{setSelectedUserId(user.id) , setUserSearchQuery(user.username)}} className='cursor-pointer block p-2 hover:bg-blue-100 transition-all duration-300' key={user.id} > {user.username}
-              </span>
-              ))}
-        </div> : null}
+          {searchResult.length !=0 ?
+                <div  className="mt-1 max-h-40 overflow-scroll z-50 block w-4/5  border border-gray-300 rounded-md shadow-sm py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                  {searchResult.map(user => (
+                  <span onClick={()=>{setSelectedUserId(user.id) , setUserSearchQuery(user.username) , setSearchResult([]) }}
+                  className='cursor-pointer block p-2 hover:bg-blue-100 transition-all duration-300' key={user.id} > {user.username}
+                  </span>
+                  ))}
+            </div> : null}
 
-
-            {selectedUser && (
-              <div className="mt-2 p-2 bg-gray-50 rounded-lg flex justify-between items-center">
-                <div>
-                  <span className="font-medium">{selectedUser.username}</span>
-                  <span className="text-sm text-gray-500 ml-2">{selectedUser.email}</span>
-                </div>
-                <button
-                  onClick={() => {
-                    setSelectedUser(null);
-                    setUserSearchQuery('');
-                  }}
-                  className="text-gray-400 hover:text-gray-600 cursor-pointer"
-                >
-                  <i className="fas fa-times"></i>
-                </button>
-              </div>
-            )}
           </div>
 
           {/* Notification Title */}
@@ -123,7 +105,7 @@ const SendNotificationModal = ({
             onClick={onSend}
             className="bg-[#191970] hover:bg-[#0F0F4B] text-white px-4 py-2 rounded-lg shadow-sm"
           >
-            <i className="fas fa-paper-plane mr-2"></i>
+            <FaPaperPlane className="inline ml-2" />
             ارسال اعلان
           </button>
         </div>
