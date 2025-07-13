@@ -16,12 +16,9 @@ const RecentComments = ({storeID}) => {
     const fetchComments = async () => {
         console.log("storeID:", storeID);
       try {
-        const response = await axiosInstance.post('/store_comment/get_store_comments', {store_id : storeID})
-        
-        setTimeout(() => {
-          setComments(response.data);
-          setLoading(false);
-        }, 1000);
+        const response = await axiosInstance.post('/store_comment/get_last_5_store_comments', {store_id : storeID})
+        setComments(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching comments:', error);
         setLoading(false);
