@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import * as echarts from 'echarts';
-import ReviewModal from './ReviewModal'; 
-import SearchFilters from './SearchFilters';
-import StatsOverview from './StatsOverview';
+import ReviewModal from '../ReviewModal'; 
+import SearchFilters from '../SearchFilters';
+import StatsOverview from '../StatsOverview';
 import StoreRequestCard from './StoreRequestCard'
-const AdminReports = () => {
+const StoreRequest = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCity, setSelectedCity] = useState(null);
@@ -216,8 +216,6 @@ const AdminReports = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {/* Stats Cards */}
-        <StatsOverview />
 
 
         {/* Search and Filters */}
@@ -313,4 +311,4 @@ const AdminReports = () => {
   );
 };
 
-export default AdminReports;
+export default StoreRequest;

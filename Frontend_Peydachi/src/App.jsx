@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Navigate } from 'react-router-dom';
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AboutUs from './Component/About us/AboutUs';
@@ -30,7 +31,10 @@ import UserManagement from './Component/Admin/AdminUser/UserManagement';
 import StoreCommentManagement from './Component/Admin/AdminCommet/StoreCommentManagement';
 import AdminNotification from './Component/Admin/AdminNotif/AdminNotification';
 import AdminFormsPage from './Component/Admin/AdminForm/AdminForm';
-import AdminReports from './Component/Admin/AdminReports/AdminRequest';
+import AdminReports from './Component/Admin/AdminReports/AdminReports';
+import StoreRequest from './Component/Admin/AdminReports/StoreRequests/StoreRequest';
+import UserReports from './Component/Admin/AdminReports/UserReports/UserReports';
+
 
 function App() {
   return (
@@ -64,7 +68,13 @@ function App() {
               <Route path="stores" element={<StoreManagement/>} />
               <Route path="cities" element={<CityManagement/>} />
               <Route path="users" element={<UserManagement/>} />
-              <Route path="reports" element={<AdminReports/>} />
+              <Route path="/admin/reports" element={<AdminReports />}>
+                <Route index element={<Navigate to="requests" replace />} />
+                <Route path="requests" element={<StoreRequest />} />
+                <Route path="reports" element={<UserReports />} />
+              </Route>
+
+
               <Route path="notifications" element={<AdminNotification/>} />
               <Route path="adminManagement" element={<AdminFormsPage/>} />
               <Route path="/admin/comments/:storeId" element={<StoreCommentManagement />} />
