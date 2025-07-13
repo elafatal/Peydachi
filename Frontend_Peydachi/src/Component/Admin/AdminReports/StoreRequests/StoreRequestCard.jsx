@@ -22,24 +22,24 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
                 : 'bg-blue-100 text-blue-800'
             }`}
           >
-            {request.isReviewed ? 'Reviewed' : 'Pending'}
+            {request.isReviewed ? 'بررسی شده' : 'در انتظار'}
           </span>
         </div>
 
         <div className="mb-4 space-y-2 text-sm">
           <div className="flex items-center text-gray-600">
-            <FaMapMarkerAlt className="mr-2 text-blue-500" />
+            <FaMapMarkerAlt className="ml-2 text-blue-500" />
             <span>{getCityName(request.city_id)}</span>
           </div>
           <div className="flex items-center text-gray-600">
-            <FaCalendarAlt className="mr-2 text-blue-500" />
+            <FaCalendarAlt className="ml-2 text-blue-500" />
             <span>{formatDate(request.date_added)}</span>
           </div>
         </div>
 
-        <p className="text-gray-600 mb-6 line-clamp-3">
+        {/* <p className="text-gray-600 mb-6 line-clamp-3">
           {request.description}
-        </p>
+        </p> */}
 
         <div className="flex justify-between items-center gap-2">
           {!request.isReviewed ? (
@@ -47,16 +47,16 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
               className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-sm transition-colors"
               onClick={() => onReview(request)}
             >
-              <FaCheckCircle className="mr-2 inline" />
-              Review
+              <FaCheckCircle className="ml-2 inline" />
+              بررسی
             </button>
           ) : (
             <button
               className="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg shadow-sm"
               disabled
             >
-              <FaCheckCircle className="mr-2 inline" />
-              Reviewed
+              <FaCheckCircle className="ml-2 inline" />
+              بررسی شد
             </button>
           )}
 
@@ -64,8 +64,8 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
             className="bg-red-100 hover:bg-red-200 text-red-600 py-2 px-4 rounded-lg shadow-sm transition-colors"
             onClick={() => onRemove(request.id)}
           >
-            <FaTrashAlt className="mr-2 inline" />
-            Remove
+            <FaTrashAlt className="ml-2 inline" />
+            حذف
           </button>
         </div>
       </div>
