@@ -22,6 +22,11 @@ async def get_store_comments(store_id: ID_BODY, db: DB_DEPENDENCY):
     return await store_comment_functions.get_store_comments(store_id=store_id, db=db)
 
 
+@router.post('/get_last_5_store_comments', status_code=200, response_model=list[StoreCommentDisplay])
+async def get_last_5_store_comments(store_id: ID_BODY, db: DB_DEPENDENCY):
+    return await store_comment_functions.get_last_5_store_comments(store_id=store_id, db=db)
+
+
 @router.post('/get_store_comment_by_id', status_code=200, response_model=StoreCommentDisplay)
 async def get_store_comment_by_id(store_comment_id: ID_BODY, db: DB_DEPENDENCY):
     return await store_comment_functions.get_store_comment_by_id(store_comment_id=store_comment_id, db=db)
