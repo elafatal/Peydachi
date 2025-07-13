@@ -24,9 +24,14 @@ async def delete_all_comments_of_store(store_id: ID_BODY, db: DB_DEPENDENCY):
     return await store_comment_functions.delete_all_comments_of_store(store_id=store_id, db=db)
 
 
-@router.post('/search_store_comments', status_code=200, response_model=list[StoreCommentDisplay])
-async def search_store_comments(store_id: ID_BODY, search: NAME_BODY, db: DB_DEPENDENCY):
-    return await store_comment_functions.search_store_comments(store_id=store_id, search=search, db=db)
+@router.post('/search_store_comments_of_store', status_code=200, response_model=list[StoreCommentDisplay])
+async def search_store_comments_of_store(store_id: ID_BODY, search: NAME_BODY, db: DB_DEPENDENCY):
+    return await store_comment_functions.search_store_comments_of_store(store_id=store_id, search=search, db=db)
+
+
+@router.post('/search_in_all_store_comments', status_code=200, response_model=list[StoreCommentDisplay])
+async def search_in_all_store_comments(search: NAME_BODY, db: DB_DEPENDENCY):
+    return await store_comment_functions.search_in_all_store_comments(search=search, db=db)
 
 
 @router.post('/get_user_store_comments', status_code=200, response_model=list[StoreCommentDisplay])

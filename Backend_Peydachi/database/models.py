@@ -31,14 +31,14 @@ class Region(ID, Base):
 class City(ID, Base):
     __tablename__ = "city"
     name = Column(String(150), nullable=False)
-    region_id = Column(Integer, ForeignKey("region.id"), nullable=False)
+    region_id = Column(Integer, ForeignKey("region.id", ondelete="CASCADE"), nullable=False)
 
 
 # Store Class ===============================================================================================
 class Store(ID, Base):
     __tablename__ = "store"
     name = Column(String(150), nullable=False)
-    owner_id = Column(Integer, ForeignKey("user.id"), nullable=True)
+    owner_id = Column(Integer, ForeignKey("user.id", ondelete="SET NULL"), nullable=True)
     contact_info = Column(JSON, nullable=True)
     description = Column(String(500), nullable=True)
     location_longitude = Column(String, nullable=True)
@@ -47,13 +47,13 @@ class Store(ID, Base):
     average_product_rating = Column(Float, nullable=True)
     date_added = Column(DateTime, nullable=False)
     is_banned = Column(Boolean, default=False)
-    city_id = Column(Integer, ForeignKey("city.id"), nullable=True)
+    city_id = Column(Integer, ForeignKey("city.id", ondelete="SET NULL"), nullable=True)
 
 
 # Product Class =============================================================================================
 class Product(ID, Base):
     __tablename__ = "product"
-    store_id = Column(Integer, ForeignKey("store.id"), nullable=False)
+    store_id = Column(Integer, ForeignKey("store.id", ondelete="CASCADE"), nullable=False)
     name = Column(String(150), nullable=False)
     description = Column(String(500), nullable=True)
     pic_url = Column(String(500), nullable=True)
@@ -61,14 +61,14 @@ class Product(ID, Base):
     average_rating = Column(Float, nullable=True)
     date_added = Column(DateTime, nullable=False)
     quantity = Column(Integer, nullable=False)
-    city_id = Column(Integer, ForeignKey("city.id"), nullable=False)
+    city_id = Column(Integer, ForeignKey("city.id", ondelete="SET NULL"), nullable=False)
 
 
 # Store Comments Class ======================================================================================
 class StoreComment(ID, Base):
     __tablename__ = "store_comment"
-    store_id = Column(Integer, ForeignKey("store.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    store_id = Column(Integer, ForeignKey("store.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     user_name = Column(String(150), nullable=False)
     text = Column(String(500), nullable=False)
     date_added = Column(DateTime, nullable=False)
@@ -77,8 +77,8 @@ class StoreComment(ID, Base):
 # Product Comments Class ===================================================================================
 class ProductComment(ID, Base):
     __tablename__ = "product_comment"
-    product_id = Column(Integer, ForeignKey("product.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("product.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     user_name = Column(String(150), nullable=False)
     text = Column(String(500), nullable=False)
     date_added = Column(DateTime, nullable=False)
@@ -93,14 +93,14 @@ class Category(ID, Base):
 # Store Category Class =====================================================================================
 class StoreCategory(ID, Base):
     __tablename__ = "store_category"
-    store_id = Column(Integer, ForeignKey("store.id"), nullable=False)
-    category_id = Column(Integer, ForeignKey("category.id"), nullable=False)
+    store_id = Column(Integer, ForeignKey("store.id", ondelete="CASCADE"), nullable=False)
+    category_id = Column(Integer, ForeignKey("category.id", ondelete="CASCADE"), nullable=False)
 
 
 # Category Relation Class =================================================================================
 class CategoryRelation(ID, Base):
     __tablename__ = "category_relation"
-    category_id = Column(Integer, ForeignKey("category.id"), nullable=False)
+    category_id = Column(Integer, ForeignKey("category.id", ondelete="CASCADE"), nullable=False)
     word = Column(String, nullable=False)
 
 
@@ -108,27 +108,27 @@ class CategoryRelation(ID, Base):
 # Product Rating Class ====================================================================================
 class ProductRating(ID, Base):
     __tablename__ = "product_rating"
-    product_id = Column(Integer, ForeignKey("product.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
-    store_id = Column(Integer, ForeignKey("store.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("product.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    store_id = Column(Integer, ForeignKey("store.id", ondelete="CASCADE"), nullable=False)
     rating = Column(Integer, nullable=False)
 
 
 # Store Rating Class ======================================================================================
 class StoreRating(ID, Base):
     __tablename__ = "store_rating"
-    store_id = Column(Integer, ForeignKey("store.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    store_id = Column(Integer, ForeignKey("store.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     rating = Column(Integer, nullable=False)
 
 
 # Notification Class ======================================================================================
 class Notification(ID, Base):
     __tablename__ = "notification"
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     title = Column(String(200), nullable=False)
     text = Column(String(500), nullable=False)
-    admin_id = Column(Integer, ForeignKey("user.id"), nullable=True)
+    admin_id = Column(Integer, ForeignKey("user.id", ondelete="SET NULL"), nullable=True)
     has_seen = Column(Boolean, default=False)
     date_added = Column(DateTime, nullable=False)
 
@@ -145,7 +145,7 @@ class Report(ID, Base):
 # Comment Report Class ====================================================================================
 class CommentReport(ID, Base):
     __tablename__ = "comment_report"
-    comment_id = Column(Integer, ForeignKey("store_comment.id"), nullable=False)
+    comment_id = Column(Integer, ForeignKey("store_comment.id", ondelete="CASCADE"), nullable=False)
     text = Column(String, nullable=False)
     is_reviewed = Column(Boolean, default=False)
     is_store = Column(Boolean, default=False) # True: It's store comment , False: It's product comment
@@ -157,8 +157,9 @@ class AddStoreRequest(ID, Base):
     __tablename__ = "add_store_request"
     store_name = Column(String(150), nullable=False)
     phone_number = Column(String(20), nullable=False)
-    region_id = Column(Integer, ForeignKey("region.id"))
-    city_id = Column(Integer, ForeignKey("city.id"))
+    region_id = Column(Integer, ForeignKey("region.id", ondelete="SET NULL"), nullable=True)
+    city_id = Column(Integer, ForeignKey("city.id", ondelete="SET NULL"), nullable=True)
+    address = Column(String(500), nullable=False)
     date_added = Column(DateTime, nullable=False)
     description = Column(String(600), nullable=True)
     is_reviewed = Column(Boolean, default=False)
@@ -174,6 +175,6 @@ class DeletedPics(Base, ID):
 # City Center Class =======================================================================================
 class CityCenter(ID, Base):
     __tablename__ = "city_center"
-    city_id = Column(Integer, ForeignKey("city.id"), nullable=False)
+    city_id = Column(Integer, ForeignKey("city.id", ondelete="CASCADE"), nullable=False)
     longitude = Column(String, nullable=False)
     latitude = Column(String, nullable=False)
