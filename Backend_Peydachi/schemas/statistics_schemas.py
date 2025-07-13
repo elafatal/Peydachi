@@ -49,3 +49,22 @@ class StoreDistributionByCity(BaseSchema):
 class StoreDistributionByRegion(BaseSchema):
     region: str
     store_count: int
+
+
+class TopCommenterDisplay(BaseSchema):
+    username: str
+    total_comments: int
+
+class TopRaterDisplay(BaseSchema):
+    username: str
+    total_ratings: int
+
+
+class AllDashboardStatisticsDisplay(BaseSchema):
+    general_statistics: GeneralStatisticsDisplay
+    add_store_request_statistics: AddStoreRequestStatisticsDisplay
+    pending_review_statistics: PendingReviewStatisticsDisplay
+    store_distribution_by_city: list[StoreDistributionByCity] | None
+    store_distribution_by_region: list[StoreDistributionByRegion] | None
+    top_commenters: list[TopCommenterDisplay] | None
+    top_raters: list[TopRaterDisplay] | None
