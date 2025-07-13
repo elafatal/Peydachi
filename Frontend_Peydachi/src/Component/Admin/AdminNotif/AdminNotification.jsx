@@ -1,10 +1,12 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import axiosInstance from '../../axiosInstance';
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../AuthContext/AuthContext';
 import { FaPlus,FaTrashAlt,FaSearch,FaFilter,FaChevronDown,FaUser,FaBellSlash,FaRegClock,FaExclamationTriangle,FaCheckCircle, FaExclamationCircle} from 'react-icons/fa';
 import SendNotificationModal from './SendNotificationModal';
 import Swal from "sweetalert2";
 const AdminNotification = () => {
+  const { role } = useAuth(); 
   const [userSuggestions, setUserSuggestions] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [notifications, setNotifications] = useState([]);
@@ -334,14 +336,16 @@ const AdminNotification = () => {
             >
               <FaPlus className="mr-2 inline" />
               ارسال پیغام جدید
-            </button>          
+            </button>    
+            {role=== 'superadmin' ?  
             <button
               onClick={handleDeleteAllSeen}
               className="bg-red-500 hover:bg-red-600  text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
             >
               <FaTrashAlt className="mr-2 inline" />
               پاک کردن خوانده شده‌ها
-            </button>
+            </button>:null}      
+           
         </div>
       </header>
 
