@@ -1,10 +1,12 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
-
+import axiosInstance from '../../axiosInstance';
 import React, { useState, useEffect } from 'react';
-import * as echarts from 'echarts';
+import { FaPlus,FaTrashAlt,FaSearch,FaFilter,FaChevronDown,FaUser,FaBellSlash,FaRegClock,FaExclamationTriangle,FaCheckCircle, FaExclamationCircle} from 'react-icons/fa';
 import SendNotificationModal from './SendNotificationModal';
-
+import Swal from "sweetalert2";
 const AdminNotification = () => {
+  const [userSuggestions, setUserSuggestions] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [filteredNotifications, setFilteredNotifications] = useState([]);
   const [filterType, setFilterType] = useState('all');
@@ -12,7 +14,6 @@ const AdminNotification = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [userSearchQuery, setUserSearchQuery] = useState('');
-  const [selectedUser, setSelectedUser] = useState(null);
   const [notificationTitle, setNotificationTitle] = useState('');
   const [notificationText, setNotificationText] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -21,305 +22,270 @@ const AdminNotification = () => {
   const [toastType, setToastType] = useState('success');
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [userSuggestions, setUserSuggestions] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(0);
+    const [searchResult,setSearchResult]=useState([])
 
-  // Mock data for demonstration
-  const mockNotifications = [
-    {
-      user_id: 1,
-      title: "New Feature Announcement",
-      text: "We've just launched a new dashboard feature. Check it out!",
-      id: 1,
-      date_added: "2025-06-30T10:15:00.000Z",
-      has_seen: true,
-      admin_id: 101
-    },
-    {
-      user_id: 2,
-      title: "Account Verification Required",
-      text: "Please verify your account details to continue using all features.",
-      id: 2,
-      date_added: "2025-06-29T14:30:00.000Z",
-      has_seen: false,
-      admin_id: 102
-    },
-    {
-      user_id: 3,
-      title: "Weekly Report Available",
-      text: "Your weekly performance report is now available for review.",
-      id: 3,
-      date_added: "2025-06-28T09:45:00.000Z",
-      has_seen: true,
-      admin_id: 101
-    },
-    {
-      user_id: 4,
-      title: "Security Alert",
-      text: "Unusual login detected from a new device. Please confirm if this was you.",
-      id: 4,
-      date_added: "2025-06-27T22:10:00.000Z",
-      has_seen: false,
-      admin_id: 103
-    },
-    {
-      user_id: 5,
-      title: "Maintenance Scheduled",
-      text: "System maintenance scheduled for July 5th from 2-4 AM UTC.",
-      id: 5,
-      date_added: "2025-06-26T11:20:00.000Z",
-      has_seen: true,
-      admin_id: 102
-    },
-    {
-      user_id: 1,
-      title: "Payment Processed",
-      text: "Your recent payment has been successfully processed.",
-      id: 6,
-      date_added: "2025-06-25T16:40:00.000Z",
-      has_seen: true,
-      admin_id: 101
-    }
-  ];
-
-  const mockUsers = [
-    {
-      id: 1,
-      username: "john_doe",
-      phone_number: "+1234567890",
-      email: "john@example.com",
-      is_seller: true,
-      is_admin: false,
-      is_super_admin: false,
-      is_banned: false
-    },
-    {
-      id: 2,
-      username: "jane_smith",
-      phone_number: "+1987654321",
-      email: "jane@example.com",
-      is_seller: false,
-      is_admin: true,
-      is_super_admin: false,
-      is_banned: false
-    },
-    {
-      id: 3,
-      username: "alex_wilson",
-      phone_number: "+1122334455",
-      email: "alex@example.com",
-      is_seller: true,
-      is_admin: false,
-      is_super_admin: false,
-      is_banned: false
-    },
-    {
-      id: 4,
-      username: "sarah_johnson",
-      phone_number: "+1567890123",
-      email: "sarah@example.com",
-      is_seller: false,
-      is_admin: false,
-      is_super_admin: false,
-      is_banned: true
-    },
-    {
-      id: 5,
-      username: "mike_brown",
-      phone_number: "+1456789012",
-      email: "mike@example.com",
-      is_seller: true,
-      is_admin: false,
-      is_super_admin: false,
-      is_banned: false
-    }
-  ];
-
-  // Initialize chart
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setNotifications(mockNotifications);
-      setFilteredNotifications(mockNotifications);
-      setIsLoading(false);
-    }, 1000);
+    const fetchLastNotifSent = async () => {
+        try {
+          const response = await axiosInstance.post('/admin/notification/get_last_n_sent_notifications_of_admin?n=12');
+          setNotifications(response.data);
+          setFilteredNotifications(response.data);
+          setIsLoading(false);
+        } catch (error) {
+          console.log('last 12 notif sent errors:', error);
+        }  
+    };
+  
+    fetchLastNotifSent();
   }, []);
 
-  // Update filtered notifications when filter type or search query changes
-  useEffect(() => {
-    let filtered = [...notifications];
-    
-    // Filter by type
-    if (filterType === 'seen') {
-      filtered = filtered.filter(notif => notif.has_seen);
-    } else if (filterType === 'unseen') {
-      filtered = filtered.filter(notif => !notif.has_seen);
-    }
-    
-    // Filter by search query
-    if (searchQuery) {
-      filtered = filtered.filter(
-        notif => 
-          notif.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-          notif.text.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-    
-    setFilteredNotifications(filtered);
-  }, [filterType, searchQuery, notifications]);
 
-  // Initialize notification stats chart
   useEffect(() => {
-    if (!isLoading) {
-      const chartDom = document.getElementById('notificationStatsChart');
-      if (chartDom) {
-        const myChart = echarts.init(chartDom);
-        
-        const seenCount = notifications.filter(n => n.has_seen).length;
-        const unseenCount = notifications.filter(n => !n.has_seen).length;
-        
-        const option = {
-          animation: false,
-          tooltip: {
-            trigger: 'item'
-          },
-          legend: {
-            top: '5%',
-            left: 'center',
-            textStyle: {
-              color: '#333'
-            }
-          },
-          series: [
-            {
-              name: 'Notification Status',
-              type: 'pie',
-              radius: ['40%', '70%'],
-              avoidLabelOverlap: false,
-              itemStyle: {
-                borderRadius: 10,
-                borderColor: '#fff',
-                borderWidth: 2
-              },
-              label: {
-                show: false,
-                position: 'center'
-              },
-              emphasis: {
-                label: {
-                  show: true,
-                  fontSize: '18',
-                  fontWeight: 'bold'
-                }
-              },
-              labelLine: {
-                show: false
-              },
-              data: [
-                { value: seenCount, name: 'Seen', itemStyle: { color: '#191970' } },
-                { value: unseenCount, name: 'Unseen', itemStyle: { color: '#4169E1' } }
-              ]
-            }
-          ]
-        };
-        
-        myChart.setOption(option);
-        
-        // Cleanup
-        return () => {
-          myChart.dispose();
-        };
+    const filterLastNotifSent = async () => {
+      if (selectedUser && filterType !== 'all') {
+        setFilteredNotifications([]); 
+        showToastMessage('لطفاً فیلتر را به "تمام اعلان‌ها" تغییر دهید', 'error');
+        return;
       }
-    }
-  }, [notifications, isLoading]);
+      let filtered = [...notifications];
+      // Filter by type
+      if (!selectedUser) {
+        if (filterType === 'seen') {
+          if (searchQuery) {
+            try {
+              const response = await axiosInstance.post('/admin/notification/search_seen_notifications',{search:searchQuery});
+              filtered=response.data
+            } catch (error) {
+              if (error.response && error.response.status === 404) {
+                filtered = [];
+              } else {
+                console.log('search seen notif errors:', error)
+              }
+            }  
+        }else{
+            try {
+              const response = await axiosInstance.post('/admin/notification/get_last_n_seen_notifications?n=12');
+              filtered=response.data
+            } catch (error) {
+              if (error.response && error.response.status === 404) {
+                filtered = [];
+              } else {
+                if (error.response && error.response.status === 404) {
+                  filtered = [];
+                } else {
+                  console.log('last 12 seen notif errors:', error)
+                }
+              }
+            }  
+        }
+  
+        } else if (filterType === 'unseen') {
+          if (searchQuery) {
+            try {
+              const response = await axiosInstance.post('/admin/notification/search_unseen_notifications',{search:searchQuery});
+              filtered=response.data
+            } catch (error) {
+              if (error.response && error.response.status === 404) {
+                filtered = [];
+              } else {
+                console.log('search unseen notif errors:', error)
+              }
+            }  
+          }else{
+              try {
+                const response = await axiosInstance.post('/admin/notification/get_last_n_unseen_notifications?n=12');
+                filtered=response.data
+              } catch (error) {
+                if (error.response && error.response.status === 404) {
+                  filtered = [];
+                } else {
+                  console.log('last 12 unseen notif errors:', error);
+                }
+ 
+            }  
+          }
+        }else if (filterType === 'all') {
+           if (searchQuery) {
+              try {
+                const response = await axiosInstance.post('/admin/notification/search_notifications',{search:searchQuery});
+                filtered=response.data
+              } catch (error) {
+                if (error.response && error.response.status === 404) {
+                  filtered = [];
+                } else {
+                  console.log('last notif errors:', error)
+                }
+              }  
+          }else{
+            try {
+              const response = await axiosInstance.post('/admin/notification/get_last_n_sent_notifications_of_admin?n=12');
+              filtered=response.data
+            } catch (error) {
+              if (error.response && error.response.status === 404) {
+                filtered = [];
+              } else {
+                console.log('last 12 notif error:', error)
+              }
+            }  
+          }
+        }
+      setFilteredNotifications(filtered);
+      }
+  };
 
-  // Handle user search
+  filterLastNotifSent();
+   
+  }, [filterType, searchQuery, notifications, selectedUser]);
+
+
   useEffect(() => {
-    if (userSearchQuery.length > 1) {
-      // Simulate API call for user search
-      const filteredUsers = mockUsers.filter(
-        user => user.username.toLowerCase().includes(userSearchQuery.toLowerCase())
-      );
-      setUserSuggestions(filteredUsers);
-      setIsUserDropdownOpen(true);
-    } else {
-      setUserSuggestions([]);
-      setIsUserDropdownOpen(false);
-    }
+    const fetchUserSuggestions = async () => {
+      if (userSearchQuery.length > 1) {
+        try {
+          const response = await axiosInstance.post('/admin/user/search_users', { username: userSearchQuery });
+          setIsUserDropdownOpen(true);
+          setUserSuggestions(response.data);
+        } catch (error) {
+          console.log('search username error:', error);
+        }
+      } else {
+        setSelectedUser(null);
+        setSelectedUserId(null);
+        setUserSuggestions([]);
+        setIsUserDropdownOpen(false);
+      }
+    };
+  
+    fetchUserSuggestions();
   }, [userSearchQuery]);
+  
 
   const handleFilterChange = (type) => {
     setFilterType(type);
     setIsFilterMenuOpen(false);
   };
 
-  const handleSearch = () => {
-    // Search is already handled by useEffect
-    showToastMessage('Search completed', 'success');
+  const handleSearch = async() => {
+    let filtered2 = [...notifications];
+    if (!selectedUser) {
+      showToastMessage('لطفاً ابتدا یک کاربر را از لیست انتخاب کنید', 'error');
+      return;
+    }    
+    if (filterType === 'all') {
+      try {
+        const response = await axiosInstance.post('/admin/notification/search_user_notifications',{user_id:selectedUser.id , search:searchQuery});
+        console.log(response);
+        filtered2=response.data
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          showToastMessage('اطلاعاتی یافت نشد.', 'error');
+          filtered2 = [];
+        } else {
+          console.log('search notif errors:', error);
+          showToastMessage('خطا در جستجو. لطفاً بعداً تلاش کنید.', 'error');
+        }
+      }  
+    }
+  setFilteredNotifications(filtered2);
+ 
   };
 
-  const handleClearFilters = () => {
-    setFilterType('all');
-    setSearchQuery('');
-    setUserSearchQuery('');
-    setSelectedUser(null);
-    setFilteredNotifications(notifications);
-    showToastMessage('Filters cleared', 'success');
-  };
-
-  const handleDeleteNotification = (id) => {
-    // Simulate API call
-    setTimeout(() => {
-      const updatedNotifications = notifications.filter(notif => notif.id !== id);
+  const handleSearchUser=async()=>{
+    try {
+      const response = await axiosInstance.post('/admin/user/search_users', {username : userSearchQuery});
+      setSearchResult(response.data)
+    } catch (error) {
+      console.log('search username error:', error);
+    }
+  }
+  const handleDeleteNotification = async(id) => {
+    try {
+      const response = await axiosInstance.delete('/admin/notification/delete_notification',{data:{ notification_id : Number(id) }});
+      console.log(response);
+      if (response.status===200) {
+        const updatedNotifications = notifications.filter(notif => notif.id !== id);
       setNotifications(updatedNotifications);
-      showToastMessage('Notification deleted successfully', 'success');
-    }, 500);
+      showToastMessage('اعلان با موفقیت حذف شد', 'success');
+      }
+      
+    } catch (error) {
+      console.log('delete notif error:', error);
+    }
   };
 
   const handleDeleteAllSeen = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const confirmDeleteAllSeen = () => {
-    // Simulate API call
-    setTimeout(() => {
-      const updatedNotifications = notifications.filter(notif => !notif.has_seen);
-      setNotifications(updatedNotifications);
-      setIsDeleteModalOpen(false);
-      showToastMessage('All seen notifications deleted', 'success');
-    }, 500);
+  const confirmDeleteAllSeen = async() => {
+    try {
+      const response = await axiosInstance.delete('/admin/notification/delete_all_seen_notifications');
+      console.log(response);
+      if (response.status===200) {
+        const updatedNotifications = notifications.filter(notif => !notif.has_seen);
+        setNotifications(updatedNotifications);
+        setIsDeleteModalOpen(false);
+        showToastMessage('اعلان‌های خوانده شده حذف شدند', 'success');
+      }
+      
+    } catch (error) {
+      console.log('delete all seen error:', error);
+    }
+
   };
 
-  const handleSendNotification = () => {
-    if (!selectedUser) {
+  const handleSendNotification = async() => {
+    if (!selectedUserId) {
       showToastMessage('یک کاربر را انتخاب کنید', 'error');
       return;
     }
+    
     
     if (!notificationTitle.trim() || !notificationText.trim()) {
       showToastMessage('تمام فیلدها را پر کنید', 'error');
       return;
     }
     
-    // Simulate API call
-    setTimeout(() => {
-      const newNotification = {
-        user_id: selectedUser.id,
-        title: notificationTitle,
-        text: notificationText,
-        id: Math.max(...notifications.map(n => n.id)) + 1,
-        date_added: new Date().toISOString(),
-        has_seen: false,
-        admin_id: 101 // Mock admin ID
-      };
-      
-      setNotifications([newNotification, ...notifications]);
+    try {
+      const response = await axiosInstance.post('/admin/notification/admin_send_notification', {user_id : selectedUserId , title:notificationTitle , text: notificationText});
+      if (response.status === 201) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "پیغام ارسال شد",
+          showConfirmButton: false,
+          timer: 1500,
+          toast: true,
+          customClass: {
+            popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+            title: 'text-xs', 
+            content: 'text-xs',
+            icon : 'text-xs mb-2'
+          }
+      });
       setIsModalOpen(false);
       setNotificationTitle('');
       setNotificationText('');
-      setSelectedUser(null);
+      setSelectedUserId(null);
       setUserSearchQuery('');
-      showToastMessage('Notification sent successfully', 'success');
-    }, 500);
+    }
+    } catch (error) {
+       Swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: "خطا در ارسال پیغام",
+              showConfirmButton: false,
+              timer: 1500,
+              toast: true,
+              customClass: {
+                popup: 'w-2 h-15 text-sm flex items-center justify-center',
+                title: 'text-xs', 
+                content: 'text-xs', 
+                icon : 'text-xs mb-2'
+              }
+          });
+    }
   };
 
   const handleUserSelect = (user) => {
@@ -361,19 +327,19 @@ const AdminNotification = () => {
     <div className="min-h-screen bg-gray-50" dir='ltr'>
       {/* Header */}
       <header className="bg-white shadow-sm">
-        <div className="flex justify-between w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex justify-between w-full flex-col gap-2 md:flex-row max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <button 
               onClick={() => setIsModalOpen(true)}
               className="bg-[#191970] hover:bg-[#0F0F4B] text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
             >
-              <i className="fas fa-plus mr-2"></i>
+              <FaPlus className="mr-2 inline" />
               ارسال پیغام جدید
             </button>          
             <button
               onClick={handleDeleteAllSeen}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out ml-auto !rounded-button whitespace-nowrap cursor-pointer"
+              className="bg-red-500 hover:bg-red-600  text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
             >
-              <i className="fas fa-trash-alt mr-2"></i>
+              <FaTrashAlt className="mr-2 inline" />
               پاک کردن خوانده شده‌ها
             </button>
         </div>
@@ -382,10 +348,11 @@ const AdminNotification = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" dir='rtl'>
         {/* Search and Filter Section */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex flex-col md:flex-row md:items-center gap-4">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+         
             <div className="relative flex-grow">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i className="fas fa-search text-gray-400"></i>
+              <FaSearch className="text-gray-400 inline" />
               </div>
               <input
                 type="text"
@@ -401,10 +368,10 @@ const AdminNotification = () => {
                 onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
                 className="px-4 py-2 border border-gray-300 rounded-lg flex items-center bg-white hover:bg-gray-50 text-sm !rounded-button whitespace-nowrap cursor-pointer"
               >
-                <i className="fas fa-filter mr-2 text-[#191970]"></i>
+                <FaFilter className="ml-2 text-blue-800 inline" />
                 {filterType === 'all' ? 'تمام اعلان‌ها' : 
                  filterType === 'seen' ? 'دیده شده‌ها' : 'دیده نشده‌ها '}
-                <i className="fas fa-chevron-down ml-2 text-gray-500"></i>
+                <FaChevronDown className="mr-2 text-gray-500 inline" />
               </button>
               
               {isFilterMenuOpen && (
@@ -436,7 +403,7 @@ const AdminNotification = () => {
             <div className="relative">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <i className="fas fa-user text-gray-400"></i>
+                <FaUser className="text-gray-400 inline" />
                 </div>
                 <input
                   type="text"
@@ -456,7 +423,7 @@ const AdminNotification = () => {
                         onClick={() => handleUserSelect(user)}
                         className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 text-gray-700 cursor-pointer"
                       >
-                        {user.username} ({user.email})
+                        {user.username}
                       </button>
                     ))}
                   </div>
@@ -468,17 +435,9 @@ const AdminNotification = () => {
               onClick={handleSearch}
               className="bg-[#191970] hover:bg-[#0F0F4B] text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
             >
-              <i className="fas fa-search mr-2"></i>
+              <FaSearch className="inline ml-2"/>
               جستجو
             </button>
-{/*             
-            <button
-              onClick={handleClearFilters}
-              className="border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
-            >
-              <i className="fas fa-times mr-2"></i>
-              Clear
-            </button> */}
 
           </div>
         </div>
@@ -486,10 +445,10 @@ const AdminNotification = () => {
         {/* Notifications List */}
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-xl font-semibold text-[#191970] mb-4">
-            {filterType === 'all' ? 'All Notifications' : 
-             filterType === 'seen' ? 'Seen Notifications' : 'Unseen Notifications'}
-            <span className="ml-2 text-sm font-normal text-gray-500">
-              ({filteredNotifications.length} {filteredNotifications.length === 1 ? 'notification' : 'notifications'})
+            {filterType === 'all' ? 'تمام اعلان‌ها' : 
+             filterType === 'seen' ? 'اعلان‌های خوانده شده' : 'اعلان‌های خوانده نشده'}
+            <span className="mr-2 text-sm font-normal text-gray-500">
+              ({filteredNotifications.length} اعلان)
             </span>
           </h2>
           
@@ -500,9 +459,9 @@ const AdminNotification = () => {
           ) : filteredNotifications.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-5xl text-gray-300 mb-4">
-                <i className="fas fa-bell-slash"></i>
+              <FaBellSlash className='inline' />
               </div>
-              <p className="text-gray-500">No notifications found</p>
+              <p className="text-gray-500">هیچ اعلانی یافت نشد</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -514,31 +473,31 @@ const AdminNotification = () => {
                   }`}
                 >
                   {!notification.has_seen && (
-                    <div className="absolute top-4 right-4 h-3 w-3 rounded-full bg-blue-500"></div>
+                    <div className="absolute top-5 right-4 h-3 w-3 rounded-full bg-blue-500"></div>
                   )}
                   <div className="flex justify-between items-start">
-                    <h3 className="font-semibold text-[#191970]">{notification.title}</h3>
+                    <h3 className="font-semibold text-[#191970] pr-4">{notification.title}</h3>
                     <button 
                       onClick={() => handleDeleteNotification(notification.id)}
                       className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
                     >
-                      <i className="fas fa-trash-alt"></i>
+                     <FaTrashAlt className='inline' />
                     </button>
                   </div>
                   <p className="text-gray-600 mt-2 text-sm">{notification.text}</p>
                   <div className="mt-4 flex justify-between items-center text-xs text-gray-500">
                     <span>
-                      <i className="fas fa-user mr-1"></i>
-                      User ID: {notification.user_id}
+                      <FaUser className='inline ml-1' />
+                      شناسه کاربر: {notification.user_id}
                     </span>
                     <span>
-                      <i className="far fa-clock mr-1"></i>
+                    <FaRegClock className="ml-1 inline" />
                       {formatDate(notification.date_added)}
                     </span>
                   </div>
-                  <div className="mt-2 text-xs">
+                  <div className="mt-3 text-xs">
                     <span className={`px-2 py-1 rounded-full ${notification.has_seen ? 'bg-gray-100 text-gray-600' : 'bg-blue-100 text-blue-800'}`}>
-                      {notification.has_seen ? 'Seen' : 'Unseen'}
+                      {notification.has_seen ? 'خوانده شده' : 'خوانده نشده'}
                     </span>
                   </div>
                 </div>
@@ -547,142 +506,29 @@ const AdminNotification = () => {
           )}
         </div>
       </main>
+      <SendNotificationModal
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      onSend={handleSendNotification}
+      userSearchQuery={userSearchQuery}
+      setUserSearchQuery={setUserSearchQuery}
+      notificationTitle={notificationTitle}
+      setNotificationTitle={setNotificationTitle}
+      notificationText={notificationText}
+      setNotificationText={setNotificationText}
+      handleSearchUser={handleSearchUser}
+      searchResult={searchResult}
+      setSearchResult={setSearchResult}
+      setSelectedUserId={setSelectedUserId}
+    />
 
-      {/* Send Notification Modal */}
-      {/* {isModalOpen && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 mx-4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-[#191970]">ارسال اعلان جدید</h2>
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600 cursor-pointer"
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Select User
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i className="fas fa-user text-gray-400"></i>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search username..."
-                    className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-[#191970] focus:border-[#191970]"
-                    value={userSearchQuery}
-                    onChange={(e) => setUserSearchQuery(e.target.value)}
-                  />
-                </div>
-                
-                {isUserDropdownOpen && userSuggestions.length > 0 && (
-                  <div className="mt-1 w-full bg-white rounded-md shadow-lg max-h-60 overflow-auto border border-gray-200">
-                    <div className="py-1">
-                      {userSuggestions.map(user => (
-                        <button
-                          key={user.id}
-                          onClick={() => handleUserSelect(user)}
-                          className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 text-gray-700 cursor-pointer"
-                        >
-                          {user.username} ({user.email})
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {selectedUser && (
-                  <div className="mt-2 p-2 bg-gray-50 rounded-lg flex justify-between items-center">
-                    <div>
-                      <span className="font-medium">{selectedUser.username}</span>
-                      <span className="text-sm text-gray-500 ml-2">{selectedUser.email}</span>
-                    </div>
-                    <button 
-                      onClick={() => {
-                        setSelectedUser(null);
-                        setUserSearchQuery('');
-                      }}
-                      className="text-gray-400 hover:text-gray-600 cursor-pointer"
-                    >
-                      <i className="fas fa-times"></i>
-                    </button>
-                  </div>
-                )}
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Notification Title
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter title..."
-                  className="px-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-[#191970] focus:border-[#191970]"
-                  value={notificationTitle}
-                  onChange={(e) => setNotificationTitle(e.target.value)}
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Notification Message
-                </label>
-                <textarea
-                  placeholder="Enter message..."
-                  rows={4}
-                  className="px-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-[#191970] focus:border-[#191970]"
-                  value={notificationText}
-                  onChange={(e) => setNotificationText(e.target.value)}
-                ></textarea>
-              </div>
-            </div>
-            
-            <div className="mt-6 flex justify-end space-x-3">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
-              >
-                لغو
-              </button>
-              <button
-                onClick={handleSendNotification}
-                className="bg-[#191970] hover:bg-[#0F0F4B] text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
-              >
-                <i className="fas fa-paper-plane mr-2"></i>
-                ارسال اعلان
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
-<SendNotificationModal
-  isOpen={isModalOpen}
-  onClose={() => setIsModalOpen(false)}
-  onSend={handleSendNotification}
-  userSearchQuery={userSearchQuery}
-  setUserSearchQuery={setUserSearchQuery}
-  userSuggestions={userSuggestions}
-  isUserDropdownOpen={isUserDropdownOpen}
-  handleUserSelect={handleUserSelect}
-  selectedUser={selectedUser}
-  setSelectedUser={setSelectedUser}
-  notificationTitle={notificationTitle}
-  setNotificationTitle={setNotificationTitle}
-  notificationText={notificationText}
-  setNotificationText={setNotificationText}
-/>
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 mx-4">
             <div className="text-center">
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                <i className="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+              <FaExclamationTriangle className="text-red-500 text-xl inline" />
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">حذف همه اعلان‌های مشاهده‌شده</h3>
               <p className="text-sm text-gray-500">
@@ -701,7 +547,7 @@ const AdminNotification = () => {
                 onClick={confirmDeleteAllSeen}
                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
               >
-                <i className="fas fa-trash-alt mr-2"></i>
+               <FaTrashAlt className="inline mr-2" />
                 پاک کردن همه
               </button>
             </div>
@@ -709,15 +555,18 @@ const AdminNotification = () => {
         </div>
       )}
 
-      {/* Toast Notification */}
-      {showToast && (
-        <div className={`fixed bottom-4 right-4 px-4 py-3 rounded-lg shadow-lg ${
-          toastType === 'success' ? 'bg-green-500' : 'bg-red-500'
-        } text-white flex items-center z-50 transition-opacity duration-300`}>
-          <i className={`mr-2 ${toastType === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'}`}></i>
-          {toastMessage}
-        </div>
-      )}
+      <div className={`fixed bottom-4 right-4 px-4 py-3 rounded-lg shadow-lg transform transition-all duration-500 ease-out
+        ${showToast ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}
+        ${toastType === 'success' ? 'bg-green-500' : 'bg-red-500'}
+        text-white flex items-center z-50`}>
+        {toastType === 'success' ? (
+          <FaCheckCircle className="mr-2 inline" />
+        ) : (
+          <FaExclamationCircle className="mr-2 inline" />
+        )}
+        {toastMessage}
+      </div>
+
     </div>
   );
 };

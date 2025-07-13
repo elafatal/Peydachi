@@ -24,7 +24,7 @@ const searchByText = async () => {
     setIsLoading(true);
     try {
         const response = await axiosInstance.post('/admin/store_comment/search_store_comments', {
-            store_id : storeId,
+            store_id :storeId,
             search : searchQuery
           });
     const data = response.data.filter(item => item.text.toLowerCase().includes(searchQuery.toLowerCase()));

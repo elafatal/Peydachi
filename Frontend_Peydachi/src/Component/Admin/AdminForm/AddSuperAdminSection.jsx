@@ -18,7 +18,7 @@ const AddSuperAdminSection = () => {
             Swal.fire({
                 position: "top-end",
                 icon: "success",
-                title: "  سوپر ادمین اضافه شد",
+                title: "سوپر ادمین اضافه شد",
                 showConfirmButton: false,
                 timer: 1500,
                 toast: true,

@@ -120,7 +120,7 @@ useEffect(() => {
         }
        
         };
-    // Handle deleting a region => error////////////////////////////////////////////////////////////
+
         const handleDeleteRegion = async(id) => {
         if (window.confirm('از حذف استان اطمینان دارید؟‌ تمام شهر‌های مربوطه نیز حذف خواهند شد')) {
             try {
@@ -229,7 +229,7 @@ return (
         </div>
         )}
         <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {/* Region Management Panel */}
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
         <div className="bg-blue-800 text-white p-3">
