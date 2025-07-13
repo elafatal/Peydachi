@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import * as echarts from 'echarts';
-import ReviewModal from './ReviewModal'; 
+import ReviewModal from '../ReviewModal'; 
 import SearchFilters from '../SearchFilters';
 import StatsOverview from '../StatsOverview';
 import StoreRequestCard from './StoreRequestCard'

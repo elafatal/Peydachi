@@ -405,7 +405,7 @@ if (store.is_banned) {
                           type="button"
                           className="text-blue-600 hover:text-blue-900 cursor-pointer"
                           title="نظرات فروشگاه"
-                          onClick={() => navigate(`/admin/comments/${store.id}`)}
+                          onClick={() => navigate(`/admin/storeComments/${store.id}`)}
                         >
                           <FaComment   />
                         </button>

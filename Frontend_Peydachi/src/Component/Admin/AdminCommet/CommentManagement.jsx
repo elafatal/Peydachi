@@ -1,11 +1,14 @@
-import { FaCheckCircle, FaExclamationCircle, FaUser, FaTrashAlt, FaRegClock, FaRegCommentDots } from 'react-icons/fa';
+import {FaCheckCircle, FaExclamationCircle, FaSearch, FaUser,FaPhone , FaTag ,FaUserSlash , FaTrashAlt,FaRegClock, FaRegCommentDots} from 'react-icons/fa';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
-const StoreCommentManagement= () => {
+const CommentManagement= () => {
+const [activeTab, setActiveTab] = useState('text');
 const [searchQuery, setSearchQuery] = useState('');
 const [searchResults, setSearchResults] = useState([]);
 const [isLoading, setIsLoading] = useState(false);
+const [selectedUsers, setSelectedUsers] = useState([]);
+const [showUserResults, setShowUserResults] = useState(false);
 const [showDeleteModal, setShowDeleteModal] = useState(false);
 const [commentToDelete, setCommentToDelete] = useState(null);
 const [showResetModal, setShowResetModal] = useState(false);
@@ -14,8 +17,57 @@ show: false,
 message: '',
 type: 'success'
 });
-const { storeId } = useParams();
-
+  const { storeId } = useParams();
+const searchByText = async () => {
+    if (!searchQuery.trim()) return;
+    setIsLoading(true);
+    try {
+        const response = await axiosInstance.post('/admin/store_comment/search_store_comments_of_store', {
+            store_id :Number(storeId),
+            search : searchQuery
+          });
+    const data = response.data.filter(item => item.text.toLowerCase().includes(searchQuery.toLowerCase()));
+    setSearchResults(data);
+    } catch (error) {
+    console.error('Error searching comments:', error);
+    showNotification('جستجوی نظرات ناموفق بود', 'error');
+    } finally {
+    setIsLoading(false);
+    }
+};
+const searchByUsername = async () => {
+if (!searchQuery.trim()) return;
+setIsLoading(true);
+try {
+    const response = await axiosInstance.post('/admin/user/search_users', {
+        username: searchQuery
+      });
+const data = response.data.filter(user => user.username.toLowerCase().includes(searchQuery.toLowerCase()));
+setSelectedUsers(data);
+setShowUserResults(true);
+} catch (error) {
+console.error('Error searching users:', error);
+showNotification('جستجوی کاربران ناموفق بود', 'error');
+} finally {
+setIsLoading(false);
+}
+};
+const getUserComments = async (userId) => {
+setIsLoading(true);
+try {
+    const response = await axiosInstance.post('/admin/store_comment/get_user_store_comments', {
+        user_id: userId
+      });
+      console.log(response);
+    setSearchResults(response.data);
+    setShowUserResults(false);
+} catch (error) {
+    console.error('Error fetching user comments:', error);
+    showNotification('دریافت نظرات کاربران ناموفق بود', 'error');
+} finally {
+setIsLoading(false);
+}
+};
 const deleteComment = async (commentId) => {
 try {
     const response = await axiosInstance.delete('/admin/store_comment/admin_remove_store_comment',{data:  {store_comment_id: Number(commentId)}});
@@ -43,23 +95,13 @@ const resetStoreRating = async () => {
     }
 };
 
-const handleSearch = async() => {
-    if (!searchQuery.trim()) return;
-    setIsLoading(true);
-    try {
-        const response = await axiosInstance.post('/admin/store_comment/search_store_comments_of_store', {
-            store_id :Number(storeId),
-            search : searchQuery
-          });
-    const data = response.data.filter(item => item.text.toLowerCase().includes(searchQuery.toLowerCase()));
-    setSearchResults(data);
-    } catch (error) {
-    console.error('Error searching comments:', error);
-    showNotification('جستجوی نظرات ناموفق بود', 'error');
-    } finally {
-    setIsLoading(false);
-    }
-  };
+    const handleSearch = () => {
+        if (activeTab === 'text') {
+            searchByText();
+        } else {
+            searchByUsername();
+        }
+    };
 const confirmDeleteComment = (commentId) => {
 setCommentToDelete(commentId);
 setShowDeleteModal(true);
@@ -92,9 +134,13 @@ const formatDate = (dateString) => {
     if (days < 7) return `${days} روز قبل`;
     if (weeks < 4) return `${weeks} هفته قبل`;
     if (months < 12) return `${months} ماه قبل`;
-    return `${years} سال قبل`;
+    return `${years} سال${years > 1 ? 's' : ''} گذشته`;
 };
-
+useEffect(() => {
+    setSearchResults([]);
+    setSelectedUsers([]);
+    setShowUserResults(false);
+}, [activeTab]);
 return (
 <div className=" bg-gray-50">
 {/* Main Content */}
@@ -103,11 +149,24 @@ return (
 <div className="bg-white rounded-lg shadow-md p-6 mb-8">
 <div className="flex justify-between md:flex-row flex-col border-b border-gray-200 mb-6">
     
-
+        <div className="">
+            <button
+            className={`px-4 py-2 font-medium text-sm mr-4 border-b-2 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer ${activeTab === 'text' ? 'border-blue-800 text-blue-800' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+            onClick={() => setActiveTab('text')}
+            >
+           جستجو با متن کامنت
+            </button>
+            <button
+            className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer ${activeTab === 'username' ? 'border-blue-800 text-blue-800' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+            onClick={() => setActiveTab('username')}
+            >
+           جستجو با نام‌کاربری
+            </button>
+        </div>
     <div className="">
         <button
         onClick={confirmResetRating}
-        className="border border-red-700 hover:bg-red-100 text-red-700 px-4 py-2 mb-3 rounded-lg transition-colors duration-200  whitespace-nowrap cursor-pointer"
+        className="border border-red-700 hover:bg-red-100 text-red-700 px-4 py-2 mb-3 rounded-lg transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer"
         >
         صفر کردن امتیازات
         </button>
@@ -117,7 +176,7 @@ return (
 <div className="relative flex-1">
 <input
 type="text"
-placeholder="جستجو در کامنت‌ها" 
+placeholder={activeTab === 'text' ? "جستجو در کامنت‌ها" : "نام‌کاربری را وارد کنید"}
 value={searchQuery}
 onChange={(e) => setSearchQuery(e.target.value)}
 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-800 focus:border-blue-800 outline-none text-sm"
@@ -126,13 +185,57 @@ onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
 </div>
 <button
 onClick={handleSearch}
-className="mr-4 bg-blue-800 hover:bg-blue-900 text-white px-6 py-3 rounded-lg transition-colors duration-200 whitespace-nowrap cursor-pointer"
+className="mr-4 bg-blue-800 hover:bg-blue-900 text-white px-6 py-3 rounded-lg transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer"
 >
 جستجو
 </button>
 </div>
 </div>
-
+{/* User Results (for username search) */}
+{showUserResults && (
+<div className="bg-white rounded-lg shadow-md p-6 mb-8">
+<h2 className="text-lg font-semibold mb-4">کاربران پیدا شده</h2>
+{selectedUsers.length > 0 ? (
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+{selectedUsers.map(user => (
+<div
+key={user.id}
+className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200 cursor-pointer"
+onClick={() => getUserComments(user.id)}
+>
+<div className="flex items-center">
+<div className="w-10 h-10 rounded-full bg-blue-800 text-white flex items-center justify-center">
+<FaUser className='inline' />
+</div>
+<div className="mr-3">
+<h3 className="font-medium">{user.username}</h3>
+<p className="text-sm text-gray-500">{user.email}</p>
+</div>
+</div>
+<div className="mt-3 text-sm text-gray-600">
+<p>
+<FaPhone className="inline ml-2" />
+{user.phone_number}
+</p>
+<p className="mt-1">
+<FaTag className="ml-2 inline" />
+{user.is_seller ? 'فروشنده' : 'کاربر'}
+{user.is_admin && '، ادمین'}
+{user.is_super_admin && '، سوپر ادمین '}
+{user.is_banned && '، مسدود شده'}
+</p>
+</div>
+</div>
+))}
+</div>
+) : (
+<div className="text-center py-8 text-gray-500">
+<FaUserSlash className="text-4xl mb-3 inline" />
+<p>هیچ کاربری مطابق با معیارهای جستجوی شما یافت نشد</p>
+</div>
+)}
+</div>
+)}
 {/* Comments Results */}
 <div className="bg-white rounded-lg shadow-md p-6">
 <h2 className="text-lg font-semibold mb-4">نظرات</h2>
@@ -187,13 +290,13 @@ aria-label="حذف نظر"
 <div className="flex justify-end space-x-3">
 <button
 onClick={() => setShowDeleteModal(false)}
-className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors whitespace-nowrap cursor-pointer"
+className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
 >
 لغو
 </button>
 <button
 onClick={() => commentToDelete !== null && deleteComment(commentToDelete)}
-className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors whitespace-nowrap cursor-pointer"
+className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
 >
 حذف
 </button>
@@ -210,13 +313,13 @@ className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transitio
 <div className="flex justify-end space-x-3">
 <button
 onClick={() => setShowResetModal(false)}
-className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors whitespace-nowrap cursor-pointer"
+className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
 >
 لغو
 </button>
 <button
 onClick={resetStoreRating}
-className="px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition-colors whitespace-nowrap cursor-pointer"
+className="px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
 >
 بازنشانی امتیاز
 </button>
@@ -240,4 +343,4 @@ className="px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transit
 </div>
 );
 };
-export default StoreCommentManagement
+export default CommentManagement

@@ -16,12 +16,9 @@ const RecentComments = ({storeID}) => {
     const fetchComments = async () => {
         console.log("storeID:", storeID);
       try {
-        const response = await axiosInstance.post('/store_comment/get_store_comments', {store_id : storeID})
-        
-        setTimeout(() => {
-          setComments(response.data);
-          setLoading(false);
-        }, 1000);
+        const response = await axiosInstance.post('/store_comment/get_last_5_store_comments', {store_id : storeID})
+        setComments(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching comments:', error);
         setLoading(false);
@@ -32,20 +29,25 @@ const RecentComments = ({storeID}) => {
   }, []);
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
     const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const addedDate = new Date(dateString);
     
-    if (diffDays === 0) {
-      return 'امروز';
-    } else if (diffDays === 1) {
-      return 'دیروز';
-    } else if (diffDays < 7) {
-      return `${diffDays} روز قبل`;
-    } else {
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
+    const diffInMilliseconds = now - addedDate;
+    const seconds = Math.floor(diffInMilliseconds / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+  
+    if (seconds < 60) return 'لحظاتی پیش';
+    if (minutes < 60) return `${minutes} دقیقه قبل`;
+    if (hours < 24) return `${hours} ساعت قبل`;
+    if (days < 7) return `${days} روز قبل`;
+    if (weeks < 4) return `${weeks} هفته قبل`;
+    if (months < 12) return `${months} ماه قبل`;
+    return `${years} سال قبل`;
   };
 
 
