@@ -108,6 +108,3 @@ async def delete_all_user_notifications(user_id: ID_BODY, db: DB_DEPENDENCY):
     return await notification_functions.delete_all_user_notifications(user_id=user_id, db=db)
 
 
-@router.delete('/delete_all_seen_notifications', status_code=200)
-async def delete_all_seen_notifications(db: DB_DEPENDENCY):
-    return await notification_functions.delete_all_seen_notifications(db=db)
