@@ -22,7 +22,7 @@ const searchByText = async () => {
     if (!searchQuery.trim()) return;
     setIsLoading(true);
     try {
-        const response = await axiosInstance.post('/admin/store_comment/search_store_comments', {
+        const response = await axiosInstance.post('/admin/store_comment/search_store_comments_of_store', {
             store_id :Number(storeId),
             search : searchQuery
           });
