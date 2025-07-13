@@ -8,7 +8,7 @@ const UserReportCard = ({ report }) => {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4">
+    <div className="bg-white shadow-md rounded-lg p-4" dir='rtl'>
       <h3 className="text-lg font-semibold text-gray-800 mb-2">{report.title}</h3>
       <p className="text-gray-600 text-sm mb-4 line-clamp-3">{report.text}</p>
       <div className="flex justify-between items-center text-sm text-gray-500">

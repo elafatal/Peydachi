@@ -73,8 +73,6 @@ function App() {
                 <Route path="requests" element={<StoreRequest />} />
                 <Route path="reports" element={<UserReports />} />
               </Route>
-
-
               <Route path="notifications" element={<AdminNotification/>} />
               <Route path="adminManagement" element={<AdminFormsPage/>} />
               <Route path="/admin/comments/:storeId" element={<StoreCommentManagement />} />
