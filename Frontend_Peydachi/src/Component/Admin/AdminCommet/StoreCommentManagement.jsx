@@ -17,14 +17,13 @@ show: false,
 message: '',
 type: 'success'
 });
-  const { storeـid } = useParams();
-  const storeId = Number(storeـid);
+  const { storeId } = useParams();
 const searchByText = async () => {
     if (!searchQuery.trim()) return;
     setIsLoading(true);
     try {
         const response = await axiosInstance.post('/admin/store_comment/search_store_comments', {
-            store_id :storeId,
+            store_id :Number(storeId),
             search : searchQuery
           });
     const data = response.data.filter(item => item.text.toLowerCase().includes(searchQuery.toLowerCase()));
