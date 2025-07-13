@@ -37,7 +37,8 @@ from routers.admin_routers import (
     admin_add_store_request,
     admin_store_comment,
     admin_product_comment,
-    admin_city_center
+    admin_city_center,
+    admin_statistics
 )
 
 
@@ -94,6 +95,7 @@ app.include_router(admin_product_rating.router)
 app.include_router(admin_product_comment.router)
 app.include_router(admin_add_store_request.router)
 app.include_router(admin_city_center.router)
+app.include_router(admin_statistics.router)
 app.include_router(super_admin.router)
 app.include_router(super_admin_notifications.router)
 app.include_router(admin.router)
