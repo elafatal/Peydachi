@@ -8,7 +8,10 @@ from schemas.statistics_schemas import (
     AddStoreRequestStatisticsDisplay,
     PendingReviewStatisticsDisplay,
     StoreDistributionByCity,
-    StoreDistributionByRegion
+    StoreDistributionByRegion,
+    TopRaterDisplay,
+    TopCommenterDisplay,
+    AllDashboardStatisticsDisplay
 )
 
 
@@ -42,3 +45,18 @@ async def get_store_distribution_by_city(db: DB_DEPENDENCY):
 @router.get('/get_store_distribution_by_region', status_code=200, response_model=list[StoreDistributionByRegion])
 async def get_store_distribution_by_region(db: DB_DEPENDENCY):
     return await statistics_functions.get_store_distribution_by_region(db=db)
+
+
+@router.get('/get_top_commenters', status_code=200, response_model=list[TopCommenterDisplay])
+async def get_top_commenters(db: DB_DEPENDENCY):
+    return await statistics_functions.get_top_commenters(db=db)
+
+
+@router.get('/get_top_raters', status_code=200, response_model=list[TopRaterDisplay])
+async def get_top_raters(db: DB_DEPENDENCY):
+    return await statistics_functions.get_top_raters(db=db)
+
+
+@router.get('/get_all_dashboard_stats', status_code=200, response_model=AllDashboardStatisticsDisplay)
+async def get_all_dashboard_stats(db: DB_DEPENDENCY):
+    return await statistics_functions.get_all_dashboard_stats(db=db)
