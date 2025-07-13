@@ -1,10 +1,8 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 
 import React, { useState, useEffect } from 'react';
-import * as echarts from 'echarts';
-import ReviewModal from '../ReviewModal'; 
+import ReviewModal from './ReviewModal'; 
 import SearchFilters from '../SearchFilters';
-import StatsOverview from '../StatsOverview';
 import StoreRequestCard from './StoreRequestCard'
 const StoreRequest = () => {
   const [activeTab, setActiveTab] = useState('all');
