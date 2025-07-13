@@ -44,7 +44,7 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
         <div className="flex justify-between items-center gap-2">
           {!request.isReviewed ? (
             <button
-              className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-sm transition-colors"
+              className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-lg shadow-sm transition-colors"
               onClick={() => onReview(request)}
             >
               <FaCheckCircle className="ml-2 inline" />
@@ -52,7 +52,7 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
             </button>
           ) : (
             <button
-              className="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg shadow-sm"
+              className="bg-gray-200 text-gray-700 py-1 px-4 rounded-lg shadow-sm"
               disabled
             >
               <FaCheckCircle className="ml-2 inline" />
@@ -61,7 +61,7 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
           )}
 
           <button
-            className="bg-red-100 hover:bg-red-200 text-red-600 py-2 px-4 rounded-lg shadow-sm transition-colors"
+            className="bg-red-100 hover:bg-red-200 text-red-600 py-1 px-4 rounded-lg shadow-sm transition-colors"
             onClick={() => onRemove(request.id)}
           >
             <FaTrashAlt className="ml-2 inline" />
