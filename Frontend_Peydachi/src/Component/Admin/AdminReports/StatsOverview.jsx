@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { FaStore, FaCheckCircle, FaClock } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const StatsOverview = () => {
   const [stats, setStats] = useState({ total: 0, reviewed: 0, pending: 0 });
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -44,23 +46,25 @@ const StatsOverview = () => {
         color="blue"
       />
       <StatsCard
-        label="Reviewed"
+        label="Reports"
         value={loading ? '...' : stats.reviewed}
         Icon={FaCheckCircle}
         color="green"
+        onClick={() => navigate('reports')}
       />
       <StatsCard
-        label="Pending"
+        label="Requests"
         value={loading ? '...' : stats.pending}
         Icon={FaClock}
         color="yellow"
+        onClick={() => navigate('requests')}
       />
     </div>
   );
 };
 
-const StatsCard = ({ label, value, Icon, color }) => (
-  <div className={`bg-white rounded-lg shadow-md p-6 border-l-4 border-${color}-500`}>
+const StatsCard = ({ label, value, Icon, color,onClick }) => (
+  <div onClick={onClick}  className={`bg-white rounded-lg shadow-md p-6 border-l-4 border-${color}-500`}>
     <div className="flex justify-between items-center">
       <div>
         <p className="text-gray-500 text-sm pb-2">{label}</p>
