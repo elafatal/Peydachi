@@ -1,0 +1,76 @@
+import React from 'react';
+
+const SearchFilters = ({
+  searchTerm,
+  setSearchTerm,
+  selectedCity,
+  setSelectedCity,
+  activeTab,
+  setActiveTab,
+  cities
+}) => {
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6 mb-8" dir='rtl'>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="relative flex-grow">
+          <input
+            type="text"
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="جستجوی درخواست های فروشگاه..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <div className="absolute left-3 top-2.5 text-gray-400">
+            <i className="fas fa-search"></i>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-3 items-center">
+          {/* شهرها */}
+          <div>
+            <select
+              className="bg-white border border-gray-300 text-gray-700 py-2 px-4 pl-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={selectedCity || ''}
+              onChange={(e) => setSelectedCity(e.target.value ? parseInt(e.target.value) : null)}
+            >
+              <option value="">تمام شهرها</option>
+              {cities.map(city => (
+                <option key={city.id} value={city.id}>{city.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* فیلتر وضعیت */}
+          <div>
+            <select
+              className="bg-white border border-gray-300 text-gray-700 py-2 px-4 pl-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={activeTab}
+              onChange={(e) => setActiveTab(e.target.value)}
+            >
+              <option value="all">همه درخواست‌ها</option>
+              <option value="reviewed">بررسی‌شده</option>
+              <option value="pending">در انتظار بررسی</option>
+            </select>
+          </div>
+
+          {/* پاکسازی فیلترها */}
+          {(searchTerm || selectedCity || activeTab !== 'all') && (
+            <button
+              className="py-2 px-4 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 whitespace-nowrap"
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedCity(null);
+                setActiveTab('all');
+              }}
+            >
+              <i className="fas fa-times mr-2"></i>
+              پاک‌سازی فیلترها
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SearchFilters;

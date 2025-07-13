@@ -24,7 +24,6 @@ const AdminNotification = () => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(0);
     const [searchResult,setSearchResult]=useState([])
-  // Mock data for demonstration
 
   useEffect(() => {
     const fetchLastNotifSent = async () => {

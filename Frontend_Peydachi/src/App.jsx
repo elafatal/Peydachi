@@ -5,7 +5,6 @@ import AboutUs from './Component/About us/AboutUs';
 import Login from './Component/SignUp-SignIn/Login';
 import LandingPage from './Component/landingPage/LandingPage';
 import Footer from './Component/Footer/footer';
-
 import ErrorPage from './Component/Error/Error';
 import UserInfo from './Component/UserInfo/UserInfo';
 import { AuthProvider } from './Component/AuthContext/AuthContext';
@@ -31,6 +30,7 @@ import UserManagement from './Component/Admin/AdminUser/UserManagement';
 import StoreCommentManagement from './Component/Admin/AdminCommet/StoreCommentManagement';
 import AdminNotification from './Component/Admin/AdminNotif/AdminNotification';
 import AdminFormsPage from './Component/Admin/AdminForm/AdminForm';
+import AdminReports from './Component/Admin/AdminReports/AdminRequest';
 
 function App() {
   return (
@@ -64,7 +64,7 @@ function App() {
               <Route path="stores" element={<StoreManagement/>} />
               <Route path="cities" element={<CityManagement/>} />
               <Route path="users" element={<UserManagement/>} />
-              <Route path="reports" element={<UserManagement/>} />
+              <Route path="reports" element={<AdminReports/>} />
               <Route path="notifications" element={<AdminNotification/>} />
               <Route path="adminManagement" element={<AdminFormsPage/>} />
               <Route path="/admin/comments/:storeId" element={<StoreCommentManagement />} />
