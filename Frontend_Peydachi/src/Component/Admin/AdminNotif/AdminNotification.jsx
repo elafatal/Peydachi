@@ -328,7 +328,7 @@ const AdminNotification = () => {
     <div className="min-h-screen bg-gray-50" dir='ltr'>
       {/* Header */}
       <header className="bg-white shadow-sm">
-        <div className="flex justify-between w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex justify-between w-full flex-col gap-2 md:flex-row max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <button 
               onClick={() => setIsModalOpen(true)}
               className="bg-[#191970] hover:bg-[#0F0F4B] text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
@@ -338,7 +338,7 @@ const AdminNotification = () => {
             </button>          
             <button
               onClick={handleDeleteAllSeen}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out ml-auto !rounded-button whitespace-nowrap cursor-pointer"
+              className="bg-red-500 hover:bg-red-600  text-white px-4 py-2 rounded-lg shadow-sm transition-colors duration-200 ease-in-out !rounded-button whitespace-nowrap cursor-pointer"
             >
               <FaTrashAlt className="mr-2 inline" />
               پاک کردن خوانده شده‌ها
@@ -473,10 +473,10 @@ const AdminNotification = () => {
                   }`}
                 >
                   {!notification.has_seen && (
-                    <div className="absolute top-4 right-4 h-3 w-3 rounded-full bg-blue-500"></div>
+                    <div className="absolute top-5 right-4 h-3 w-3 rounded-full bg-blue-500"></div>
                   )}
                   <div className="flex justify-between items-start">
-                    <h3 className="font-semibold text-[#191970]">{notification.title}</h3>
+                    <h3 className="font-semibold text-[#191970] pr-4">{notification.title}</h3>
                     <button 
                       onClick={() => handleDeleteNotification(notification.id)}
                       className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
@@ -488,16 +488,16 @@ const AdminNotification = () => {
                   <div className="mt-4 flex justify-between items-center text-xs text-gray-500">
                     <span>
                       <FaUser className='inline ml-1' />
-                      User ID: {notification.user_id}
+                      شناسه کاربر: {notification.user_id}
                     </span>
                     <span>
                     <FaRegClock className="ml-1 inline" />
                       {formatDate(notification.date_added)}
                     </span>
                   </div>
-                  <div className="mt-2 text-xs">
+                  <div className="mt-3 text-xs">
                     <span className={`px-2 py-1 rounded-full ${notification.has_seen ? 'bg-gray-100 text-gray-600' : 'bg-blue-100 text-blue-800'}`}>
-                      {notification.has_seen ? 'Seen' : 'Unseen'}
+                      {notification.has_seen ? 'خوانده شده' : 'خوانده نشده'}
                     </span>
                   </div>
                 </div>
@@ -507,20 +507,20 @@ const AdminNotification = () => {
         </div>
       </main>
       <SendNotificationModal
-  isOpen={isModalOpen}
-  onClose={() => setIsModalOpen(false)}
-  onSend={handleSendNotification}
-  userSearchQuery={userSearchQuery}
-  setUserSearchQuery={setUserSearchQuery}
-  notificationTitle={notificationTitle}
-  setNotificationTitle={setNotificationTitle}
-  notificationText={notificationText}
-  setNotificationText={setNotificationText}
-  handleSearchUser={handleSearchUser}
-  searchResult={searchResult}
-  setSearchResult={setSearchResult}
-  setSelectedUserId={setSelectedUserId}
-/>
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      onSend={handleSendNotification}
+      userSearchQuery={userSearchQuery}
+      setUserSearchQuery={setUserSearchQuery}
+      notificationTitle={notificationTitle}
+      setNotificationTitle={setNotificationTitle}
+      notificationText={notificationText}
+      setNotificationText={setNotificationText}
+      handleSearchUser={handleSearchUser}
+      searchResult={searchResult}
+      setSearchResult={setSearchResult}
+      setSelectedUserId={setSelectedUserId}
+    />
 
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
