@@ -18,7 +18,6 @@ from sqlalchemy import and_,func
 
 
 
-from sqlalchemy import func, and_
 
 async def get_general_stats(db: Session):
     number_of_regions = db.query(func.count(Region.id)).scalar()
@@ -82,6 +81,9 @@ async def get_general_stats(db: Session):
 
 
 
+
+
+
 async def get_add_store_request_stats(db: Session):
     number_of_add_store_requests = db.query(func.count(AddStoreRequest.id)).scalar()
     number_of_pending_review_add_store_requests = db.query(func.count(AddStoreRequest.id)).filter(AddStoreRequest.is_reviewed == False).scalar()
@@ -109,3 +111,25 @@ async def get_pending_review_stats(db: Session):
     }
 
     return stats
+
+
+
+async def get_store_distribution_by_city(db: Session):
+    raw_stats = (
+        db.query(City.name, func.count(Store.id))
+        .join(Store, Store.city_id == City.id)
+        .group_by(City.name)
+        .order_by(func.count(Store.id).desc())
+        .all()
+    )
+
+    top5 = raw_stats[:5]
+    others = raw_stats[5:]
+
+    result = [{"city": name, "store_count": count} for name, count in top5]
+
+    if others:
+        other_total = sum(count for _, count in others)
+        result.append({"city": "بقیه شهر ها", "store_count": other_total})
+
+    return result

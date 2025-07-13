@@ -6,7 +6,8 @@ from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
 from schemas.statistics_schemas import (
     GeneralStatisticsDisplay,
     AddStoreRequestStatisticsDisplay,
-    PendingReviewStatisticsDisplay
+    PendingReviewStatisticsDisplay,
+    StoreDistributionByCity
 )
 
 
@@ -30,3 +31,8 @@ async def get_add_store_request_stats(db: DB_DEPENDENCY):
 @router.get('/get_pending_review_stats', status_code=200, response_model=PendingReviewStatisticsDisplay)
 async def get_pending_review_stats(db: DB_DEPENDENCY):
     return await statistics_functions.get_pending_review_stats(db=db)
+
+
+@router.get('/get_store_distribution_by_city', status_code=200, response_model=list[StoreDistributionByCity])
+async def get_store_distribution_by_city(db: DB_DEPENDENCY):
+    return await statistics_functions.get_store_distribution_by_city(db=db)
