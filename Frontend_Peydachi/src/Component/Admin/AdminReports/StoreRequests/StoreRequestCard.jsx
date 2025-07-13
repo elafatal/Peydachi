@@ -9,7 +9,7 @@ import {
 
 const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all hover:shadow-lg">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all hover:shadow-lg" dir='rtl'>
       <div className="p-6">
         <div className="flex justify-between items-start mb-4">
           <h3 className="text-xl font-bold text-gray-800 truncate">
@@ -27,10 +27,6 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
         </div>
 
         <div className="mb-4 space-y-2 text-sm">
-          <div className="flex items-center text-gray-600">
-            <FaPhoneAlt className="mr-2 text-blue-500" />
-            <span>{request.phone_number}</span>
-          </div>
           <div className="flex items-center text-gray-600">
             <FaMapMarkerAlt className="mr-2 text-blue-500" />
             <span>{getCityName(request.city_id)}</span>
