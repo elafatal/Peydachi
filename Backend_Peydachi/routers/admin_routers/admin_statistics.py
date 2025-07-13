@@ -3,7 +3,7 @@ from functions import statistics_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
-from schemas.statistics_schemas import StatisticsDisplay
+from schemas.statistics_schemas import GeneralStatisticsDisplay, AddStoreRequestStatisticsDisplay
 
 
 router = APIRouter(
@@ -13,6 +13,11 @@ router = APIRouter(
 )
 
 
-@router.get('/get_general_stats', status_code=200, response_model=StatisticsDisplay)
+@router.get('/get_general_stats', status_code=200, response_model=GeneralStatisticsDisplay)
 async def get_general_stats(db: DB_DEPENDENCY):
     return await statistics_functions.get_general_stats(db=db)
+
+
+@router.get('/get_add_store_request_stats', status_code=200, response_model=AddStoreRequestStatisticsDisplay)
+async def get_add_store_request_stats(db: DB_DEPENDENCY):
+    return await statistics_functions.get_add_store_request_stats(db=db)
