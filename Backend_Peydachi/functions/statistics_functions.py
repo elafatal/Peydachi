@@ -130,6 +130,27 @@ async def get_store_distribution_by_city(db: Session):
 
     if others:
         other_total = sum(count for _, count in others)
-        result.append({"city": "بقیه شهر ها", "store_count": other_total})
+        result.append({"city": "بقیه شهرها", "store_count": other_total})
+
+    return result
+
+
+async def get_store_distribution_by_region(db: Session):
+    raw_stats = (
+        db.query(Region.name, func.count(Store.id))
+        .join(Store, Store.city.region_id == Region.id)
+        .group_by(Region.name)
+        .order_by(func.count(Store.id).desc())
+        .all()
+    )
+
+    top5 = raw_stats[:5]
+    others = raw_stats[5:]
+
+    result = [{"region": name, "store_count": count} for name, count in top5]
+
+    if others:
+        other_total = sum(count for _, count in others)
+        result.append({"region": "بقیه استان‌ها", "store_count": other_total})
 
     return result

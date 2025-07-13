@@ -44,3 +44,8 @@ class PendingReviewStatisticsDisplay(BaseSchema):
 class StoreDistributionByCity(BaseSchema):
     city: str
     store_count: int
+
+
+class StoreDistributionByRegion(BaseSchema):
+    region: str
+    store_count: int

@@ -7,7 +7,8 @@ from schemas.statistics_schemas import (
     GeneralStatisticsDisplay,
     AddStoreRequestStatisticsDisplay,
     PendingReviewStatisticsDisplay,
-    StoreDistributionByCity
+    StoreDistributionByCity,
+    StoreDistributionByRegion
 )
 
 
@@ -36,3 +37,8 @@ async def get_pending_review_stats(db: DB_DEPENDENCY):
 @router.get('/get_store_distribution_by_city', status_code=200, response_model=list[StoreDistributionByCity])
 async def get_store_distribution_by_city(db: DB_DEPENDENCY):
     return await statistics_functions.get_store_distribution_by_city(db=db)
+
+
+@router.get('/get_store_distribution_by_region', status_code=200, response_model=list[StoreDistributionByRegion])
+async def get_store_distribution_by_region(db: DB_DEPENDENCY):
+    return await statistics_functions.get_store_distribution_by_region(db=db)
