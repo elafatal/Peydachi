@@ -22,10 +22,14 @@ async def delete_all_comments_of_product(product_id: ID_BODY, db: DB_DEPENDENCY)
     return await product_comment_functions.delete_all_comments_of_product(product_id=product_id, db=db)
 
 
-@router.post('/search_product_comments', status_code=200, response_model=list[ProductCommentDisplay])
-async def search_product_comments(product_id: ID_BODY, search: NAME_BODY, db: DB_DEPENDENCY):
-    return await product_comment_functions.search_product_comments(product_id=product_id, search=search, db=db)
+@router.post('/search_product_comments_of_product', status_code=200, response_model=list[ProductCommentDisplay])
+async def search_product_comments_of_product(product_id: ID_BODY, search: NAME_BODY, db: DB_DEPENDENCY):
+    return await product_comment_functions.search_product_comments_of_product(product_id=product_id, search=search, db=db)
 
+
+@router.post('/search_in_all_product_comments', status_code=200, response_model=list[ProductCommentDisplay])
+async def search_in_all_product_comments(search: NAME_BODY, db: DB_DEPENDENCY):
+    return await product_comment_functions.search_in_all_product_comments(search=search, db=db)
 
 @router.post('/get_user_product_comments', status_code=200, response_model=list[ProductCommentDisplay])
 async def get_user_product_comments(user_id: ID_BODY, db: DB_DEPENDENCY):

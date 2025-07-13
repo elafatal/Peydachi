@@ -207,14 +207,14 @@ async def delete_all_user_notifications(user_id: int, db: Session):
 
 
 async def delete_all_seen_notifications(db: Session):
-    notifs = db.query(Notification).filter(Notification.has_seen == True).all()
+    notifs = db.query(Notification).filter(Notification.has_seen == True)
     if not notifs:
         raise NO_NOTIFICATION_FOUND_ERROR
 
-    db.delete(notifs)
+    notifs.delete(synchronize_session=False)
     db.commit()
 
-    return 'Notifications deleted'
+    return 'All Seen Notifications Deleted'
 
 
 async def get_notif_count_and_first_three_notifs(user_id: int, db: Session):

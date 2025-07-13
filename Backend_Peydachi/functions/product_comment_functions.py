@@ -71,8 +71,16 @@ async def user_delete_product_comment(product_comment_id: int, user_id: int, db:
     return 'Product comment deleted'
 
 
-async def search_product_comments(product_id: int, search: str, db: Session):
+async def search_product_comments_of_product(product_id: int, search: str, db: Session):
     product_comments = db.query(ProductComment).filter(and_(ProductComment.product_id == product_id, ProductComment.text.contains(search))).order_by(ProductComment.date_added.desc()).all()
+    if not product_comments:
+        raise NO_PRODUCT_COMMENT_FOUND_ERROR
+
+    return product_comments
+
+
+async def search_in_all_product_comments(search: str, db: Session):
+    product_comments = db.query(ProductComment).filter(ProductComment.text.contains(search)).order_by(ProductComment.date_added.desc()).all()
     if not product_comments:
         raise NO_PRODUCT_COMMENT_FOUND_ERROR
 
