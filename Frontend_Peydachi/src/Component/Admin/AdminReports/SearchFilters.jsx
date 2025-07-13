@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { FaTimes,FaSearch } from 'react-icons/fa';
 const SearchFilters = ({
   searchTerm,
   setSearchTerm,
@@ -21,7 +21,7 @@ const SearchFilters = ({
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <div className="absolute left-3 top-2.5 text-gray-400">
-            <i className="fas fa-search"></i>
+          <FaSearch className='inline' />
           </div>
         </div>
 
@@ -63,7 +63,7 @@ const SearchFilters = ({
                 setActiveTab('all');
               }}
             >
-              <i className="fas fa-times mr-2"></i>
+              <FaTimes className='ml-2 inline'/>
               پاک‌سازی فیلترها
             </button>
           )}

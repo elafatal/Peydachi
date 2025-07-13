@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { FaTimes } from 'react-icons/fa';
 const ReviewModal = ({ show, onClose, onConfirm, request, getCityName, formatDate }) => {
   if (!show || !request) return null;
 
@@ -13,7 +13,7 @@ const ReviewModal = ({ show, onClose, onConfirm, request, getCityName, formatDat
               className="text-gray-400 hover:text-gray-500 cursor-pointer"
               onClick={onClose}
             >
-              <i className="fas fa-times"></i>
+             <FaTimes className='inline' />
             </button>
           </div>
         </div>
