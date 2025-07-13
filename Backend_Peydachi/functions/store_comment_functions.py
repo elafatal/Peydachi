@@ -37,6 +37,14 @@ async def get_store_comments(store_id: int, db: Session):
     return store_comments
 
 
+async def get_last_5_store_comments(store_id: int, db: Session):
+    store_comments = db.query(StoreComment).filter(StoreComment.store_id == store_id).order_by(StoreComment.date_added.desc()).limit(5).all()
+    if not store_comments:
+        raise NO_STORE_COMMENT_FOUND_ERROR
+
+    return store_comments
+
+
 async def get_store_comment_by_id(store_comment_id: int, db: Session):
     store_comment = db.query(StoreComment).filter(StoreComment.id == store_comment_id).first()
     if not store_comment:
