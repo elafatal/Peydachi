@@ -200,27 +200,40 @@ const AdminNotification = () => {
       console.log('search username error:', error);
     }
   }
-  const handleDeleteNotification = (id) => {
-    // Simulate API call
-    setTimeout(() => {
-      const updatedNotifications = notifications.filter(notif => notif.id !== id);
+  const handleDeleteNotification = async(id) => {
+    try {
+      const response = await axiosInstance.delete('/admin/notification/delete_notification',{data:{ notification_id : Number(id) }});
+      console.log(response);
+      if (response.status===200) {
+        const updatedNotifications = notifications.filter(notif => notif.id !== id);
       setNotifications(updatedNotifications);
-      showToastMessage('Notification deleted successfully', 'success');
-    }, 500);
+      showToastMessage('اعلان با موفقیت حذف شد', 'success');
+      }
+      
+    } catch (error) {
+      console.log('delete notif error:', error);
+    }
   };
 
   const handleDeleteAllSeen = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const confirmDeleteAllSeen = () => {
-    // Simulate API call
-    setTimeout(() => {
-      const updatedNotifications = notifications.filter(notif => !notif.has_seen);
-      setNotifications(updatedNotifications);
-      setIsDeleteModalOpen(false);
-      showToastMessage('All seen notifications deleted', 'success');
-    }, 500);
+  const confirmDeleteAllSeen = async() => {
+    try {
+      const response = await axiosInstance.delete('/admin/notification/delete_all_seen_notifications');
+      console.log(response);
+      if (response.status===200) {
+        const updatedNotifications = notifications.filter(notif => !notif.has_seen);
+        setNotifications(updatedNotifications);
+        setIsDeleteModalOpen(false);
+        showToastMessage('اعلان‌های خوانده شده حذف شدند', 'success');
+      }
+      
+    } catch (error) {
+      console.log('delete all seen error:', error);
+    }
+
   };
 
   const handleSendNotification = async() => {
