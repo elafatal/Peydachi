@@ -9,8 +9,9 @@ const Sidebar = () => {
     { path: '/admin', label: 'داشبورد' },
     { path: '/admin/stores', label: 'مدیریت فروشگاه‌ها' },
     { path: '/admin/users', label: 'مدیریت کاربران' },
+    { path: '/admin/reports', label: 'بررسی درخواست‌ها' },
     { path: '/admin/notifications', label: 'مدیریت اعلان‌ها' },
-    { path: '/admin/reports', label: 'مدیریت درخواست‌ها' },
+    { path: '/admin/comments', label: 'مدیریت نظرات' },
     { path: '/admin/cities', label: 'شهر و استان' },
     { path: '/admin/adminManagement', label: 'ادمین‌ها' },
   ];

@@ -34,6 +34,7 @@ import AdminFormsPage from './Component/Admin/AdminForm/AdminForm';
 import AdminReports from './Component/Admin/AdminReports/AdminReports';
 import StoreRequest from './Component/Admin/AdminReports/StoreRequests/StoreRequest';
 import UserReports from './Component/Admin/AdminReports/UserReports/UserReports';
+import CommentManagement from './Component/Admin/AdminCommet/CommentManagement';
 
 
 function App() {
@@ -68,6 +69,7 @@ function App() {
               <Route path="stores" element={<StoreManagement/>} />
               <Route path="cities" element={<CityManagement/>} />
               <Route path="users" element={<UserManagement/>} />
+              <Route path="comments" element={<CommentManagement/>} />
               <Route path="/admin/reports" element={<AdminReports />}>
                 <Route index element={<Navigate to="requests" replace />} />
                 <Route path="requests" element={<StoreRequest />} />
@@ -75,7 +77,7 @@ function App() {
               </Route>
               <Route path="notifications" element={<AdminNotification/>} />
               <Route path="adminManagement" element={<AdminFormsPage/>} />
-              <Route path="/admin/comments/:storeId" element={<StoreCommentManagement />} />
+              <Route path="/admin/storeComments/:storeId" element={<StoreCommentManagement />} />
             </Route>
           </Routes>
           </div>     
