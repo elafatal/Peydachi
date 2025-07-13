@@ -9,7 +9,9 @@ from database.models import (
     Notification,
     StoreRating,
     ProductRating,
-    AddStoreRequest
+    AddStoreRequest,
+    Report,
+    CommentReport
 )
 from sqlalchemy.orm import Session
 from sqlalchemy import and_,func
@@ -83,6 +85,21 @@ async def get_add_store_request_stats(db: Session):
         'total_add_store_requests': number_of_add_store_requests,
         'total_pending_review_add_store_requests': number_of_pending_review_add_store_requests,
         'total_reviewed_add_store_requests': number_of_reviewed_add_store_requests
+    }
+
+    return stats
+
+
+
+async def get_pending_review_stats(db: Session):
+    number_of_pending_review_add_store_requests = db.query(func.count(AddStoreRequest.id)).filter(AddStoreRequest.is_reviewed == False).scalar()
+    number_of_pending_review_reports = db.query(func.count(Report.id)).filter(Report.is_reviewed == False).scalar()
+    number_of_pending_review_comment_reports = db.query(func.count(CommentReport.id)).filter(CommentReport.is_reviewed == False).scalar()
+
+    stats = {
+        'total_pending_review_add_store_requests': number_of_pending_review_add_store_requests,
+        'total_pending_review_reports': number_of_pending_review_reports,
+        'total_pending_review_comment_reports': number_of_pending_review_comment_reports
     }
 
     return stats

@@ -30,3 +30,9 @@ class AddStoreRequestStatisticsDisplay(BaseSchema):
     total_add_store_requests: int
     total_pending_review_add_store_requests: int
     total_reviewed_add_store_requests: int
+
+
+class PendingReviewStatisticsDisplay(BaseSchema):
+    total_pending_review_add_store_requests: int
+    total_pending_review_reports: int
+    total_pending_review_comment_reports: int
