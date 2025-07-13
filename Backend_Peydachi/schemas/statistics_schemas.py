@@ -1,6 +1,6 @@
 from schemas.base_schemas import BaseSchema
 
-class StatisticsDisplay(BaseSchema):
+class GeneralStatisticsDisplay(BaseSchema):
     total_regions: int
     total_cities: int
     total_stores: int
@@ -24,3 +24,28 @@ class StatisticsDisplay(BaseSchema):
     total_store_ratings: int
     total_product_ratings: int
     total_ratings: int
+    total_reports: int
+    total_reviewed_reports: int
+    total_pending_review_reports: int
+
+
+class AddStoreRequestStatisticsDisplay(BaseSchema):
+    total_add_store_requests: int
+    total_pending_review_add_store_requests: int
+    total_reviewed_add_store_requests: int
+
+
+class PendingReviewStatisticsDisplay(BaseSchema):
+    total_pending_review_add_store_requests: int
+    total_pending_review_reports: int
+    total_pending_review_comment_reports: int
+
+
+class StoreDistributionByCity(BaseSchema):
+    city: str
+    store_count: int
+
+
+class StoreDistributionByRegion(BaseSchema):
+    region: str
+    store_count: int
