@@ -24,6 +24,9 @@ class GeneralStatisticsDisplay(BaseSchema):
     total_store_ratings: int
     total_product_ratings: int
     total_ratings: int
+    total_reports: int
+    total_reviewed_reports: int
+    total_pending_review_reports: int
 
 
 class AddStoreRequestStatisticsDisplay(BaseSchema):

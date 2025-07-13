@@ -44,6 +44,9 @@ async def get_general_stats(db: Session):
     number_of_store_ratings = db.query(func.count(StoreRating.id)).scalar()
     number_of_product_ratings = db.query(func.count(ProductRating.id)).scalar()
     number_of_ratings = number_of_store_ratings + number_of_product_ratings
+    number_of_reports = db.query(func.count(Report.id)).scalar()
+    number_of_reviewed_reports = db.query(func.count(Report.id)).filter(Report.is_reviewed == True).scalar()
+    number_of_pending_review_reports = db.query(func.count(Report.id)).filter(Report.is_reviewed == False).scalar()
 
     stats = {
         'total_regions': number_of_regions,
@@ -68,7 +71,10 @@ async def get_general_stats(db: Session):
         'total_seen_notifications': number_of_seen_notifications,
         'total_store_ratings': number_of_store_ratings,
         'total_product_ratings': number_of_product_ratings,
-        'total_ratings': number_of_ratings
+        'total_ratings': number_of_ratings,
+        'total_reports': number_of_reports,
+        'total_reviewed_reports': number_of_reviewed_reports,
+        'total_pending_review_reports': number_of_pending_review_reports
     }
 
     return stats
