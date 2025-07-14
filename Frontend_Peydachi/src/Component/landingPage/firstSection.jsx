@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaAllergies, FaSearch } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { FaLocationDot } from "react-icons/fa6";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import axiosInstance from '../axiosInstance';
 import backgroundImage from '../../../public/backgroundImage.jpg' 
 const FirstSection = () => {
@@ -16,7 +16,12 @@ const FirstSection = () => {
   const [allCities, setAllCities] = useState([]);
   const [filteredCities, setFilteredCities] = useState([]);
   const [filteredRegions, setFilteredRegions] = useState([]);
-
+  const dropdownVariants = {
+    hidden: { opacity: 0, height: 0 },
+    visible: { opacity: 1, height: "auto", transition: { duration: 0.3 } },
+    exit: { opacity: 0, height: 0, transition: { duration: 0.2 } },
+  };
+  
   useEffect(() => {
     const handleRegions = async () => {
       try {
@@ -207,21 +212,31 @@ const handleCityKeyDown = (e) => {
                       onFocus={() => setFilteredRegions(regions)}
                       onKeyDown={handleRegionKeyDown} 
                     />
+                  <AnimatePresence>
                     {showLocationDropdown && (
-                      <div className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                      <motion.div
+                        key="regionDropdown"
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        variants={dropdownVariants}
+                        className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
+                      >
                         <div className="p-2 max-h-44 overflow-y-scroll">
                           {filteredRegions.map((loc) => (
                             <button
                               key={loc.id}
-                              className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap "
+                              className="w-full text-right px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap"
                               onClick={() => handleLocationSelect(loc)}
                             >
                               {loc.name}
                             </button>
                           ))}
                         </div>
-                      </div>
+                      </motion.div>
                     )}
+                  </AnimatePresence>
+
                   </div>
 
                   {/* City */}
@@ -237,21 +252,31 @@ const handleCityKeyDown = (e) => {
                       onFocus={() => setFilteredCities(allCities)}
                       onKeyDown={handleCityKeyDown}
                     />
+                   <AnimatePresence>
                     {showLocationDropdown2 && (
-                      <div className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                      <motion.div
+                        key="cityDropdown"
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        variants={dropdownVariants}
+                        className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
+                      >
                         <div className="p-2 max-h-44 overflow-y-scroll">
                           {filteredCities.map((loc2) => (
                             <button
                               key={loc2.id}
-                              className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap"
+                              className="w-full text-right px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap"
                               onClick={() => handleLocationSelect2(loc2)}
                             >
                               {loc2.name}
                             </button>
                           ))}
                         </div>
-                      </div>
+                      </motion.div>
                     )}
+                  </AnimatePresence>
+
                   </div>
                   <button
                     className="w-1/2 bg-blue-600 text-xl text-white py-3 rounded-lg hover:bg-blue-700 cursor-pointer m-auto transition-colors duration-300"
