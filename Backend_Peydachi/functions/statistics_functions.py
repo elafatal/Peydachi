@@ -86,15 +86,21 @@ async def get_general_stats(db: Session):
 
 
 
-async def get_add_store_request_stats(db: Session):
+async def get_add_store_request_and_report_stats(db: Session):
     number_of_add_store_requests = db.query(func.count(AddStoreRequest.id)).scalar()
     number_of_pending_review_add_store_requests = db.query(func.count(AddStoreRequest.id)).filter(AddStoreRequest.is_reviewed == False).scalar()
     number_of_reviewed_add_store_requests = db.query(func.count(AddStoreRequest.id)).filter(AddStoreRequest.is_reviewed == True).scalar()
+    number_of_reports = db.query(func.count(Report.id)).scalar()
+    number_of_reviewed_reports = db.query(func.count(Report.id)).filter(Report.is_reviewed == True).scalar()
+    number_of_pending_review_reports = db.query(func.count(Report.id)).filter(Report.is_reviewed == False).scalar()
 
     stats = {
         'total_add_store_requests': number_of_add_store_requests,
         'total_pending_review_add_store_requests': number_of_pending_review_add_store_requests,
-        'total_reviewed_add_store_requests': number_of_reviewed_add_store_requests
+        'total_reviewed_add_store_requests': number_of_reviewed_add_store_requests,
+        'total_reports': number_of_reports,
+        'total_reviewed_reports': number_of_reviewed_reports,
+        'total_pending_review_reports': number_of_pending_review_reports
     }
 
     return stats
@@ -232,7 +238,7 @@ async def get_top_raters(db: Session, limit: int = 10):
 async def get_all_dashboard_stats(db: Session):
     general_stats = await get_general_stats(db=db)
     pending_review_stats = await get_pending_review_stats(db=db)
-    add_store_request_stats = await get_add_store_request_stats(db=db)
+    add_store_request_and_report_stats = await get_add_store_request_and_report_stats(db=db)
     store_distribution_by_city = await get_store_distribution_by_city(db=db)
     store_distribution_by_region = await get_store_distribution_by_region(db=db)
     top_commenters = await get_top_commenters(db=db)
@@ -241,7 +247,7 @@ async def get_all_dashboard_stats(db: Session):
     all_stats = {
         "general_statistics": general_stats,
         "pending_review_statistics": pending_review_stats,
-        "add_store_request_statistics": add_store_request_stats,
+        "add_store_request_and_report_stats": add_store_request_and_report_stats,
         "store_distribution_by_city": store_distribution_by_city or [],
         "store_distribution_by_region": store_distribution_by_region or [],
         "top_commenters": top_commenters or [],

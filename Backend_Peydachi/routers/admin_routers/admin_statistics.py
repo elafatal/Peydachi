@@ -5,7 +5,7 @@ from dependencies.body_dependencies import NAME_BODY, ID_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
 from schemas.statistics_schemas import (
     GeneralStatisticsDisplay,
-    AddStoreRequestStatisticsDisplay,
+    AddStoreRequestAndReportStatisticsDisplay,
     PendingReviewStatisticsDisplay,
     StoreDistributionByCity,
     StoreDistributionByRegion,
@@ -27,9 +27,9 @@ async def get_general_stats(db: DB_DEPENDENCY):
     return await statistics_functions.get_general_stats(db=db)
 
 
-@router.get('/get_add_store_request_stats', status_code=200, response_model=AddStoreRequestStatisticsDisplay)
-async def get_add_store_request_stats(db: DB_DEPENDENCY):
-    return await statistics_functions.get_add_store_request_stats(db=db)
+@router.get('/get_add_store_request_and_report_stats', status_code=200, response_model=AddStoreRequestAndReportStatisticsDisplay)
+async def get_add_store_request_and_report_stats(db: DB_DEPENDENCY):
+    return await statistics_functions.get_add_store_request_and_report_stats(db=db)
 
 
 @router.get('/get_pending_review_stats', status_code=200, response_model=PendingReviewStatisticsDisplay)

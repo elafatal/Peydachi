@@ -29,10 +29,13 @@ class GeneralStatisticsDisplay(BaseSchema):
     total_pending_review_reports: int
 
 
-class AddStoreRequestStatisticsDisplay(BaseSchema):
+class AddStoreRequestAndReportStatisticsDisplay(BaseSchema):
     total_add_store_requests: int
     total_pending_review_add_store_requests: int
     total_reviewed_add_store_requests: int
+    total_reports: int
+    total_reviewed_reports: int
+    total_pending_review_reports: int
 
 
 class PendingReviewStatisticsDisplay(BaseSchema):
@@ -62,7 +65,7 @@ class TopRaterDisplay(BaseSchema):
 
 class AllDashboardStatisticsDisplay(BaseSchema):
     general_statistics: GeneralStatisticsDisplay
-    add_store_request_statistics: AddStoreRequestStatisticsDisplay
+    add_store_request_and_report_stats: AddStoreRequestAndReportStatisticsDisplay
     pending_review_statistics: PendingReviewStatisticsDisplay
     store_distribution_by_city: list[StoreDistributionByCity] | None
     store_distribution_by_region: list[StoreDistributionByRegion] | None
