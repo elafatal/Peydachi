@@ -5,14 +5,16 @@ import AnalyticsCharts from './AnalyticsCharts';
 import axiosInstance from '../../axiosInstance';
 const DashboardOverview = () => {
   const [statistics, setStatistics] = useState(null);
-
+  const [cityData, setCityData] = useState([]);
+  const [productData, setProductData] = useState([]); // در صورت نیاز آینده
   useEffect(() => {
-    const fetchLastNotifSent = async () => {
+    const fetchDashboardData = async () => {
       try {
         const response = await axiosInstance.get('/admin/statistics/get_all_dashboard_stats');
-        if (response.data === 200) {
+        if (response.status === 200) {
+          const data = response.data
           //cards
-          const { total_stores, total_active_products, total_cities, total_users} =response.data.general_statistics;
+          const { total_stores, total_active_products, total_cities, total_users} = data.general_statistics;
           const extractedStats = {
             totalStores: total_stores,
             activeProducts: total_active_products,
@@ -22,17 +24,20 @@ const DashboardOverview = () => {
           setStatistics(extractedStats);
           //charts
           console.log(response.data);
-          
+          const transformedCityData = data.store_distribution_by_city.map(item => ({
+            name: item.city,
+            value: item.store_count,
+          }));
+          setCityData(transformedCityData);
+    
         }
-       
-
-       
+  
       } catch (error) {
-        console.log('last 12 notif sent errors:', error);
+        console.log('Error fetching dashboard data:', error);
       }
     };
   
-    fetchLastNotifSent();
+    fetchDashboardData();
   }, []);
   
 
@@ -72,7 +77,10 @@ const productChartData = {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Analytics Overview</h3>
-            <AnalyticsCharts cityData={cityChartData} productData={productChartData} />
+            <AnalyticsCharts
+            cityData={cityData}
+            productData={{ categories: [], values: [] }} 
+          />
           </div>
         </div>
         <RecentActivity />
