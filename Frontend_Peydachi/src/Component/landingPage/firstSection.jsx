@@ -212,30 +212,30 @@ const handleCityKeyDown = (e) => {
                       onFocus={() => setFilteredRegions(regions)}
                       onKeyDown={handleRegionKeyDown} 
                     />
-                  <AnimatePresence>
-                    {showLocationDropdown && (
-                      <motion.div
-                        key="regionDropdown"
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        variants={dropdownVariants}
-                        className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
-                      >
-                        <div className="p-2 max-h-44 overflow-y-scroll">
-                          {filteredRegions.map((loc) => (
-                            <button
-                              key={loc.id}
-                              className="w-full text-right px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap"
-                              onClick={() => handleLocationSelect(loc)}
-                            >
-                              {loc.name}
-                            </button>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                    <AnimatePresence>
+                      {showLocationDropdown && (
+                        <motion.div
+                          key="regionDropdown"
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                          variants={dropdownVariants}
+                          className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
+                        >
+                          <div className="p-2 max-h-44 overflow-y-scroll">
+                            {filteredRegions.map((loc) => (
+                              <button
+                                key={loc.id}
+                                className="w-full text-right px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap"
+                                onClick={() => handleLocationSelect(loc)}
+                              >
+                                {loc.name}
+                              </button>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
 
                   </div>
 
@@ -252,31 +252,30 @@ const handleCityKeyDown = (e) => {
                       onFocus={() => setFilteredCities(allCities)}
                       onKeyDown={handleCityKeyDown}
                     />
-                   <AnimatePresence>
-                    {showLocationDropdown2 && (
-                      <motion.div
-                        key="cityDropdown"
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        variants={dropdownVariants}
-                        className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
-                      >
-                        <div className="p-2 max-h-44 overflow-y-scroll">
-                          {filteredCities.map((loc2) => (
-                            <button
-                              key={loc2.id}
-                              className="w-full text-right px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap"
-                              onClick={() => handleLocationSelect2(loc2)}
-                            >
-                              {loc2.name}
-                            </button>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
+                         <AnimatePresence>
+                            {showLocationDropdown2 && (
+                              <motion.div
+                                key="cityDropdown"
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                                variants={dropdownVariants}
+                                className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
+                              >
+                                <div className="p-2 max-h-44 overflow-y-scroll">
+                                  {filteredCities.map((loc2) => (
+                                    <button
+                                      key={loc2.id}
+                                      className="w-full text-right px-4 py-3 hover:bg-gray-50 rounded cursor-pointer whitespace-nowrap"
+                                      onClick={() => handleLocationSelect2(loc2)}
+                                    >
+                                      {loc2.name}
+                                    </button>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                   </div>
                   <button
                     className="w-1/2 bg-blue-600 text-xl text-white py-3 rounded-lg hover:bg-blue-700 cursor-pointer m-auto transition-colors duration-300"
