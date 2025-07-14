@@ -32,7 +32,10 @@ const useMainSearchLogic = () => {
   }, [cityName]);
   useEffect(() => {
     const saved = sessionStorage.getItem('mainSearchState');
-    if (saved) {
+    const hasParams = searchParams.get('city_name') || searchParams.get('city_id') || searchParams.get('Query');
+  
+    // فقط اگر پارامترهای url وجود نداشتن، state قبلی رو از sessionStorage لود کن
+    if (!hasParams && saved) {
       const parsed = JSON.parse(saved);
       setSearchTerm(parsed.searchTerm || '');
       setRange(parsed.range || 10);
@@ -44,6 +47,21 @@ const useMainSearchLogic = () => {
       }
     }
   }, []);
+  useEffect(() => {
+    const shouldSave = searchTerm && cityName && location && mapCenter;
+    if (!shouldSave) return;
+  
+    const stateToSave = {
+      searchTerm,
+      range,
+      cityName,
+      location,
+      mapCenter,
+      selectedStoreLocation,
+    };
+    sessionStorage.setItem('mainSearchState', JSON.stringify(stateToSave));
+  }, [searchTerm, range, cityName, location, mapCenter, selectedStoreLocation]);
+  
   
   useEffect(() => {
     setSearchPayload(prev => ({
@@ -103,19 +121,19 @@ const useMainSearchLogic = () => {
   }, [searchPayload]);
   
   useEffect(() => {
-    
     const cityIdFromParams = searchParams.get('city_id');
     const cityNameFromParams = searchParams.get('city_name');
     const query = searchParams.get('Query');
     const rangeFromParams = searchParams.get('range');
   
-    if (cityIdFromParams) setCityId(cityIdFromParams);
-    if (cityNameFromParams) setCityName(cityNameFromParams);
-    if (query) setSearchTerm(query);
-    if (rangeFromParams) setRange(Number(rangeFromParams));
+    if (cityIdFromParams !== cityId) setCityId(cityIdFromParams);
+    if (cityNameFromParams !== cityName) setCityName(cityNameFromParams);
+    if (query !== searchTerm) setSearchTerm(query);
+    if (rangeFromParams && Number(rangeFromParams) !== range) {
+      setRange(Number(rangeFromParams));
+    }
   
     const targetCity = cityNameFromParams || 'تهران';
-  
     geocodeLocation(targetCity).then((coords) => {
       if (coords) {
         const newLocation = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
@@ -125,7 +143,7 @@ const useMainSearchLogic = () => {
         console.warn('❌ نتوانستیم مختصات مکان پیش‌فرض را بگیریم.');
       }
     });
-  }, []);
+  }, [searchParams]);
   
   
   useEffect(() => {
