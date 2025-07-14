@@ -52,10 +52,10 @@ const SearchProduct = () => {
   } = useSearchProduct();
 
 const goHome =()=>{
-  navigate('/', { replace: true });
+  navigate('/', { replace: false });
 }
 const goMainSearch =()=>{
-  navigate('/Search', { replace: true });
+  navigate('/Search', { replace: false });
 }
 
 let displayedProducts = [...filteredProducts];

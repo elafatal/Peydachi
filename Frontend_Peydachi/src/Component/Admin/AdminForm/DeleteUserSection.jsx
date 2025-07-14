@@ -123,7 +123,7 @@ const DeleteUserSection = () => {
           placeholder="نام کاربری"
           value={searchUsername}
           onChange={(e) => setSearchUsername(e.target.value)}
-          className="flex-1 p-2 border rounded"
+          className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent"
         />
         <button
           onClick={handleSearch}

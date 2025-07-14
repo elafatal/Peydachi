@@ -18,7 +18,7 @@ const renderStars = (rating) => {
 const ProductList = ({ stores , onStoreClick }) => {
   const navigate = useNavigate();
   const handleSeeDetail=(item)=>{
-    navigate(`/storeDetail/${item.store.id}`);
+    navigate(`/storeDetail/${item.store.id}`, { replace: false });
   }
   return (
     <div className="flex-1 overflow-auto p-4">

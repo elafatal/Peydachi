@@ -58,9 +58,9 @@ const handleLink =(Link)=>{
     <div className="max-w-7xl mx-auto px-6">
       <h2 className="text-3xl font-bold text-center text-gray-900 mb-16">
         خدمات متفرقه 
-        <h4 className="text-sm font-bold text-center text-gray-700 mb-16">  
+        <p className="text-sm font-bold text-center text-gray-700 mb-16">  
           (بدون نیاز به لوکیشن)
-      </h4>
+        </p>
       </h2>
      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
