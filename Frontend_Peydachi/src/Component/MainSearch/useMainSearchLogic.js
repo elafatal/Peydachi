@@ -1,7 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
+import { useNavigate } from 'react-router-dom';
+
 const useMainSearchLogic = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
@@ -18,24 +21,39 @@ const useMainSearchLogic = () => {
     range_km: 5
   });
 
+  
   const [stores,setStores] = useState([]);
   const [cityId, setCityId] = useState(searchParams.get('city_id') || '');
   const [cityName, setCityName] = useState(searchParams.get('city_name') || '');
-
+  const firstLoad = useRef(true);
   const cityRef = useRef(cityName);
   useEffect(() => {
     cityRef.current = cityName;
   }, [cityName]);
-
+  useEffect(() => {
+    const saved = sessionStorage.getItem('mainSearchState');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setSearchTerm(parsed.searchTerm || '');
+      setRange(parsed.range || 10);
+      setCityName(parsed.cityName || '');
+      setLocation(parsed.location || null);
+      setMapCenter(parsed.mapCenter || null);
+      if (parsed.selectedStoreLocation) {
+        setSelectedStoreLocation(parsed.selectedStoreLocation);
+      }
+    }
+  }, []);
+  
   useEffect(() => {
     setSearchPayload(prev => ({
       ...prev,
       name: searchTerm,
       range_km: range,
-      city_id: cityId ? parseInt(cityId) : null
+      city_id: /^\d+$/.test(cityId) ? parseInt(cityId) : null
     }));
-  }, [searchTerm, range]);
-
+  }, [searchTerm, range, cityId]);
+  
   useEffect(() => {
     const [lat, lng] = location.split(',').map(parseFloat);
     if (!isNaN(lat) && !isNaN(lng)) {
@@ -46,7 +64,18 @@ const useMainSearchLogic = () => {
       }));
     }
   }, [location]);
-    
+  useEffect(() => {
+    const stateToSave = {
+      searchTerm,
+      range,
+      cityName,
+      location,
+      mapCenter,
+      selectedStoreLocation,
+    };
+    sessionStorage.setItem('mainSearchState', JSON.stringify(stateToSave));
+  }, [searchTerm, range, cityName, location, mapCenter, selectedStoreLocation]);
+  
   const geocodeLocation = async (query, city = '') => {
     const fullQuery = city ? `${query}, ${city}` : query;
     const response = await fetch(
@@ -59,27 +88,45 @@ const useMainSearchLogic = () => {
     }
     return null;
   };
+
+  useEffect(() => {
+    const { name, city_id, location_latitude, location_longitude, range_km } = searchPayload;
+    const allReady = name && city_id && location_latitude && location_longitude && range_km;
+  
+    if (allReady) {
+      // فقط بار اول به‌صورت خودکار سرچ کن
+      if (firstLoad.current) {
+        firstLoad.current = false;
+        handleSearch();
+      }
+    }
+  }, [searchPayload]);
   
   useEffect(() => {
+    
     const cityIdFromParams = searchParams.get('city_id');
     const cityNameFromParams = searchParams.get('city_name');
     const query = searchParams.get('Query');
+    const rangeFromParams = searchParams.get('range');
   
     if (cityIdFromParams) setCityId(cityIdFromParams);
     if (cityNameFromParams) setCityName(cityNameFromParams);
     if (query) setSearchTerm(query);
+    if (rangeFromParams) setRange(Number(rangeFromParams));
   
-    const targetCity = cityNameFromParams || 'تهران'; 
+    const targetCity = cityNameFromParams || 'تهران';
   
     geocodeLocation(targetCity).then((coords) => {
       if (coords) {
+        const newLocation = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
         setMapCenter([coords.lat, coords.lng]);
-        setLocation(`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`);
+        setLocation(newLocation);
       } else {
         console.warn('❌ نتوانستیم مختصات مکان پیش‌فرض را بگیریم.');
       }
     });
   }, []);
+  
   
   useEffect(() => {
     if (!cityName) return;
@@ -93,6 +140,14 @@ const useMainSearchLogic = () => {
   }, [cityName]);
     
   const handleSearch = async() => {
+  
+    const queryParams = new URLSearchParams();
+    queryParams.set('city_id', cityId); // ← اضافه کن
+    queryParams.set('Query', searchTerm);
+    queryParams.set('range', range);
+    queryParams.set('city_name', cityName);
+    navigate(`/search?${queryParams.toString()}`, { replace: true });
+    console.log("📦 Payload being sent:", searchPayload);
    console.log(searchPayload);
    try {
     const response = await axiosInstance.post('/product/search_near_products', 
