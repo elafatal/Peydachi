@@ -13,7 +13,6 @@ import {
   } from 'react-icons/fa';
   import { useLocation } from 'react-router-dom';
   import { FaRegFaceRollingEyes } from "react-icons/fa6";
-  import { IoArrowBackCircleOutline } from "react-icons/io5";
   import axiosInstance from '../axiosInstance';
   import { BiMessageRoundedCheck } from "react-icons/bi";
   import { formatDistanceToNow } from 'date-fns';
@@ -26,6 +25,7 @@ const AllNotifPage= () => {
   const notifId = searchParams.get('id');
   const [notifications, setNotifications] = useState([]);
   const [unredNotifications,setUnreadNotifications]=useState([])
+  const [loading, setLoading] = useState(true);
   const [selectedNotification, setSelectedNotification] = useState(null);
       const [notificationsCache, setNotificationsCache] = useState({
         all: null,
@@ -46,7 +46,7 @@ const AllNotifPage= () => {
       if (notifId) {
         try {
           const response = await axiosInstance.post('/notification/get_notification_by_id', { notification_id: Number(notifId) });
-setSelectedNotification(response.data)
+          setSelectedNotification(response.data)
           console.log(response.data);
         } catch (error) {
           console.log(error); 
@@ -57,8 +57,10 @@ setSelectedNotification(response.data)
   }, [notifId]);
 useEffect(() => {
   const fetchNotifications = async () => {
+    setLoading(true);
     if (notificationsCache[activeFilter]) {
       setNotifications(notificationsCache[activeFilter]);
+      setLoading(false);
       return;
     }
 
@@ -78,6 +80,8 @@ useEffect(() => {
       }));
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -271,7 +275,12 @@ useEffect(() => {
         <div className="w-full flex gap-5">
           {/* right column - Notifications */}
           <div className="flex-grow">
-            {filteredNotifications.length > 0 ? (
+          {loading ? (
+              <div className="text-center py-20">
+                <div className="inline-block w-12 h-12 border-4 border-blue-300 border-t-blue-600 rounded-full animate-spin"></div>
+                <p className="mt-4 text-sm text-gray-600">در حال بارگذاری اعلان‌ها...</p>
+              </div>
+            ) :filteredNotifications.length > 0 ? (
               <div className="space-y-4 w-full">
                 {filteredNotifications.map((notification) => (
                   <div dir='rtl'
