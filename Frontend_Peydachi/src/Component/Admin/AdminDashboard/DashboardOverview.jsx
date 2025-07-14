@@ -3,11 +3,14 @@ import StatsCards from './StatsCards';
 import RecentActivity from './RecentActivity';
 import AnalyticsCharts from './AnalyticsCharts';
 import axiosInstance from '../../axiosInstance';
+import AdminActivity from './RecentActivity';
 const DashboardOverview = () => {
   const [statistics, setStatistics] = useState(null);
   const [cityData, setCityData] = useState([]);
   const [topRatersData, setTopRatersData] = useState({ categories: [], values: [] });
-  const [reviewStatusData, setReviewStatusData] = useState({ categories: [], values: [] });
+  const [adminStats, setAdminStats] = useState(null);
+  const [adminActivity, setAdminActivity] = useState([]);
+
   const chartsLoading = cityData.length === 0 || topRatersData.categories.length === 0;
 
   const [productData, setProductData] = useState([]); // در صورت نیاز آینده
@@ -43,6 +46,29 @@ const DashboardOverview = () => {
             { categories: [], values: [] }
           );
           setTopRatersData(transformedTopRaters);
+          //admins
+          const adminActivity = [
+            {
+              id: 1,
+              type: 'total_admins',
+              label: 'تعداد کل ادمین‌ها',
+              value: data.general_statistics.total_admins
+            },
+            {
+              id: 2,
+              type: 'active_admins',
+              label: 'ادمین‌های فعال',
+              value: data.general_statistics.total_active_admins
+            },
+            {
+              id: 3,
+              type: 'super_admins',
+              label: 'سوپر ادمین',
+              value: data.general_statistics.total_super_admins
+            }
+          ];
+          setAdminActivity(adminActivity);
+          
           
         }
   
@@ -92,7 +118,16 @@ const DashboardOverview = () => {
           )}
         </div>
         </div>
-        <RecentActivity />
+        {adminActivity.length > 0 ? (
+          <AdminActivity data={adminActivity} />
+        ) : (
+          <div className="bg-white rounded-lg shadow p-6">
+            <div  className="w-full h-80 bg-gray-100 animate-pulse rounded-lg" />
+        
+        </div>
+        )}
+
+
       </div>
     </div>
   );
