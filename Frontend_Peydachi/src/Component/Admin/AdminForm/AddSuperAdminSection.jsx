@@ -52,7 +52,7 @@ const AddSuperAdminSection = () => {
           placeholder={placeholders[field]}
           value={formData[field]}
           onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent"
         />
       ))}
       <button type="submit" className="w-full border-2 border-blue-800 text-blue-800 px-4 py-2 rounded hover:bg-blue-100 transition-all duration-300">
