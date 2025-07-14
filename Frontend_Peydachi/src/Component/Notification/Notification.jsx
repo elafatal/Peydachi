@@ -4,7 +4,6 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosNotifications } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from "framer-motion";
-import Cookies from 'js-cookie';
 import { isLoggedIn } from '../auth';
 const Notifications=()=>{
     const navigate = useNavigate();
@@ -66,21 +65,24 @@ const Notifications=()=>{
               transition={{ duration: 0.3 }}
               className="absolute top-10 left-0 w-56 bg-white shadow-lg border border-gray-100 rounded-md p-2 z-10"
             >
-              {unreadNotif.first_three_notifs.slice(0, 3).map((n, index) => (
+
+            {Array.isArray(unreadNotif.first_three_notifs) && unreadNotif.first_three_notifs.length > 0 ? (
+              unreadNotif.first_three_notifs.slice(0, 3).map((n, index) => (
                 <div
                   key={n.id}
-                  className={`px-4 py-3 cursor-pointer hover:bg-gray-100 transition-all duration-300`}
+                  className="px-4 py-3 cursor-pointer hover:bg-gray-100 transition-all duration-300"
                   onClick={() => {
                     handleTitleClick(n);
                     setShowDropdown(false);
-                }}
+                  }}
                 >
                   {n.title}
                 </div>
-              ))}
-              {unreadNotif.first_three_notifs.length === 0 && (
-                <div className="text-gray-500 text-sm">اعلان جدیدی ندارید</div>
-              )}
+              ))
+            ) : (
+              <div className="text-gray-500 text-sm">اعلان جدیدی ندارید</div>
+            )}
+
                <div
                   className={`px-4 py-3 text-gray-800 cursor-pointer border-t border-gray-100 hover:bg-gray-100 transition-all duration-300`}
                   onClick={() => {

@@ -2,15 +2,14 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState , useEffect } from 'react';
 import {
-    FaCog,
     FaClock,
-    FaArchive,
     FaTrashAlt,
     FaBell,
     FaCheckDouble,
     FaSearch,
     FaTimes,
   } from 'react-icons/fa';
+  import { isLoggedIn } from '../auth';
   import { useLocation } from 'react-router-dom';
   import { FaRegFaceRollingEyes } from "react-icons/fa6";
   import axiosInstance from '../axiosInstance';
@@ -55,6 +54,7 @@ const AllNotifPage= () => {
     }
     getNotifById();
   }, [notifId]);
+
 useEffect(() => {
   const fetchNotifications = async () => {
     setLoading(true);
