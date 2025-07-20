@@ -129,7 +129,7 @@ describe('StoreProfile Component - Tests', () => {
       expect(screen.getByText('Test Product')).toBeInTheDocument();
     });
 
-    const searchInput = screen.getByPlaceholderText('Search products...');
+    const searchInput = screen.getByPlaceholderText('جستجوی محصول...');
     fireEvent.change(searchInput, { target: { value: 'New Search' } });
     expect(searchInput).toHaveValue('New Search');
 
