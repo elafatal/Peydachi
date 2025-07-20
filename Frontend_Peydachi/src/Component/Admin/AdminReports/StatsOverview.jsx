@@ -5,7 +5,7 @@ import axiosInstance from '../../axiosInstance';
 
 const StatsOverview = () => {
   const [stats, setStats] = useState({
-    unseen: 0,
+    requests: 0,
     pending: 0,
     totalAlerts: 0
   });
@@ -15,14 +15,14 @@ const StatsOverview = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axiosInstance.get('/admin/statistics/get_general_stats');
+        const response = await axiosInstance.get('/admin/statistics/get_add_store_request_and_report_stats');
         const data = response.data;
 
-        const unseen = data.total_unseen_notifications || 0;
+        const requests = data.total_pending_review_add_store_requests || 0;
         const pending = data.total_pending_review_reports || 0;
-        const totalAlerts = unseen + pending;
+        const totalAlerts = requests + pending;
 
-        setStats({ unseen, pending, totalAlerts });
+        setStats({ requests, pending, totalAlerts });
       } catch (err) {
         console.error('Error fetching stats:', err);
       } finally {
@@ -50,7 +50,7 @@ const StatsOverview = () => {
       />
       <StatsCard
         label="درخواست‌های بررسی نشده"
-        value={loading ? '...' : stats.unseen}
+        value={loading ? '...' : stats.requests}
         Icon={FaInbox}
         color="yellow"
         onClick={() => navigate('requests')}
