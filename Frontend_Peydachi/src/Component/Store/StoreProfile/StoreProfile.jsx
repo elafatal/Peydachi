@@ -201,9 +201,9 @@ useEffect(() => {
           <h2 className="text-2xl font-bold text-blue-800">محصولات موجود</h2>
           <div className="flex items-center">
             <div className="relative">
-            <input
+            <input dir='rtl'
                 type="text"
-                placeholder="Search products..."
+                placeholder="جستجوی محصول..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -272,7 +272,7 @@ useEffect(() => {
         </div>
   
         <div className="mt-12 flex justify-center">
-          <button onClick={handleSetOffset} className="flex items-center bg-white border border-blue-300 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-button transition duration-200 font-medium whitespace-nowrap cursor-pointer">
+          <button type="button" onClick={handleSetOffset} className="flex items-center bg-white border border-blue-300 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-button transition duration-200 font-medium whitespace-nowrap cursor-pointer">
             نمایش بیشتر <FaChevronDown className="ml-2" />
           </button>
         </div>
@@ -280,7 +280,6 @@ useEffect(() => {
       <ProductReview  closeProductModal={closeProductModal}  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedProduct={modalProduct} />
      
     </div>
-
   </div>
   );
 };
