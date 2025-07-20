@@ -29,7 +29,7 @@ const ProductCard = ({ product, onEdit, onView,formatDate }) => {
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
           <div className="flex items-center">
-            <FaStar className="text-yellow-400 mr-1 text-sm" />
+            <FaStar className="text-yellow-400 ml-1 text-sm" />
             <span className="text-sm text-gray-600">{(product.average_rating  ?? 0).toFixed(1)}</span>
           </div>
         </div>

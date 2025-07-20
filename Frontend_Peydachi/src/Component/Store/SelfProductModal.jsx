@@ -13,17 +13,23 @@ const SelfProductModal = ({
 }) => {
   if (!isModalOpen || !selectedProduct) return null;
 
-  const renderStars = (rating) => {
-    const stars = [];
-    const full = Math.floor(rating);
-    const half = rating % 1 >= 0.5;
-    for (let i = 1; i <= 5; i++) {
-      if (i <= full) stars.push(<FaStar key={i} className="inline text-yellow-400" />);
-      else if (i === full + 1 && half) stars.push(<FaStarHalfAlt key={i} className="inline text-yellow-400" />);
-      else stars.push(<FaRegStar key={i} className="inline text-yellow-400" />);
-    }
-    return stars;
-  };
+ const renderStars = (rating) => {
+     const stars = [];
+     const fullStars = Math.floor(rating);
+     const hasHalfStar = rating % 1 >= 0.5;
+     for (let i = 0; i < fullStars; i++) {
+       stars.push(<FaStar key={`full-${i}`} className="text-yellow-400" />);
+     }
+     if (hasHalfStar) {
+       stars.push(<FaStarHalfAlt key="half" className="text-yellow-400" />);
+     }
+     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+     for (let i = 0; i < emptyStars; i++) {
+       stars.push(<FaRegStar key={`empty-${i}`} className="text-yellow-400" />);
+     }
+     return stars;
+   };
+   
   
 
   return (
