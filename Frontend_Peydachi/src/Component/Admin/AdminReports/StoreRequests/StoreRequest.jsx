@@ -32,29 +32,25 @@ const StoreRequest = () => {
       } catch (error) {
         console.log(error);
       }
+
+      try {
+        const response = await axiosInstance.get('/admin/add_store_request/get_all_add_store_requests', {
+          headers: {
+            Authorization: null,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        setStoreRequests(response.data)
+        console.log(response);
+        setIsLoading(false)
+      } catch (error) {
+        console.log(error);
+        
+      } 
     };
   
     fetchCities();
-  
-    // // Simulate API call to get store requests
-    // try {
-    //   const response = await axiosInstance.get('/city/get_all_cities', {
-    //     headers: {
-    //       Authorization: null,
-    //       'Content-Type': 'multipart/form-data'
-    //     }
-    //   });
-    //   setCities(response.data);
-    //   console.log(response);
-      
-    // } catch (error) {
-    //   console.log(error);
-      
-    // } 
 
-    //   setStoreRequests(mockRequests);
-    //   setIsLoading(false);
-      
     //   // Update stats
     //   setStats({
     //     total: mockRequests.length,
