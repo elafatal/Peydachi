@@ -1,5 +1,5 @@
 import React from "react";
-import { FaStar, FaRegStar, FaStarHalfAlt, FaTimes, FaStore, FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaComments,FaStar, FaRegStar, FaStarHalfAlt, FaTimes, FaStore, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 const ProductModal = ({
   selectedProduct,
@@ -10,7 +10,8 @@ const ProductModal = ({
   getCityName,
   formatDate,
   toggleFavorite,
-  favorites
+  favorites,
+  setIsReviewModalOpen
 }) => {
   if (!isModalOpen || !selectedProduct) return null;
   const navigate = useNavigate();
@@ -61,7 +62,19 @@ const ProductModal = ({
                     {/* <div className="text-gray-600">Product ID:</div>
                     <div>#{selectedProduct.id}</div> */}
                   </div>
+                 
                 </div>
+                <button
+                className="m-auto pt-3 border px-4 py-2 rounded-lg border-blue-500 text-blue-600 hover:bg-blue-50 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
+                onClick={() => {
+                  setIsReviewModalOpen(true);        // 👈 اول مودال نظر رو فعال کن
+                  setTimeout(() => {                 // 👈 بعد از کمی تأخیر، مودال محصول رو ببند
+                    closeProductModal();
+                  }, 100); // 100ms کافیه
+                }}
+              >
+                ثبت نظر
+              </button>
               </div>
 
               {/* right column */}

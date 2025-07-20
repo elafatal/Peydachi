@@ -15,6 +15,7 @@ import {
 } from 'react-icons/fa';
 import searchProduct from '../../../../public/searchProduct.jpg'
 import ProductModal from './ProductModal';
+import ProductReview from '../../Store/StoreProfile/ProductReview';
 const SearchProduct = () => {
   const navigate = useNavigate();
   const {
@@ -33,6 +34,7 @@ const SearchProduct = () => {
     handleAvailabilityToggle,
     openProductModal,
     closeProductModal,
+    clearSelectedProduct,
     getCityName,
     formatDate,
     clearFilters,
@@ -42,6 +44,8 @@ const SearchProduct = () => {
   toggleFavorite,
   showOnlyFavorites,
   setShowOnlyFavorites,
+  isReviewModalOpen, 
+  setIsReviewModalOpen
   } = useSearchProduct();
 
 const goHome =()=>{
@@ -349,8 +353,17 @@ if (sortOption === 'highestRated') {
       getCityName={getCityName}
       formatDate={formatDate}
       toggleFavorite={toggleFavorite}
-      favorites={favorites} />
+      favorites={favorites}
+      setIsReviewModalOpen={setIsReviewModalOpen} />
+      <ProductReview closeProductModal={() => setIsReviewModalOpen(false)}
+        isModalOpen={isReviewModalOpen}
+        setIsModalOpen={setIsReviewModalOpen}
+        selectedProduct={selectedProduct}
+        />
+
     </div>
+
+
   );
 };
 

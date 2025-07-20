@@ -20,6 +20,7 @@ const useSearchProduct = () => {
   const [allCities, setAllCities] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [ratingDistribution, setRatingDistribution] = useState([]);
   const chartRef = useRef(null);
 
@@ -149,13 +150,17 @@ const useSearchProduct = () => {
 
   };
   
+
   const closeProductModal = () => {
     setIsModalOpen(false);
-    setSelectedProduct(null);
+    // این خط رو برمی‌داریم یا با تأخیر صدا می‌زنیم
     setRatingDistribution([]);
-
   };
-
+  
+  const clearSelectedProduct = () => {
+    setSelectedProduct(null);
+  };
+  
 
  useEffect(() => {
   const handleSearch = async()=>{
@@ -255,6 +260,7 @@ const useSearchProduct = () => {
     handleAvailabilityToggle,
     openProductModal,
     closeProductModal,
+    clearSelectedProduct, 
     getCityName,
     formatDate,
     clearFilters,
@@ -264,6 +270,8 @@ const useSearchProduct = () => {
   toggleFavorite,
   showOnlyFavorites,
   setShowOnlyFavorites,
+  isReviewModalOpen,
+  setIsReviewModalOpen
   };
 };
 
