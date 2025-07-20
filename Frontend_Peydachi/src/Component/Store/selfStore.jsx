@@ -347,8 +347,8 @@ const handleAskRemovePic = () => {
 };
 const handleAskUploadPic = () => {
   showConfirmModal({
-    title: 'حذف عکس محصول',
-    message: 'آیا مطمئن هستی می‌خوای عکس این محصول رو حذف کنی؟',
+    title: ' به‌روزرسانی عکس محصول ',
+    message: 'آیا مطمئن هستی می‌خوای عکس این محصول رو عوض کنی؟',
     onConfirm: handleUploadProductPic
   });
 };
