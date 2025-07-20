@@ -27,6 +27,7 @@ async def send_add_store_request(request: AddAddStoreRequestModel, db: Session):
         city_id=request.city_id if request.city_id else None,
         description=request.description if request.description else None,
         date_added=datetime.datetime.now(),
+        address=request.address
     )
 
     db.add(request)
@@ -37,7 +38,7 @@ async def send_add_store_request(request: AddAddStoreRequestModel, db: Session):
 
 
 async def get_requests_to_review(db: Session):
-    requests = db.query(AddStoreRequest).filter(AddStoreRequest.is_reviewed == False).all()
+    requests = db.query(AddStoreRequest).filter(AddStoreRequest.is_reviewed == False).order_by(AddStoreRequest.date_added.asc()).all()
 
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
@@ -46,7 +47,7 @@ async def get_requests_to_review(db: Session):
 
 
 async def get_all_add_store_requests(db: Session):
-    requests = db.query(AddStoreRequest).all()
+    requests = db.query(AddStoreRequest).order_by(AddStoreRequest.date_added.asc()).all()
 
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
