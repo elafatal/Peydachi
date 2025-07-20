@@ -1,26 +1,19 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import * as echarts from 'echarts';
+import React from 'react';
 import useSearchProduct from './useSearchProduct';
 import { useNavigate } from 'react-router-dom';
 import {
-  FaStore,
   FaRegHeart,
   FaHeart,
   FaSearch,
   FaMapMarkerAlt,
-  FaChevronDown,
   FaCheckCircle,
   FaTimesCircle,
-  FaTimes,
   FaStar,
   FaRegStar,
   FaStarHalfAlt
 } from 'react-icons/fa';
-
-import axiosInstance from '../../axiosInstance';
 import searchProduct from '../../../../public/searchProduct.jpg'
-import { motion, AnimatePresence } from 'framer-motion';
 import ProductModal from './ProductModal';
 const SearchProduct = () => {
   const navigate = useNavigate();
