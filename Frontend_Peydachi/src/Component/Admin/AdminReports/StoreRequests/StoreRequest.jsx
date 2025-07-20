@@ -1,8 +1,7 @@
-// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
-
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../../axiosInstance';
 import ReviewModal from './ReviewModal'; 
-import SearchFilters from '../SearchFilters';
+import SearchFilters from './SearchFilters';
 import StoreRequestCard from './StoreRequestCard'
 const StoreRequest = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -19,96 +18,52 @@ const StoreRequest = () => {
     pending: 0
   });
 
-  // Mock data for demonstration
   useEffect(() => {
-    // Simulate API call to get cities
-    setTimeout(() => {
-      const mockCities= [
-        { id: 1, region_id: 1, name: "New York" },
-        { id: 2, region_id: 1, name: "Los Angeles" },
-        { id: 3, region_id: 2, name: "Chicago" },
-        { id: 4, region_id: 2, name: "Houston" },
-        { id: 5, region_id: 3, name: "Phoenix" }
-      ];
-      setCities(mockCities);
-    }, 500);
-
-    // Simulate API call to get store requests
-    setTimeout(() => {
-      const mockRequests = [
-        {
-          id: 1,
-          store_name: "Urban Outfitters",
-          phone_number: "+1 (555) 123-4567",
-          region_id: 1,
-          city_id: 1,
-          description: "A trendy clothing and lifestyle store focusing on urban fashion and home decor for young adults.",
-          date_added: "2025-07-01T14:23:45.639Z",
-          isReviewed: true
-        },
-        {
-          id: 2,
-          store_name: "Tech Haven",
-          phone_number: "+1 (555) 987-6543",
-          region_id: 1,
-          city_id: 2,
-          description: "Specialized electronics store offering the latest gadgets, computer hardware, and tech accessories.",
-          date_added: "2025-07-02T09:15:30.639Z",
-          isReviewed: false
-        },
-        {
-          id: 3,
-          store_name: "Green Grocers",
-          phone_number: "+1 (555) 456-7890",
-          region_id: 2,
-          city_id: 3,
-          description: "Organic grocery store with locally sourced produce, sustainable products, and zero-waste options.",
-          date_added: "2025-07-02T16:45:10.639Z",
-          isReviewed: false
-        },
-        {
-          id: 4,
-          store_name: "Bookworm Paradise",
-          phone_number: "+1 (555) 234-5678",
-          region_id: 2,
-          city_id: 4,
-          description: "Independent bookstore with a vast collection of fiction, non-fiction, and rare books. Includes a cozy reading café.",
-          date_added: "2025-07-03T11:30:22.639Z",
-          isReviewed: true
-        },
-        {
-          id: 5,
-          store_name: "Fitness First",
-          phone_number: "+1 (555) 876-5432",
-          region_id: 3,
-          city_id: 5,
-          description: "Fitness equipment and sportswear store with professional consultation services for home gym setup.",
-          date_added: "2025-07-03T08:20:15.639Z",
-          isReviewed: false
-        },
-        {
-          id: 6,
-          store_name: "Artisan Bakery",
-          phone_number: "+1 (555) 345-6789",
-          region_id: 1,
-          city_id: 1,
-          description: "Traditional bakery offering freshly baked bread, pastries, and cakes using time-honored recipes and techniques.",
-          date_added: "2025-06-30T13:10:45.639Z",
-          isReviewed: true
-        }
-      ];
-      setStoreRequests(mockRequests);
-      setIsLoading(false);
+    const fetchCities = async () => {
+      try {
+        const response = await axiosInstance.get('/city/get_all_cities', {
+          headers: {
+            Authorization: null,
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        setCities(response.data);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchCities();
+  
+    // // Simulate API call to get store requests
+    // try {
+    //   const response = await axiosInstance.get('/city/get_all_cities', {
+    //     headers: {
+    //       Authorization: null,
+    //       'Content-Type': 'multipart/form-data'
+    //     }
+    //   });
+    //   setCities(response.data);
+    //   console.log(response);
       
-      // Update stats
-      setStats({
-        total: mockRequests.length,
-        reviewed: mockRequests.filter(req => req.isReviewed).length,
-        pending: mockRequests.filter(req => !req.isReviewed).length
-      });
-    }, 800);
-  }, []);
+    // } catch (error) {
+    //   console.log(error);
+      
+    // } 
 
+    //   setStoreRequests(mockRequests);
+    //   setIsLoading(false);
+      
+    //   // Update stats
+    //   setStats({
+    //     total: mockRequests.length,
+    //     reviewed: mockRequests.filter(req => req.isReviewed).length,
+    //     pending: mockRequests.filter(req => !req.isReviewed).length
+    //   });
+ 
+  }, []);
+  
   // Filter requests based on active tab, search term, and selected city
   const filteredRequests = storeRequests.filter(request => {
     const matchesTab = 
