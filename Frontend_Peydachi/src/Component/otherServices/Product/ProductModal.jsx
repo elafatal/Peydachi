@@ -67,10 +67,10 @@ const ProductModal = ({
                 <button
                 className="m-auto pt-3 border px-4 py-2 rounded-lg border-blue-500 text-blue-600 hover:bg-blue-50 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
                 onClick={() => {
-                  setIsReviewModalOpen(true);        // 👈 اول مودال نظر رو فعال کن
-                  setTimeout(() => {                 // 👈 بعد از کمی تأخیر، مودال محصول رو ببند
+                  setIsReviewModalOpen(true);  
+                  setTimeout(() => {               
                     closeProductModal();
-                  }, 100); // 100ms کافیه
+                  }, 100); 
                 }}
               >
                 ثبت نظر
