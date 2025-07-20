@@ -33,7 +33,6 @@ const AboutUs = () => {
             >
               <BiLogoTelegram className="opacity-90 transition-opacity hover:opacity-100 text-blue-600 w-8 h-8 cursor-pointer" />
             </a>
-
             <a
               href="https://github.com/HB2102/Peydachi"
               target="_blank"
@@ -41,7 +40,6 @@ const AboutUs = () => {
             >
               <FaGithub className="opacity-90 transition-opacity hover:opacity-100 text-blue-600 w-8 h-8 cursor-pointer" />
             </a>
-
             <a
               href="mailto:your.email@example.com" 
               target="_blank"
