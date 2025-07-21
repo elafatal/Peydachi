@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import UserReportCard from './UserReportCard';
-import axiosInstance from '../../../axiosInstance'; // مسیر درست axios
+import axiosInstance from '../../../axiosInstance'; 
 
 const UserReports = () => {
   const [reports, setReports] = useState([]);
@@ -10,33 +10,19 @@ const UserReports = () => {
   const [filtered, setFiltered] = useState([]);
   useEffect(() => {
     const fetchReports = async () => {
-      // حذف axios و استفاده از mock data
-      const mockReports = [
-        {
-          id: 1,
-          title: 'گزارش تخلف فروشگاه موبایل',
-          text: 'این فروشگاه قیمت کالا را بیشتر از قیمت مصوب درج کرده است و هیچ فاکتوری هم ارائه نمی‌دهد.',
-          date_added: '2025-07-13T12:25:00.474Z',
-          is_reviewed: false
-        },
-        {
-          id: 2,
-          title: 'رفتار نامناسب فروشنده',
-          text: 'در مراجعه حضوری، فروشنده رفتار نامناسبی داشت و پاسخگوی سوالات نبود.',
-          date_added: '2025-07-12T10:15:00.474Z',
-          is_reviewed: true
-        },
-        {
-          id: 3,
-          title: 'عدم موجودی کالا',
-          text: 'در سایت نوشته بود موجود است، اما بعد از خرید تماس گرفتند و گفتند که کالا موجود نیست.',
-          date_added: '2025-07-10T15:40:00.474Z',
-          is_reviewed: false
-        }
-      ];
-  
-      setReports(mockReports);
-      setFiltered(mockReports);
+      try {
+        const response = await axiosInstance.get('/admin/report/get_all_reports', {
+          headers: {
+            Authorization: null,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        setReports(response.data);
+        setFiltered(response.data);
+      } catch (error) {
+        console.log(error);
+        
+      } 
     };
   
     fetchReports();
@@ -46,7 +32,7 @@ const UserReports = () => {
     const fetchReports = async () => {
       try {
         const res = await axiosInstance.post('/admin/report/search_reports', {
-          search
+          report_text : search
         });
         setReports(res.data);
         setFiltered(res.data);

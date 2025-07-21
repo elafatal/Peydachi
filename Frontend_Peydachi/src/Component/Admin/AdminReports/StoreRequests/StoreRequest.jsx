@@ -99,7 +99,7 @@ const StoreRequest = () => {
     if (days < 7) return `${days} روز قبل`;
     if (weeks < 4) return `${weeks} هفته قبل`;
     if (months < 12) return `${months} ماه قبل`;
-    return `${years} سال${years > 1 ? 's' : ''} گذشته`;
+    return `${years} سال گذشته`;
   };
 
   // Get city name by ID
