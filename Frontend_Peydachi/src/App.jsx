@@ -8,7 +8,7 @@ import LandingPage from './Component/landingPage/LandingPage';
 import Footer from './Component/Footer/footer';
 import ErrorPage from './Component/Error/Error';
 import UserInfo from './Component/UserInfo/UserInfo';
-import { AuthProvider } from './Component/AuthContext/AuthContext';
+import { AuthProvider } from './Component/Context/AuthContext';
 import UnauthorizedPage from './Component/Error/UnauthorizedPage';
 import AdminPage from './Component/Admin/Admin';
 import SearchStore from './Component/otherServices/Store/SearchStore/SearchStore';

@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './AdminMenu/Sidebar';
-import { useAuth } from '../AuthContext/AuthContext';
+import { useAuth } from '../Context/AuthContext';
 import UnauthorizedPage from '../Error/UnauthorizedPage';
 const AdminPage = () => {
   const { role } = useAuth(); 

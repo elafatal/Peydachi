@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
 import { TbMapSearch } from "react-icons/tb";
 import { IoIosMenu,IoMdClose } from "react-icons/io";
-import { useAuth } from '../AuthContext/AuthContext';
+import { useAuth } from '../Context/AuthContext';
 import { useLocation } from 'react-router-dom';
 import { isLoggedIn, getAccessToken } from '../auth';
 import Cookies from 'js-cookie';

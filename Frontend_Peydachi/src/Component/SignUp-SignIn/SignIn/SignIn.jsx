@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
-import { useAuth } from '../../AuthContext/AuthContext';
+import { useAuth } from '../../Context/AuthContext';
 
 const SignIn= ({showComponent,setshowComponent, setusername , username }) => {
   const navigate = useNavigate();

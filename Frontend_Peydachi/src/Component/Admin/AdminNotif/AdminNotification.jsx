@@ -1,7 +1,7 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import axiosInstance from '../../axiosInstance';
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../AuthContext/AuthContext';
+import { useAuth } from '../../Context/AuthContext';
 import { FaPlus,FaTrashAlt,FaSearch,FaFilter,FaChevronDown,FaUser,FaBellSlash,FaRegClock,FaExclamationTriangle,FaCheckCircle, FaExclamationCircle} from 'react-icons/fa';
 import SendNotificationModal from './SendNotificationModal';
 import Swal from "sweetalert2";

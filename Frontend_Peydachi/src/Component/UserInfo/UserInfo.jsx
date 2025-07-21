@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { useAuth } from '../AuthContext/AuthContext';
+import { useAuth } from '../Context/AuthContext';
 import { FaRegEdit } from "react-icons/fa";
 import Swal from "sweetalert2";  
 import UnauthorizedPage from '../Error/UnauthorizedPage';

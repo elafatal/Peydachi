@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import Swal from "sweetalert2"; 
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
-import { useAuth } from '../../AuthContext/AuthContext';
+import { useAuth } from '../../Context/AuthContext';
 
 const SignUp= ({showComponent,setshowComponent}) => {
   const { login } = useAuth()

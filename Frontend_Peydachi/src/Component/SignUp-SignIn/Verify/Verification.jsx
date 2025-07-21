@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";  
 import Cookies from 'js-cookie';
 import axiosInstance from '../../axiosInstance';
-import { useAuth } from '../../AuthContext/AuthContext';
+import { useAuth } from '../../Context/AuthContext';
 const OTPVerification = ({ showComponent,setshowComponent ,username }) => {
   const navigate = useNavigate();
   const { login } = useAuth()
