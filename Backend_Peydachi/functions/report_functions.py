@@ -104,6 +104,18 @@ async def remove_report(report_id: int, db: Session):
 
 
 
+async def delete_all_reviewed_reports(db: Session):
+    reports = db.query(Report).filter(Report.is_reviewed == True)
+    if not reports:
+        raise NO_REPORT_FOUND_ERROR
+
+    reports.delete(synchronize_session=False)
+    db.commit()
+
+    return 'Deleted reports deleted'
+
+
+
 
 
 

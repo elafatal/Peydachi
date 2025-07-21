@@ -1,11 +1,13 @@
 from fastapi import APIRouter
 from functions import notification_functions
 from dependencies.dependencies import DB_DEPENDENCY
+from dependencies.access_dependencies import ROUTER_SUPER_ADMIN_DEPENDENCY
 
 
 router = APIRouter(
     prefix='/super_admin/notification',
-    tags=['Super Admin Notification']
+    tags=['Super Admin Notification'],
+    dependencies=[ROUTER_SUPER_ADMIN_DEPENDENCY]
 )
 
 

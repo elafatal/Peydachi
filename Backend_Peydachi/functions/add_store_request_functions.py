@@ -117,11 +117,11 @@ async def remove_add_store_request(request_id: int, db: Session):
 
 
 async def remove_all_reviewed_add_store_requests(db: Session):
-    requests = db.query(AddStoreRequest).filter(AddStoreRequest.is_reviewed == True).all()
+    requests = db.query(AddStoreRequest).filter(AddStoreRequest.is_reviewed == True)
     if not requests:
         raise NO_ADD_STORE_REQUEST_FOUND_ERROR
 
-    db.delete(requests)
+    requests.delete(synchronize_session=False)
     db.commit()
 
     return 'All Reviewed Requests Deleted.'

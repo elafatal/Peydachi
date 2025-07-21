@@ -3,8 +3,15 @@ from database import models
 from database.database import Base, engine
 from authentication import authentication_route, phone_verification_route
 from fastapi.middleware.cors import CORSMiddleware
-from routers.super_admin_routers import super_admin, admin, deleted_pics, super_admin_notifications
 from routers.seller_routers import seller_store, seller_product
+from routers.super_admin_routers import (
+    super_admin,
+    admin,
+    deleted_pics,
+    super_admin_notifications,
+    super_admin_add_store_request,
+    super_admin_reports
+)
 from routers.general_routers import (
     user,
     region,
@@ -97,7 +104,9 @@ app.include_router(admin_add_store_request.router)
 app.include_router(admin_city_center.router)
 app.include_router(admin_statistics.router)
 app.include_router(super_admin.router)
+app.include_router(super_admin_reports.router)
 app.include_router(super_admin_notifications.router)
+app.include_router(super_admin_add_store_request.router)
 app.include_router(admin.router)
 app.include_router(deleted_pics.router)
 app.include_router(authentication_route.router)

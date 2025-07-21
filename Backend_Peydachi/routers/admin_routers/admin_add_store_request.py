@@ -58,11 +58,6 @@ async def remove_add_store_request(request_id: ID_BODY, db: DB_DEPENDENCY):
     return await add_store_request_functions.remove_add_store_request(request_id=request_id, db=db)
 
 
-@router.delete('/remove_all_reviewed_add_store_requests', status_code=200)
-async def remove_all_reviewed_add_store_requests(db: DB_DEPENDENCY):
-    return await add_store_request_functions.remove_all_reviewed_add_store_requests(db=db)
-
-
 @router.post('/get_all_add_store_requests_of_region', status_code=200, response_model=list[AddStoreRequestDisplay])
 async def get_all_add_store_requests_of_region(region_id: ID_BODY, db: DB_DEPENDENCY):
     return await add_store_request_functions.get_all_add_store_requests_of_region(region_id=region_id, db=db)

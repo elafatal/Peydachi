@@ -28,11 +28,11 @@ async def review_deleted_pic(deleted_pic_id: int, db: Session):
 
 
 async def delete_all_reviewed_deleted_pics(db: Session):
-    deleted_pics = db.query(DeletedPics).filter(DeletedPics.is_reviewed == True).all()
+    deleted_pics = db.query(DeletedPics).filter(DeletedPics.is_reviewed == True)
     if not deleted_pics:
         raise NO_DELETED_PIC_FOUND
 
-    db.delete(deleted_pics)
+    deleted_pics.delete(synchronize_session=False)
     db.commit()
 
     return 'Deleted pics deleted'
