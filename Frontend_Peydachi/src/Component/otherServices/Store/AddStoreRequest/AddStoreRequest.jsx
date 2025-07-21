@@ -10,12 +10,14 @@ const AddStore = () => {
   const [formData, setFormData] = useState({
     store_name: '',
     phone_number: '',
+    address: '', 
     region_id: 0,
     city_id: 0,
     description: '',
     id: 0,
     date_added: new Date().toISOString().split('T')[0],
   });
+  
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,6 +102,7 @@ const AddStore = () => {
 
   const validate = () => {
     const errs = {};
+    if (!formData.address) errs.address = 'این فیلد اجباری است';
     if (!formData.store_name) errs.store_name = 'این فیلد اجباری است';
     if (!formData.phone_number) errs.phone_number = 'این فیلد اجباری است';
     else if (!/^09\d{9}$/.test(formData.phone_number)) errs.phone_number = 'شماره باید ۱۱ رقم باشد';
@@ -159,12 +162,14 @@ const AddStore = () => {
     setFormData({
       store_name: '',
       phone_number: '',
+      address: '', 
       region_id: 0,
       city_id: 0,
       description: '',
       id: 0,
       date_added: new Date().toISOString().split('T')[0],
     });
+    
     setErrors({});
     setCharacterCount(0);
   };
@@ -267,6 +272,26 @@ const AddStore = () => {
               {errors.city_id && <p className="text-sm text-red-500 mt-1">{errors.city_id}</p>}
             </div>
           </div>
+          <div>
+          <label className="block text-sm font-medium text-gray-700">آدرس فروشگاه <span className="text-red-500">*</span></label>
+          <div className="relative">
+            <input
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              className={`mt-1 w-full rounded-lg border px-4 py-2 shadow-sm ${errors.address ? 'border-red-500' : 'border-gray-300'}`}
+              placeholder="آدرس دقیق فروشگاه"
+            />
+            {errors.address && (
+              <div className="absolute inset-y-0 right-3 flex items-center">
+                <FaExclamationCircle className="text-red-500" />
+              </div>
+            )}
+          </div>
+          {errors.address && <p className="text-sm text-red-500 mt-1">{errors.address}</p>}
+        </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700">توضیحات <span className="text-red-500">*</span></label>
             <textarea
