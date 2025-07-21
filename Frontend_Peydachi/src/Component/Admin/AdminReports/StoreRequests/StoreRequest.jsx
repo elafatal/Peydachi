@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import Swal from "sweetalert2";  
+import { useAdminStats } from '../../../Context/AdminStatsContext';
 import axiosInstance from '../../../axiosInstance';
 import ReviewModal from './ReviewModal'; 
 import SearchFilters from './SearchFilters';
 import StoreRequestCard from './StoreRequestCard'
 const StoreRequest = () => {
+  const { refreshStats } = useAdminStats();
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCity, setSelectedCity] = useState(null);
@@ -133,20 +136,35 @@ const StoreRequest = () => {
   };
 
   // Handle remove action
-  const handleRemove = (requestId) => {
-    // In a real app, this would be an API call
-    const requestToRemove = storeRequests.find(req => req.id === requestId);
-    const updatedRequests = storeRequests.filter(req => req.id !== requestId);
-    setStoreRequests(updatedRequests);
-    
-    if (requestToRemove) {
-      setStats({
-        total: stats.total - 1,
-        reviewed: requestToRemove.isReviewed ? stats.reviewed - 1 : stats.reviewed,
-        pending: !requestToRemove.isReviewed ? stats.pending - 1 : stats.pending
+  const handleRemove = async (requestId) => {
+    try {
+      const response = await axiosInstance.delete('/admin/add_store_request/remove_add_store_request', {
+        data: { request_id: requestId },
       });
+  
+      if (response.status === 200) {
+        setStoreRequests((prev) => prev.filter(req => req.id !== requestId));
+         Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "درخواست حذف شد ",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        toast: true,
+                        customClass: {
+                          popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+                          title: 'text-xs', 
+                          content: 'text-xs',
+                          icon : 'text-xs mb-2'
+                        }
+                    });
+        await refreshStats();
+      }
+    } catch (err) {
+      console.error('خطا در حذف درخواست فروشگاه:', err);
     }
   };
+  
 
   // Handle remove all reviewed
   const handleRemoveAllReviewed = () => {
