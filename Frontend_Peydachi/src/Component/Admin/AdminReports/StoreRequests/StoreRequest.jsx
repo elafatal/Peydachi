@@ -126,16 +126,11 @@ const StoreRequest = () => {
       });
   
       if (response.status === 200) {
-        // بروزرسانی محلی لیست درخواست‌ها
         const updatedRequests = storeRequests.map(req =>
           req.id === selectedRequest.id ? { ...req, is_reviewed: true } : req
         );
         setStoreRequests(updatedRequests);
-  
-        // آپدیت آمار
         await refreshStats();
-  
-        // مودال و انتخاب پاک میشن
         setShowReviewModal(false);
         setSelectedRequest(null);
   
@@ -157,6 +152,7 @@ const StoreRequest = () => {
     } catch (err) {
       console.error('خطا در بررسی درخواست:', err);
       Swal.fire({
+        position: "top-end",
         icon: 'error',
         title: 'خطا در بررسی',
         text: 'مشکلی در بررسی این درخواست پیش آمد.',
