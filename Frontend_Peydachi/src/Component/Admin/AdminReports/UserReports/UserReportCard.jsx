@@ -1,7 +1,7 @@
 // AdminReports/UserReports/UserReportCard.jsx
 import { FaClock, FaTrashAlt } from 'react-icons/fa';
 
-const UserReportCard = ({ report }) => {
+const UserReportCard = ({ report,onDeleteClick  }) => {
   const formatDate = (date) => {
     const now = new Date();
     const addedDate = new Date(date);
@@ -21,12 +21,20 @@ const UserReportCard = ({ report }) => {
     if (days < 7) return `${days} روز قبل`;
     if (weeks < 4) return `${weeks} هفته قبل`;
     if (months < 12) return `${months} ماه قبل`;
-    return `${years} سال${years > 1 ? 's' : ''} گذشته`;
+    return `${years} سال گذشته`;
   };
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4" dir='rtl'>
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">{report.title}</h3>
+      <div className="flex justify-between">
+       <h3 className="text-lg font-semibold text-gray-800 mb-2">{report.title}</h3>
+       <FaTrashAlt
+        className="text-red-500 cursor-pointer"
+        onClick={() => onDeleteClick(report.id)} // یا report.report_id اگه اسم اون باشه
+      />
+      </div>
+     
+
       <p className="text-gray-600 text-sm mb-4 line-clamp-3">{report.text}</p>
       <div className="flex justify-between items-center text-sm text-gray-500">
         <span>

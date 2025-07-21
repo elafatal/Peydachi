@@ -2,12 +2,49 @@
 
 import React, { useEffect, useState } from 'react';
 import UserReportCard from './UserReportCard';
+import Swal from "sweetalert2";  
 import axiosInstance from '../../../axiosInstance'; 
-
+import DeleteConfirmModal from './DeleteConfirmModal';
 const UserReports = () => {
   const [reports, setReports] = useState([]);
   const [search, setSearch] = useState('');
   const [filtered, setFiltered] = useState([]);
+  const [selectedReportId, setSelectedReportId] = useState(null);
+const [showModal, setShowModal] = useState(false);
+const handleDeleteClick = (reportId) => {
+  setSelectedReportId(reportId);
+  setShowModal(true);
+};
+
+const handleDeleteConfirm = async () => {
+  try {
+    const response = await axiosInstance.delete('/admin/report/delete_report', {
+      data: { report_id: selectedReportId },
+    });
+    if (response.status === 200) {
+      Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "گزارش حذف شد ",
+                showConfirmButton: false,
+                timer: 1500,
+                toast: true,
+                customClass: {
+                  popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+                  title: 'text-xs', 
+                  content: 'text-xs',
+                  icon : 'text-xs mb-2'
+                }
+            });
+            setFiltered(prev => prev.filter(r => r.id !== selectedReportId));
+            setReports(prev => prev.filter(r => r.id !== selectedReportId));
+            setShowModal(false);
+    }
+  } catch (err) {
+    console.error('خطا در حذف گزارش:', err);
+  }
+};
+
   useEffect(() => {
     const fetchReports = async () => {
       try {
@@ -58,9 +95,15 @@ const UserReports = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filtered.map((report) => (
-          <UserReportCard key={report.id} report={report} />
+          <UserReportCard key={report.id} report={report} onDeleteClick={handleDeleteClick} />
         ))}
       </div>
+      <DeleteConfirmModal
+  show={showModal}
+  onClose={() => setShowModal(false)}
+  onConfirm={handleDeleteConfirm}
+/>
+
     </div>
   );
 };

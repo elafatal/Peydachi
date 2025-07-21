@@ -21,7 +21,6 @@ import AllNotifPage from './Component/Notification/AllNotifPage';
 import Navbar from './Component/landingPage/navbar';
 import ScrollToTop from './Component/ScrollToTop';
 import AddProduct from './Component/Store/AddProduct';
-import SelfStore from './Component/Store/selfStore';
 import StoreFullComment from './Component/Store/StoreProfile/StoreFullComment';
 import SendReport from './Component/Report/SendReport';
 import DashboardOverview from './Component/Admin/AdminDashboard/DashboardOverview';
@@ -35,6 +34,7 @@ import AdminReports from './Component/Admin/AdminReports/AdminReports';
 import StoreRequest from './Component/Admin/AdminReports/StoreRequests/StoreRequest';
 import UserReports from './Component/Admin/AdminReports/UserReports/UserReports';
 import CommentManagement from './Component/Admin/AdminCommet/CommentManagement';
+import SelfStore from './Component/Store/SelfStore';
 
 
 function App() {
@@ -60,7 +60,7 @@ function App() {
             <Route path="/SearchProduct" element={<SearchProduct/>} />
             <Route path="/AllNotification" element={<AllNotifPage/>} />
             <Route path="/AddProduct" element={<AddProduct/>} />
-            <Route path="/SelfStore" element={<SelfStore/>} />
+            <Route path="/SelfStore" element={<SelfStore/>} /> 
             <Route path="/storeComments/:storeID" element={<StoreFullComment/>} />
             <Route path="/Report" element={<SendReport/>} />
             <Route path="/Admin" element={<AdminPage/>} />
