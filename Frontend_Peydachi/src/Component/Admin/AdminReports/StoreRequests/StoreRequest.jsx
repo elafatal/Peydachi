@@ -198,6 +198,14 @@ const StoreRequest = () => {
       if (response.status === 200) {
         const updatedRequests = storeRequests.filter(req => !req.is_reviewed);
         setStoreRequests(updatedRequests);
+        const reviewed = response.data.filter(req => req.is_reviewed).length;
+        const pending = response.data.filter(req => !req.is_reviewed).length;
+        setStats({
+          total: response.data.length,
+          reviewed,
+          pending
+        });
+
         await refreshStats(); 
         Swal.fire({
           position: "top-end",
@@ -248,10 +256,10 @@ const StoreRequest = () => {
             <button
               className="flex items-center bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-colors !rounded-button whitespace-nowrap cursor-pointer"
               onClick={handleRemoveAllReviewed}
-              disabled={stats.reviewed === 0}
+              // disabled={stats.reviewed === 0}
             >
               <i className="fas fa-trash-alt mr-2"></i>
-              Remove All Reviewed
+             پاک کردن درخواست‌های بررسی شده
             </button>
           </div>
         </div>
