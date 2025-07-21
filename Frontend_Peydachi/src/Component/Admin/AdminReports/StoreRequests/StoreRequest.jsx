@@ -117,24 +117,53 @@ const StoreRequest = () => {
     setShowReviewModal(true);
   };
 
-  // Handle confirm review
-  const handleConfirmReview = () => {
-    if (selectedRequest) {
-      // In a real app, this would be an API call
-      const updatedRequests = storeRequests.map(req => 
-        req.id === selectedRequest.id ? { ...req, isReviewed: true } : req
-      );
-      setStoreRequests(updatedRequests);
-      setStats({
-        total: stats.total,
-        reviewed: stats.reviewed + 1,
-        pending: stats.pending - 1
+  const handleConfirmReview = async () => {
+    if (!selectedRequest) return;
+  
+    try {
+      const response = await axiosInstance.put('/admin/add_store_request/review_add_store_request', {
+        request_id: selectedRequest.id,
       });
-      setShowReviewModal(false);
-      setSelectedRequest(null);
+  
+      if (response.status === 200) {
+        // بروزرسانی محلی لیست درخواست‌ها
+        const updatedRequests = storeRequests.map(req =>
+          req.id === selectedRequest.id ? { ...req, isReviewed: true } : req
+        );
+        setStoreRequests(updatedRequests);
+  
+        // آپدیت آمار
+        await refreshStats();
+  
+        // مودال و انتخاب پاک میشن
+        setShowReviewModal(false);
+        setSelectedRequest(null);
+  
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "درخواست با موفقیت بررسی شد",
+          showConfirmButton: false,
+          timer: 1500,
+          toast: true,
+          customClass: {
+            popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+            title: 'text-xs', 
+            content: 'text-xs',
+            icon : 'text-xs mb-2'
+          }
+        });
+      }
+    } catch (err) {
+      console.error('خطا در بررسی درخواست:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'خطا در بررسی',
+        text: 'مشکلی در بررسی این درخواست پیش آمد.',
+      });
     }
   };
-
+  
   // Handle remove action
   const handleRemove = async (requestId) => {
     try {
@@ -167,17 +196,34 @@ const StoreRequest = () => {
   
 
   // Handle remove all reviewed
-  const handleRemoveAllReviewed = () => {
-    // In a real app, this would be an API call
-    const updatedRequests = storeRequests.filter(req => !req.isReviewed);
-    setStoreRequests(updatedRequests);
-    setStats({
-      total: updatedRequests.length,
-      reviewed: 0,
-      pending: updatedRequests.length
-    });
+  const handleRemoveAllReviewed = async () => {
+    try {
+      const response = await axiosInstance.delete('/admin/add_store_request/remove_all_reviewed_add_store_requests');
+      if (response.status === 200) {
+        const updatedRequests = storeRequests.filter(req => !req.isReviewed);
+        setStoreRequests(updatedRequests);
+        await refreshStats(); 
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "درخواست‌های بررسی‌شده با موفقیت حذف شدند",
+          showConfirmButton: false,
+          timer: 1500,
+          toast: true,
+          customClass: {
+            popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+            title: 'text-xs', 
+            content: 'text-xs',
+            icon : 'text-xs mb-2'
+          }
+        });
+        
+      }
+    } catch (error) {
+      console.error('خطا در حذف درخواست‌های بررسی‌شده:', error);
+    }
   };
-
+  
   return (
     <div className="min-h-screen bg-gray-50" dir='ltr'>
 
