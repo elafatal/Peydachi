@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom';
+import { AdminStatsProvider } from './Component/Context/AdminStatsContext'; 
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AboutUs from './Component/About us/AboutUs';
@@ -40,6 +41,7 @@ import SelfStore from './Component/Store/SelfStore';
 function App() {
   return (
     <AuthProvider>
+       <AdminStatsProvider>
       <Router>
         <ScrollToTop/>
         <div>
@@ -84,6 +86,7 @@ function App() {
            <Footer/>
         </div>
       </Router>
+      </AdminStatsProvider>
     </AuthProvider>
   )
 }

@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { FaBell, FaExclamationCircle, FaInbox } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
+import { useAdminStats } from '../../Context/AdminStatsContext';
 
 const StatsOverview = () => {
-  const [stats, setStats] = useState({
-    requests: 0,
-    pending: 0,
-    totalAlerts: 0
-  });
-  const [loading, setLoading] = useState(true);
+  const { stats, loading } = useAdminStats();
+  // const [stats, setStats] = useState({
+  //   requests: 0,
+  //   pending: 0,
+  //   totalAlerts: 0
+  // });
+  // const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {

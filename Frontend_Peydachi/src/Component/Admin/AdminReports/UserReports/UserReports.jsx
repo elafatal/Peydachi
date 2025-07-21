@@ -1,4 +1,5 @@
 // AdminReports/UserReports/UserReports.jsx
+import { useAdminStats } from '../../../Context/AdminStatsContext';
 
 import React, { useEffect, useState } from 'react';
 import UserReportCard from './UserReportCard';
@@ -6,6 +7,7 @@ import Swal from "sweetalert2";
 import axiosInstance from '../../../axiosInstance'; 
 import DeleteConfirmModal from './DeleteConfirmModal';
 const UserReports = () => {
+  const { refreshStats } = useAdminStats();
   const [reports, setReports] = useState([]);
   const [search, setSearch] = useState('');
   const [filtered, setFiltered] = useState([]);
@@ -39,6 +41,8 @@ const handleDeleteConfirm = async () => {
             setFiltered(prev => prev.filter(r => r.id !== selectedReportId));
             setReports(prev => prev.filter(r => r.id !== selectedReportId));
             setShowModal(false);
+            await refreshStats();
+
     }
   } catch (err) {
     console.error('خطا در حذف گزارش:', err);
