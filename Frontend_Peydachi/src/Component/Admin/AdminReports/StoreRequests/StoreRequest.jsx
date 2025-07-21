@@ -57,8 +57,8 @@ const StoreRequest = () => {
     //   // Update stats
     //   setStats({
     //     total: mockRequests.length,
-    //     reviewed: mockRequests.filter(req => req.isReviewed).length,
-    //     pending: mockRequests.filter(req => !req.isReviewed).length
+    //     reviewed: mockRequests.filter(req => req.is_reviewed).length,
+    //     pending: mockRequests.filter(req => !req.is_reviewed).length
     //   });
  
   }, []);
@@ -67,8 +67,8 @@ const StoreRequest = () => {
   const filteredRequests = storeRequests.filter(request => {
     const matchesTab = 
       activeTab === 'all' || 
-      (activeTab === 'reviewed' && request.isReviewed) || 
-      (activeTab === 'pending' && !request.isReviewed);
+      (activeTab === 'reviewed' && request.is_reviewed) || 
+      (activeTab === 'pending' && !request.is_reviewed);
     
     const matchesSearch = 
       searchTerm === '' || 
@@ -128,7 +128,7 @@ const StoreRequest = () => {
       if (response.status === 200) {
         // بروزرسانی محلی لیست درخواست‌ها
         const updatedRequests = storeRequests.map(req =>
-          req.id === selectedRequest.id ? { ...req, isReviewed: true } : req
+          req.id === selectedRequest.id ? { ...req, is_reviewed: true } : req
         );
         setStoreRequests(updatedRequests);
   
@@ -200,7 +200,7 @@ const StoreRequest = () => {
     try {
       const response = await axiosInstance.delete('/admin/add_store_request/remove_all_reviewed_add_store_requests');
       if (response.status === 200) {
-        const updatedRequests = storeRequests.filter(req => !req.isReviewed);
+        const updatedRequests = storeRequests.filter(req => !req.is_reviewed);
         setStoreRequests(updatedRequests);
         await refreshStats(); 
         Swal.fire({

@@ -14,3 +14,4 @@ class AddAddStoreRequestModel(BaseSchema):
 class AddStoreRequestDisplay(AddAddStoreRequestModel):
     id: int
     date_added: datetime.datetime
+    is_reviewed: bool

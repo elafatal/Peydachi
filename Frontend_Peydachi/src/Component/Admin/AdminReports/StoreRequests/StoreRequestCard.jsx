@@ -16,12 +16,12 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
           </h3>
           <span
             className={`px-3 py-1 rounded-full text-xs font-medium ${
-              request.isReviewed
+              request.is_reviewed
                 ? 'bg-green-100 text-green-800'
                 : 'bg-blue-100 text-blue-800'
             }`}
           >
-            {request.isReviewed ? 'بررسی شده' : 'در انتظار'}
+            {request.is_reviewed ? 'بررسی شده' : 'در انتظار'}
           </span>
         </div>
 
@@ -41,7 +41,7 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
         </p> */}
 
         <div className="flex justify-between items-center gap-2">
-          {!request.isReviewed ? (
+          {!request.is_reviewed ? (
             <button
               className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-lg shadow-sm transition-colors"
               onClick={() => onReview(request)}

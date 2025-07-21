@@ -5,7 +5,7 @@ import axiosInstance from '../../axiosInstance';
 import { useAdminStats } from '../../Context/AdminStatsContext';
 
 const StatsOverview = () => {
-  const { stats, loading } = useAdminStats();
+  const { stats, loading, refreshStats } = useAdminStats();
   // const [stats, setStats] = useState({
   //   requests: 0,
   //   pending: 0,
@@ -15,26 +15,9 @@ const StatsOverview = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await axiosInstance.get('/admin/statistics/get_add_store_request_and_report_stats');
-        const data = response.data;
-
-        const requests = data.total_pending_review_add_store_requests || 0;
-        const pending = data.total_pending_review_reports || 0;
-        const totalAlerts = requests + pending;
-
-        setStats({ requests, pending, totalAlerts });
-      } catch (err) {
-        console.error('Error fetching stats:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStats();
+    refreshStats(); // فقط کافیه اینو صدا بزنی
   }, []);
-
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <StatsCard
