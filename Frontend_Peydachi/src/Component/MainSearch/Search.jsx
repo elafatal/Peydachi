@@ -88,7 +88,7 @@ const MainSearch = () => {
   stores={stores}
   onStoreClick={(store) => {
     console.log('📍 Store clicked:', store);
-    setSelectedStoreLocation(store); // این تابع در useMainSearchLogic تعریف شده
+    setSelectedStoreLocation(store); 
   }}
 />
 
@@ -136,23 +136,18 @@ const MainSearch = () => {
               />
             )}
             
- <RoutePath
-  map={mapInstance}
-  from={location ? location.split(',').map(parseFloat) : null}
-  to={
-    selectedStoreLocation
-      ? [
-          parseFloat(selectedStoreLocation.location_latitude),
-          parseFloat(selectedStoreLocation.location_longitude),
-        ]
-      : null
-  }
-/>
-
-
-
-
-
+        <RoutePath
+          map={mapInstance}
+          from={location ? location.split(',').map(parseFloat) : null}
+          to={
+            selectedStoreLocation
+              ? [
+                  parseFloat(selectedStoreLocation.location_latitude),
+                  parseFloat(selectedStoreLocation.location_longitude),
+                ]
+              : null
+          }
+        />
           </MapContainer>
         )}
 
@@ -170,7 +165,7 @@ const MainSearch = () => {
             }`}
           >
             <FaList className="text-lg" />
-            <span className="text-xs mt-1">List</span>
+            <span className="text-xs mt-1">لیست</span>
           </button>
 
           {/* Map tab */}
