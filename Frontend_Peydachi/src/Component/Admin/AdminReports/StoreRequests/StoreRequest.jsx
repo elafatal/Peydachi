@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Swal from "sweetalert2";  
+import { useAuth } from '../../../Context/AuthContext';
 import { useAdminStats } from '../../../Context/AdminStatsContext';
 import axiosInstance from '../../../axiosInstance';
 import ReviewModal from './ReviewModal'; 
 import SearchFilters from './SearchFilters';
 import StoreRequestCard from './StoreRequestCard'
 const StoreRequest = () => {
+  const { role } = useAuth(); 
   const { refreshStats } = useAdminStats();
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -197,11 +199,8 @@ const StoreRequest = () => {
       const response = await axiosInstance.delete('/super_admin/add_store_request/remove_all_reviewed_add_store_requests');
       
       if (response.status === 200) {
-        // 1. حذف آیتم‌هایی که is_reviewed هستند
         const updatedRequests = storeRequests.filter(req => !req.is_reviewed);
         setStoreRequests(updatedRequests);
-  
-        // 2. محاسبه آمار جدید از updatedRequests
         const reviewed = updatedRequests.filter(req => req.is_reviewed).length;
         const pending = updatedRequests.filter(req => !req.is_reviewed).length;
   
@@ -257,8 +256,7 @@ const StoreRequest = () => {
           <div className="flex items-center space-x-2">
            
           </div>
-          
-          <div className="flex items-center">
+          { role=== 'superadmin' ? ( <div className="flex items-center">
             <button
               className="flex items-center bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-colors !rounded-button whitespace-nowrap cursor-pointer"
               onClick={handleRemoveAllReviewed}
@@ -267,7 +265,8 @@ const StoreRequest = () => {
               <i className="fas fa-trash-alt mr-2"></i>
              پاک کردن درخواست‌های بررسی شده
             </button>
-          </div>
+          </div>) : (<> </>)}
+         
         </div>
 
         {/* Store Requests */}
