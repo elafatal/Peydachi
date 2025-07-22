@@ -1,4 +1,3 @@
-// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useState, useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import axiosInstance from '../axiosInstance';
@@ -110,49 +109,36 @@ const closeProductModal = () => {
     setConfirmModalConfig(prev => ({ ...prev, isOpen: false }));
   };
   
-const [storeInfo, setStoreInfo] = useState({
-name: "Organic Harvest Market",
-owner_id: 1,
-contact_info: {
-email: "contact@organicharvest.com",
-phone: "+1 (555) 123-4567",
-website: "www.organicharvest.com"
-},
-description: "A premium store offering fresh organic produce, locally sourced goods, and artisanal products. We work directly with farmers to bring you the best quality food with sustainability in mind.",
-location_longitude: "-122.4194",
-location_latitude: "37.7749",
-city_id: 1,
-id: 101,
-average_rating: 4.7,
-average_product_rating: 4.5,
-is_banned: false
-});
-const [products, setProducts] = useState([]);
+  const [storeInfo, setStoreInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-const filteredProducts = products.filter((product) =>
-  product.name.toLowerCase().includes(searchTerm.toLowerCase())
-);
+  const [products, setProducts] = useState([]);
 
-useEffect(() => {
-  const getSelfStoreInfo =async()=>{
-    try {
-      const response = await axiosInstance.get('/seller/store/get_self_store', {
-        headers: {
-           'Accept': 'application/json'
-        }
-      });
-     if (response.data) {
-  setStoreInfo(response.data); 
-  console.log('Store info:', response.data);
-}
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-    } catch (error) {
-      console.log(error);
+  useEffect(() => {
+    const getSelfStoreInfo =async()=>{
+      try {
+        const response = await axiosInstance.get('/seller/store/get_self_store', {
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+      if (response.data) {
+      setStoreInfo(response.data); 
+      console.log('Store info:', response.data);
+      }
+      } catch (error) {
+        console.log(error);
+      }finally {
+        setIsLoading(false);  
+      }
     }
-  }
 
-  getSelfStoreInfo();
-}, []);
+    getSelfStoreInfo();
+  }, []);
 
 const getSelfStoreProduct =async()=>{
   try {
@@ -182,7 +168,7 @@ location_longitude: "",
 location_latitude: ""
 });
 useEffect(() => {
-// Initialize edit data when store info changes
+
 if (storeInfo) {
 setEditData({
 name: storeInfo.name,
@@ -194,44 +180,47 @@ location_latitude: storeInfo.location_latitude
 }
 }, [storeInfo]);
 useEffect(() => {
-// Initialize the rating chart
-if (!isEditing) {
-const chartDom = document.getElementById('rating-chart');
-if (chartDom) {
-const myChart = echarts.init(chartDom);
-const option = {
-  animation: false,
-  radar: {
-  indicator: [
-  { name: 'امتیاز فروشگاه', max: 5 },
-  { name: 'امتیاز محصول ', max: 5 }
-  ]
-  },
-  series: [{
-    name: 'Ratings',
-    type: 'radar',
-    data: [{
-      value: [storeInfo.average_rating, storeInfo.average_product_rating],
-      name: 'Ratings',
-      areaStyle: {
-      color: 'rgba(25, 118, 210, 0.6)'
-      },
-      lineStyle: {
-      color: '#1976D2'
-      },
-      itemStyle: {
-      color: '#1976D2'
-      }
-    }]
-  }]
-};
-myChart.setOption(option);
-return () => {
-myChart.dispose();
-};
-}
-}
-}, [isEditing, storeInfo.average_rating, storeInfo.average_product_rating]);
+  if (!isEditing && storeInfo) {
+    const chartDom = document.getElementById('rating-chart');
+    if (chartDom) {
+      const myChart = echarts.init(chartDom);
+      const option = {
+        animation: false,
+        radar: {
+          indicator: [
+            { name: 'امتیاز فروشگاه', max: 5 },
+            { name: 'امتیاز محصول ', max: 5 }
+          ]
+        },
+        series: [{
+          name: 'Ratings',
+          type: 'radar',
+          data: [{
+            value: [
+              storeInfo.average_rating ?? 0,
+              storeInfo.average_product_rating ?? 0
+            ],
+            name: 'Ratings',
+            areaStyle: {
+              color: 'rgba(25, 118, 210, 0.6)'
+            },
+            lineStyle: {
+              color: '#1976D2'
+            },
+            itemStyle: {
+              color: '#1976D2'
+            }
+          }]
+        }]
+      };
+      myChart.setOption(option);
+      return () => {
+        myChart.dispose();
+      };
+    }
+  }
+}, [isEditing, storeInfo]);
+
 const [selectedProduct, setSelectedProduct] = useState(null);
 const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 const [productEditData, setProductEditData] = useState({
@@ -537,6 +526,16 @@ const renderStars = (rating) => {
     }
     return stars;
   };
+  if (!storeInfo) {
+    return (
+      <div className="min-h-screen flex justify-center items-center bg-white">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+          <p className="text-gray-500 text-sm">در حال بارگذاری اطلاعات فروشگاه...</p>
+        </div>
+      </div>
+    );
+  }
   
 return (
 <div dir='rtl'  className="min-h-screen bg-gradient-to-r from-blue-50 to-white">
