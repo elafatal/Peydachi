@@ -5,12 +5,13 @@ import {
   FaCheckCircle,
   FaTrashAlt
 } from 'react-icons/fa';
+import { IoIosCheckmarkCircleOutline,IoIosCheckmarkCircle } from "react-icons/io";
 
 const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all hover:shadow-lg" dir='rtl'>
       <div className="p-6">
-        <div className="flex justify-between items-start mb-4">
+        <div className="flex justify-between items-start mb-3">
           <h3 className="text-xl font-bold text-gray-800 truncate">
             {request.store_name}
           </h3>
@@ -25,7 +26,7 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
           </span>
         </div>
 
-        <div className="mb-4 space-y-2 text-sm">
+        <div className="mb-2 space-y-2 text-sm">
           <div className="flex items-center text-gray-600">
             <FaMapMarkerAlt className="ml-2 text-blue-500" />
             <span>{getCityName(request.city_id)}</span>
@@ -43,28 +44,28 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
         <div className="flex justify-between items-center gap-2">
           {!request.is_reviewed ? (
             <button
+             title="بررسی "
               className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-lg shadow-sm transition-colors"
               onClick={() => onReview(request)}
             >
-              <FaCheckCircle className="ml-2 inline" />
-              بررسی
+              <FaCheckCircle className=" inline" />
+              
             </button>
           ) : (
             <button
+              title="بررسی شده "
               className="bg-gray-200 text-gray-700 py-1 px-4 rounded-lg shadow-sm"
               disabled
             >
-              <FaCheckCircle className="ml-2 inline" />
-              بررسی شد
+              <FaCheckCircle className=" inline" />
             </button>
           )}
 
           <button
-            className="bg-red-100 hover:bg-red-200 text-red-600 py-1 px-4 rounded-lg shadow-sm transition-colors"
+            className=" text-red-600 cursor-pointer"
             onClick={() => onRemove(request.id)}
           >
-            <FaTrashAlt className="ml-2 inline" />
-            حذف
+            <FaTrashAlt className=" inline" />
           </button>
         </div>
       </div>
