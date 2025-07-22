@@ -3,11 +3,12 @@ import { useAdminStats } from '../../../Context/AdminStatsContext';
 import UserReportSkeleton from '../../../SkeletionLoading/UserReportSkeleton';
 import React, { useEffect, useState } from 'react';
 import UserReportCard from './UserReportCard';
+import { useAuth } from '../../../Context/AuthContext';
 import Swal from "sweetalert2";  
 import axiosInstance from '../../../axiosInstance'; 
 import DeleteConfirmModal from './DeleteConfirmModal';
 const UserReports = () => {
-
+  const { role } = useAuth(); 
   const { refreshStats } = useAdminStats();
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +20,35 @@ const handleDeleteClick = (reportId) => {
   setSelectedReportId(reportId);
   setShowModal(true);
 };
+const handleRemoveAllReviewed = async () => {
+  try {
+    const response = await axiosInstance.delete('/super_admin/report/delete_all_reviewed_reports');
+    
+    if (response.status === 200) {
+      const updatedRequests = reports.filter(req => !req.is_reviewed);
+      setReports(updatedRequests);
+      setFiltered(updatedRequests);
+      await refreshStats();
 
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "گزارش‌ها با موفقیت حذف شدند",
+        showConfirmButton: false,
+        timer: 1500,
+        toast: true,
+        customClass: {
+          popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+          title: 'text-xs', 
+          content: 'text-xs',
+          icon : 'text-xs mb-2'
+        }
+      });
+    }
+  } catch (error) {
+    console.error('خطا در حذف درخواست‌های بررسی‌شده:', error);
+  }
+};
 const handleDeleteConfirm = async () => {
   try {
     const response = await axiosInstance.delete('/admin/report/delete_report', {
@@ -96,7 +125,9 @@ useEffect(() => {
 
   return (
     <div>
-      <div className="mb-6">
+
+      <div className="flex sm:justify-between flex-col gap-2 lg:flex-row items-center mb-6">
+      
         <input
           type="text"
           className="w-full md:w-96 border rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-400"
@@ -104,7 +135,19 @@ useEffect(() => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-      </div>
+
+          { role=== 'superadmin' ? ( <div className="flex items-center">
+            <button
+              className="flex items-center bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-colors !rounded-button whitespace-nowrap cursor-pointer"
+              onClick={handleRemoveAllReviewed}
+              // disabled={stats.reviewed === 0}
+            >
+              <i className="fas fa-trash-alt mr-2"></i>
+             پاک کردن گزارش‌های بررسی شده
+            </button>
+          </div>) : (<> </>)}
+         
+        </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading
