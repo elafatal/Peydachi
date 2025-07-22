@@ -1,14 +1,16 @@
 // AdminReports/UserReports/UserReports.jsx
 import { useAdminStats } from '../../../Context/AdminStatsContext';
-
+import UserReportSkeleton from '../../../SkeletionLoading/UserReportSkeleton';
 import React, { useEffect, useState } from 'react';
 import UserReportCard from './UserReportCard';
 import Swal from "sweetalert2";  
 import axiosInstance from '../../../axiosInstance'; 
 import DeleteConfirmModal from './DeleteConfirmModal';
 const UserReports = () => {
+
   const { refreshStats } = useAdminStats();
   const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filtered, setFiltered] = useState([]);
   const [selectedReportId, setSelectedReportId] = useState(null);
@@ -49,41 +51,48 @@ const handleDeleteConfirm = async () => {
   }
 };
 
+useEffect(() => {
+  const fetchReports = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get('/admin/report/get_all_reports', {
+        headers: {
+          Authorization: null,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      setReports(response.data);
+      setFiltered(response.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchReports();
+}, []);
+
+  
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await axiosInstance.get('/admin/report/get_all_reports', {
-          headers: {
-            Authorization: null,
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        setReports(response.data);
-        setFiltered(response.data);
-      } catch (error) {
-        console.log(error);
-        
-      } 
-    };
-  
-    fetchReports();
-  }, []);
-  
-  useEffect(() => {
-    const fetchReports = async () => {
-      try {
+        setLoading(true);
         const res = await axiosInstance.post('/admin/report/search_reports', {
-          report_text : search
+          report_text: search
         });
         setReports(res.data);
         setFiltered(res.data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
-
+  
     fetchReports();
   }, [search]);
+  
 
   return (
     <div>
@@ -98,15 +107,19 @@ const handleDeleteConfirm = async () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map((report) => (
-          <UserReportCard key={report.id} report={report} onDeleteClick={handleDeleteClick} />
-        ))}
+        {loading
+          ? Array.from({ length: 6 }).map((_, i) => <UserReportSkeleton key={i} />)
+          : filtered.map((report) => (
+              <UserReportCard key={report.id} report={report} onDeleteClick={handleDeleteClick} />
+            ))
+        }
       </div>
       <DeleteConfirmModal
   show={showModal}
   onClose={() => setShowModal(false)}
   onConfirm={handleDeleteConfirm}
 />
+
 
     </div>
   );
