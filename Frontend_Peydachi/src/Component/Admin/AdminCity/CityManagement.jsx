@@ -1,4 +1,3 @@
-// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useState, useEffect } from 'react';
 import { FaTimesCircle , FaCheck , FaChevronDown ,FaCity ,FaBuilding } from "react-icons/fa";
 import axiosInstance from '../../axiosInstance';
@@ -6,26 +5,29 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 const CityManagement = () => {
-// State for regions and cities
-const [regions, setRegions] = useState([]);
-const [cities, setCities] = useState([]);
-// State for form inputs
-const [newRegionName, setNewRegionName] = useState('');
-const [newCityName, setNewCityName] = useState('');
-const [selectedRegionId, setSelectedRegionId] = useState(null);
-const [selectedRegionForCities, setSelectedRegionForCities] = useState(null);
-// State for editing
-const [editingRegionId, setEditingRegionId] = useState(null);
-const [editingRegionName, setEditingRegionName] = useState('');
-const [editingCityId, setEditingCityId] = useState(null);
-const [editingCityName, setEditingCityName] = useState('');
-const [editingCityRegionId, setEditingCityRegionId] = useState(null);
-// State for notifications
-const [notification, setNotification] = useState(null);
+  const [loadingCities, setLoadingCities] = useState(true);
+  const [loadingRegions, setLoadingRegions] = useState(true);
+  // State for regions and cities
+  const [regions, setRegions] = useState([]);
+  const [cities, setCities] = useState([]);
+  // State for form inputs
+  const [newRegionName, setNewRegionName] = useState('');
+  const [newCityName, setNewCityName] = useState('');
+  const [selectedRegionId, setSelectedRegionId] = useState(null);
+  const [selectedRegionForCities, setSelectedRegionForCities] = useState(null);
+  // State for editing
+  const [editingRegionId, setEditingRegionId] = useState(null);
+  const [editingRegionName, setEditingRegionName] = useState('');
+  const [editingCityId, setEditingCityId] = useState(null);
+  const [editingCityName, setEditingCityName] = useState('');
+  const [editingCityRegionId, setEditingCityRegionId] = useState(null);
+  // State for notifications
+  const [notification, setNotification] = useState(null);
 
-useEffect(() => {
+  useEffect(() => {
     const handleRegions = async () => {
       try {
+        setLoadingRegions(true); 
         const response = await axiosInstance.get('/region/get_all_regions', {
           headers: {
             Authorization: null,
@@ -33,36 +35,38 @@ useEffect(() => {
           }
         });
         setRegions(response.data);
-        console.log(response);
-        
       } catch (error) {
         console.log(error);
-        
-      } 
+      } finally {
+        setLoadingRegions(false);
+      }
     };
+  
     handleRegions();
   }, []);
+  
 
-  useEffect(() => {
-    const handleAllCities = async () => {
-      try {
-        const response = await axiosInstance.get('/city/get_all_cities', {
-          headers: {
-            Authorization: null,
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        setCities(response.data);
-        console.log(response);
-        
-      } catch (error) {
-        console.log(error);
-        
-      } 
-    };
-    handleAllCities();
-  }, []);
-
+    useEffect(() => {
+      const handleAllCities = async () => {
+        try {
+          setLoadingCities(true); 
+          const response = await axiosInstance.get('/city/get_all_cities', {
+            headers: {
+              Authorization: null,
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+          setCities(response.data);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoadingCities(false); 
+        }
+      };
+    
+      handleAllCities();
+    }, []);
+    
 
     const filteredCities = selectedRegionForCities
     ? cities.filter(city => city.region_id === selectedRegionForCities)
@@ -258,9 +262,17 @@ return (
             <div>
             <h3 className="text-sm font-medium text-gray-700 mb-2">استان‌ها</h3>
             <div className="max-h-80 overflow-y-auto pr-2">
-            {regions.length === 0 ? (
+            {loadingRegions ? (
+            <div className="text-center py-6">
+              <div className="relative w-8 h-8 mx-auto">
+                <div className="absolute w-full h-full border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+              </div>
+              <p className="mt-3 text-sm text-blue-600">در حال دریافت لیست استان‌ها...</p>
+            </div>
+          ) : regions.length === 0 ? (
             <p className="text-gray-500 text-sm italic">استانی پیدا نشد</p>
-            ) : (
+          )
+          : (
             <ul className="space-y-2">
             {regions.map(region => (
             <li key={region.id} className="border border-gray-200 rounded-lg p-2 bg-gray-50">
@@ -377,20 +389,27 @@ return (
         </ul>
         </div>
         </div>
-        <button
-        onClick={handleAddCity}
-        className="w-full bg-blue-800 text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
-        >
-        <FaCirclePlus className="ml-2 inline"/>
-        افزودن شهر
-        </button>
+          <button
+          onClick={handleAddCity}
+          className="w-full bg-blue-800 text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
+          >
+            <FaCirclePlus className="ml-2 inline"/>
+            افزودن شهر
+          </button>
         </div>
         </div>
         <div>
         <h3 className="text-sm font-medium text-gray-700 mb-2">شهرها</h3>
         <div className="max-h-80 overflow-y-auto pr-2">
-        {cities.length === 0 ? (
-        <p className="text-gray-500 text-sm italic">شهری پیدا نشد</p>
+        {loadingCities ? (
+          <div className="flex flex-col items-center justify-center py-10">
+            <div className="relative w-12 h-12">
+              <div className="absolute top-0 left-0 w-full h-full border-4 border-blue-400 border-dashed rounded-full animate-spin"></div>
+            </div>
+            <p className="mt-4 text-blue-700 text-sm font-medium">در حال بارگذاری اطلاعات شهرها...</p>
+          </div>
+        ) : cities.length === 0 ? (
+          <p className="text-gray-500 text-sm italic">شهری پیدا نشد</p>
         ) : (
         <ul className="space-y-2">
             {cities.map(city => (
@@ -510,29 +529,37 @@ return (
         </div>
         </div>
         </div>
-            <div className="max-h-96 overflow-y-auto pr-2">
-            {filteredCities.length === 0 ? (
-            <div className="text-center py-8">
-            <FaCity  className="inline text-gray-300 text-4xl mb-2" />
-            <p className="text-gray-500">شهری برای این استان ثبت نشده</p>
+        {loadingCities ? (
+          <div className="flex flex-col items-center justify-center py-10">
+            <div className="relative w-12 h-12">
+              <div className="absolute top-0 left-0 w-full h-full border-4 border-blue-400 border-dashed rounded-full animate-spin"></div>
+            
             </div>
+            <p className="mt-4 text-blue-700 text-sm font-medium">در حال بارگذاری اطلاعات شهرها...</p>
+          </div>
+          ) : (
+            filteredCities.length === 0 ? (
+              <div className="text-center py-8">
+                <FaCity className="inline text-gray-300 text-4xl mb-2" />
+                <p className="text-gray-500">شهری برای این استان ثبت نشده</p>
+              </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-1 gap-2">
-                    {filteredCities.map(city => (
-                        <div
-                        key={city.id}
-                        className="border border-gray-200 rounded-lg p-3 bg-gradient-to-br from-gray-50 to-gray-100 hover:shadow-md transition-shadow"
-                        >
-                            <div className="flex items-center">
-                                <FaBuilding className="inline text-blue-800 ml-2"/>
-                                <h3 className="font-medium">{city.name}</h3>
-                            </div>
-                        
-                        </div>
-                        ))}
-                </div>
-            )}
-            </div>
+              <div className="grid grid-cols-1 sm:grid-cols-1 gap-2">
+                {filteredCities.map(city => (
+                  <div
+                    key={city.id}
+                    className="border border-gray-200 rounded-lg p-3 bg-gradient-to-br from-gray-50 to-gray-100 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-center">
+                      <FaBuilding className="inline text-blue-800 ml-2" />
+                      <h3 className="font-medium">{city.name}</h3>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
+          )}
+
             <div className="mt-4 text-sm text-gray-500 flex items-center justify-between">
             <span> تعداد شهرها: {filteredCities.length} </span>
             </div>
