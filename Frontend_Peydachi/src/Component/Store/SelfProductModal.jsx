@@ -1,5 +1,5 @@
 import React from "react";
-import { FaStar, FaRegStar, FaStarHalfAlt, FaTimes, FaStore, FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaStar, FaRegStar, FaStarHalfAlt, FaTimes } from 'react-icons/fa';
 
 const SelfProductModal = ({
   selectedProduct,

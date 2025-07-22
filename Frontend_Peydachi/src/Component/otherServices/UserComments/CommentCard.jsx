@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaStar, FaRegThumbsUp, FaRegCommentDots, FaRegStar } from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 import axiosInstance from '../../axiosInstance';
 import { MdDelete } from "react-icons/md";
 const ConfirmModal = ({ isOpen, onConfirm, onCancel }) => {

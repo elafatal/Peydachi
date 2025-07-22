@@ -1,4 +1,3 @@
-// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import axiosInstance from '../axiosInstance';
 import React, { useState, useEffect, useRef } from 'react';
 import Swal from "sweetalert2"; 

@@ -1,6 +1,6 @@
-// components/ProductCard.jsx
+
 import React from 'react';
-import { FaEdit, FaStar, FaCubes, FaCalendarAlt } from 'react-icons/fa';
+import { FaEdit, FaStar, FaCubes } from 'react-icons/fa';
 import { LuInfo } from "react-icons/lu";
 const ProductCard = ({ product, onEdit, onView,formatDate }) => {
   return (

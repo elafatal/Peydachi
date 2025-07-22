@@ -1,4 +1,3 @@
-// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import { useNavigate } from 'react-router-dom';
 import React, { useState , useEffect } from 'react';
 import {

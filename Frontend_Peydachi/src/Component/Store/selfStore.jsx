@@ -4,7 +4,7 @@ import axiosInstance from '../axiosInstance';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { useAuth } from '../Context/AuthContext'; // مسیر درست رو بذار اگه فرق داره
+import { useAuth } from '../Context/AuthContext';
 
 import {
     FaEdit,

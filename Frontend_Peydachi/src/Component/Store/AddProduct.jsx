@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
 import Swal from 'sweetalert2';
-import React, { useState, useRef, ChangeEvent } from 'react';
+import React, { useState, useRef } from 'react';
 import {FaLightbulb ,FaTimes,FaSave,FaRocket, FaSpinner,FaCloudUploadAlt, FaCamera,FaImage,FaBox,FaPlus,FaCheck , FaExternalLinkAlt, FaTag, FaExclamationCircle,FaInfoCircle, FaAlignLeft, FaMinus} from 'react-icons/fa';
 import { LuSparkles } from 'react-icons/lu';
 import { useEffect } from 'react'; 
@@ -16,20 +16,7 @@ const AddProduct = () => {
     quantity: 0,
     pic_url: '',
   });
-  // useEffect(() => {
-  //   const draft = localStorage.getItem('productDraft');
-  //   if (draft) {
-  //     const parsed = JSON.parse(draft);
-  //     if (parsed.formData) {
-  //       setFormData(parsed.formData);
-  //     }
-  //     if (parsed.previewImage) {
-  //       setPreviewImage(parsed.previewImage);
-  //     }
-  //     setHasDraft(true);
-  //   }
-  // }, []);
-  
+
   const [errors, setErrors] = useState({
     name: '',
     description: '',
