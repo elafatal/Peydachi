@@ -457,9 +457,15 @@ const AdminNotification = () => {
           </h2>
           
           {isLoading ? (
-            <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#191970]"></div>
+            // <div className="flex justify-center items-center py-12">
+            //   <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#191970]"></div>
+            // </div>
+            <div className="flex flex-col items-center justify-center py-10">
+            <div className="relative w-12 h-12">
+              <div className="absolute top-0 left-0 w-full h-full border-4 border-blue-700 border-dashed rounded-full animate-spin"></div>
             </div>
+            <p className="mt-4 text-blue-700 text-sm font-medium">در حال بارگذاری اعلان‌ها ...</p>
+          </div>
           ) : filteredNotifications.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-5xl text-gray-300 mb-4">
