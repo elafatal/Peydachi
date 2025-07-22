@@ -194,23 +194,29 @@ const StoreRequest = () => {
   // Handle remove all reviewed
   const handleRemoveAllReviewed = async () => {
     try {
-      const response = await axiosInstance.delete('/admin/add_store_request/remove_all_reviewed_add_store_requests');
+      const response = await axiosInstance.delete('/super_admin/add_store_request/remove_all_reviewed_add_store_requests');
+      
       if (response.status === 200) {
+        // 1. حذف آیتم‌هایی که is_reviewed هستند
         const updatedRequests = storeRequests.filter(req => !req.is_reviewed);
         setStoreRequests(updatedRequests);
-        const reviewed = response.data.filter(req => req.is_reviewed).length;
-        const pending = response.data.filter(req => !req.is_reviewed).length;
+  
+        // 2. محاسبه آمار جدید از updatedRequests
+        const reviewed = updatedRequests.filter(req => req.is_reviewed).length;
+        const pending = updatedRequests.filter(req => !req.is_reviewed).length;
+  
         setStats({
-          total: response.data.length,
+          total: updatedRequests.length,
           reviewed,
           pending
         });
-
-        await refreshStats(); 
+  
+        await refreshStats();
+  
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: "درخواست‌های بررسی‌شده با موفقیت حذف شدند",
+          title: "درخواست‌ها با موفقیت حذف شدند",
           showConfirmButton: false,
           timer: 1500,
           toast: true,
@@ -221,12 +227,12 @@ const StoreRequest = () => {
             icon : 'text-xs mb-2'
           }
         });
-        
       }
     } catch (error) {
       console.error('خطا در حذف درخواست‌های بررسی‌شده:', error);
     }
   };
+  
   
   return (
     <div className="min-h-screen bg-gray-50" dir='ltr'>
