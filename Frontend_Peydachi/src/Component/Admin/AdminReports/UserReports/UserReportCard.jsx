@@ -1,7 +1,8 @@
 // AdminReports/UserReports/UserReportCard.jsx
 import { FaClock, FaTrashAlt } from 'react-icons/fa';
+import { IoIosCheckmarkCircleOutline,IoIosCheckmarkCircle } from "react-icons/io";
 
-const UserReportCard = ({ report,onDeleteClick  }) => {
+const UserReportCard = ({ report,onDeleteClick,onCheckClick  }) => {
   const formatDate = (date) => {
     const now = new Date();
     const addedDate = new Date(date);
@@ -27,11 +28,17 @@ const UserReportCard = ({ report,onDeleteClick  }) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-4" dir='rtl'>
       <div className="flex justify-between">
-       <h3 className="text-lg font-semibold text-gray-800 mb-2">{report.title}</h3>
-       <FaTrashAlt
-        className="text-red-500 cursor-pointer"
-        onClick={() => onDeleteClick(report.id)} // یا report.report_id اگه اسم اون باشه
-      />
+       <h3 className="text-lg font-semibold text-gray-800  mb-2">{report.title}</h3>
+       <div className="flex gap-1">
+        {report.is_reviewed ? <IoIosCheckmarkCircle title="بررسی شده"  className="text-green-500 text-2xl pb-1" /> 
+        : <IoIosCheckmarkCircleOutline onClick={() => onCheckClick(report.id)}
+          className="text-green-500 text-2xl pb-1 cursor-pointer" title="بررسی این گزارش"/> }
+        <FaTrashAlt
+          className="text-red-500 cursor-pointer"
+          onClick={() => onDeleteClick(report.id)}
+        />
+      </div>
+       
       </div>
      
 

@@ -80,6 +80,43 @@ const handleDeleteConfirm = async () => {
   }
 };
 
+const handleCheckClick = async (reportId) => {
+  try {
+    const res = await axiosInstance.post('/admin/report/review_report', {
+      report_id: reportId
+    });
+
+    if (res.status === 200) {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "گزارش بررسی شد",
+        showConfirmButton: false,
+        timer: 1500,
+        toast: true,
+        customClass: {
+          popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+          title: 'text-xs', 
+          content: 'text-xs',
+          icon : 'text-xs mb-2'
+        }
+      });
+      setReports(prev => prev.map(r => 
+        r.id === reportId ? { ...r, is_reviewed: true } : r
+      ));
+      setFiltered(prev => prev.map(r => 
+        r.id === reportId ? { ...r, is_reviewed: true } : r
+      ));
+
+      await refreshStats();
+    }
+
+  } catch (err) {
+    console.error("خطا در بررسی گزارش:", err);
+  }
+};
+
+
 useEffect(() => {
   const fetchReports = async () => {
     try {
@@ -104,7 +141,7 @@ useEffect(() => {
 
   
   useEffect(() => {
-    const fetchReports = async () => {
+    const searchReports = async () => {
       try {
         setLoading(true);
         const res = await axiosInstance.post('/admin/report/search_reports', {
@@ -119,7 +156,7 @@ useEffect(() => {
       }
     };
   
-    fetchReports();
+    searchReports();
   }, [search]);
   
 
@@ -153,7 +190,7 @@ useEffect(() => {
         {loading
           ? Array.from({ length: 6 }).map((_, i) => <UserReportSkeleton key={i} />)
           : filtered.map((report) => (
-              <UserReportCard key={report.id} report={report} onDeleteClick={handleDeleteClick} />
+              <UserReportCard key={report.id} report={report} onDeleteClick={handleDeleteClick} onCheckClick={handleCheckClick} />
             ))
         }
       </div>
