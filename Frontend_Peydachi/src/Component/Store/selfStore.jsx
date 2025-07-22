@@ -4,7 +4,8 @@ import axiosInstance from '../axiosInstance';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { isLoggedIn, getAccessToken } from '../auth';
+import { useAuth } from '../Context/AuthContext'; // مسیر درست رو بذار اگه فرق داره
+
 import {
     FaEdit,
     FaTimes,
@@ -25,7 +26,8 @@ import ConfirmModal from './ConfirmModal';
 import SelfProductModal from './SelfProductModal';
 import UnauthorizedPage from '../Error/UnauthorizedPage';
 const SelfStore = () => {
-  const [isLogged, setIsLogged] = useState(isLoggedIn());
+  const { user, role } = useAuth();
+
   const navigate = useNavigate();
   // Store Info
 const [storeInfo, setStoreInfo] = useState(null);
@@ -569,10 +571,13 @@ const renderStars = (rating) => {
       </div>
     );
   }
+  if (!user || user.role !== 'seller') {
+    return <UnauthorizedPage />;
+  }
   
 return (
 <div dir='rtl'  className="min-h-screen bg-gradient-to-r from-blue-50 to-white">
-{isLogged ?<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+ <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 {/* {Object.entries(storeInfo.contact_info || {}).map(([key, value]) => (
   <div key={key} className="flex">
     <span className="text-gray-500 capitalize w-24">{key}:</span>
@@ -803,7 +808,7 @@ className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
     ))}
   </div>
 </div>
-</main> : <UnauthorizedPage/>}
+</main>
 
 {/* Product Edit Modal */}
 {isProductModalOpen && selectedProduct && (
