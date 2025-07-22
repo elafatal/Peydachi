@@ -154,7 +154,7 @@ const handleCityKeyDown = (e) => {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url("./backgraoundImage.jpg")`,
+          backgroundImage: `url(./backgroundImage.jpg)`,
         }}
       ></div>
 
