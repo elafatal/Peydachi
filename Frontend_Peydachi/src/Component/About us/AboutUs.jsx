@@ -2,7 +2,6 @@ import React from 'react';
 import { FaLinkedin } from 'react-icons/fa';
 import { FaGithub } from 'react-icons/fa';
 import {BiLogoGmail , BiLogoTelegram } from "react-icons/bi";
-import hero from '../../../public/hero.svg'
 
 const AboutUs = () => {
   return (
@@ -11,7 +10,7 @@ const AboutUs = () => {
        
         <div className=" flex md:w-1/2 p-8">
           <div className="image object-center text-center">
-            <img src={hero} alt="Company" />
+            <img src="/hero.svg" alt="Company" />
           </div>
           
         </div>

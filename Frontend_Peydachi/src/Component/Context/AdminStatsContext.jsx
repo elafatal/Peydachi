@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axiosInstance from '../axiosInstance';
-
+import { useAuth } from './AuthContext';
 const AdminStatsContext = createContext();
 
 export const useAdminStats = () => useContext(AdminStatsContext);
 
 export const AdminStatsProvider = ({ children }) => {
+  const { user } = useAuth();
   const [stats, setStats] = useState({
     requests: 0,
     pending: 0,
@@ -29,8 +30,12 @@ export const AdminStatsProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if (!user) {
+      setLoading(false); // فقط یک‌بار اجرا می‌شه
+      return;
+    }
     fetchStats();
-  }, []);
+  }, [user]);
 
   return (
     <AdminStatsContext.Provider value={{ stats, loading, refreshStats: fetchStats }}>

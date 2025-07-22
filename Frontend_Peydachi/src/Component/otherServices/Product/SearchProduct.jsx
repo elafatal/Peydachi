@@ -13,7 +13,6 @@ import {
   FaRegStar,
   FaStarHalfAlt
 } from 'react-icons/fa';
-import searchProduct from '../../../../public/searchProduct.jpg'
 import ProductModal from './ProductModal';
 import ProductReview from '../../Store/StoreProfile/ProductReview';
 const SearchProduct = () => {
@@ -120,7 +119,7 @@ if (sortOption === 'highestRated') {
             </div>
             <div className="md:w-1/2 flex justify-center md:justify-end">
               <img
-                src={searchProduct}
+                src="/searchProduct.jpg"
                 alt="Product Search App"
                 className="w-full max-w-md rounded-lg shadow-lg transform md:translate-y-4"
               />

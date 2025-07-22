@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { FaLocationDot } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
 import axiosInstance from '../axiosInstance';
-import backgroundImage from '../../../public/backgroundImage.jpg' 
 const FirstSection = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
@@ -155,7 +154,7 @@ const handleCityKeyDown = (e) => {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${backgroundImage})`,
+          backgroundImage: `url("./backgraoundImage.jpg")`,
         }}
       ></div>
 
