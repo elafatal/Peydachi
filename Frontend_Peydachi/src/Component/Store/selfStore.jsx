@@ -4,6 +4,7 @@ import axiosInstance from '../axiosInstance';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { isLoggedIn, getAccessToken } from '../auth';
 import {
     FaEdit,
     FaTimes,
@@ -24,29 +25,51 @@ import ConfirmModal from './ConfirmModal';
 import SelfProductModal from './SelfProductModal';
 import UnauthorizedPage from '../Error/UnauthorizedPage';
 const SelfStore = () => {
-    const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-const [modalProduct, setModalProduct] = useState(null);
-const [comments, setComments] = useState([]);
-const chartRef = useRef(null);
+  const [isLogged, setIsLogged] = useState(isLoggedIn());
+  const navigate = useNavigate();
+  // Store Info
+const [storeInfo, setStoreInfo] = useState(null);
+const [editData, setEditData] = useState({
+  name: "",
+  contact_info: {},
+  description: "",
+  location_longitude: "",
+  location_latitude: ""
+  });
+const [isEditing, setIsEditing] = useState(false);
+//  Contact Info Add
+const [isAddingContact, setIsAddingContact] = useState(false);
 const [newContactKey, setNewContactKey] = useState('');
 const [newContactValue, setNewContactValue] = useState('');
-const [isAddingContact, setIsAddingContact] = useState(false);
-const handleAddContactField = () => {
-  if (!newContactKey || !newContactValue) return;
 
-  setEditData((prev) => ({
-    ...prev,
-    contact_info: {
-      ...prev.contact_info,
-      [newContactKey]: newContactValue
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalProduct, setModalProduct] = useState(null);
+  const [comments, setComments] = useState([]);
+  const chartRef = useRef(null);
+  
+  const handleAddContactField = () => {
+    if (!newContactKey || !newContactValue) return;
+
+    if (editData.contact_info.hasOwnProperty(newContactKey)) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'کلید تکراری',
+        text: `کلید "${newContactKey}" قبلاً اضافه شده است.`,
+        confirmButtonText: 'باشه',
+      });
+      return;
     }
-  }));
-
-  // پاک‌کردن input‌ها بعد از افزودن
-  setNewContactKey('');
-  setNewContactValue('');
-};
+    setEditData((prev) => ({
+      ...prev,
+      contact_info: {
+        ...prev.contact_info,
+        [newContactKey]: newContactValue
+      }
+    }));
+    setNewContactKey('');
+    setNewContactValue('');
+    setIsAddingContact(false);
+  };
 
 const openProductModal = async (product) => {
   setModalProduct(product);
@@ -128,7 +151,6 @@ const closeProductModal = () => {
     setConfirmModalConfig(prev => ({ ...prev, isOpen: false }));
   };
   
-  const [storeInfo, setStoreInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const [products, setProducts] = useState([]);
@@ -178,14 +200,6 @@ useEffect(() => {
   getSelfStoreProduct();
 }, []);
 
-const [isEditing, setIsEditing] = useState(false);
-const [editData, setEditData] = useState({
-name: "",
-contact_info: {},
-description: "",
-location_longitude: "",
-location_latitude: ""
-});
 useEffect(() => {
 
 if (storeInfo) {
@@ -469,7 +483,7 @@ const handleSaveChanges = async() => {
 setStoreInfo({
 ...storeInfo,
 name: editData.name,
-contact_info: editData.contact_info,
+contact_info: editData.contact_info ?? {},
 description: editData.description,
 location_longitude: editData.location_longitude,
 location_latitude: editData.location_latitude
@@ -558,7 +572,7 @@ const renderStars = (rating) => {
   
 return (
 <div dir='rtl'  className="min-h-screen bg-gradient-to-r from-blue-50 to-white">
-{Cookies.get('auth_token') ?<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+{isLogged ?<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 {/* {Object.entries(storeInfo.contact_info || {}).map(([key, value]) => (
   <div key={key} className="flex">
     <span className="text-gray-500 capitalize w-24">{key}:</span>
@@ -663,19 +677,7 @@ className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
           />
           <div className="flex gap-2">
             <button
-              onClick={() => {
-                if (!newContactKey || !newContactValue) return;
-                setEditData((prev) => ({
-                  ...prev,
-                  contact_info: {
-                    ...prev.contact_info,
-                    [newContactKey]: newContactValue
-                  }
-                }));
-                setNewContactKey('');
-                setNewContactValue('');
-                setIsAddingContact(false); 
-              }}
+              onClick={handleAddContactField}
               className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
             >
               ذخیره
