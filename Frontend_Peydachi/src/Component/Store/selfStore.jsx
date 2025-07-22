@@ -29,6 +29,25 @@ const SelfStore = () => {
 const [modalProduct, setModalProduct] = useState(null);
 const [comments, setComments] = useState([]);
 const chartRef = useRef(null);
+const [newContactKey, setNewContactKey] = useState('');
+const [newContactValue, setNewContactValue] = useState('');
+const [isAddingContact, setIsAddingContact] = useState(false);
+const handleAddContactField = () => {
+  if (!newContactKey || !newContactValue) return;
+
+  setEditData((prev) => ({
+    ...prev,
+    contact_info: {
+      ...prev.contact_info,
+      [newContactKey]: newContactValue
+    }
+  }));
+
+  // پاک‌کردن input‌ها بعد از افزودن
+  setNewContactKey('');
+  setNewContactValue('');
+};
+
 const openProductModal = async (product) => {
   setModalProduct(product);
   setIsModalOpen(true);
@@ -617,9 +636,65 @@ className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
                 </div>
               </div>
             ))}
-          <button className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center cursor-pointer whitespace-nowrap !rounded-button">
-            <FaPlus className="ml-1" /> افزودن
-          </button>
+            {!isAddingContact && (
+              <button
+                onClick={() => setIsAddingContact(true)}
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center cursor-pointer whitespace-nowrap !rounded-button mt-2"
+              >
+                <FaPlus className="ml-1" /> افزودن راه ارتباطی جدید
+              </button>
+            )}
+
+      {isAddingContact && (
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-4">
+          <input
+            type="text"
+            placeholder="نام (مثلاً instagram)"
+            value={newContactKey}
+            onChange={(e) => setNewContactKey(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm w-full sm:w-1/3"
+          />
+          <input
+            type="text"
+            placeholder="مقدار (مثلاً @yourstore)"
+            value={newContactValue}
+            onChange={(e) => setNewContactValue(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm w-full sm:w-1/3"
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                if (!newContactKey || !newContactValue) return;
+                setEditData((prev) => ({
+                  ...prev,
+                  contact_info: {
+                    ...prev.contact_info,
+                    [newContactKey]: newContactValue
+                  }
+                }));
+                setNewContactKey('');
+                setNewContactValue('');
+                setIsAddingContact(false); 
+              }}
+              className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
+            >
+              ذخیره
+            </button>
+            <button
+              onClick={() => {
+                setIsAddingContact(false);
+                setNewContactKey('');
+                setNewContactValue('');
+              }}
+              className="px-3 py-2 bg-gray-200 text-gray-800 rounded-lg text-sm hover:bg-gray-300"
+            >
+              لغو
+            </button>
+          </div>
+        </div>
+      )}
+
+
 
         </div>
       </div>
