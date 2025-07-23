@@ -10,6 +10,7 @@ import DeleteConfirmModal from './DeleteConfirmModal';
 const UserReports = () => {
   const { role } = useAuth(); 
   const { refreshStats } = useAdminStats();
+  const { stats } = useAdminStats();
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -121,7 +122,7 @@ useEffect(() => {
   const fetchReports = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get('/admin/report/get_all_reports', {
+      const response = await axiosInstance.get('/admin/report/get_reports_to_review', {
         headers: {
           Authorization: null,
           'Content-Type': 'multipart/form-data'
@@ -188,7 +189,7 @@ useEffect(() => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading
-          ? Array.from({ length: 6 }).map((_, i) => <UserReportSkeleton key={i} />)
+          ? Array.from({ length: stats?.pending || 6 }).map((_, i) => <UserReportSkeleton key={i} />)
           : filtered.map((report) => (
               <UserReportCard key={report.id} report={report} onDeleteClick={handleDeleteClick} onCheckClick={handleCheckClick} />
             ))

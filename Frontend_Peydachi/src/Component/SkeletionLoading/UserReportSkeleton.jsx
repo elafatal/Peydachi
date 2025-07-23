@@ -5,9 +5,6 @@ const UserReportSkeleton = () => {
           <div className="h-4 bg-gray-300 rounded w-1/3"></div>
           <div className="h-4 bg-gray-300 rounded w-5"></div>
         </div>
-        <div className="h-3 bg-gray-300 rounded mb-2 w-full"></div>
-        <div className="h-3 bg-gray-300 rounded mb-2 w-5/6"></div>
-        <div className="h-3 bg-gray-300 rounded mb-4 w-4/6"></div>
         <div className="flex justify-between items-center text-sm text-gray-500">
           <div className="h-3 bg-gray-300 rounded w-1/4"></div>
           <div className="h-4 bg-gray-300 rounded w-1/4"></div>
