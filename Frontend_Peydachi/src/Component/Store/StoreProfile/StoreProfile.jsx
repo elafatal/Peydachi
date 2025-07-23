@@ -224,7 +224,7 @@ useEffect(() => {
                           <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-200 border border-blue-50 cursor-pointer">
                         <div className="h-64 overflow-hidden">
                           <img
-                            src={product.pic_url}
+                            src={product.pic_url || "/defult.png"}
                             alt={product.name}
                             className="w-full h-full object-cover object-top transition duration-300 hover:scale-105"
                           />

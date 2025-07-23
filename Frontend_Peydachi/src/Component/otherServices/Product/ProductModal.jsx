@@ -46,7 +46,7 @@ const ProductModal = ({
               {/* image & details */}
               <div>
                 <div className="rounded-lg overflow-hidden mb-4">
-                  <img src={selectedProduct.pic_url} alt={selectedProduct.name} className="w-full h-auto object-cover" />
+                  <img src={selectedProduct.pic_url || "/defult.png"} alt={selectedProduct.name} className="w-full h-auto object-cover" />
                 </div>
                 <div dir="rtl" className="bg-gray-50 rounded-lg p-4">
                   <h4 className="text-sm font-medium text-gray-900 mb-2">جزئیات محصول</h4>
