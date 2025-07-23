@@ -19,32 +19,32 @@ const AboutUs = () => {
           <div className="text ">
             <span className="text-gray-500 border-b-2 border-blue-600 uppercase">درباره‌ی ما</span>
             <h2 className="my-4 font-bold text-3xl sm:text-3xl">
-              درباره‌ی <span className="text-blue-600">اهداف ما</span>
+               از <span className="text-blue-600">پیداچی </span>
             </h2>
             <p className="text-gray-700 text-md">
 پیداچی پروژه ی نرم افزار ماست که قراره توسط اقای نوربخش نمره دهی بشه. اهداف این پروژه گرفتن نمره ی قبولی و مخاطب این پروژه افراد تنبلی هستند که برای خرید قرص سرما خوردگی حاضر نیستن تا 
 سر کوچه برن و داروخونه ها رو بگردن. تیم ما شامل ۳ تا بکند کار و یک فرانت کار هست که این غیرمنصفانه ترین تقسیم بندی برای ترتیب دادن یک پروژه ست.             </p>
           <div className="flex justify-center space-x-4 mt-6" dir='ltr'>
             <a
-              href="https://t.me/YourTelegramUsername"
+              href="https://t.me/peydachi"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <BiLogoTelegram className="opacity-90 transition-opacity hover:opacity-100 text-blue-600 w-8 h-8 cursor-pointer" />
+              <BiLogoTelegram title='تلگرام' className="opacity-90 transition-opacity hover:opacity-100 text-blue-600 w-8 h-8 cursor-pointer" />
             </a>
             <a
               href="https://github.com/HB2102/Peydachi"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaGithub className="opacity-90 transition-opacity hover:opacity-100 text-blue-600 w-8 h-8 cursor-pointer" />
+              <FaGithub title='گیتهاب' className="opacity-90 transition-opacity hover:opacity-100 text-blue-600 w-8 h-8 cursor-pointer" />
             </a>
             <a
               href="mailto:your.email@example.com" 
               target="_blank"
               rel="noopener noreferrer"
             >
-              <BiLogoGmail className="opacity-90 transition-opacity hover:opacity-100 text-blue-600 w-8 h-8 cursor-pointer" />
+              <BiLogoGmail title='ایمیل' className="opacity-90 transition-opacity hover:opacity-100 text-blue-600 w-8 h-8 cursor-pointer" />
             </a>
           </div>
 
