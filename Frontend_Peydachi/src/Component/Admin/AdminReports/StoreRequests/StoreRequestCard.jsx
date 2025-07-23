@@ -48,8 +48,8 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
               className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-lg shadow-sm transition-colors"
               onClick={() => onReview(request)}
             >
-              <FaCheckCircle className=" inline" />
-              
+              <FaCheckCircle className="ml-1 inline" />
+              بررسی
             </button>
           ) : (
             <button
@@ -57,7 +57,8 @@ const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate
               className="bg-gray-200 text-gray-700 py-1 px-4 rounded-lg shadow-sm"
               disabled
             >
-              <FaCheckCircle className=" inline" />
+              <FaCheckCircle className="ml-1 inline" />
+              بررسی شده
             </button>
           )}
 
