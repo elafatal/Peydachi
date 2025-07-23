@@ -177,15 +177,52 @@ const users=[{id:1 , username:'ali'}]
     setStores([]);
   };
 
-
-  const handleDeleteStore = (storeId) => {
-    if (window.confirm("Are you sure you want to delete this store?")) {
-      console.log("Deleting store with ID:", storeId);
-      
-      const updatedStores = stores.filter(store => store.id !== storeId);
-      setStores(updatedStores);
+  const handleDeleteStore = async (storeId) => {
+    const result = await Swal.fire({
+      title: 'حذف فروشگاه',
+      text: 'آیا مطمئن هستید که می‌خواهید این فروشگاه را حذف کنید؟ این عمل قابل بازگشت نیست.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'بله، حذف کن',
+      cancelButtonText: 'انصراف',
+      reverseButtons: true,
+      customClass: {
+        title: 'text-sm',
+        htmlContainer: 'text-sm',
+        confirmButton: 'text-xs bg-red-600 hover:bg-red-700',
+        cancelButton: 'text-xs bg-gray-300 hover:bg-gray-400 text-black',
+      }
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        const response = await axiosInstance.delete('/admin/store/delete_store', {
+          data: { store_id: storeId },
+          headers: { 'Content-Type': 'application/json' }
+        });
+  
+        if (response.status === 200) {
+          setStores(prev => prev.filter(store => store.id !== storeId));
+          Swal.fire({
+            icon: 'success',
+            title: 'فروشگاه با موفقیت حذف شد',
+            toast: true,
+            position: 'top-end',
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        }
+      } catch (error) {
+        console.error('خطا در حذف فروشگاه:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'خطا در حذف فروشگاه',
+          text: 'لطفا دوباره تلاش کنید.',
+        });
+      }
     }
   };
+  
 
   const handleToggleBan = async(store) => {
 if (store.is_banned) {
@@ -280,7 +317,7 @@ if (store.is_banned) {
    </div>
         {/* فیلترها و دکمه */}
         <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-wrap gap-3 mt-3" dir='rtl'>
-          <select
+          {/* <select
             className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
             value={filterCity}
             onChange={(e) => setFilterCity(e.target.value)}
@@ -289,7 +326,7 @@ if (store.is_banned) {
             {cities.map(city => (
               <option key={city.id} value={city.id.toString()}>{city.name}</option>
             ))}
-          </select>
+          </select> */}
 
           <select
             className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
