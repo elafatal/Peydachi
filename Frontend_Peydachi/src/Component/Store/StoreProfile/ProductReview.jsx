@@ -9,10 +9,10 @@ const [comment, setComment] = useState('');
 const [isSubmitting, setIsSubmitting] = useState(false);
 const [feedback, setFeedback] = useState(null);
 const [productData, setProductData] = useState({
-id: 123,
-storeId: 456,
-name: 'Premium Wireless Headphones',
-image: 'https://readdy.ai/api/search-image?query=Premium%20wireless%20headphones%20with%20blue%20accents%20on%20a%20clean%20white%20background%2C%20professional%20product%20photography%20with%20soft%20shadows%20and%20minimal%20styling%2C%20high%20resolution%20detailed%20image&width=400&height=400&seq=1&orientation=squarish'
+id: 0,
+storeId: 0,
+name: '',
+image: 'blah'
 });
 useEffect(() => {
     if (selectedProduct) {
@@ -155,7 +155,7 @@ return (
     <div className="flex items-center p-6 border-b border-gray-100">
       <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
       <img
-      src={productData.image}
+      src={productData.pic_url || "/defult.png"}
       alt={productData.name}
       className="w-full h-full object-cover object-top"
       />
