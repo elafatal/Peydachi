@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { useAuth } from '../../Context/AuthContext';
+
 const Sidebar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { role } = useAuth();
 
   const tabs = [
     { path: '/admin', label: 'داشبورد' },
@@ -13,9 +16,9 @@ const Sidebar = () => {
     { path: '/admin/notifications', label: 'مدیریت اعلان‌ها' },
     { path: '/admin/comments', label: 'مدیریت نظرات' },
     { path: '/admin/cities', label: 'شهر و استان' },
-    { path: '/admin/adminManagement', label: 'ادمین‌ها' },
+    ...(role === 'superadmin' ? [{ path: '/admin/adminManagement', label: 'ادمین‌ها' }] : []),
   ];
-
+  
   const handleLinkClick = () => {
     if (window.innerWidth < 640) setIsMenuOpen(false);
   };
