@@ -289,6 +289,9 @@ const AddStore = () => {
               </div>
             )}
           </div>
+          <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <span>اگر شهر یا استان شما تحت پوشش پیداچی نبود، نام آن را در بخش آدرس بنویسید</span>
+            </div>
           {errors.address && <p className="text-sm text-red-500 mt-1">{errors.address}</p>}
         </div>
 
