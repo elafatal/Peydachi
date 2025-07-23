@@ -16,6 +16,7 @@ from datetime import datetime, UTC, timedelta
 from database.models import User
 from hash.hash import Hash
 from jose.exceptions import JWTError
+from anyio import to_thread 
 from dotenv import load_dotenv
 from jose import jwt
 import os
@@ -67,34 +68,13 @@ async def get_current_user(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
 
     except JWTError:
         raise ERROR_CREDENTIAL
+    
+    async def fetch_user():
+        return await get_user_by_username(username, db)
+    
+    user = await fetch_user()
 
-    user = await get_user_by_username(username, db)
-
-    if user.is_banned:
-        raise USER_IS_BANNED_ERROR
-
-    return user
-
-
-async def get_current_seller(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
-    try:
-        _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
-        username = _dict.get('sub')
-        refresh = _dict.get('refresh')
-
-        if refresh:
-            raise ACCESS_TOKEN_DEMAND_ERROR
-
-        if not username:
-            raise ERROR_CREDENTIAL
-
-    except JWTError:
-        raise ERROR_CREDENTIAL
-
-    user = await get_user_by_username(username, db)
-
-    if not user.is_seller:
-        raise PROTECTED_ERROR
+    # user = await get_user_by_username(username, db)
 
     if user.is_banned:
         raise USER_IS_BANNED_ERROR
@@ -103,59 +83,112 @@ async def get_current_seller(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
 
 
 async def get_current_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
-    try:
-        _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
-        username = _dict.get('sub')
-        refresh = _dict.get('refresh')
-
-        if refresh:
-            raise ACCESS_TOKEN_DEMAND_ERROR
-
-        if not username:
-            raise ERROR_CREDENTIAL
-
-    except JWTError as e:
-        raise ERROR_CREDENTIAL
-
-    user = await get_user_by_username(username, db)
+    user = await get_current_user(token, db)
 
     if not user.is_admin:
         raise PROTECTED_ERROR
-
-    if user.is_banned:
-        raise USER_IS_BANNED_ERROR
-
+    
     return user
 
-
 async def get_current_super_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
-    try:
-        _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
-        username = _dict.get('sub')
-        refresh = _dict.get('refresh')
-
-        if refresh:
-            raise ACCESS_TOKEN_DEMAND_ERROR
-
-        if not username:
-            raise ERROR_CREDENTIAL
-
-    except JWTError:
-        raise ERROR_CREDENTIAL
-
-    user = await get_user_by_username(username, db)
+    user = await get_current_user(token, db)
 
     if not user.is_super_admin:
         raise PROTECTED_ERROR
-
-    if user.is_banned:
-        raise USER_IS_BANNED_ERROR
-
+    
     return user
 
+async def get_current_seller(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
+    user = await get_current_user(token, db)
 
-def login(request: AUTHENTICATION_DEPENDENCY, db: DB_DEPENDENCY):
-    user = db.query(User).filter(User.username == request.username).first()
+    if not user.is_seller:
+        raise PROTECTED_ERROR
+    
+    return user
+# async def get_current_seller(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
+#     try:
+#         _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+#         username = _dict.get('sub')
+#         refresh = _dict.get('refresh')
+
+#         if refresh:
+#             raise ACCESS_TOKEN_DEMAND_ERROR
+
+#         if not username:
+#             raise ERROR_CREDENTIAL
+
+#     except JWTError:
+#         raise ERROR_CREDENTIAL
+
+#     user = await get_user_by_username(username, db)
+
+#     if not user.is_seller:
+#         raise PROTECTED_ERROR
+
+#     if user.is_banned:
+#         raise USER_IS_BANNED_ERROR
+
+#     return user
+
+
+# async def get_current_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
+#     try:
+#         _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+#         username = _dict.get('sub')
+#         refresh = _dict.get('refresh')
+
+#         if refresh:
+#             raise ACCESS_TOKEN_DEMAND_ERROR
+
+#         if not username:
+#             raise ERROR_CREDENTIAL
+
+#     except JWTError as e:
+#         raise ERROR_CREDENTIAL
+
+#     user = await get_user_by_username(username, db)
+
+#     if not user.is_admin:
+#         raise PROTECTED_ERROR
+
+#     if user.is_banned:
+#         raise USER_IS_BANNED_ERROR
+
+#     return user
+
+
+# async def get_current_super_admin(token: TOKEN_DEPENDENCY, db: DB_DEPENDENCY):
+#     try:
+#         _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+#         username = _dict.get('sub')
+#         refresh = _dict.get('refresh')
+
+#         if refresh:
+#             raise ACCESS_TOKEN_DEMAND_ERROR
+
+#         if not username:
+#             raise ERROR_CREDENTIAL
+
+#     except JWTError:
+#         raise ERROR_CREDENTIAL
+
+#     user = await get_user_by_username(username, db)
+
+#     if not user.is_super_admin:
+#         raise PROTECTED_ERROR
+
+#     if user.is_banned:
+#         raise USER_IS_BANNED_ERROR
+
+#     return user
+
+
+async def login(request: AUTHENTICATION_DEPENDENCY, db: DB_DEPENDENCY):
+    def get_user():
+        return db.query(User).filter(User.username == request.username).first()
+    
+    user = await to_thread.run_sync(get_user)
+    # user = db.query(User).filter(User.username == request.username).first()
     if not user:
         raise INVALID_USER_ERROR
 
@@ -177,7 +210,7 @@ def login(request: AUTHENTICATION_DEPENDENCY, db: DB_DEPENDENCY):
     }
 
 
-def get_new_access_token(token: TOKEN_DEPENDENCY):
+async def get_new_access_token(token: TOKEN_DEPENDENCY):
     try:
         _dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
         refresh = _dict.get('refresh')
