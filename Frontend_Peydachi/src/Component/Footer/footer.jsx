@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaGithub } from "react-icons/fa";
-
+import { Link } from 'react-router-dom';
 export function Footer() {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
@@ -34,9 +34,9 @@ switch (link) {
       <div>
         <h4 className="text-base font-semibold mb-3">لینک‌های مفید</h4>
         <ul className="space-y-2 text-gray-400">
-          <li><a href="aboutUs" className="hover:text-white transition-colors">درباره ما</a></li>
-          <li><a href="#" className="hover:text-white transition-colors">تماس با ما</a></li>
-          <li><a href="#" className="hover:text-white transition-colors">انتقادات و پیشنهادات  </a></li>
+          <li><Link to="/AboutUs" className="hover:text-white transition-colors">درباره ما</Link></li>
+          <li><Link to="/report" className="hover:text-white transition-colors">تماس با ما</Link></li>
+          <li><Link to="/Criticism" className="hover:text-white transition-colors">انتقادات و پیشنهادات  </Link></li>
         </ul>
       </div>
 
