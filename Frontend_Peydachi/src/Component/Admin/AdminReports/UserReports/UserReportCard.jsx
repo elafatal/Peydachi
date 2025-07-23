@@ -38,12 +38,12 @@ const UserReportCard = ({ report,onDeleteClick,onCheckClick  }) => {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4" dir='rtl'>
-      <div className="flex justify-between">
+    <div className="bg-white shadow-md rounded-lg p-4"  dir='rtl'>
+      <div className="flex justify-between" onClick={handleCheckClick}>
        <h3 className="text-lg font-semibold text-gray-800  mb-2">{report.title}</h3>
        <div className="flex gap-1">
         {report.is_reviewed ? <IoIosCheckmarkCircle title="بررسی شده"  className="text-green-500 text-2xl pb-1" /> 
-        : <IoIosCheckmarkCircleOutline onClick={handleCheckClick} 
+        : <IoIosCheckmarkCircleOutline  
           className="text-green-500 text-2xl pb-1 cursor-pointer" title="بررسی این گزارش"/> }
         <FaTrashAlt
           className="text-red-500 cursor-pointer"
