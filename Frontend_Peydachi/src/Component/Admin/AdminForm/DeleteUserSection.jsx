@@ -114,7 +114,7 @@ const DeleteUserSection = () => {
 
   return (
     <form onSubmit={(e) => e.preventDefault()} className="bg-white p-6 rounded shadow space-y-4">
-      <h3 className="text-lg font-semibold text-gray-800 text-center">حذف کاربر</h3>
+      <h3 className="text-lg font-semibold text-gray-800 text-center">حذف کاربر / ارتقا کاربر </h3>
 
       {/* فیلد جستجو */}
       <div className="flex gap-2">

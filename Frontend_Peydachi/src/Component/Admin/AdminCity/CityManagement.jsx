@@ -7,6 +7,7 @@ import { FaCirclePlus } from "react-icons/fa6";
 const CityManagement = () => {
   const [loadingCities, setLoadingCities] = useState(true);
   const [loadingRegions, setLoadingRegions] = useState(true);
+  const [regionSearchText, setRegionSearchText] = useState('');
   // State for regions and cities
   const [regions, setRegions] = useState([]);
   const [cities, setCities] = useState([]);
@@ -21,6 +22,7 @@ const CityManagement = () => {
   const [editingCityId, setEditingCityId] = useState(null);
   const [editingCityName, setEditingCityName] = useState('');
   const [editingCityRegionId, setEditingCityRegionId] = useState(null);
+  
   // State for notifications
   const [notification, setNotification] = useState(null);
 
@@ -348,26 +350,29 @@ return (
         />
         <div className="relative">
         <input
-        type="text"
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-800 text-sm"
-        placeholder="استان شهر مربوطه را وارد کنید"
-        onFocus={() => document.getElementById('region-dropdown')?.classList.remove('hidden')}
-        onChange={(e) => {
-        const searchBox = e.target;
-        const dropdown = document.getElementById('region-dropdown');
-        const items = dropdown?.getElementsByTagName('li');   
-        if (items) {
-          Array.from(items).forEach(item => {
-            if (item.textContent?.toLowerCase().includes(searchBox.value.toLowerCase())) {
-              item.style.display = '';
-            } else {
-              item.style.display = 'none';
-            }
-          });
+  type="text"
+  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-800 text-sm"
+  placeholder="استان شهر مربوطه را وارد کنید"
+  onFocus={() => document.getElementById('region-dropdown')?.classList.remove('hidden')}
+  onChange={(e) => {
+    const value = e.target.value;
+    setRegionSearchText(value);
+    const dropdown = document.getElementById('region-dropdown');
+    const items = dropdown?.getElementsByTagName('li');
+
+    if (items) {
+      Array.from(items).forEach(item => {
+        if (item.textContent?.toLowerCase().includes(value.toLowerCase())) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
         }
-        }}
-        value={selectedRegionId ? getRegionName(selectedRegionId) : ''}
-        />
+      });
+    }
+  }}
+  value={regionSearchText}
+/>
+
         <div id="region-dropdown" className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg hidden">
         <ul className="py-1 max-h-60 overflow-y-auto">
         {regions.map(region => (
@@ -375,6 +380,7 @@ return (
         key={region.id}
         onClick={(e) => {
         setSelectedRegionId(region.id);
+        setRegionSearchText(region.name); 
         const input = e.currentTarget.parentElement?.parentElement?.previousElementSibling;
         if (input) {
           input.value = region.name;
