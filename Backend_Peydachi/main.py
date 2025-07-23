@@ -10,7 +10,10 @@ from routers.super_admin_routers import (
     deleted_pics,
     super_admin_notifications,
     super_admin_add_store_request,
-    super_admin_reports
+    super_admin_reports,
+    super_admin_city,
+    super_admin_city_center,
+    super_admin_region
 )
 from routers.general_routers import (
     user,
@@ -42,7 +45,6 @@ from routers.admin_routers import (
     admin_add_store_request,
     admin_store_comment,
     admin_product_comment,
-
     admin_statistics
 )
 
@@ -86,8 +88,6 @@ app.include_router(city_center.router)
 app.include_router(seller_store.router)
 app.include_router(seller_product.router)
 app.include_router(admin_user.router)
-app.include_router(admin_region.router)
-app.include_router(admin_city.router)
 app.include_router(admin_reports.router)
 app.include_router(admin_comment_report.router)
 app.include_router(admin_store.router)
@@ -99,9 +99,11 @@ app.include_router(admin_store_comment.router)
 app.include_router(admin_product_rating.router)
 app.include_router(admin_product_comment.router)
 app.include_router(admin_add_store_request.router)
-app.include_router(admin_city_center.router)
 app.include_router(admin_statistics.router)
 app.include_router(super_admin.router)
+app.include_router(super_admin_city.router)
+app.include_router(super_admin_region.router)
+app.include_router(super_admin_city_center.router)
 app.include_router(super_admin_reports.router)
 app.include_router(super_admin_notifications.router)
 app.include_router(super_admin_add_store_request.router)
