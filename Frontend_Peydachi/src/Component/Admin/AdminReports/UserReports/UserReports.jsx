@@ -141,25 +141,27 @@ useEffect(() => {
 }, []);
 
   
-  useEffect(() => {
-    const searchReports = async () => {
-      try {
-        setLoading(true);
-        const res = await axiosInstance.post('/admin/report/search_reports', {
-          report_text: search
-        });
-        setReports(res.data);
-        setFiltered(res.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    searchReports();
-  }, [search]);
-  
+useEffect(() => {
+  if (search.trim() === '') return; 
+
+  const searchReports = async () => {
+    try {
+      setLoading(true);
+      const res = await axiosInstance.post('/admin/report/search_reports', {
+        report_text: search
+      });
+      setReports(res.data);
+      setFiltered(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  searchReports();
+}, [search]);
+
 
   return (
     <div>
