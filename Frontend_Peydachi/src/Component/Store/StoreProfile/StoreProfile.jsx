@@ -11,16 +11,8 @@ import StoreComment from './StoreComment';
 const StoreProfile = () => {
   const { id } = useParams(); 
   const [store, setStore] = useState(null);
-  const [products,setProducts]=useState([    {
-    id: 1,
-    name: "Coastal Linen Throw Pillow",
-    description: "Handcrafted linen throw pillow with coastal patterns. Perfect for adding a touch of the ocean to your living space.",
-    quantity: 24,
-    date_added: "2025-04-15T10:30:00.000Z",
-    city_id: 1,
-    pic_url: "https://readdy.ai/api/search-image?query=A%20luxurious%20coastal-themed%20linen%20throw%20pillow%20with%20blue%20and%20white%20patterns%2C%20photographed%20in%20a%20minimalist%20setting%20with%20soft%20natural%20lighting%2C%20showing%20texture%20details%20and%20elegant%20stitching%2C%20perfect%20for%20a%20modern%20coastal%20home%20decor&width=600&height=400&seq=1001&orientation=landscape",
-    average_rating: 4.8
-  }])
+  const [products, setProducts] = useState([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [s, setS] = useState(false);
@@ -224,58 +216,64 @@ useEffect(() => {
           </div>
         </div>
   
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* {products2.map(product => (
-            
-          ))} */}
-                  {sortedProducts && sortedProducts.length > 0 ? (
-          sortedProducts.map(product => (
-            <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-200 border border-blue-50 cursor-pointer">
-              <div className="h-64 overflow-hidden">
-                <img
-                  src={product.pic_url}
-                  alt={product.name}
-                  className="w-full h-full object-cover object-top transition duration-300 hover:scale-105"
-                />
-              </div>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-semibold text-blue-800">{product.name}</h3>
-                  {renderRating(product.average_rating)}
-                </div>
-                <p className="text-gray-600 mb-4 line-clamp-2">{product.description}</p>
-                <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span className="flex items-center">
-                    <FaBox className="mr-1 text-blue-400" />
-                    {product.quantity} موجود در انبار
-                  </span>
-                  <span className="flex items-center" dir='rtl'>
-                    <FaCalendarAlt className="ml-1 text-blue-400" />
-                    {formatRelativeDate(product.date_added)}
-                  </span>
-                 
-                </div>
-                <div className="mt-4 pt-4 border-t border-blue-50 flex justify-between">
-                  <button className="flex items-center justify-center bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 py-1 px-3 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
-                    <FaEye className="mr-1" /> دیدن جزئیات
-                  </button>
-                  <button onClick={()=>openProductModal(product)} className="flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
-                    <FaComments className="mr-1 " /> ثبت نظر
-                  </button>
-                </div>
+                  {sortedProducts && sortedProducts.length > 0 ?
+                  (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {sortedProducts.map(product => (
+                        <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-200 border border-blue-50 cursor-pointer">
+                          <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-200 border border-blue-50 cursor-pointer">
+                        <div className="h-64 overflow-hidden">
+                          <img
+                            src={product.pic_url}
+                            alt={product.name}
+                            className="w-full h-full object-cover object-top transition duration-300 hover:scale-105"
+                          />
+                        </div>
+                        <div className="p-6">
+                          <div className="flex justify-between items-start mb-2">
+                            <h3 className="text-xl font-semibold text-blue-800">{product.name}</h3>
+                            {renderRating(product.average_rating)}
+                          </div>
+                          <p className="text-gray-600 mb-4 line-clamp-2">{product.description}</p>
+                          <div className="flex justify-between items-center text-sm text-gray-500">
+                            <span className="flex items-center">
+                              <FaBox className="mr-1 text-blue-400" />
+                              {product.quantity} موجود در انبار
+                            </span>
+                            <span className="flex items-center" dir='rtl'>
+                              <FaCalendarAlt className="ml-1 text-blue-400" />
+                              {formatRelativeDate(product.date_added)}
+                            </span>
+                          
+                          </div>
+                          <div className="mt-4 pt-4 border-t border-blue-50 flex justify-between">
+                            <button className="flex items-center justify-center bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 py-1 px-3 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
+                              <FaEye className="mr-1" /> دیدن جزئیات
+                            </button>
+                            <button onClick={()=>openProductModal(product)} className="flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
+                              <FaComments className="mr-1 " /> ثبت نظر
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+            <div className="w-full flex justify-center mt-16">
+              <div className="flex flex-col items-center text-center text-gray-500 max-w-xs">
+                <FaBox className="text-5xl text-blue-300 mb-4" />
+                <h3 className="text-lg font-semibold mb-1">محصولی یافت نشد</h3>
+                <p className="text-sm text-gray-400">این فروشگاه در حال حاضر محصولی برای نمایش ندارد.</p>
               </div>
             </div>
-          ))
-        ) : (
-          <div className="text-center text-gray-500 mt-8">محصولی برای نمایش وجود ندارد.</div>
-        )}
-        </div>
-  
-        <div className="mt-12 flex justify-center">
+                  )}
+        {sortedProducts && sortedProducts.length > 0 ?         <div className="mt-12 flex justify-center">
           <button type="button" onClick={handleSetOffset} className="flex items-center bg-white border border-blue-300 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-button transition duration-200 font-medium whitespace-nowrap cursor-pointer">
             نمایش بیشتر <FaChevronDown className="ml-2" />
           </button>
-        </div>
+        </div>:null}
+
       </div>
       <ProductReview  closeProductModal={closeProductModal}  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedProduct={modalProduct} />
      
