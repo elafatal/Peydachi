@@ -2,14 +2,14 @@ from fastapi import APIRouter
 from functions import city_center_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY
-from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
+from dependencies.access_dependencies import ROUTER_SUPER_ADMIN_DEPENDENCY
 from schemas.city_center_schemas import AddCityCenterModel, CityCenterDisplay
 
 
 router = APIRouter(
-    prefix='/admin/city_center',
-    tags=['Admin City Center'],
-    dependencies=[ROUTER_ADMIN_DEPENDENCY]
+    prefix='/super_admin/city_center',
+    tags=['Super Admin City Center'],
+    dependencies=[ROUTER_SUPER_ADMIN_DEPENDENCY]
 )
 
 

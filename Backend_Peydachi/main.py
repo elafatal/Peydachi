@@ -31,8 +31,6 @@ from routers.general_routers import (
 )
 from routers.admin_routers import (
     admin_user,
-    admin_region,
-    admin_city,
     admin_reports,
     admin_comment_report,
     admin_store,
@@ -44,7 +42,7 @@ from routers.admin_routers import (
     admin_add_store_request,
     admin_store_comment,
     admin_product_comment,
-    admin_city_center,
+
     admin_statistics
 )
 
