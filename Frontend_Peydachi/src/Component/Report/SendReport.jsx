@@ -131,7 +131,24 @@ const SendReport= () => {
 
   return (
     <div className=" bg-gradient-to-b from-blue-50 to-white flex flex-col items-center">
-      
+      <div className="w-full max-w-4xl px-4 mt-6">
+        <div className="bg-white border border-blue-100 shadow-md rounded-lg p-4 flex items-center gap-3">
+          <div className="flex items-center justify-center w-10 h-10 bg-blue-100 text-blue-600 rounded-full">
+            <FaInfoCircle className="text-xl" />
+          </div>
+          <div className="text-sm sm:text-base text-gray-700">
+            برای ارتباط مستقیم، می‌توانید به آدرس ایمیل 
+            <a 
+              href="mailto:contact@peidachi.ir"
+              className="text-blue-600 font-medium hover:underline mx-1"
+            >
+              contact@peidachi.ir
+            </a>
+            پیام ارسال کنید.
+          </div>
+        </div>
+      </div>
+
       <main className="w-full max-w-4xl px-4 pb-20  mt-8">
         {/* Form Container */}
         <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
