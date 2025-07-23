@@ -15,21 +15,33 @@ const SignUp= ({showComponent,setshowComponent}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  const isValidUsername = (username) => {
+    const regex = /^[a-zA-Z0-9_.-]+$/;
+    return regex.test(username);
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log({ username, phone_number, password, rememberMe });
+    if (!isValidUsername(username)) {
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "نام کاربری فقط باید شامل حروف انگلیسی، عدد و _ یا . باشد",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-2 h-20 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs pb-2 mb-2',
+          icon: 'text-xs mb-2',
+        },
+      });
+      return;
+    }
+    
     if (password == password2) {
       try {
-        // const response = await axios.post(
-        //   'http://127.0.0.1:8000/user/create_user',
-        //   { username: username, password: password, phone_number: phone_number },
-        //   {
-        //     headers: {
-        //       'Content-Type': 'application/json',
-        //       'Accept': 'application/json',
-        //     },
-        //   }
-        // );
         const response = await axiosInstance.post(
           '/user/create_user',
           { username, password, phone_number },
