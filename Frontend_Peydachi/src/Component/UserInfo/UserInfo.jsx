@@ -398,20 +398,20 @@ const handleGoSelfStore =()=>{
 
     {/* Form Actions */}
     <div className="mt-10 pt-6  flex flex-col items-center">
-      <button 
-        type="submit"
-        className="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white text-base font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300"
-      >
-تایید اطلاعات             </button>
-      <button 
-       onClick={handleGoHome}
-        type="button"
-        className="mt-3 text-sm text-gray-600 hover:text-gray-800"
-      >
-فعلا نه              </button>
+          <button 
+            type="submit"
+            className="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white text-base font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300"
+          >
+    تایید اطلاعات             </button>
+          <button 
+          onClick={handleGoHome}
+            type="button"
+            className="mt-3 text-sm text-gray-600 hover:text-gray-800"
+          >
+    فعلا نه              </button>
+        </div>
+      </form>
     </div>
-  </form>
-</div>
 
 {/* Footer */}
 <div className="mt-3 text-center text-xs text-gray-500">

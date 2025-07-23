@@ -91,9 +91,6 @@ const Navbar = ()=>{
                   ورود/ثبت‌نام  
                   </li>):
                 ( <>
-                <li  onClick={handleLogOut} className="  relative w-full text-center text-gray-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-900 hover:text-gray-800 hover:rounded-xl  px-2 py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300 sm:transition-all  sm:after:content-[''] sm:after:absolute sm:after:block sm:after:w-0 after:h-0.5 sm:after:bg-blue-600 sm:after:transition-all sm:after:duration-300 sm:after:left-1/2 sm:after:bottom-0 sm:hover:after:w-full sm:hover:after:left-0">
-                    خروج
-                  </li>
                   <li onClick={()=>handleLinks('userInfo')} className="relative w-full text-center text-gray-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-900 hover:text-gray-800 hover:rounded-xl  px-2 py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300 sm:transition-all  sm:after:content-[''] sm:after:absolute sm:after:block sm:after:w-0 after:h-0.5 sm:after:bg-blue-600 sm:after:transition-all sm:after:duration-300 sm:after:left-1/2 sm:after:bottom-0 sm:hover:after:w-full sm:hover:after:left-0">
                     اطلاعات کاربر
                   </li>
@@ -101,12 +98,19 @@ const Navbar = ()=>{
                   <li onClick={()=>handleLinks('Report')} className="relative w-full text-center text-gray-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-900 hover:text-gray-800 hover:rounded-xl px-2 py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300 sm:transition-all  sm:after:content-[''] sm:after:absolute sm:after:block sm:after:w-0 after:h-0.5 sm:after:bg-blue-600 sm:after:transition-all sm:after:duration-300 sm:after:left-1/2 sm:after:bottom-0 sm:hover:after:w-full sm:hover:after:left-0">
                     ثبت درخواست
                   </li>
-                  { isLogged && role ? <li className="relative w-full text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
-                    <Notifications/>
+                  {isLogged && (role === 'seller') ? <li onClick={()=>handleLinks('selfStore')} className="relative w-full text-center text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
+                    پنل فروشگاه
                   </li> : null }
                   {isLogged && (role === 'admin' || role=== 'superadmin') ? <li onClick={()=>handleLinks('Admin')} className="relative w-full text-center text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
                     پنل ادمین
                   </li> : null }
+                  <li  onClick={handleLogOut} className="  relative w-full text-center text-gray-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-900 hover:text-gray-800 hover:rounded-xl  px-2 py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300 sm:transition-all  sm:after:content-[''] sm:after:absolute sm:after:block sm:after:w-0 after:h-0.5 sm:after:bg-blue-600 sm:after:transition-all sm:after:duration-300 sm:after:left-1/2 sm:after:bottom-0 sm:hover:after:w-full sm:hover:after:left-0">
+                    خروج
+                  </li>
+                  { isLogged && role ? <li className="relative w-full text-blue-600 sm:hover:bg-transparent hover:bg-gray-100 sm:hover:text-blue-700 hover:text-blue-800 hover:rounded-xl  py-2 cursor-pointer whitespace-nowrap !rounded-button transition-colors duration-300">
+                    <Notifications/>
+                  </li> : null }
+
                   
               </ul>
             </nav>
