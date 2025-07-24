@@ -3,12 +3,14 @@ from functions import notification_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.access_dependencies import USER_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
+from dependencies.limiter_dependencies import LIMIT_10_PER_MINUTE_DEPENDENCY
 from schemas.notification_schemas import NotificationDisplay, NotifCountShortDisplay
 
 
 router = APIRouter(
     prefix='/notification',
     tags=['Notification'],
+    dependencies=[LIMIT_10_PER_MINUTE_DEPENDENCY]
 )
 
 

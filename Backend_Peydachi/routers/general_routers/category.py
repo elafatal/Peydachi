@@ -2,12 +2,14 @@ from fastapi import APIRouter
 from functions import category_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
+from dependencies.limiter_dependencies import LIMIT_10_PER_MINUTE_DEPENDENCY
 from schemas.category_schema import CategoryDisplay
 
 
 router = APIRouter(
     prefix='/category',
-    tags=['Category']
+    tags=['Category'],
+    dependencies=[LIMIT_10_PER_MINUTE_DEPENDENCY]
 )
 
 

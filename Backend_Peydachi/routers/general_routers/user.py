@@ -3,12 +3,14 @@ from functions import user_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY
 from dependencies.access_dependencies import USER_DEPENDENCY
+from dependencies.limiter_dependencies import LIMIT_10_PER_MINUTE_DEPENDENCY
 from schemas.user_schemas import UserDisplay, UserModel, UserUpdateModel
 
 
 router = APIRouter(
     prefix='/user',
-    tags=['User']
+    tags=['User'],
+    dependencies=[LIMIT_10_PER_MINUTE_DEPENDENCY]
 )
 
 
