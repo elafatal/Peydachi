@@ -25,6 +25,12 @@ from errors.store_comment_errors import (
 )
 from errors.store_rating_errors import STORE_RATING_MUST_BE_BETWEEN_0_AND_5_ERROR
 from errors.product_rating_errors import PRODUCT_RATING_MUST_BE_BETWEEN_0_AND_5_ERROR
+from errors.notifications_errors import (
+    NOTIFICATION_TITLE_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR,
+    NOTIFICATION_TITLE_MUST_BE_SHORTER_THAN_200_CHARACTERS_ERROR,
+    NOTIFICATION_TEXT_MUST_BE_LONGER_THAN_5_CHARACTERS_ERROR,
+    NOTIFICATION_TEXT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
+)
     
 
 
@@ -238,6 +244,22 @@ class Notification(ID, Base):
     admin_id = Column(Integer, ForeignKey("user.id", ondelete="SET NULL"), nullable=True)
     has_seen = Column(Boolean, default=False)
     date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
+
+
+    def validate_title(self, key, value):
+        if not value or len(value.strip()) <= 3:
+            raise NOTIFICATION_TITLE_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
+        if len(value) > 200:
+            raise NOTIFICATION_TITLE_MUST_BE_SHORTER_THAN_200_CHARACTERS_ERROR
+        return value.strip()
+
+    @validates("text")
+    def validate_text(self, key, value):
+        if not value or len(value.strip()) <= 5:
+            raise NOTIFICATION_TEXT_MUST_BE_LONGER_THAN_5_CHARACTERS_ERROR
+        if len(value) > 500:
+            raise NOTIFICATION_TEXT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
+        return value.strip()
 
 
 # Report Class ============================================================================================
