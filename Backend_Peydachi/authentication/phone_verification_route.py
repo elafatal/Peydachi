@@ -1,12 +1,14 @@
 from fastapi import APIRouter
-from dependencies.dependencies import REDIS_DEPENDENCY, DB_DEPENDENCY
-from dependencies.body_dependencies import NAME_BODY
 from authentication import phone_verification_functions
+from dependencies.body_dependencies import NAME_BODY
+from dependencies.dependencies import REDIS_DEPENDENCY, DB_DEPENDENCY
+from dependencies.limiter_dependencies import LIMIT_5_PER_3MIN_DEPENDENCY
 from schemas.phone_verification_schemas import PhoneVerifyCheckModel, ForgetPasswordVerifyCheck
 
 router = APIRouter(
     prefix='/phone_verification',
-    tags=['Phone Verification']
+    tags=['Phone Verification'],
+    dependencies=[LIMIT_5_PER_3MIN_DEPENDENCY]
 )
 
 
