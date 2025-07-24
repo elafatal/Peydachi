@@ -7,12 +7,19 @@ import { formatDistanceToNow } from 'date-fns';
 import faIR from 'date-fns/locale/fa-IR';
 import ProductReview from './ProductReview';
 import StoreComment from './StoreComment';
+import ProductDetailModal from './ProductModal'; // مسیر دقیق فایل
 
 const StoreProfile = () => {
   const { id } = useParams(); 
   const [store, setStore] = useState(null);
   const [products, setProducts] = useState([]);
-
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const openDetailModal = (productId) => {
+    setSelectedProductId(productId);
+    setIsDetailModalOpen(true);
+  };
+    
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [s, setS] = useState(false);
@@ -221,7 +228,7 @@ useEffect(() => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {sortedProducts.map(product => (
                         <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-200 border border-blue-50 cursor-pointer">
-                          <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-200 border border-blue-50 cursor-pointer">
+                          <div key={product.id} className="bg-white rounded-lg overflow-hidden  transition duration-200 border border-white cursor-pointer">
                         <div className="h-64 overflow-hidden">
                           <img
                             src={product.pic_url || "/defult.png"}
@@ -247,9 +254,13 @@ useEffect(() => {
                           
                           </div>
                           <div className="mt-4 pt-4 border-t border-blue-50 flex justify-between">
-                            <button className="flex items-center justify-center bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 py-1 px-3 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
+                          <button
+                              onClick={() => openDetailModal(product.id)}
+                              className="flex items-center justify-center bg-white text-blue-600 border border-blue-200 hover:bg-blue-50 py-1 px-3 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer"
+                            >
                               <FaEye className="mr-1" /> دیدن جزئیات
                             </button>
+
                             <button onClick={()=>openProductModal(product)} className="flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-sm transition duration-200 text-sm whitespace-nowrap cursor-pointer">
                               <FaComments className="mr-1 " /> ثبت نظر
                             </button>
@@ -268,7 +279,7 @@ useEffect(() => {
               </div>
             </div>
                   )}
-        {sortedProducts && sortedProducts.length > 10 ?         <div className="mt-12 flex justify-center">
+        {sortedProducts && sortedProducts.length > 10 ? <div className="mt-12 flex justify-center">
           <button type="button" onClick={handleSetOffset} className="flex items-center bg-white border border-blue-300 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-button transition duration-200 font-medium whitespace-nowrap cursor-pointer">
             نمایش بیشتر <FaChevronDown className="ml-2" />
           </button>
@@ -278,6 +289,13 @@ useEffect(() => {
       <ProductReview  closeProductModal={closeProductModal}  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedProduct={modalProduct} />
      
     </div>
+    <ProductDetailModal 
+        isOpen={isDetailModalOpen}
+        productId={selectedProductId}
+        onClose={() => setIsDetailModalOpen(false)}
+      />
+
+
   </div>
   );
 };
