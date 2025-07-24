@@ -152,7 +152,7 @@ const ProductDetailModal = ({ productId, isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" dir="ltr">
-      <div className="fixed inset-0 bg-gray-500 bg-opacity-75" onClick={onClose}></div>
+      <div className="fixed inset-0 bg-white/10 backdrop-blur-md bg-opacity-75" onClick={onClose}></div>
       <div className="flex items-center justify-center min-h-screen px-4">
         <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl p-6 relative z-10">
           <button onClick={onClose} className="absolute top-4 right-4 text-gray-600 hover:text-gray-800">

@@ -3,8 +3,8 @@ import * as echarts from 'echarts';
 import axiosInstance from '../axiosInstance';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import { useAuth } from '../Context/AuthContext';
+import EditLocationModal from './EditLocationModal';
 
 import {
     FaEdit,
@@ -27,27 +27,49 @@ import SelfProductModal from './SelfProductModal';
 import UnauthorizedPage from '../Error/UnauthorizedPage';
 const SelfStore = () => {
   const { user, role } = useAuth();
-
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const navigate = useNavigate();
   // Store Info
-const [storeInfo, setStoreInfo] = useState(null);
-const [editData, setEditData] = useState({
-  name: "",
-  contact_info: {},
-  description: "",
-  location_longitude: "",
-  location_latitude: ""
-  });
-const [isEditing, setIsEditing] = useState(false);
-//  Contact Info Add
-const [isAddingContact, setIsAddingContact] = useState(false);
-const [newContactKey, setNewContactKey] = useState('');
-const [newContactValue, setNewContactValue] = useState('');
+  const [storeInfo, setStoreInfo] = useState(null);
+  const [editData, setEditData] = useState({
+    name: "",
+    contact_info: {},
+    description: "",
+    location_longitude: "",
+    location_latitude: ""
+    });
+  const [isEditing, setIsEditing] = useState(false);
+  //  Contact Info Add
+  const [isAddingContact, setIsAddingContact] = useState(false);
+  const [newContactKey, setNewContactKey] = useState('');
+  const [newContactValue, setNewContactValue] = useState('');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalProduct, setModalProduct] = useState(null);
   const [comments, setComments] = useState([]);
   const chartRef = useRef(null);
+  
+  const handleSaveLocation = async (coords) => {
+    try {
+      const updatedData = {
+        ...editData,
+        location_latitude: coords.location_latitude,
+        location_longitude: coords.location_longitude,
+      };
+  
+      const res = await axiosInstance.put('/seller/store/update_store_info', updatedData, {
+        headers: { Accept: 'application/json' }
+      });
+  
+      if (res.data) {
+        setEditData(updatedData);
+        setStoreInfo((prev) => ({ ...prev, ...updatedData }));
+      }
+    } catch (err) {
+      console.error('خطا در بروزرسانی مختصات:', err);
+    }
+  };
+
   
   const handleAddContactField = () => {
     if (!newContactKey || !newContactValue) return;
@@ -706,10 +728,13 @@ className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
         </div>
       </div>
     <div>
-    <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 flex items-center cursor-pointer whitespace-nowrap !rounded-button">
-    <FaMapMarkerAlt className="ml-2 text-blue-600" />
-    تغییر موقعیت فروشگاه
+    <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 flex items-center cursor-pointer whitespace-nowrap !rounded-button"
+      onClick={() => setIsLocationModalOpen(true)}
+    >
+      <FaMapMarkerAlt className="ml-2 text-blue-600" />
+      تغییر موقعیت فروشگاه
     </button>
+
     </div>
     <div className="flex justify-end">
     <button
@@ -845,6 +870,16 @@ className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
   toggleFavorite={() => {}} // چون در صفحه فروشنده نیست
   favorites={[]} // خالی می‌تونه بمونه
   />
+  <EditLocationModal
+  isOpen={isLocationModalOpen}
+  onClose={() => setIsLocationModalOpen(false)}
+  currentLocation={{
+    lat: parseFloat(editData.location_latitude),
+    lng: parseFloat(editData.location_longitude),
+  }}
+  onSave={handleSaveLocation}
+/>
+
 </div>
 );
 };
