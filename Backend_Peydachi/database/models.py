@@ -15,6 +15,16 @@ from errors.product_errors import (
     PRODUCT_NAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR,
     PRODUCT_QUANTITY_CAN_NOT_BE_NEGATIVE_ERROR
 )
+from errors.product_comment_errors import (
+    PRODUCT_COMMENT_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR,
+    PRODUCT_COMMENT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
+)
+from errors.store_comment_errors import (
+    STORE_COMMENT_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR,
+    STORE_COMMENT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
+)
+from errors.store_rating_errors import STORE_RATING_MUST_BE_BETWEEN_0_AND_5_ERROR
+from errors.product_rating_errors import PRODUCT_RATING_MUST_BE_BETWEEN_0_AND_5_ERROR
     
 
 
@@ -141,6 +151,14 @@ class StoreComment(ID, Base):
     text = Column(String(500), nullable=False)
     date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
 
+    @validates("text")
+    def validate_text(self, key, value):
+        if not value or len(value.strip()) <= 3:
+            raise STORE_COMMENT_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
+        if len(value) > 500:
+            raise STORE_COMMENT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
+        return value.strip()
+
 
 # Product Comments Class ===================================================================================
 class ProductComment(ID, Base):
@@ -150,6 +168,15 @@ class ProductComment(ID, Base):
     user_name = Column(String(150), nullable=False)
     text = Column(String(500), nullable=False)
     date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
+
+
+    @validates("text")
+    def validate_text(self, key, value):
+        if not value or len(value.strip()) <= 3:
+            raise PRODUCT_COMMENT_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
+        if len(value) > 500:
+            raise PRODUCT_COMMENT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
+        return value.strip()
 
 
 # Category Class ===========================================================================================
@@ -182,6 +209,13 @@ class ProductRating(ID, Base):
     rating = Column(Integer, nullable=False)
 
 
+    @validates("rating")
+    def validate_rating(self, key, value):
+        if value not in [1, 2, 3, 4, 5]:
+            raise PRODUCT_RATING_MUST_BE_BETWEEN_0_AND_5_ERROR
+        return value
+
+
 # Store Rating Class ======================================================================================
 class StoreRating(ID, Base):
     __tablename__ = "store_rating"
@@ -189,6 +223,11 @@ class StoreRating(ID, Base):
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     rating = Column(Integer, nullable=False)
 
+    @validates("rating")
+    def validate_rating(self, key, value):
+        if value not in [1, 2, 3, 4, 5]:
+            raise STORE_RATING_MUST_BE_BETWEEN_0_AND_5_ERROR
+        return value
 
 # Notification Class ======================================================================================
 class Notification(ID, Base):
