@@ -20,7 +20,6 @@ async def add_store_comment(store_comment: AddStoreCommentModel, user_id: int, d
         store_id=store_comment.store_id,
         user_name=user.username,
         text=store_comment.text,
-        date_added=datetime.datetime.now(),
     )
 
     db.add(new_store_comment)

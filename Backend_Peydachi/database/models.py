@@ -1,5 +1,6 @@
 from database.database import Base
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Float, JSON
+from datetime import datetime
 
 
 # ID Class ==============================================================================================
@@ -45,7 +46,7 @@ class Store(ID, Base):
     location_latitude = Column(String, nullable=True)
     average_rating = Column(Float, nullable=True)
     average_product_rating = Column(Float, nullable=True)
-    date_added = Column(DateTime, nullable=False)
+    date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
     is_banned = Column(Boolean, default=False)
     city_id = Column(Integer, ForeignKey("city.id", ondelete="SET NULL"), nullable=True)
 
@@ -59,7 +60,7 @@ class Product(ID, Base):
     pic_url = Column(String(500), nullable=True)
     pic_name = Column(String, nullable=True)
     average_rating = Column(Float, nullable=True)
-    date_added = Column(DateTime, nullable=False)
+    date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
     quantity = Column(Integer, nullable=False)
     city_id = Column(Integer, ForeignKey("city.id", ondelete="SET NULL"), nullable=False)
 
@@ -71,7 +72,7 @@ class StoreComment(ID, Base):
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     user_name = Column(String(150), nullable=False)
     text = Column(String(500), nullable=False)
-    date_added = Column(DateTime, nullable=False)
+    date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
 # Product Comments Class ===================================================================================
@@ -81,7 +82,7 @@ class ProductComment(ID, Base):
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     user_name = Column(String(150), nullable=False)
     text = Column(String(500), nullable=False)
-    date_added = Column(DateTime, nullable=False)
+    date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
 # Category Class ===========================================================================================
@@ -130,7 +131,7 @@ class Notification(ID, Base):
     text = Column(String(500), nullable=False)
     admin_id = Column(Integer, ForeignKey("user.id", ondelete="SET NULL"), nullable=True)
     has_seen = Column(Boolean, default=False)
-    date_added = Column(DateTime, nullable=False)
+    date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
 # Report Class ============================================================================================
@@ -139,7 +140,7 @@ class Report(ID, Base):
     title = Column(String(200), nullable=False)
     text = Column(String, nullable=False)
     is_reviewed = Column(Boolean, default=False)
-    date_added = Column(DateTime, nullable=False)
+    date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
 # Comment Report Class ====================================================================================
@@ -149,7 +150,7 @@ class CommentReport(ID, Base):
     text = Column(String, nullable=False)
     is_reviewed = Column(Boolean, default=False)
     is_store = Column(Boolean, default=False) # True: It's store comment , False: It's product comment
-    date_added = Column(DateTime, nullable=False)
+    date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
 # Add Store Request Class =================================================================================
@@ -160,7 +161,7 @@ class AddStoreRequest(ID, Base):
     region_id = Column(Integer, ForeignKey("region.id", ondelete="SET NULL"), nullable=True)
     city_id = Column(Integer, ForeignKey("city.id", ondelete="SET NULL"), nullable=True)
     address = Column(String(500), nullable=False)
-    date_added = Column(DateTime, nullable=False)
+    date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
     description = Column(String(600), nullable=True)
     is_reviewed = Column(Boolean, default=False)
 

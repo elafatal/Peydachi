@@ -19,7 +19,6 @@ async def send_comment_report(comment_report: AddCommentReportModel, db: Session
         comment_id=comment_report.comment_id,
         text=comment_report.text,
         is_store=comment_report.is_store,
-        date_added=datetime.datetime.now(),
     )
 
     db.add(report)

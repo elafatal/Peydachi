@@ -16,7 +16,6 @@ async def admin_send_notification(notif_info: SendNotificationModel, admin_id: i
         admin_id=admin_id,
         title=notif_info.title,
         text=notif_info.text,
-        date_added=datetime.datetime.now(),
     )
 
     db.add(notif)

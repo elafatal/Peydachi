@@ -1,7 +1,7 @@
 from database.models import CityCenter, City
 from sqlalchemy.orm import Session
 from errors.city_center_errors import NO_CITY_CENTER_FOUND_ERROR, CITY_CENTER_NOT_FOUND_ERROR, CITY_CENTER_ALREADY_EXISTS_ERROR
-from errors.city_errors import CITY_NOT_FOUND_ERROR
+from errors.city_errors import CITY_NOT_FOUND_ERROR, NO_CITY_FOUND_ERROR
 from schemas.city_center_schemas import AddCityCenterModel
 
 

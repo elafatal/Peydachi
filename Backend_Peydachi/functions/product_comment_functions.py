@@ -21,7 +21,6 @@ async def add_product_comment(product_comment: AddProductCommentModel, user_id: 
         product_id=product_comment.product_id,
         user_name=user.username,
         text=product_comment.text,
-        date_added=datetime.datetime.now(),
     )
 
     db.add(new_product_comment)
