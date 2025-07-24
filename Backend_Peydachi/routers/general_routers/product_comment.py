@@ -3,12 +3,14 @@ from functions import product_comment_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.access_dependencies import USER_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY
+from dependencies.limiter_dependencies import LIMIT_10_PER_MINUTE_DEPENDENCY
 from schemas.product_comment_schemas import AddProductCommentModel, ProductCommentDisplay, FullProductCommentDisplay
 
 
 router = APIRouter(
     prefix='/product_comment',
-    tags=['Product Comment']
+    tags=['Product Comment'],
+    dependencies=[LIMIT_10_PER_MINUTE_DEPENDENCY]
 )
 
 

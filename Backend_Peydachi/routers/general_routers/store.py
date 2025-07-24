@@ -2,12 +2,14 @@ from fastapi import APIRouter
 from functions import store_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
+from dependencies.limiter_dependencies import LIMIT_20_PER_MINUTE_DEPENDENCY
 from schemas.store_schema import StoreDisplay
 
 
 router = APIRouter(
     prefix='/store',
-    tags=['Store']
+    tags=['Store'],
+    dependencies=[LIMIT_20_PER_MINUTE_DEPENDENCY]
 )
 
 

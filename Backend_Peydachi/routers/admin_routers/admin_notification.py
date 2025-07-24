@@ -3,13 +3,14 @@ from functions import notification_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY, ID_BODY_OR_NONE
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY, ADMIN_DEPENDENCY
+from dependencies.limiter_dependencies import LIMIT_10_PER_MINUTE_DEPENDENCY
 from schemas.notification_schemas import SendNotificationModel, AdminNotificationDisplay
 
 
 router = APIRouter(
     prefix='/admin/notification',
     tags=['Admin Notification'],
-    dependencies=[ROUTER_ADMIN_DEPENDENCY]
+    dependencies=[ROUTER_ADMIN_DEPENDENCY, LIMIT_10_PER_MINUTE_DEPENDENCY]
 )
 
 

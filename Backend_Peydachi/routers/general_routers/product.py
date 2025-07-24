@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from functions import product_functions
 from dependencies.dependencies import DB_DEPENDENCY, REDIS_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
+from dependencies.limiter_dependencies import LIMIT_15_PER_MINUTE_DEPENDENCY
 from schemas.product_schemas import (
     ProductDisplay,
     ProductSearchModels,
@@ -12,7 +13,8 @@ from schemas.product_schemas import (
 
 router = APIRouter(
     prefix='/product',
-    tags=['Product']
+    tags=['Product'],
+    dependencies=[LIMIT_15_PER_MINUTE_DEPENDENCY]
 )
 
 

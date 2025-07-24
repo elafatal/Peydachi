@@ -10,7 +10,6 @@ async def send_report(request: AddReportModel, db: Session):
     report = Report(
         title=request.title,
         text=request.text,
-        date_added=datetime.datetime.now(),
     )
 
     db.add(report)

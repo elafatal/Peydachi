@@ -2,12 +2,14 @@ from fastapi import APIRouter
 from functions import city_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
+from dependencies.limiter_dependencies import LIMIT_10_PER_MINUTE_DEPENDENCY
 from schemas.city_schemas import CityDisplay
 
 
 router = APIRouter(
     prefix='/city',
-    tags=['City']
+    tags=['City'],
+    dependencies=[LIMIT_10_PER_MINUTE_DEPENDENCY]
 )
 
 

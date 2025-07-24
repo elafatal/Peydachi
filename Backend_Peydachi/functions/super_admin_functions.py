@@ -3,15 +3,19 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from schemas.user_schemas import UserModel
 from hash.hash import Hash
-from functions.general_functions import (check_username_duplicate,
-                                         check_email_duplicate,
-                                         check_phone_number_duplicate)
+from functions.general_functions import (
+    check_username_duplicate,
+    check_email_duplicate,
+    check_phone_number_duplicate
+)
 
-from errors.user_errors import (USER_NAME_DUPLICATE_ERROR,
-                                EMAIL_DUPLICATE_ERROR,
-                                PHONE_NUMBER_DUPLICATE_ERROR,
-                                NO_USER_FOUND_ERROR,
-                                USER_NOT_FOUND_ERROR)
+from errors.user_errors import (
+    USER_NAME_DUPLICATE_ERROR,
+    EMAIL_DUPLICATE_ERROR,
+    PHONE_NUMBER_DUPLICATE_ERROR,
+    NO_USER_FOUND_ERROR,
+    USER_NOT_FOUND_ERROR
+)
 
 
 

@@ -3,6 +3,7 @@ from functions import product_rating_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY
 from dependencies.access_dependencies import USER_DEPENDENCY
+from dependencies.limiter_dependencies import LIMIT_10_PER_MINUTE_DEPENDENCY
 from schemas.product_rating_schemas import (
     ProductRatingDisplayModel,
     AddProductRatingModel,
@@ -12,7 +13,8 @@ from schemas.product_rating_schemas import (
 
 router = APIRouter(
     prefix='/product_rating',
-    tags=['Product Rating']
+    tags=['Product Rating'],
+    dependencies=[LIMIT_10_PER_MINUTE_DEPENDENCY]
 )
 
 

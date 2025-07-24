@@ -2,14 +2,14 @@ from fastapi import APIRouter
 from functions import city_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY
-from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
+from dependencies.access_dependencies import ROUTER_SUPER_ADMIN_DEPENDENCY
 from schemas.city_schemas import CityDisplay, CityModel, CityUpdateModel
 
 
 router = APIRouter(
-    prefix='/admin/city',
-    tags=['Admin City'],
-    dependencies=[ROUTER_ADMIN_DEPENDENCY]
+    prefix='/super_admin/city',
+    tags=['Super Admin City'],
+    dependencies=[ROUTER_SUPER_ADMIN_DEPENDENCY]
 )
 
 

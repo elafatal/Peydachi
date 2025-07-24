@@ -26,7 +26,6 @@ async def send_add_store_request(request: AddAddStoreRequestModel, db: Session):
         region_id=request.region_id if request.region_id else None,
         city_id=request.city_id if request.city_id else None,
         description=request.description if request.description else None,
-        date_added=datetime.datetime.now(),
         address=request.address
     )
 

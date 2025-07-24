@@ -2,14 +2,14 @@ from fastapi import APIRouter
 from functions import region_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
-from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
+from dependencies.access_dependencies import ROUTER_SUPER_ADMIN_DEPENDENCY
 from schemas.region_schemas import RegionDisplay
 
 
 router = APIRouter(
-    prefix='/admin/region',
-    tags=['Admin Region'],
-    dependencies=[ROUTER_ADMIN_DEPENDENCY]
+    prefix='/super_admin/region',
+    tags=['Super Admin Region'],
+    dependencies=[ROUTER_SUPER_ADMIN_DEPENDENCY]
 )
 
 

@@ -33,7 +33,6 @@ async def create_store(request: StoreModel, db: Session):
         location_latitude=request.location_latitude if request.location_latitude else None,
         location_longitude=request.location_longitude if request.location_longitude else None,
         contact_info=request.contact_info if request.contact_info else None,
-        date_added=datetime.datetime.now(),
         city_id=request.city_id
     )
 

@@ -3,6 +3,7 @@ from functions import store_comment_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
+from dependencies.limiter_dependencies import LIMIT_10_PER_MINUTE_DEPENDENCY
 from schemas.store_comments_schemas import StoreCommentDisplay, FullStoreCommentDisplay
 
 
@@ -10,7 +11,7 @@ from schemas.store_comments_schemas import StoreCommentDisplay, FullStoreComment
 router = APIRouter(
     prefix='/admin/store_comment',
     tags=['Admin Store Comment'],
-    dependencies=[ROUTER_ADMIN_DEPENDENCY]
+    dependencies=[ROUTER_ADMIN_DEPENDENCY, LIMIT_10_PER_MINUTE_DEPENDENCY]
 )
 
 
