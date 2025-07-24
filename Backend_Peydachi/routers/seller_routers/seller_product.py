@@ -3,12 +3,14 @@ from functions import product_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY
 from dependencies.access_dependencies import SELLER_DEPENDENCY
+from dependencies.limiter_dependencies import LIMIT_10_PER_MINUTE_DEPENDENCY
 from schemas.product_schemas import ProductDisplay, UpdateProductModel
 
 
 router = APIRouter(
     prefix='/seller/product',
     tags=['Seller Product'],
+    dependencies=[LIMIT_10_PER_MINUTE_DEPENDENCY]
 )
 
 @router.post('/add_product', status_code=201, response_model=ProductDisplay)

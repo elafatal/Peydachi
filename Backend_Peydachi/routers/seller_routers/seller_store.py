@@ -2,11 +2,13 @@ from fastapi import APIRouter
 from functions import store_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.access_dependencies import SELLER_DEPENDENCY
+from dependencies.limiter_dependencies import LIMIT_10_PER_MINUTE_DEPENDENCY
 from schemas.store_schema import StoreDisplay, UpdateStoreModel
 
 router = APIRouter(
     prefix='/seller/store',
     tags=['Seller Store'],
+    dependencies=[LIMIT_10_PER_MINUTE_DEPENDENCY]
 )
 
 
