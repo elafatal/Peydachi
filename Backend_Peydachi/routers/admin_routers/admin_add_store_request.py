@@ -3,13 +3,14 @@ from functions import add_store_request_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY, NAME_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
+from dependencies.limiter_dependencies import LIMIT_5_PER_MINUTE_DEPENDENCY
 from schemas.add_store_request_schemas import AddStoreRequestDisplay
 
 
 router = APIRouter(
     prefix='/admin/add_store_request',
     tags=['Admin Add Store Request'],
-    dependencies=[ROUTER_ADMIN_DEPENDENCY]
+    dependencies=[ROUTER_ADMIN_DEPENDENCY, LIMIT_5_PER_MINUTE_DEPENDENCY]
 )
 
 

@@ -3,6 +3,7 @@ from functions import category_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY, NAME_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
+from dependencies.limiter_dependencies import LIMIT_10_PER_2MIN_DEPENDENCY
 from schemas.category_schema import (
     CategoryDisplay,
     AddCategoryRelationModel,
@@ -15,7 +16,7 @@ from schemas.category_schema import (
 router = APIRouter(
     prefix='/admin/category',
     tags=['Admin Category'],
-    dependencies=[ROUTER_ADMIN_DEPENDENCY]
+    dependencies=[ROUTER_ADMIN_DEPENDENCY, LIMIT_10_PER_2MIN_DEPENDENCY]
 )
 
 

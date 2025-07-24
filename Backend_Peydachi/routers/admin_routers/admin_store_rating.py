@@ -3,13 +3,14 @@ from functions import store_rating_functions
 from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import ID_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
+from dependencies.limiter_dependencies import LIMIT_3_PER_MINUTE_DEPENDENCY
 
 
 
 router = APIRouter(
     prefix='/admin/store_rating',
     tags=['Admin Store Rating'],
-    dependencies=[ROUTER_ADMIN_DEPENDENCY]
+    dependencies=[ROUTER_ADMIN_DEPENDENCY, LIMIT_3_PER_MINUTE_DEPENDENCY]
 )
 
 
