@@ -865,10 +865,10 @@ className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none
   comments={comments}
   chartRef={chartRef}
   closeProductModal={closeProductModal}
-  getCityName={(id) => 'نام شهر'} // اگر لازم نیست واقعی باشه
+  getCityName={(id) => 'نام شهر'}
   formatDate={formatDate}
-  toggleFavorite={() => {}} // چون در صفحه فروشنده نیست
-  favorites={[]} // خالی می‌تونه بمونه
+  toggleFavorite={() => {}} 
+  favorites={[]} 
   />
   <EditLocationModal
   isOpen={isLocationModalOpen}

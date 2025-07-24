@@ -5,8 +5,12 @@ import L from 'leaflet';
 import { FaTimes } from 'react-icons/fa';
 
 const EditLocationModal = ({ isOpen, onClose, currentLocation, onSave }) => {
-  const [markerPos, setMarkerPos] = useState(null);
-
+    const [markerPos, setMarkerPos] = useState(
+        currentLocation && currentLocation.lat && currentLocation.lng
+          ? [currentLocation.lat, currentLocation.lng]
+          : [35.6892, 51.3890]
+      );
+      
   useEffect(() => {
     if (isOpen && currentLocation) {
       setMarkerPos([currentLocation.lat, currentLocation.lng]);
