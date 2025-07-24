@@ -10,9 +10,12 @@ from errors.user_errors import (
     PHONE_NUMBER_CAN_NOT_BE_EMPTY_ERROR,
     INVALID_PHONE_NUMBER_ERROR,
 )
-from errors.store_errors import (
-    STORE_NAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
+from errors.store_errors import STORE_NAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
+from errors.product_errors import (
+    PRODUCT_NAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR,
+    PRODUCT_QUANTITY_CAN_NOT_BE_NEGATIVE_ERROR
 )
+    
 
 
 # ID Class ==================================================================================================
@@ -113,6 +116,20 @@ class Product(ID, Base):
     date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
     quantity = Column(Integer, nullable=False)
     city_id = Column(Integer, ForeignKey("city.id", ondelete="SET NULL"), nullable=False)
+
+
+    @validates("name")
+    def validate_name(self, key, value):
+        if not value or len(value.strip()) <= 3:
+            raise PRODUCT_NAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
+        return value.strip()
+    
+
+    @validates("quantity")
+    def validate_quantity(self, key, value):
+        if value is not None and value < 0:
+            raise PRODUCT_QUANTITY_CAN_NOT_BE_NEGATIVE_ERROR
+        return value
 
 
 # Store Comments Class ======================================================================================
