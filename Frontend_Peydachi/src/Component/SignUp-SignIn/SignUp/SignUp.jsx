@@ -148,7 +148,7 @@ console.log(err);
       duration: 2,
       type: "spring",
     }}
-     className="w-full md:w-1/2 p-8 flex flex-col justify-center" dir='rtl'>
+     className="w-full md:w-1/2 g:h-[75vh] p-8 flex flex-col justify-center" dir='rtl'>
     <div className="max-w-sm mx-auto w-full">
       <h1 className="text-3xl font-bold mb-8 text-gray-800">ثبت‌نام</h1>
       
