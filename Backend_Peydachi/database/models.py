@@ -31,6 +31,16 @@ from errors.notifications_errors import (
     NOTIFICATION_TEXT_MUST_BE_LONGER_THAN_5_CHARACTERS_ERROR,
     NOTIFICATION_TEXT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
 )
+from errors.report_errors import (
+    REPORT_TITLE_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR,
+    REPORT_TITLE_MUST_BE_SHORTER_THAN_200_CHARACTERS_ERROR,
+    REPORT_TEXT_MUST_BE_LONGER_THAN_10_CHARACTERS_ERROR,
+    REPORT_TEXT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
+)
+from errors.comment_report_errors import (
+    COMMENT_REPORT_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR,
+    COMMENT_REPORT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
+)
     
 
 
@@ -271,6 +281,23 @@ class Report(ID, Base):
     date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
+    @validates("title")
+    def validate_title(self, key, value):
+        if not value or len(value.strip()) <= 3:
+            raise REPORT_TITLE_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
+        if len(value) > 200:
+            raise REPORT_TITLE_MUST_BE_SHORTER_THAN_200_CHARACTERS_ERROR
+        return value.strip()
+
+    @validates("text")
+    def validate_text(self, key, value):
+        if not value or len(value.strip()) <= 10:
+            raise REPORT_TEXT_MUST_BE_LONGER_THAN_10_CHARACTERS_ERROR
+        if len(value) > 5000:
+            raise REPORT_TEXT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
+        return value.strip()
+
+
 # Comment Report Class ====================================================================================
 class CommentReport(ID, Base):
     __tablename__ = "comment_report"
@@ -279,6 +306,15 @@ class CommentReport(ID, Base):
     is_reviewed = Column(Boolean, default=False)
     is_store = Column(Boolean, default=False) # True: It's store comment , False: It's product comment
     date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
+
+
+    @validates("text")
+    def validate_text(self, key, value):
+        if not value or len(value.strip()) <= 3:
+            raise COMMENT_REPORT_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
+        if len(value) > 500:
+            raise COMMENT_REPORT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
+        return value.strip()
 
 
 # Add Store Request Class =================================================================================
