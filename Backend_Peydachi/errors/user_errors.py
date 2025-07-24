@@ -143,3 +143,33 @@ USER_IS_NOT_SELLER_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
     detail="User is not a seller."
     )
+
+
+USERNAME_CAN_NOT_HAVE_SPACE_ERROR = HTTPException(
+    status_code=status.HTTP_406_NOT_ACCEPTABLE,
+    detail="Username can not have space."
+    )
+
+
+USERNAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR = HTTPException(
+    status_code=status.HTTP_406_NOT_ACCEPTABLE,
+    detail="Username must be longer than 3 characters."
+    )
+
+
+PASSWORD_MUST_BE_LONGER_THAN_6_CHARACTERS_ERROR = HTTPException(
+    status_code=status.HTTP_406_NOT_ACCEPTABLE,
+    detail="Password must be longer than 6 characters."
+    )
+
+
+INVALID_PHONE_NUMBER_ERROR = HTTPException(
+    status_code=status.HTTP_406_NOT_ACCEPTABLE,
+    detail="Invalid phone number."
+    )
+
+
+PHONE_NUMBER_CAN_NOT_BE_EMPTY_ERROR = HTTPException(
+    status_code=status.HTTP_406_NOT_ACCEPTABLE,
+    detail="Phone number can not be empty."
+    )

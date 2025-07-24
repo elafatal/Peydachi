@@ -1,9 +1,18 @@
-from database.database import Base
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Float, JSON
+import re
 from datetime import datetime
+from database.database import Base
+from sqlalchemy.orm import validates
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Float, JSON
+from errors.user_errors import (
+    USERNAME_CAN_NOT_HAVE_SPACE_ERROR, 
+    USERNAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR,
+    PASSWORD_MUST_BE_LONGER_THAN_6_CHARACTERS_ERROR,
+    PHONE_NUMBER_CAN_NOT_BE_EMPTY_ERROR,
+    INVALID_PHONE_NUMBER_ERROR,
+)
 
 
-# ID Class ==============================================================================================
+# ID Class ==================================================================================================
 class ID:
     __abstract__ = True
     id = Column(Integer, unique=True, index=True, primary_key=True)
@@ -20,6 +29,37 @@ class User(ID, Base):
     is_admin = Column(Boolean, default=False)
     is_super_admin = Column(Boolean, default=False)
     is_banned = Column(Boolean, default=False)
+
+
+    @validates("username")
+    def validate_username(self, key, value):
+        if not value or len(value.strip()) < 3:
+            raise USERNAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
+        if " " in value:
+            raise USERNAME_CAN_NOT_HAVE_SPACE_ERROR
+        return value
+    
+
+    @validates("password")
+    def validate_password(self, key, value):
+        if not value or len(value) < 6:
+            raise PASSWORD_MUST_BE_LONGER_THAN_6_CHARACTERS_ERROR
+        return value
+    
+    
+    @validates("phone_number")
+    def validate_phone_number(self, key, value):
+
+        if not value:
+            raise PHONE_NUMBER_CAN_NOT_BE_EMPTY_ERROR
+
+        iran_national = re.match(r"^09\d{9}$", value)
+        iran_international = re.match(r"^\+989\d{9}$", value)
+
+        if not (iran_national or iran_international):
+            raise INVALID_PHONE_NUMBER_ERROR
+        
+        return value
 
 
 # Region Class ==============================================================================================
