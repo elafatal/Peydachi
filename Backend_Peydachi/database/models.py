@@ -41,6 +41,14 @@ from errors.comment_report_errors import (
     COMMENT_REPORT_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR,
     COMMENT_REPORT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
 )
+from errors.add_store_request_errors import (
+    ADD_STORE_REQUEST_PHONE_NUMBER_CAN_NOT_BE_EMPTY_ERROR,
+    ADD_STORE_REQUEST_NAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR,
+    ADD_STORE_REQUEST_NAME_MUST_BE_SHORTER_THAN_150_CHARACTERS_ERROR,
+    ADD_STORE_REQUEST_ADDRESS_MUST_BE_LONGER_THAN_5_CHARACTERS_ERROR,
+    ADD_STORE_REQUEST_ADDRESS_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR,
+    ADD_STORE_REQUEST_DESCRIPTION_MUST_BE_SHORTER_THAN_600_CHARACTERS_ERROR,
+)
     
 
 
@@ -328,6 +336,42 @@ class AddStoreRequest(ID, Base):
     date_added = Column(DateTime, nullable=False, default=datetime.utcnow)
     description = Column(String(600), nullable=True)
     is_reviewed = Column(Boolean, default=False)
+
+
+    @validates("store_name")
+    def validate_store_name(self, key, value):
+        if not value or len(value.strip()) < 3:
+            raise ADD_STORE_REQUEST_NAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
+        if len(value) > 150:
+            raise ADD_STORE_REQUEST_NAME_MUST_BE_SHORTER_THAN_150_CHARACTERS_ERROR
+        return value.strip()
+
+    @validates("phone_number")
+    def validate_phone_number(self, key, value):
+        if not value:
+            raise ADD_STORE_REQUEST_PHONE_NUMBER_CAN_NOT_BE_EMPTY_ERROR
+
+        pattern_national = r"^09\d{9}$"
+        pattern_international = r"^\+989\d{9}$"
+
+        if not (re.match(pattern_national, value) or re.match(pattern_international, value)):
+            raise INVALID_PHONE_NUMBER_ERROR
+
+        return value
+
+    @validates("address")
+    def validate_address(self, key, value):
+        if not value or len(value.strip()) <= 5:
+            raise ADD_STORE_REQUEST_ADDRESS_MUST_BE_LONGER_THAN_5_CHARACTERS_ERROR
+        if len(value) > 500:
+            raise ADD_STORE_REQUEST_ADDRESS_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR
+        return value.strip()
+
+    @validates("description")
+    def validate_description(self, key, value):
+        if value and len(value.strip()) > 600:
+            raise ADD_STORE_REQUEST_DESCRIPTION_MUST_BE_SHORTER_THAN_600_CHARACTERS_ERROR
+        return value
 
 
 # Deleted Picture Class ===================================================================================
