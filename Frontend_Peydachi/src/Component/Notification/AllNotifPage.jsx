@@ -176,9 +176,15 @@ useEffect(() => {
 
 
   // Delete notification
-  const deleteNotification = () => {
+  const deleteNotification =async () => {
     e.stopPropagation();
-    setNotifications(notifications.filter(notification => notification.id !== id));
+    try {
+      const response = await axiosInstance.delete('/notification/user_delete_self_notif', { data:{} });
+      setSelectedNotification(response.data)
+      console.log(response.data);
+    } catch (error) {
+      console.log(error); 
+    } 
   };
 
 
