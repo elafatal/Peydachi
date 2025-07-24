@@ -21,3 +21,9 @@ STORE_ACCESS_ERROR = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
     detail='You Are Forbidden To Change Other Stores Info.'
     )
+
+
+STORE_NAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR = HTTPException(
+    status_code=status.HTTP_406_NOT_ACCEPTABLE,
+    detail="Store name must be longer than 3 characters."
+    )
