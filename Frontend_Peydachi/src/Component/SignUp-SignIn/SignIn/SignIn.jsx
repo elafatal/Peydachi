@@ -6,13 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../Context/AuthContext';
 
-const SignIn= ({showComponent,setshowComponent, setusername , username }) => {
+const SignIn= ({showComponent,setshowComponent, setRememberMe,rememberMe, setusername , username }) => {
   const navigate = useNavigate();
   const { login } = useAuth()
   
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   
   const handleSubmit =async (e) => {
     e.preventDefault();
@@ -139,7 +138,7 @@ const SignIn= ({showComponent,setshowComponent, setusername , username }) => {
           />
           <label htmlFor="remember" className="mr-2 text-[13px] text-gray-600 cursor-pointer">مرا به خاطر بسپار</label></div>
           <div className="cursor-pointer text-xs text-gray-500" onClick={() => {
-            setshowComponent("verify");
+            setshowComponent("passVerify");
           }}>
             فراموشی رمز عبور
           </div>

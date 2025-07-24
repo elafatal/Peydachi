@@ -6,14 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../Context/AuthContext';
 
-const SignUp= ({showComponent,setshowComponent}) => {
+const SignUp= ({showComponent,setshowComponent, setRememberMe,rememberMe,setPhoneVerificationData}) => {
   const { login } = useAuth()
   const [username, setUsername] = useState('');
   const [phone_number, setphone_number] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
   const isValidUsername = (username) => {
     const regex = /^[a-zA-Z0-9_.-]+$/;
@@ -40,87 +39,7 @@ const SignUp= ({showComponent,setshowComponent}) => {
       return;
     }
     
-    if (password == password2) {
-      try {
-        const response = await axiosInstance.post(
-          '/user/create_user',
-          { username, password, phone_number },
-          { headers: { 'Content-Type': 'application/json' } }
-        );
-        console.log(response);
-    
-        if (response.status === 201) {
-          try{
-            const loginResponse  = await axiosInstance.post('/authentication/token', 
-              { username, password }, 
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                }
-              }
-            );
-                  if (loginResponse .status === 200) {
-                    if (rememberMe) {
-                      Cookies.set('auth_token', loginResponse.data.access_token, { expires: 3, secure: true, sameSite: 'Strict' });
-                      Cookies.set('refresh_token', loginResponse.data.refresh_token, { expires: 3, secure: true, sameSite: 'Strict' });
-                    } else {
-                      Cookies.set('auth_token', loginResponse.data.access_token, { secure: true, sameSite: 'Strict' });
-                      Cookies.set('refresh_token', loginResponse.data.refresh_token, { secure: true, sameSite: 'Strict' });
-                    }
-            
-            
-                    const userData = {
-                      userID: loginResponse.data.userID,
-                      username: loginResponse.data.username,
-                      role: loginResponse.data.is_super_admin
-                        ? 'superadmin'
-                        : loginResponse.data.is_admin
-                        ? 'admin'
-                        : loginResponse.data.is_seller
-                        ? 'seller'
-                        : 'user',
-                    };
-                   login(userData);
-                   navigate('/', { replace: true });
-                   }
-          }catch(err){
-console.log(err);
-
-          }
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "ثبت نام شما انجام شد",
-            showConfirmButton: false,
-            timer: 1500,
-            toast: true,
-            customClass: {
-              popup: 'w-2 h-15 text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
-         
-          
-        }
-      } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: "دوباره امتحان کنید",
-          showConfirmButton: false,
-          timer: 1500,
-          toast: true,
-          customClass: {
-            popup: 'w-2 h-15 text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
-      }
-    }else{
+    if (password !== password2) {
       Swal.fire({
         position: "top-end",
         icon: "error",
@@ -137,6 +56,19 @@ console.log(err);
       });
     }
 
+    try {
+      const response = await axiosInstance.post('/phone_verification/user_sign_up_phone_verification', {
+        phone_number,
+      });
+
+      if (response.status === 200) {
+        setPhoneVerificationData({ username, phone_number, password });
+        setshowComponent('phoneVerify');
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
   };
 
 
