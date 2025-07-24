@@ -4,7 +4,12 @@ import axiosInstance from '../../axiosInstance';
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
+import { useAuth } from '../../Context/AuthContext'; 
+import UnauthorizedPage from '../../Error/UnauthorizedPage';
+
 const CityManagement = () => {
+  const { role } = useAuth();
+
   const [loadingCities, setLoadingCities] = useState(true);
   const [loadingRegions, setLoadingRegions] = useState(true);
   const [regionSearchText, setRegionSearchText] = useState('');
@@ -225,6 +230,7 @@ setSelectedRegionForCities(regions[0].id);
 }
 }, [regions, selectedRegionForCities]);
 return (
+      role === 'superadmin' ?
       <div className=" bg-gray-50 p-4 md:p-4" >
         {/* Notification */}
         {notification && (
@@ -573,7 +579,7 @@ return (
         </div>
         </div>
         </div>
-      </div>
+      </div> : <UnauthorizedPage/>
       );
 };
 export default CityManagement

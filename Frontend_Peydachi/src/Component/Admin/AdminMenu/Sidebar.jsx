@@ -15,8 +15,7 @@ const Sidebar = () => {
     { path: '/admin/reports', label: 'بررسی درخواست‌ها' },
     { path: '/admin/notifications', label: 'مدیریت اعلان‌ها' },
     { path: '/admin/comments', label: 'مدیریت نظرات' },
-    { path: '/admin/cities', label: 'شهر و استان' },
-    ...(role === 'superadmin' ? [{ path: '/admin/adminManagement', label: 'ادمین‌ها' }] : []),
+    ...(role === 'superadmin' ? [{ path: '/admin/adminManagement', label: 'ادمین‌ها' } ,{ path: '/admin/cities', label: 'شهر و استان' },] : []),
   ];
   
   const handleLinkClick = () => {
