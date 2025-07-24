@@ -3,6 +3,9 @@ from database import models
 from database.database import Base, engine
 from authentication import authentication_route, phone_verification_route
 from fastapi.middleware.cors import CORSMiddleware
+from limiter.limiter_init import init_rate_limiter
+from limiter.limiter_message import custom_rate_limit_exception_handler
+from fastapi.exceptions import HTTPException
 from routers.seller_routers import seller_store, seller_product
 from routers.super_admin_routers import (
     super_admin,
@@ -70,6 +73,7 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods 
     allow_headers=["*"],  # Allows all headers
 )
+app.add_exception_handler(HTTPException, custom_rate_limit_exception_handler)
 app.include_router(user.router)
 app.include_router(region.router)
 app.include_router(city.router)
@@ -114,10 +118,10 @@ app.include_router(phone_verification_route.router)
 
 
 
+@app.on_event("startup")
+async def startup():
+    await init_rate_limiter()
 
-
-
-# Base.metadata.create_all(engine)
 
 
 @app.get("/")
