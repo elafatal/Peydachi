@@ -6,32 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../Context/AuthContext';
 
-const SignIn= ({showComponent,setshowComponent, setusername , username }) => {
+const SignIn= ({showComponent,setshowComponent, setRememberMe,rememberMe, setusername , username }) => {
   const navigate = useNavigate();
   const { login } = useAuth()
   
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   
-  const user_forget_password = async()=>{
-    setshowComponent("verify");
-    try {
-      const response = await axiosInstance.post('/phone_verification/user_forget_password', {
-        username: username
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      });
-      console.log(response);
-    } catch (error) {
-   console.log(error);
-   
-    }
-
-  }
   const handleSubmit =async (e) => {
     e.preventDefault();
     try{
@@ -109,7 +90,7 @@ const SignIn= ({showComponent,setshowComponent, setusername , username }) => {
       duration: 2,
       type: "spring",
     }}
-     className="w-full md:w-1/2 p-8 flex flex-col justify-center" dir='rtl'>
+     className="w-full md:w-1/2 p-8 flex flex-col justify-center g:h-[75vh]" dir='rtl'>
     <div className="max-w-sm mx-auto w-full">
       <h1 className="text-3xl font-bold mb-8 text-gray-800">ورود</h1>
       
@@ -156,10 +137,12 @@ const SignIn= ({showComponent,setshowComponent, setusername , username }) => {
             className="h-4 w-4 text-blue-500 border-gray-300 rounded cursor-pointer"
           />
           <label htmlFor="remember" className="mr-2 text-[13px] text-gray-600 cursor-pointer">مرا به خاطر بسپار</label></div>
-          <div  className="cursor-pointer text-xs text-gray-500" onClick={() => {
-            user_forget_password();
-          }}
-          >فراموشی رمز عبور</div>
+          <div className="cursor-pointer text-xs text-gray-500" onClick={() => {
+            setshowComponent("passVerify");
+          }}>
+            فراموشی رمز عبور
+          </div>
+
         </div>
         
         <button 

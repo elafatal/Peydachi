@@ -1,7 +1,10 @@
 import React from 'react';
 import { FaUserShield, FaUserCheck, FaUserTie } from 'react-icons/fa';
+import { useAuth } from '../../Context/AuthContext';
 
 const AdminActivity = ({ data }) => {
+  const { role } = useAuth();
+
   const getIconAndStyle = (type) => {
     switch (type) {
       case 'total_admins':
@@ -16,6 +19,7 @@ const AdminActivity = ({ data }) => {
   };
 
   return (
+    role==='superadmin' ?
     <div className="bg-white rounded-lg shadow">
       <div className="px-6 py-4 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-800">آمار ادمین‌ها</h3>
@@ -42,7 +46,7 @@ const AdminActivity = ({ data }) => {
           })}
         </ul>
       </div>
-    </div>
+    </div> : null
   );
 };
 

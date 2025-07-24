@@ -7,7 +7,7 @@ import { LuSparkles } from 'react-icons/lu';
 import { useEffect } from 'react'; 
 const AddProduct = () => {
   const navigate = useNavigate();
-  const [selectedFile, setSelectedFile] = useState(null); // اضافه کن
+  const [selectedFile, setSelectedFile] = useState(null);
   const [hasDraft, setHasDraft] = useState(false);
 
   const [formData, setFormData] = useState({

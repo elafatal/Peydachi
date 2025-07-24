@@ -4,7 +4,12 @@ import axiosInstance from '../../axiosInstance';
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
+import { useAuth } from '../../Context/AuthContext'; 
+import UnauthorizedPage from '../../Error/UnauthorizedPage';
+
 const CityManagement = () => {
+  const { role } = useAuth();
+
   const [loadingCities, setLoadingCities] = useState(true);
   const [loadingRegions, setLoadingRegions] = useState(true);
   const [regionSearchText, setRegionSearchText] = useState('');
@@ -80,7 +85,7 @@ const CityManagement = () => {
         return;
         }else{
             try {
-                const response = await axiosInstance.post('/admin/region/add_region', {
+                const response = await axiosInstance.post('/super_admin/region/add_region', {
                   name: newRegionName
                 });
                 console.log(response.data);
@@ -105,7 +110,7 @@ const CityManagement = () => {
         return;
         }else{
             try {
-                const response = await axiosInstance.put('/admin/region/update_region', {
+                const response = await axiosInstance.put('/super_admin/region/update_region', {
                     id: regionID ,
                   name: editingRegionName
                 });
@@ -130,7 +135,7 @@ const CityManagement = () => {
         const handleDeleteRegion = async(id) => {
         if (window.confirm('از حذف استان اطمینان دارید؟‌ تمام شهر‌های مربوطه نیز حذف خواهند شد')) {
             try {
-                const response = await axiosInstance.delete('/admin/region/delete_region',{data:  {id: Number(id)}});
+                const response = await axiosInstance.delete('/super_admin/region/delete_region',{data:  {id: Number(id)}});
                 console.log(response);
                if (response.status === 200 ) {
                     setRegions(regions.filter(region => region.id !== id));
@@ -150,14 +155,14 @@ const CityManagement = () => {
         return;
         }else{
             try {
-                const response = await axiosInstance.post('/admin/city/add_city', {
+                const response = await axiosInstance.post('/super_admin/city/add_city', {
                   name: newCityName,
                   region_id : selectedRegionId
                 });
                 console.log(response);
                if (response.status === 201 ) {
                 setNewCityName('');
-                showNotification('City added successfully', 'success');
+                showNotification('شهر اضافه شد', 'success');
                }
               } catch (error) {
                 console.log('add region error:', error);
@@ -170,7 +175,7 @@ const CityManagement = () => {
     return;
     }
     try {
-        const response = await axiosInstance.put('/admin/city/update_city', {
+        const response = await axiosInstance.put('/super_admin/city/update_city', {
             city_id: cityID ,
             region_id: editingCityRegionId,
             name: editingCityName
@@ -196,11 +201,11 @@ const CityManagement = () => {
   const handleDeleteCity = async(id) => {
   if (window.confirm('از حذف شهر اطمینان دارید؟')) {
     try {
-      const response = await axiosInstance.delete('/admin/city/delete_city',{data: {city_id: id }});
+      const response = await axiosInstance.delete('/super_admin/city/delete_city',{data: {city_id: id }});
       console.log(response.data);
      if (response.status === 200 ) {
       setCities(cities.filter(city => city.id !== id));
-      showNotification('City deleted successfully', 'success');
+      showNotification('شهر حذف شد', 'success');
      }
     } catch (error) {
       console.log('delete city error:', error);
@@ -225,6 +230,7 @@ setSelectedRegionForCities(regions[0].id);
 }
 }, [regions, selectedRegionForCities]);
 return (
+      role === 'superadmin' ?
       <div className=" bg-gray-50 p-4 md:p-4" >
         {/* Notification */}
         {notification && (
@@ -573,7 +579,7 @@ return (
         </div>
         </div>
         </div>
-      </div>
+      </div> : <UnauthorizedPage/>
       );
 };
 export default CityManagement

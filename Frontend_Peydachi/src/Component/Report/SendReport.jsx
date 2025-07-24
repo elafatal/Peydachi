@@ -139,10 +139,10 @@ const SendReport= () => {
           <div className="text-sm sm:text-base text-gray-700">
             برای ارتباط مستقیم، می‌توانید به آدرس ایمیل 
             <a 
-              href="mailto:contact@peidachi.ir"
+              href="mailto:peydachi.management@gmail.com"
               className="text-blue-600 font-medium hover:underline mx-1"
             >
-              contact@peidachi.ir
+              peydachi.management@gmail.com
             </a>
             پیام ارسال کنید.
           </div>

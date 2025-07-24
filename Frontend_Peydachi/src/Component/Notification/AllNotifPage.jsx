@@ -176,9 +176,15 @@ useEffect(() => {
 
 
   // Delete notification
-  const deleteNotification = () => {
+  const deleteNotification =async () => {
     e.stopPropagation();
-    setNotifications(notifications.filter(notification => notification.id !== id));
+    try {
+      const response = await axiosInstance.delete('/notification/user_delete_self_notif', { data:{} });
+      setSelectedNotification(response.data)
+      console.log(response.data);
+    } catch (error) {
+      console.log(error); 
+    } 
   };
 
 
@@ -316,7 +322,7 @@ useEffect(() => {
                             
                           </h3>
                           <span className="text-xs text-gray-500 ml-2 flex items-center">
-                          <FaClock className='ml-1 inline'/>
+                          <FaClock className='ml-1 mb-1 inline'/>
                           {formatRelativeDate(notification.date_added)}
                           </span>
                         </div>
@@ -328,13 +334,18 @@ useEffect(() => {
 
                         {/* Action buttons - only show on expanded or hover */}
                         <div className={`mt-3 flex space-x-2 ${expandedId === notification.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}>
-                          <button 
-                            onClick={(e) => toggleReadStatus(notification.id, e)}
-                            className="text-xs px-2 py-1.5 rounded bg-gray-100 text-green-700 hover:bg-green-200 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
-                          >
-                            {notification.has_seen ? 'خوانده شده ' : 'خواندن '}
-                            <FaRegFaceRollingEyes className='inline text-md'/>
-                          </button>
+                        <button 
+                        onClick={(e) => toggleReadStatus(notification.id, e)}
+                        disabled={notification.has_seen}
+                        className={`text-xs px-2 py-1.5 rounded transition-colors cursor-pointer !rounded-button whitespace-nowrap
+                          ${notification.has_seen 
+                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
+                            : 'bg-gray-100 text-green-700 hover:bg-green-200'}`}
+                      >
+                        {notification.has_seen ? 'خوانده شده' : 'خواندن'}
+                        <FaRegFaceRollingEyes className='inline text-md mr-1' />
+                      </button>
+
                           <button 
                             onClick={(e) => deleteNotification(notification.id, e)}
                             className="text-xs px-2 py-1 rounded bg-gray-100 text-red-600 hover:bg-red-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap"

@@ -1,29 +1,42 @@
 import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
-// import { useLocation } from 'react-router-dom';
 import SignUp from './SignUp/SignUp';
 import SignIn from './SignIn/SignIn';
-import OTPVerification from './Verify/Verification';
+import OTPVerification from './Verify/PasswordVerification';
+import PhoneVerification from './Verify/PhoneVerification';
+
 const Login= () => {
 
   const [showComponent, setshowComponent] = useState("Signin");
 const [username, setusername] = useState('');
+const [phoneVerificationData, setPhoneVerificationData] = useState(null);
+const [rememberMe, setRememberMe] = useState(false);
 
   const renderContent = () => {
     switch (showComponent) {
         case "Signin":
-            return(<SignIn  showComponent={showComponent} setshowComponent={setshowComponent} setusername={setusername} username={username} />)
+            return(<SignIn  showComponent={showComponent} setshowComponent={setshowComponent} setRememberMe={setRememberMe} rememberMe={rememberMe} setusername={setusername} username={username} />)
             break;
         case "Signup":
-            return(<SignUp showComponent={showComponent} setshowComponent={setshowComponent}/>)
+            return(<SignUp showComponent={showComponent} setshowComponent={setshowComponent} setRememberMe={setRememberMe} rememberMe={rememberMe} setPhoneVerificationData={setPhoneVerificationData} />)
             break;
-        case "verify":
+        case "passVerify":
             return(<OTPVerification  showComponent={showComponent} setshowComponent={setshowComponent} username={username}/> )
             break;
-        default:
-            return(<SignUp showComponent={showComponent} setshowComponent={setshowComponent}/>)
+        case "phoneVerify":
+            return(<PhoneVerification showComponent={showComponent} setshowComponent={setshowComponent} rememberMe={rememberMe} verificationData={phoneVerificationData} /> )
             break;
+        default:
+            return(
+              <SignUp 
+                showComponent={showComponent} 
+                setshowComponent={setshowComponent} 
+                setRememberMe={setRememberMe} 
+                rememberMe={rememberMe}
+                setPhoneVerificationData={setPhoneVerificationData}
+              />
+            )
     }
 };
 

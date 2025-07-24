@@ -13,26 +13,28 @@ const Notifications=()=>{
     const [selectedNotification, setSelectedNotification] = useState(null);
 
 
-      useEffect(() => {
-        const GetUnreadNotif = async () => {
-          if (isLoggedIn()){
-            try {
-              const response = await axiosInstance.get('/notification/get_notif_count_and_first_three_notifs', {
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                }
-              });
-              setUnreadNotif(response.data);
-              setisUnreadNotif(true)
-              console.log(response.data);
-            } catch (error) {
-              console.log(error); 
-            } 
+    useEffect(() => {
+      let intervalId;
+    
+      const GetUnreadNotif = async () => {
+        if (isLoggedIn()) {
+          try {
+            const response = await axiosInstance.get('/notification/get_notif_count_and_first_three_notifs');
+            setUnreadNotif(response.data);
+            setisUnreadNotif(true);
+            console.log('✅ Notifs fetched:', response.data);
+          } catch (error) {
+            console.log('❌ Error fetching notifications:', error);
           }
-         
-        };
-        GetUnreadNotif();
-      }, []);
+        }
+      };
+    
+      GetUnreadNotif();
+      intervalId = setInterval(GetUnreadNotif, 10000); 
+    
+      return () => clearInterval(intervalId);
+    }, []);
+    
     
       const toggleDropdown = () => {
         setShowDropdown((prev) => !prev);
