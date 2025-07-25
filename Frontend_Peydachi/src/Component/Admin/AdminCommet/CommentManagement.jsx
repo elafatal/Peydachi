@@ -22,8 +22,7 @@ const searchByText = async () => {
     if (!searchQuery.trim()) return;
     setIsLoading(true);
     try {
-        const response = await axiosInstance.post('/admin/store_comment/search_store_comments_of_store', {
-            store_id :Number(storeId),
+        const response = await axiosInstance.post('/admin/store_comment/search_in_all_store_comments', {
             search : searchQuery
           });
     const data = response.data.filter(item => item.text.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -82,18 +81,7 @@ setShowDeleteModal(false);
 setCommentToDelete(null);
 }
 };
-const resetStoreRating = async () => {
-    try {
-        const response = await axiosInstance.delete('/admin/store_rating/reset_all_ratings_of_store',{data:  {store_id: Number(storeId)}});
-        console.log(response);
-        showNotification('امتیاز فروشگاه پاک شد', 'success');
-    } catch (error) {
-        console.error('Error resetting store rating:', error);
-        showNotification('درخواست انجام نشد', 'error');
-    } finally {
-        setShowResetModal(false);
-    }
-};
+
 
     const handleSearch = () => {
         if (activeTab === 'text') {
@@ -106,9 +94,7 @@ const confirmDeleteComment = (commentId) => {
 setCommentToDelete(commentId);
 setShowDeleteModal(true);
 };
-const confirmResetRating = () => {
-setShowResetModal(true);
-};
+
 const showNotification = (message, type) => {
 setNotification({ show: true, message, type });
 setTimeout(() => {
@@ -134,7 +120,7 @@ const formatDate = (dateString) => {
     if (days < 7) return `${days} روز قبل`;
     if (weeks < 4) return `${weeks} هفته قبل`;
     if (months < 12) return `${months} ماه قبل`;
-    return `${years} سال${years > 1 ? 's' : ''} گذشته`;
+    return `${years} سال گذشته`;
 };
 useEffect(() => {
     setSearchResults([]);
@@ -164,12 +150,7 @@ return (
             </button>
         </div>
     <div className="">
-        <button
-        onClick={confirmResetRating}
-        className="border border-red-700 hover:bg-red-100 text-red-700 px-4 py-2 mb-3 rounded-lg transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer"
-        >
-        صفر کردن امتیازات
-        </button>
+
     </div>
 </div>
 <div className="flex items-center">
@@ -317,29 +298,30 @@ className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gr
 >
 لغو
 </button>
-<button
-onClick={resetStoreRating}
-className="px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
->
-بازنشانی امتیاز
-</button>
+
 </div>
 </div>
 </div>
 )}
 {/* Notification Toast */}
-{notification.show && (
-<div className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white z-50 transition-all duration-300 ${notification.type === 'success' ? 'bg-green-600' : 'bg-red-600'}`}>
-<div className="flex items-center">
-{notification.type === 'success' ? (
-  <FaCheckCircle className="mr-2" />
-) : (
-  <FaExclamationCircle className="mr-2" />
-)}
-<span>{notification.message}</span>
+{/* Notification Toast */}
+<div
+  className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white z-50 
+    transition-all duration-500 ease-in-out transform
+    ${notification.show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'} 
+    ${notification.type === 'success' ? 'bg-green-600' : 'bg-red-600'}
+  `}
+>
+  <div className="flex items-center">
+    {notification.type === 'success' ? (
+      <FaCheckCircle className="ml-2" />
+    ) : (
+      <FaExclamationCircle className="ml-2" />
+    )}
+    <span>{notification.message}</span>
+  </div>
 </div>
-</div>
-)}
+
 </div>
 );
 };
