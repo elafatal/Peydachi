@@ -36,6 +36,7 @@ import StoreRequest from './Component/Admin/AdminReports/StoreRequests/StoreRequ
 import UserReports from './Component/Admin/AdminReports/UserReports/UserReports';
 import CommentManagement from './Component/Admin/AdminCommet/CommentManagement';
 import SelfStore from './Component/Store/SelfStore';
+import CenteredVideo from './Component/Criticism/Criticism';
 
 
 function App() {
@@ -65,7 +66,7 @@ function App() {
             <Route path="/SelfStore" element={<SelfStore/>} /> 
             <Route path="/storeComments/:storeID" element={<StoreFullComment/>} />
             <Route path="/Report" element={<SendReport/>} />
-            <Route path="/Admin" element={<AdminPage/>} />
+            <Route path="/Criticism" element={<CenteredVideo/>} />
             <Route path="/admin" element={<AdminPage />}>
               <Route index element={<DashboardOverview/>} />
               <Route path="stores" element={<StoreManagement/>} />

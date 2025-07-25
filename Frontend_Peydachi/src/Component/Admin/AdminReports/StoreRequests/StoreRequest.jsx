@@ -9,7 +9,7 @@ import StoreRequestCard from './StoreRequestCard'
 const StoreRequest = () => {
   const { role } = useAuth(); 
   const { refreshStats } = useAdminStats();
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeTab, setActiveTab] = useState('pending');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCity, setSelectedCity] = useState(null);
   const [cities, setCities] = useState([]);
@@ -18,7 +18,62 @@ const StoreRequest = () => {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const { stats } = useAdminStats();
-
+  useEffect(() => {
+    const fetchRequests = async () => {
+      setIsLoading(true);
+      try {
+        let response;
+        const searchActive = searchTerm.trim() !== '';
+        const citySelected = selectedCity !== null;
+  
+        if (searchActive && citySelected) {
+          const searchPayload = { request_text: searchTerm };
+          if (activeTab === 'reviewed') {
+            response = await axiosInstance.post('/admin/add_store_request/search_reviewed_add_store_requests', searchPayload);
+          } else if (activeTab === 'pending') {
+            response = await axiosInstance.post('/admin/add_store_request/search_not_reviewed_add_store_requests', searchPayload);
+          } else {
+            response = await axiosInstance.post('/admin/add_store_request/search_add_store_requests', searchPayload);
+          }
+        } else if (!searchActive && citySelected) {
+          const cityPayload = { city_id: selectedCity };
+          if (activeTab === 'reviewed') {
+            response = await axiosInstance.post('/admin/add_store_request/get_all_reviewed_add_store_requests_of_city', cityPayload);
+          } else if (activeTab === 'pending') {
+            response = await axiosInstance.post('/admin/add_store_request/get_all_add_store_requests_of_city_to_review', cityPayload);
+          } else {
+            response = await axiosInstance.post('/admin/add_store_request/get_all_add_store_requests_of_city', cityPayload);
+          }
+        } else if (!searchActive && !citySelected) {
+          if (activeTab === 'reviewed') {
+            response = await axiosInstance.get('/admin/add_store_request/get_all_reviewed_add_store_requests');
+          } else if (activeTab === 'pending') {
+            response = await axiosInstance.get('/admin/add_store_request/get_requests_to_review');
+          } else {
+            response = await axiosInstance.get('/admin/add_store_request/get_all_add_store_requests');
+          }
+        } else {
+          const searchPayload = { request_text: searchTerm };
+          if (activeTab === 'reviewed') {
+            response = await axiosInstance.post('/admin/add_store_request/search_reviewed_add_store_requests', searchPayload);
+          } else if (activeTab === 'pending') {
+            response = await axiosInstance.post('/admin/add_store_request/search_not_reviewed_add_store_requests', searchPayload);
+          } else {
+            response = await axiosInstance.post('/admin/add_store_request/search_add_store_requests', searchPayload);
+          }
+        }
+  
+        setStoreRequests(response.data);
+      } catch (error) {
+        console.error('خطا در دریافت درخواست‌ها:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchRequests();
+  }, [searchTerm, selectedCity, activeTab]);
+  
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -36,7 +91,7 @@ const StoreRequest = () => {
       }
 
       try {
-        const response = await axiosInstance.get('/admin/add_store_request/get_all_add_store_requests', {
+        const response = await axiosInstance.get('/admin/add_store_request/get_requests_to_review', {
           headers: {
             Authorization: null,
             'Content-Type': 'multipart/form-data'
@@ -53,34 +108,7 @@ const StoreRequest = () => {
   
     fetchCities();
 
-    //   // Update stats
-    //   setStats({
-    //     total: mockRequests.length,
-    //     reviewed: mockRequests.filter(req => req.is_reviewed).length,
-    //     pending: mockRequests.filter(req => !req.is_reviewed).length
-    //   });
- 
   }, []);
-  
-  // Filter requests based on active tab, search term, and selected city
-  const filteredRequests = storeRequests.filter(request => {
-    const matchesTab = 
-      activeTab === 'all' || 
-      (activeTab === 'reviewed' && request.is_reviewed) || 
-      (activeTab === 'pending' && !request.is_reviewed);
-    
-    const matchesSearch = 
-      searchTerm === '' || 
-      request.store_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCity = 
-      selectedCity === null || 
-      request.city_id === selectedCity;
-    
-    return matchesTab && matchesSearch && matchesCity;
-  });
-
   // Format date to a more readable format
   const formatDate = (dateString) => {
     const now = new Date();
@@ -198,15 +226,6 @@ const StoreRequest = () => {
       if (response.status === 200) {
         const updatedRequests = storeRequests.filter(req => !req.is_reviewed);
         setStoreRequests(updatedRequests);
-        // const reviewed = updatedRequests.filter(req => req.is_reviewed).length;
-        // const pending = updatedRequests.filter(req => !req.is_reviewed).length;
-  
-        // setStats({
-        //   total: updatedRequests.length,
-        //   reviewed,
-        //   pending
-        // });
-  
         await refreshStats();
   
         Swal.fire({
@@ -257,7 +276,6 @@ const StoreRequest = () => {
             <button
               className="flex items-center bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-colors !rounded-button whitespace-nowrap cursor-pointer"
               onClick={handleRemoveAllReviewed}
-              // disabled={stats.reviewed === 0}
             >
               <i className="fas fa-trash-alt mr-2"></i>
              پاک کردن درخواست‌های بررسی شده
@@ -282,7 +300,7 @@ const StoreRequest = () => {
               </div>
             ))}
           </div>
-        ) : filteredRequests.length === 0 ? (
+        ) : storeRequests.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <div className="flex justify-center mb-6">
               <div className="bg-blue-100 p-6 rounded-full">
@@ -296,7 +314,7 @@ const StoreRequest = () => {
           </div>
         ) :(
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredRequests.map(request => (
+          {storeRequests.map(request => (
             <StoreRequestCard
                 key={request.id}
                 request={request}
