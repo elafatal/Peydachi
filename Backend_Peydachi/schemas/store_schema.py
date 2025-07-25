@@ -24,3 +24,8 @@ class UpdateStoreModel(BaseSchema):
     description: str | None = None
     location_longitude: str | None = None
     location_latitude: str | None = None
+
+
+class SearchStoreInCity(BaseSchema):
+    city_id: int
+    search: str | None = None

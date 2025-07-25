@@ -4,7 +4,7 @@ from dependencies.dependencies import DB_DEPENDENCY
 from dependencies.body_dependencies import NAME_BODY, ID_BODY
 from dependencies.access_dependencies import ROUTER_ADMIN_DEPENDENCY
 from dependencies.limiter_dependencies import LIMIT_10_PER_MINUTE_DEPENDENCY
-from schemas.store_schema import StoreModel, StoreDisplay
+from schemas.store_schema import StoreModel, StoreDisplay, SearchStoreInCity
 
 
 router = APIRouter(
@@ -62,6 +62,16 @@ async def get_all_banned_stores_of_city(city_id: ID_BODY, db: DB_DEPENDENCY):
 @router.post('/get_all_active_stores_of_city', status_code=200, response_model=list[StoreDisplay])
 async def get_all_active_stores_of_city(city_id: ID_BODY, db: DB_DEPENDENCY):
     return await store_functions.get_all_active_stores_of_city(city_id=city_id, db=db)
+
+
+@router.post('/search_in_banned_stores_of_city', status_code=200, response_model=list[StoreDisplay])
+async def search_in_banned_stores_of_city(search: SearchStoreInCity, db: DB_DEPENDENCY):
+    return await store_functions.search_in_banned_stores_of_city(search=search, db=db)
+
+
+@router.post('/search_in_active_stores_of_city', status_code=200, response_model=list[StoreDisplay])
+async def search_in_active_stores_of_city(search: SearchStoreInCity, db: DB_DEPENDENCY):
+    return await store_functions.search_in_active_stores_of_city(search=search, db=db)
 
 @router.put('/promote_user_to_seller', status_code=200)
 async def promote_user_to_seller(user_id: ID_BODY, db: DB_DEPENDENCY):
