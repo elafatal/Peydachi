@@ -64,6 +64,11 @@ async def get_all_active_stores_of_city(city_id: ID_BODY, db: DB_DEPENDENCY):
     return await store_functions.get_all_active_stores_of_city(city_id=city_id, db=db)
 
 
+@router.post('/search_in_all_stores_of_city', status_code=200, response_model=list[StoreDisplay])
+async def search_in_all_stores_of_city(search: SearchStoreInCity, db: DB_DEPENDENCY):
+    return await store_functions.search_in_all_stores_of_city(search=search, db=db)
+
+
 @router.post('/search_in_banned_stores_of_city', status_code=200, response_model=list[StoreDisplay])
 async def search_in_banned_stores_of_city(search: SearchStoreInCity, db: DB_DEPENDENCY):
     return await store_functions.search_in_banned_stores_of_city(search=search, db=db)
