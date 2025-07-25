@@ -36,7 +36,7 @@ const StoreRequest = () => {
       }
 
       try {
-        const response = await axiosInstance.get('/admin/add_store_request/get_all_add_store_requests', {
+        const response = await axiosInstance.get('/admin/add_store_request/get_requests_to_review', {
           headers: {
             Authorization: null,
             'Content-Type': 'multipart/form-data'
@@ -53,13 +53,6 @@ const StoreRequest = () => {
   
     fetchCities();
 
-    //   // Update stats
-    //   setStats({
-    //     total: mockRequests.length,
-    //     reviewed: mockRequests.filter(req => req.is_reviewed).length,
-    //     pending: mockRequests.filter(req => !req.is_reviewed).length
-    //   });
- 
   }, []);
   
   // Filter requests based on active tab, search term, and selected city
@@ -198,15 +191,6 @@ const StoreRequest = () => {
       if (response.status === 200) {
         const updatedRequests = storeRequests.filter(req => !req.is_reviewed);
         setStoreRequests(updatedRequests);
-        // const reviewed = updatedRequests.filter(req => req.is_reviewed).length;
-        // const pending = updatedRequests.filter(req => !req.is_reviewed).length;
-  
-        // setStats({
-        //   total: updatedRequests.length,
-        //   reviewed,
-        //   pending
-        // });
-  
         await refreshStats();
   
         Swal.fire({
@@ -257,7 +241,6 @@ const StoreRequest = () => {
             <button
               className="flex items-center bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-colors !rounded-button whitespace-nowrap cursor-pointer"
               onClick={handleRemoveAllReviewed}
-              // disabled={stats.reviewed === 0}
             >
               <i className="fas fa-trash-alt mr-2"></i>
              پاک کردن درخواست‌های بررسی شده

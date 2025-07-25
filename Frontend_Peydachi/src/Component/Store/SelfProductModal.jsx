@@ -1,18 +1,37 @@
-import React from "react";
+
 import { FaStar, FaRegStar, FaStarHalfAlt, FaTimes } from 'react-icons/fa';
+import axiosInstance from "../axiosInstance";
+import React, { useEffect, useState, useRef } from "react";
 
 const SelfProductModal = ({
   selectedProduct,
   isModalOpen,
   comments,
   closeProductModal,
-  getCityName,
   formatDate,
   toggleFavorite,
   favorites
 }) => {
   if (!isModalOpen || !selectedProduct) return null;
-
+  const [cityName, setCityName] = useState('');
+  useEffect(() => {
+    const fetchCityName = async () => {
+      if (selectedProduct?.city_id) {
+        try {
+          const res = await axiosInstance.post('/city/get_city_by_id', {
+            city_id: selectedProduct.city_id
+          });
+          setCityName(res.data.name);
+        } catch (err) {
+          console.error('خطا در دریافت نام شهر:', err);
+          setCityName('نامشخص');
+        }
+      }
+    };
+  
+    fetchCityName();
+  }, [selectedProduct]);
+  
  const renderStars = (rating) => {
      const stars = [];
      const fullStars = Math.floor(rating);
@@ -61,7 +80,7 @@ const SelfProductModal = ({
                       {selectedProduct.quantity>0 ? `${selectedProduct.quantity} موجود` : 'ناموجود'}
                     </div>
                     <div className="text-gray-600">شهر:</div>
-                    <div>{getCityName(selectedProduct.city_id)}</div>
+                    <div> {cityName || '---'}</div>
                     <div className="text-gray-600">تاریخ اضافه شدن:</div>
                     <div>{formatDate(selectedProduct.date_added)}</div>
                     <div className="text-gray-600">شناسه محصول:</div>
