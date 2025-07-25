@@ -3,9 +3,10 @@ from database.models import Notification
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, and_, or_, update
 from errors.notifications_errors import (
+    NOTIFICATION_HAS_ALREADY_BEEN_READ_ERROR,
     NOTIFICATION_NOT_FOUND_ERROR,
     NO_NOTIFICATION_FOUND_ERROR,
-    NOTIFICATION_ACCESS_ERROR
+    NOTIFICATION_ACCESS_ERROR,
 )
 from schemas.notification_schemas import SendNotificationModel
 
@@ -63,6 +64,9 @@ async def review_notification(notification_id: int, user_id: int, db: Session):
 
     if notification.user_id != user_id:
         raise NOTIFICATION_ACCESS_ERROR
+    
+    if notification.has_seen:
+        raise NOTIFICATION_HAS_ALREADY_BEEN_READ_ERROR
 
     notification.has_seen = True
     db.commit()

@@ -29,3 +29,14 @@ COMMENT_REPORT_ALREADY_REVIEWED_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
     detail="Comment Report already reviewed"
     )
+
+
+COMMENT_REPORT_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR = HTTPException(
+    status_code=status.HTTP_406_NOT_ACCEPTABLE,
+    detail="Comment report must be longer than 3 characters."
+    )
+
+COMMENT_REPORT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR = HTTPException(
+    status_code=status.HTTP_406_NOT_ACCEPTABLE,
+    detail="Comment report must be shorter than 100 characters."
+    )
