@@ -115,13 +115,13 @@ const SearchFilters = ({
           </div>
 
           {/* پاکسازی فیلترها */}
-          {(searchTerm || selectedCity || activeTab !== 'all') && (
+          {(searchTerm || selectedCity || activeTab !== 'pending') && (
             <button
               className="py-2 px-4 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 whitespace-nowrap"
               onClick={() => {
                 setSearchTerm('');
                 setSelectedCity(null);
-                setActiveTab('all');
+                setActiveTab('pending');
               }}
             >
               <FaTimes className="ml-2 inline" />
