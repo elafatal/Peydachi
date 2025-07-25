@@ -171,10 +171,13 @@ const UserManagement = () => {
      handleSearch();
    }, [searchFilter,statusFilter]);
 
-  const resetSearch = () => {
-  setSearchTerm("");
-  setUsers([]);
+   const resetSearch = () => {
+    setSearchTerm("");
+    setSearchFilter("username");
+    setStatusFilter("all");
+    setUsers([]);
   };
+  
 
   const handleKeyPress = (e) => {
   if (e.key === 'Enter') {
@@ -345,13 +348,16 @@ disabled={searchFilter === "banned" || searchFilter === "all" || (searchTerm ===
 >
 جستجو
 </button>
-<button
-type="button"
-className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors !rounded-button cursor-pointer whitespace-nowrap"
-onClick={resetSearch}
->
-پاک کردن
-</button>
+{(searchTerm || statusFilter !== 'all') && (
+  <button
+    type="button"
+    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors !rounded-button cursor-pointer whitespace-nowrap"
+    onClick={resetSearch}
+  >
+    پاک کردن
+  </button>
+)}
+
 </div>
 {/* Current filter tags */}
 <div className="mt-4 flex items-center flex-wrap gap-2">

@@ -281,14 +281,17 @@ if (store.is_banned) {
       {/* Search and Filter Section */}
  <div className="bg-white rounded-lg shadow p-6 mb-6">
   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <button
-          type="button"
-          className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 whitespace-nowrap"
-          onClick={resetSearch}
-        >
-          <FaTimes className="mr-2" />
-          پاک کردن فیلتر
-        </button>
+          {(searchTerm || filterCity || filterStatus) && (
+          <button
+            type="button"
+            className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 whitespace-nowrap"
+            onClick={resetSearch}
+          >
+            <FaTimes className="mr-2" />
+            پاک کردن فیلتر
+          </button>
+        )}
+
         <button
           type="button"
           onClick={handleSearch}
@@ -317,7 +320,7 @@ if (store.is_banned) {
    </div>
         {/* فیلترها و دکمه */}
         <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-wrap gap-3 mt-3" dir='rtl'>
-          {/* <select
+          <select
             className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
             value={filterCity}
             onChange={(e) => setFilterCity(e.target.value)}
@@ -326,7 +329,7 @@ if (store.is_banned) {
             {cities.map(city => (
               <option key={city.id} value={city.id.toString()}>{city.name}</option>
             ))}
-          </select> */}
+          </select>
 
           <select
             className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
