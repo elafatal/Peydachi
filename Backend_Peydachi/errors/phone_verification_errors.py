@@ -11,3 +11,9 @@ USER_VERIFICATION_CODE_EXPIRED_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
     detail='User Verification Code Expired.'
     )
+
+
+SMS_SERVICE_ERROR = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND,
+    detail='SMS Service Error.'
+    )
