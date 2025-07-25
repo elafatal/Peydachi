@@ -133,8 +133,26 @@ const users=[{id:1 , username:'ali'}]
       let payload = {};
   
       if (filterStatus === 'banned') {
-        apiUrl = '/admin/store/search_in_banned_stores';
+        if (!filterCity) {
+          apiUrl = '/admin/store/search_in_banned_stores';
         payload = { name: searchTerm || '' };
+        }
+        if (filterCity) {
+          apiUrl = '/admin/store/search_in_banned_stores_of_city';
+          payload = {
+            city_id: Number(filterCity),
+            search: searchTerm || '',
+          };
+        }
+      }
+      else if (filterStatus === 'active') {
+        if (filterCity) {
+          apiUrl = '/admin/store/search_in_active_stores_of_city';
+          payload = {
+            city_id: Number(filterCity),
+            search: searchTerm || '',
+          };
+        }
       }
       else if (filterCity) {
         apiUrl = '/store/search_all_stores_of_city';
