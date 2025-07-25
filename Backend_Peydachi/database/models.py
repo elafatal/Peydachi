@@ -9,6 +9,7 @@ from errors.user_errors import (
     PASSWORD_MUST_BE_LONGER_THAN_6_CHARACTERS_ERROR,
     PHONE_NUMBER_CAN_NOT_BE_EMPTY_ERROR,
     INVALID_PHONE_NUMBER_ERROR,
+    USERNAME_MUST_BE_ENGLISH
 )
 from errors.store_errors import STORE_NAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
 from errors.product_errors import (
@@ -75,8 +76,13 @@ class User(ID, Base):
     def validate_username(self, key, value):
         if not value or len(value.strip()) < 3:
             raise USERNAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR
+        
         if " " in value:
             raise USERNAME_CAN_NOT_HAVE_SPACE_ERROR
+        
+        if not re.match(r"^[a-zA-Z0-9_]+$", value):
+            raise USERNAME_MUST_BE_ENGLISH
+
         return value
     
 
