@@ -146,6 +146,10 @@ const users=[{id:1 , username:'ali'}]
         }
       }
       else if (filterStatus === 'active') {
+        if (!filterCity) {
+          apiUrl = '/store/search_active_stores';
+          payload = { name: searchTerm || '' };
+        }
         if (filterCity) {
           apiUrl = '/admin/store/search_in_active_stores_of_city';
           payload = {
@@ -155,10 +159,10 @@ const users=[{id:1 , username:'ali'}]
         }
       }
       else if (filterCity) {
-        apiUrl = '/store/search_all_stores_of_city';
+        apiUrl = '/admin/store/search_in_all_stores_of_city';
         payload = {
-          name: searchTerm || '',
           city_id: Number(filterCity),
+          search: searchTerm || '',
         };
       }
       else {
