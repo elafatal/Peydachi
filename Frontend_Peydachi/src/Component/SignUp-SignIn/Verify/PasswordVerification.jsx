@@ -26,52 +26,23 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
       setStep(2); 
     } catch (error) {
       console.error('Error sending verification code:', error);
-      Swal.fire('خطا', 'ارسال کد تایید با مشکل مواجه شد', 'error');
+      Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                showConfirmButton: false,
+                timer: 2000,
+                toast: true,
+                customClass: {
+                  popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                  title: 'text-xs',
+                  content: 'text-xs',
+                  icon: 'text-xs mb-2',
+                },
+              });
     }
   };
 
-  const handleVerificationSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axiosInstance.post('/phone_verification/user_forget_password_check', {
-        username,
-        code: verificationCode
-      });
-
-      if (response.status === 200) {
-        Cookies.set('auth_token', response.data.access_token, { expires: 3, secure: true, sameSite: 'Strict' });
-        Cookies.set('refresh_token', response.data.refresh_token, { expires: 3, secure: true, sameSite: 'Strict' });
-
-        const userData = {
-          userID: response.data.userID,
-          username: response.data.username,
-          role: response.data.is_super_admin
-            ? 'superadmin'
-            : response.data.is_admin
-            ? 'admin'
-            : response.data.is_seller
-            ? 'seller'
-            : 'user',
-        };
-        login(userData);
-
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "خوش آمدید",
-          showConfirmButton: false,
-          timer: 1500,
-          toast: true,
-        });
-
-        navigate('/', { replace: true });
-      }
-    } catch (error) {
-      console.error('Verification failed:', error);
-      Swal.fire('خطا', 'کد وارد شده نامعتبر است', 'error');
-    }
-  };
 
 
   const navigate = useNavigate();
@@ -131,7 +102,7 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
     const code = inputsRef.current.map(input => input.value).join('');
     setVerificationCode(code);
   };
-  const handleSubmit = async(e) => {
+  const handleCodeVerification = async(e) => {
     e.preventDefault();
     console.log('Submitted Verification Code:', verificationCode);
     try {
@@ -145,7 +116,6 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
           },
         });
         if (response.status === 200) {
-            console.log("yesssssss");
 
             if (response.status === 200) {
                 Cookies.set('auth_token', response.data.access_token, { expires: 3, secure: true, sameSite: 'Strict' });
@@ -176,14 +146,25 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
                       icon : 'text-xs mb-2'
                     }
                 });
-                console.log(Cookies.get('auth_token'));
-                
                 navigate('/', { replace: true });
                 }
         }
       } catch (error) {
         console.log('Error during verification', error);
-        Swal.fire('Error', 'Request failed. Please try again.', 'error');
+        Swal.fire({
+                 position: "top-end",
+                 icon: "error",
+                 title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                 showConfirmButton: false,
+                 timer: 2000,
+                 toast: true,
+                 customClass: {
+                   popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                   title: 'text-xs',
+                   content: 'text-xs',
+                   icon: 'text-xs mb-2',
+                 },
+               });
       }
    
   };
@@ -243,7 +224,7 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
 
   const renderCodeStep = () => (
 
-    <div dir="ltr" onSubmit={handleVerificationSubmit} className=" text-center py-10">
+    <div dir="ltr" className=" text-center py-10">
 
     <header className="mb-8">
       <h1 className="text-2xl font-bold mb-1">تایید شماره تلفن</h1>
@@ -251,7 +232,7 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
         کد تأیید 5 رقمی را وارد کنید
       </p>
     </header>
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleCodeVerification }>
       <div className="flex items-center justify-center gap-3">
         {[...Array(5)].map((_, index) => (
           <input

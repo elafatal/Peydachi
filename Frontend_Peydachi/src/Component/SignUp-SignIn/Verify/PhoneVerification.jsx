@@ -125,7 +125,20 @@ const PhoneVerification= ({ showComponent, setshowComponent,rememberMe, verifica
                            navigate('/', { replace: true });
                            }
                   }catch(err){
-                    console.log(err);
+                    Swal.fire({
+                      position: "top-end",
+                      icon: "error",
+                      title: err.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                      showConfirmButton: false,
+                      timer: 2000,
+                      toast: true,
+                      customClass: {
+                        popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                        title: 'text-xs',
+                        content: 'text-xs',
+                        icon: 'text-xs mb-2',
+                      },
+                    });
                   }
                   Swal.fire({
                     position: "top-end",
@@ -141,19 +154,17 @@ const PhoneVerification= ({ showComponent, setshowComponent,rememberMe, verifica
                       icon: 'text-xs mb-2',
                     },
                   });
-                 
-                  
                 }
               } catch (error) {
                 Swal.fire({
                   position: "top-end",
                   icon: "error",
-                  title: "دوباره امتحان کنید",
+                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
                   showConfirmButton: false,
-                  timer: 1500,
+                  timer: 2000,
                   toast: true,
                   customClass: {
-                    popup: 'w-2 h-15 text-sm flex items-center justify-center',
+                    popup: 'w-60 h-18 text-sm flex items-center justify-center',
                     title: 'text-xs',
                     content: 'text-xs',
                     icon: 'text-xs mb-2',
@@ -163,7 +174,21 @@ const PhoneVerification= ({ showComponent, setshowComponent,rememberMe, verifica
         }
       } catch (error) {
         console.log('Error during verification', error);
-        Swal.fire('Error', 'Request failed. Please try again.', 'error');
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
+        
       }
    
   };
