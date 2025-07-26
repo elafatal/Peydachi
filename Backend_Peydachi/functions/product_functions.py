@@ -16,7 +16,7 @@ from errors.product_errors import (
     PRIDUCT_HAS_NO_PICTURE_ERROR
 )
 from errors.store_errors import STORE_NOT_FOUND_ERROR
-from errors.general_errors import INTERNAL_ERROR
+from errors.pic_errors import FILETYPE_MUST_BE_PICTURE_ERROR
 import boto3
 from botocore.exceptions import NoCredentialsError
 from dotenv import load_dotenv
@@ -58,6 +58,8 @@ async def add_product(owner_id: int, db: Session, name: str, description: str | 
     db.add(new_product)
 
     if pic:
+        if pic.content_type not in {"image/jpeg", "image/png", "image/webp", "image/jpg"}:
+            raise FILETYPE_MUST_BE_PICTURE_ERROR
         rand_str = ''.join(random.choice(ascii_letters) for _ in range(6))
         new_name = f'_{rand_str}.'.join(pic.filename.rsplit('.', 1))
         pic.filename = new_name
@@ -107,6 +109,9 @@ async def update_product(product_info: UpdateProductModel, owner_id: int, db: Se
 
 
 async def add_product_pic(product_id: int, pic: UploadFile, owner_id: int, db: Session):
+    if pic.content_type not in {"image/jpeg", "image/png", "image/webp", "image/jpg"}:
+            raise FILETYPE_MUST_BE_PICTURE_ERROR
+    
     store = db.query(Store).filter(Store.owner_id == owner_id).first()
     if not store:
         raise STORE_NOT_FOUND_ERROR
