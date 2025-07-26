@@ -1,14 +1,14 @@
 
 import { FaStar, FaRegStar, FaStarHalfAlt, FaTimes } from 'react-icons/fa';
 import axiosInstance from "../axiosInstance";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import formatDate from '../utils/formatDate';
 
 const SelfProductModal = ({
   selectedProduct,
   isModalOpen,
   comments,
   closeProductModal,
-  formatDate,
   toggleFavorite,
   favorites
 }) => {

@@ -1,6 +1,8 @@
 import React from 'react';
 import { FaTimes } from 'react-icons/fa';
-const ReviewModal = ({ show, onClose, onConfirm, request, getCityName, formatDate }) => {
+import formatDate from '../../../utils/formatDate';
+
+const ReviewModal = ({ show, onClose, onConfirm, request, getCityName }) => {
   if (!show || !request) return null;
 
   return (

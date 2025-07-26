@@ -1,4 +1,5 @@
 import React from "react";
+import formatDate from '../../utils/formatDate';
 import { FaComments,FaStar, FaRegStar, FaStarHalfAlt, FaTimes, FaStore, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 const ProductModal = ({
@@ -8,7 +9,6 @@ const ProductModal = ({
   chartRef,
   closeProductModal,
   getCityName,
-  formatDate,
   toggleFavorite,
   favorites,
   setIsReviewModalOpen
@@ -59,8 +59,6 @@ const ProductModal = ({
                     <div>{getCityName(selectedProduct.city_id)}</div>
                     <div className="text-gray-600">تاریخ اضافه شدن:</div>
                     <div>{formatDate(selectedProduct.date_added)}</div>
-                    {/* <div className="text-gray-600">Product ID:</div>
-                    <div>#{selectedProduct.id}</div> */}
                   </div>
                  
                 </div>

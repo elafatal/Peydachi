@@ -1,4 +1,3 @@
-// utils/showErrorToast.js
 import Swal from 'sweetalert2';
 
 const showErrorToast = (error) => {
@@ -12,7 +11,7 @@ const showErrorToast = (error) => {
     icon: "error",
     html: `<div class="text-justify">${message}</div>`,
     showConfirmButton: false,
-    timer: 4000,
+    timer: 2500,
     toast: true,
     customClass: {
       popup: 'text-sm px-4 py-3 max-w-md w-full',

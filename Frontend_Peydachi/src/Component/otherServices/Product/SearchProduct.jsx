@@ -35,7 +35,6 @@ const SearchProduct = () => {
     closeProductModal,
     clearSelectedProduct,
     getCityName,
-    formatDate,
     clearFilters,
     sortOption,
     setSortOption,
@@ -350,7 +349,6 @@ if (sortOption === 'highestRated') {
       chartRef={chartRef}
       closeProductModal={closeProductModal}
       getCityName={getCityName}
-      formatDate={formatDate}
       toggleFavorite={toggleFavorite}
       favorites={favorites}
       setIsReviewModalOpen={setIsReviewModalOpen} />

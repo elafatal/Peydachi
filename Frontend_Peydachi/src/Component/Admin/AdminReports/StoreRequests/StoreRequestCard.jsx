@@ -5,9 +5,9 @@ import {
   FaCheckCircle,
   FaTrashAlt
 } from 'react-icons/fa';
-import { IoIosCheckmarkCircleOutline,IoIosCheckmarkCircle } from "react-icons/io";
+import formatDate from '../../../utils/formatDate';
 
-const StoreRequestCard = ({ request, onReview, onRemove, getCityName, formatDate }) => {
+const StoreRequestCard = ({ request, onReview, onRemove, getCityName }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all hover:shadow-lg" dir='rtl'>
       <div className="p-6">

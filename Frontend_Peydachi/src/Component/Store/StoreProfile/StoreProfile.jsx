@@ -105,10 +105,6 @@ useEffect(() => {
     if (sortBy === 'rating') return b.average_rating - a.average_rating;
     return 0;
   });
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
-  };
 
   const renderRating = (rating) => {
     return (

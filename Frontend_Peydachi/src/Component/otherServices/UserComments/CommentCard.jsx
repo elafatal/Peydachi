@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import axiosInstance from '../../axiosInstance';
 import showErrorToast from '../../utils/showErrorToast';
-
+import formatDate from '../../utils/formatDate';
 import { MdDelete } from "react-icons/md";
 const ConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
   if (!isOpen) return null;
@@ -35,27 +35,6 @@ const CommentCard = ({ item, isStore, onDelete }) => {
 
   const [showConfirm, setShowConfirm] = useState(false);
 
-    function timeAgo(dateAdded) {
-        const now = new Date();
-        const addedDate = new Date(dateAdded);
-        
-        const diffInMilliseconds = now - addedDate;
-        const seconds = Math.floor(diffInMilliseconds / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-        const weeks = Math.floor(days / 7);
-        const months = Math.floor(days / 30);
-        const years = Math.floor(days / 365);
-      
-        if (seconds < 60) return 'لحظاتی پیش';
-        if (minutes < 60) return `${minutes} دقیقه قبل`;
-        if (hours < 24) return `${hours} ساعت قبل`;
-        if (days < 7) return `${days} روز قبل`;
-        if (weeks < 4) return `${weeks} هفته قبل`;
-        if (months < 12) return `${months} ماه قبل`;
-        return `${years} سال${years > 1 ? 's' : ''} ago`;
-      }
       const handleDeleteConfirmed = async (id) => {
         try {
           const url = isStore
@@ -111,7 +90,7 @@ const CommentCard = ({ item, isStore, onDelete }) => {
             {!isStore && <p className="text-sm text-gray-600">از {item.storeName}</p>}
             <div className="flex items-center gap-1 mt-1">
               {renderStars(item.rating)}
-              <span className="text-xs text-gray-500 mr-2">{timeAgo(item.timestamp)}</span>
+              <span className="text-xs text-gray-500 mr-2">{formatDate(item.timestamp)}</span>
             </div>
           </div>
         </div>

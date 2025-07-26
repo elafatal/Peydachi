@@ -1,4 +1,4 @@
-// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
+import formatDate from '../../utils/formatDate';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { FaRegUser } from "react-icons/fa";
@@ -80,27 +80,6 @@ const StoreFullComment = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    const now = new Date();
-    const addedDate = new Date(dateString);
-    
-    const diffInMilliseconds = now - addedDate;
-    const seconds = Math.floor(diffInMilliseconds / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const weeks = Math.floor(days / 7);
-    const months = Math.floor(days / 30);
-    const years = Math.floor(days / 365);
-  
-    if (seconds < 60) return 'لحظاتی پیش';
-    if (minutes < 60) return `${minutes} دقیقه قبل`;
-    if (hours < 24) return `${hours} ساعت قبل`;
-    if (days < 7) return `${days} روز قبل`;
-    if (weeks < 4) return `${weeks} هفته قبل`;
-    if (months < 12) return `${months} ماه قبل`;
-    return `${years} سال قبل`;
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">

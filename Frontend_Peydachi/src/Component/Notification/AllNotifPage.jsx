@@ -13,8 +13,8 @@ import {
   import { FaRegFaceRollingEyes } from "react-icons/fa6";
   import axiosInstance from '../axiosInstance';
   import { BiMessageRoundedCheck } from "react-icons/bi";
-  import { formatDistanceToNow } from 'date-fns';
-  import faIR from 'date-fns/locale/fa-IR';
+  import formatDate from '../utils/formatDate';
+  import showErrorToast from '../utils/showErrorToast';
   import Swal from "sweetalert2";  
 const AllNotifPage= () => {
   const navigate = useNavigate();
@@ -47,20 +47,8 @@ const AllNotifPage= () => {
           setSelectedNotification(response.data)
           console.log(response.data);
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });        } 
+          showErrorToast(error);
+        } 
       }
     }
     getNotifById();
@@ -90,20 +78,7 @@ useEffect(() => {
         [activeFilter]: response.data,
       }));
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });;
+      showErrorToast(error);
     } finally {
       setLoading(false);
     }
@@ -115,16 +90,7 @@ useEffect(() => {
 
   // State for expanded notification
   const [expandedId, setExpandedId] = useState(null);
-
-
   const [showStats, setShowStats] = useState(true);
-
-   const formatRelativeDate = (dateString) => {
-      return formatDistanceToNow(new Date(dateString), {
-        addSuffix: true,
-        locale: faIR,
-      });
-    };
 
 
     const toggleReadStatus = async (id, e) => {
@@ -193,20 +159,7 @@ useEffect(() => {
         }
                
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(error);
       }
     };
     
@@ -221,20 +174,7 @@ useEffect(() => {
       setSelectedNotification(response.data)
       console.log(response.data);
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     } 
   };
 
@@ -263,20 +203,7 @@ useEffect(() => {
         }
     });
     } catch (err) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(err);
     }
   };
   
@@ -387,7 +314,7 @@ useEffect(() => {
                           </h3>
                           <span className="text-xs text-gray-500 ml-2 flex items-center">
                           <FaClock className='ml-1 mb-1 inline'/>
-                          {formatRelativeDate(notification.date_added)}
+                          {formatDate(notification.date_added)}
                           </span>
                         </div>
                         <p className={`mt-1 text-sm ${!notification.has_seen ? 'text-gray-800' : 'text-gray-600'}`}>
