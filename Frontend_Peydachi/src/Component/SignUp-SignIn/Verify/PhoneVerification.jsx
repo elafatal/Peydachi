@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../Context/AuthContext';
-
+import showErrorToast from '../../utils/showErrorToast';
 const PhoneVerification= ({ showComponent, setshowComponent,rememberMe, verificationData }) => {
   const { login } = useAuth()
   const { username, phone_number, password } = verificationData || {};
@@ -125,18 +125,7 @@ const PhoneVerification= ({ showComponent, setshowComponent,rememberMe, verifica
                            navigate('/', { replace: true });
                            }
                   }catch(err){
-                    Swal.fire({
-                      position: "top-end",
-                      icon: "error",
-                      html: `<div class="text-justify">${err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است"}</div>`,
-                      showConfirmButton: false,
-                      timer: 4000,
-                      toast: true,
-                      customClass: {
-                        popup: 'text-sm px-4 py-3 max-w-md w-full ',
-                        icon: 'text-xs mb-2',
-                      },
-                    });
+                    showErrorToast(err);
                   
                   }
                   Swal.fire({
@@ -155,36 +144,12 @@ const PhoneVerification= ({ showComponent, setshowComponent,rememberMe, verifica
                   });
                 }
               } catch (error) {
-                Swal.fire({
-                  position: "top-end",
-                  icon: "error",
-                  html: `<div class="text-justify">${error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است"}</div>`,
-                  showConfirmButton: false,
-                  timer: 4000,
-                  toast: true,
-                  customClass: {
-                    popup: 'text-sm px-4 py-3 max-w-md w-full',
-                    icon: 'text-xs mb-2',
-                  },
-                });
+                showErrorToast(error);
               
               }
         }
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          html: `<div class="text-justify">${error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است"}</div>`,
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(error);
         
       }
    

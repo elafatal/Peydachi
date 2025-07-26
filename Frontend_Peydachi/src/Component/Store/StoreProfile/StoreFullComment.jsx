@@ -4,8 +4,9 @@ import { useParams } from 'react-router-dom';
 import { FaRegUser } from "react-icons/fa";
 import axiosInstance from '../../axiosInstance';
 import React, { useState, useEffect } from 'react';
-import { FaFacebookF,FaComments,FaRegFlag,FaCheckCircle, FaExclamationCircle ,FaPaperPlane,FaStar,FaSpinner } from 'react-icons/fa';
+import { FaComments,FaCheckCircle, FaExclamationCircle ,FaPaperPlane,FaStar,FaSpinner } from 'react-icons/fa';
 import { FaPenToSquare } from 'react-icons/fa6';
+import showErrorToast from '../../utils/showErrorToast';
 const StoreFullComment = () => {
   const { storeID } = useParams(); 
   const navigate = useNavigate();
@@ -15,8 +16,7 @@ const StoreFullComment = () => {
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState(null);
-const [sommentNumber,setCommentNumbers]=useState(4)
-  // Mock fetch comments
+
   useEffect(() => {
     const fetchComments = async () => {
       console.log(storeID);
@@ -25,20 +25,7 @@ const [sommentNumber,setCommentNumbers]=useState(4)
       console.log(response);
       setComments(response.data);
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     }   
   };
   fetchComments();
@@ -63,20 +50,7 @@ const [sommentNumber,setCommentNumbers]=useState(4)
           });
           console.log(response.data);
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'w-60 h-18 text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+          showErrorToast(error);
         }
       }
 
@@ -89,20 +63,7 @@ const [sommentNumber,setCommentNumbers]=useState(4)
           const response = await axiosInstance.post('/store_rating/rate_store', ratingResponse);
           console.log(response.data);
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'w-60 h-18 text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+          showErrorToast(error);
         }
 
       }
@@ -112,20 +73,7 @@ const [sommentNumber,setCommentNumbers]=useState(4)
         type: "success"
       });
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     } finally {
       setIsSubmitting(false);
       setTimeout(() => setNotification(null), 5000);

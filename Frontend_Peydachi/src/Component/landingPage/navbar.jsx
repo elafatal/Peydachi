@@ -5,7 +5,7 @@ import { TbMapSearch } from "react-icons/tb";
 import { IoIosMenu,IoMdClose } from "react-icons/io";
 import { useAuth } from '../Context/AuthContext';
 import { useLocation } from 'react-router-dom';
-import { isLoggedIn, getAccessToken } from '../auth';
+import { isLoggedIn, getAccessToken } from '../utils/auth';
 import Cookies from 'js-cookie';
 import Notifications from "../Notification/Notification";
 const Navbar = ()=>{

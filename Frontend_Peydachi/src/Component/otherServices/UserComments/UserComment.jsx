@@ -8,8 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import UnauthorizedPage from '../../Error/UnauthorizedPage';
-import Swal from "sweetalert2";  
-
+import showErrorToast from '../../utils/showErrorToast';
 const UserComment = () => {
   const navigate = useNavigate();
   const fetchedRef = useRef(false);
@@ -46,20 +45,7 @@ const fetchStoreComments = async () => {
       setStoreComments(mappedData);
     }
   } catch (error) {
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-      showConfirmButton: false,
-      timer: 2000,
-      toast: true,
-      customClass: {
-        popup: 'text-sm flex items-center justify-center',
-        title: 'text-xs',
-        content: 'text-xs',
-        icon: 'text-xs mb-2',
-      },
-    });
+    showErrorToast(error);
   } finally {
     setLoadingStores(false);
   }
@@ -83,20 +69,7 @@ const fetchProductComments = async () => {
       setProductComments(mappedData);
     }
   } catch (error) {
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-      showConfirmButton: false,
-      timer: 2000,
-      toast: true,
-      customClass: {
-        popup: ' text-sm flex items-center justify-center',
-        title: 'text-xs',
-        content: 'text-xs',
-        icon: 'text-xs mb-2',
-      },
-    });
+    showErrorToast(error);
   } finally {
     setLoadingProducts(false);
   }

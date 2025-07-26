@@ -20,7 +20,7 @@ import MainSearch from './Component/MainSearch/Search';
 import SearchProduct from './Component/otherServices/Product/SearchProduct';
 import AllNotifPage from './Component/Notification/AllNotifPage';
 import Navbar from './Component/landingPage/navbar';
-import ScrollToTop from './Component/ScrollToTop';
+import ScrollToTop from './Component/utils/ScrollToTop';
 import AddProduct from './Component/Store/AddProduct';
 import StoreFullComment from './Component/Store/StoreProfile/StoreFullComment';
 import SendReport from './Component/Report/SendReport';

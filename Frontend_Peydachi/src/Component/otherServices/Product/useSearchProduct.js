@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom'; 
 import * as echarts from 'echarts';
 import axiosInstance from '../../axiosInstance';
-import Swal from "sweetalert2";  
+import showErrorToast from '../../utils/showErrorToast';
 const useSearchProduct = () => {
-  const navigate = useNavigate(); // در بالا
+  const navigate = useNavigate(); 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const initialSearch = queryParams.get('q') || '';
@@ -131,20 +131,7 @@ const useSearchProduct = () => {
       setRatingDistribution(ratingResponse.data);
       renderChart(ratingResponse.data); 
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
       setRatingDistribution([]); 
     }
     
@@ -156,30 +143,15 @@ const useSearchProduct = () => {
       setComments(response.data);
   
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
       setComments([]); 
     }
   
 
   };
-  
 
   const closeProductModal = () => {
     setIsModalOpen(false);
-    // این خط رو برمی‌داریم یا با تأخیر صدا می‌زنیم
     setRatingDistribution([]);
   };
   
@@ -200,20 +172,7 @@ const useSearchProduct = () => {
         console.log(response.data);
        
       } catch (err) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(err);
       } finally {
         setLoading(false);
       }
@@ -242,7 +201,7 @@ const useSearchProduct = () => {
          [city_id]: response.data.name,
        }));
      } catch (err) {
-       console.error('خطا در دریافت نام شهر:', err);
+      showErrorToast(err);
        setCityNames(prev => ({
         ...prev,
         [city_id]: "نامشخص",

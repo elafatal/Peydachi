@@ -13,6 +13,7 @@ import {
     FaStarHalfAlt,
     FaMapMarkerAlt,
   } from 'react-icons/fa';
+import showErrorToast from '../utils/showErrorToast';
 import ProductCard from './ProductCard';
 import EditProductModal from './EditProductModal';
 import { Navigate, useParams } from 'react-router-dom';
@@ -61,20 +62,7 @@ const SelfStore = () => {
         setStoreInfo((prev) => ({ ...prev, ...updatedData }));
       }
     } catch (err) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(err);
     }
   };
 
@@ -114,20 +102,7 @@ const openProductModal = async (product) => {
     });
     setComments(res.data);
   } catch (err) {
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-      showConfirmButton: false,
-      timer: 2000,
-      toast: true,
-      customClass: {
-        popup: 'w-60 h-18 text-sm flex items-center justify-center',
-        title: 'text-xs',
-        content: 'text-xs',
-        icon: 'text-xs mb-2',
-      },
-    });
+    showErrorToast(err);
     setComments([]);
   }
 
@@ -217,20 +192,7 @@ const closeProductModal = () => {
       console.log('Store info:', response.data);
       }
       } catch (error) {
-              Swal.fire({
-                position: "top-end",
-                icon: "error",
-                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                showConfirmButton: false,
-                timer: 2000,
-                toast: true,
-                customClass: {
-                  popup: 'w-60 h-18 text-sm flex items-center justify-center',
-                  title: 'text-xs',
-                  content: 'text-xs',
-                  icon: 'text-xs mb-2',
-                },
-              });
+        showErrorToast(error);
       }finally {
         setIsLoading(false);  
       }
@@ -251,20 +213,7 @@ setProducts(response.data);
 console.log('Store info:', response.data);
 }
   } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'w-60 h-18 text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+    showErrorToast(error);
   }
 }
 useEffect(() => {
@@ -387,20 +336,7 @@ try {
   handleProductModalClose();
  }
 } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+  showErrorToast(error);
 }
 };
 const handleUpdateQuantity = async() => {
@@ -433,20 +369,7 @@ const handleUpdateQuantity = async() => {
       handleProductModalClose();
      }
     } catch (error) {
-            Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-              showConfirmButton: false,
-              timer: 2000,
-              toast: true,
-              customClass: {
-                popup: 'w-60 h-18 text-sm flex items-center justify-center',
-                title: 'text-xs',
-                content: 'text-xs',
-                icon: 'text-xs mb-2',
-              },
-            });
+      showErrorToast(error);
     }
 };
 
@@ -494,20 +417,7 @@ try {
     handleProductModalClose();
   }
 } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+  showErrorToast(error);
 }
 
 };
@@ -526,23 +436,9 @@ const handleRemovePic = async () => {
       console.log('updated: ', response.data);
       await getSelfStoreProduct();
       handleProductModalClose();
-      // optionally update local state if needed
     }
   } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'w-60 h-18 text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+    showErrorToast(error);
   }
  
 };
@@ -582,21 +478,7 @@ const handleUploadProductPic = async () => {
         handleProductModalClose();
       }
     } catch (error) {
-      console.error("خطا در آپلود تصویر:", error);
-            Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-              showConfirmButton: false,
-              timer: 2000,
-              toast: true,
-              customClass: {
-                popup: 'w-60 h-18 text-sm flex items-center justify-center',
-                title: 'text-xs',
-                content: 'text-xs',
-                icon: 'text-xs mb-2',
-              },
-            });
+      showErrorToast(error);
     }
     
 };
@@ -646,24 +528,9 @@ try {
       icon : 'text-xs mb-2'
     }
 });
-  //await getSelfStoreProduct();
-  // handleProductModalClose();
  }
 } catch (error) {
-       Swal.fire({
-         position: "top-end",
-         icon: "error",
-         title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-         showConfirmButton: false,
-         timer: 2000,
-         toast: true,
-         customClass: {
-           popup: 'w-60 h-18 text-sm flex items-center justify-center',
-           title: 'text-xs',
-           content: 'text-xs',
-           icon: 'text-xs mb-2',
-         },
-       });
+  showErrorToast(error);
 }
 setIsEditing(false);
 

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
 import Swal from 'sweetalert2';
+import showErrorToast from '../utils/showErrorToast';
 import React, { useState, useRef } from 'react';
 import {FaLightbulb ,FaTimes,FaSave,FaRocket, FaSpinner,FaCloudUploadAlt, FaCamera,FaImage,FaBox,FaPlus,FaCheck , FaExternalLinkAlt, FaTag, FaExclamationCircle,FaInfoCircle, FaAlignLeft, FaMinus} from 'react-icons/fa';
 import { LuSparkles } from 'react-icons/lu';
@@ -170,20 +171,7 @@ const handleSubmit = async (e) => {
       setTimeout(() => setShowSuccess(false), 3000);
     }
   } catch (error) {
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-      showConfirmButton: false,
-      timer: 2000,
-      toast: true,
-      customClass: {
-        popup: 'w-60 h-18 text-sm flex items-center justify-center',
-        title: 'text-xs',
-        content: 'text-xs',
-        icon: 'text-xs mb-2',
-      },
-    });
+    showErrorToast(error);
   } finally {
     setIsSubmitting(false);
   }

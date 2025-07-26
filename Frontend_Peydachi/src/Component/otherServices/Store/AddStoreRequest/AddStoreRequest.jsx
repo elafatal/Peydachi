@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../axiosInstance';
 import Swal from "sweetalert2";  
+import showErrorToast from '../../../utils/showErrorToast';
 import { 
   FaPhone, FaChevronDown, FaCalendarAlt, 
   FaTimes, FaStore, FaExclamationCircle, FaSpinner 
@@ -24,12 +25,7 @@ const AddStore = () => {
   const [formProgress, setFormProgress] = useState(0);
   const [characterCount, setCharacterCount] = useState(0);
   const [regions, setRegions] = useState([
-    { id: 1, name: 'North America' },
-    { id: 2, name: 'Europe' },
-    { id: 3, name: 'Asia' },
-    { id: 4, name: 'Africa' },
-    { id: 5, name: 'South America' },
-    { id: 6, name: 'Australia' }
+    { id: 1, name: ' ' },
   ]);
   useEffect(() => {
     const handleRegions = async () => {
@@ -41,24 +37,9 @@ const AddStore = () => {
           }
         });
         setRegions(response.data);
-        console.log(response);
         
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
-        
+        showErrorToast(error);
       } 
     };
 
@@ -77,25 +58,9 @@ const AddStore = () => {
             'Content-Type': 'multipart/form-data'
           }
         });
-        setCities(response.data);
-        console.log(response);
-        
+        setCities(response.data);      
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
-        
+        showErrorToast(error);
       } 
     };
 
@@ -173,26 +138,9 @@ const AddStore = () => {
                       });
             }  
            handleReset()
-            console.log(response);
-            
           } catch (error) {
-            Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-              showConfirmButton: false,
-              timer: 2000,
-              toast: true,
-              customClass: {
-                popup: 'text-sm flex items-center justify-center',
-                title: 'text-xs',
-                content: 'text-xs',
-                icon: 'text-xs mb-2',
-              },
-            });
-            
+            showErrorToast(error);
           } 
-      console.log('Submitted', formData);
       setIsSubmitting(false);
     }, 1500);
   };

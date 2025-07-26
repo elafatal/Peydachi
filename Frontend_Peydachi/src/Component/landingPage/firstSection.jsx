@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Swal from "sweetalert2";  
+import showErrorToast from '../utils/showErrorToast';
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { FaLocationDot } from "react-icons/fa6";
@@ -35,21 +35,7 @@ const FirstSection = () => {
         console.log(response);
         
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
-        
+        showErrorToast(error);
       } 
     };
 
@@ -69,21 +55,7 @@ const FirstSection = () => {
         console.log(response);
         
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
-        
+        showErrorToast(error);
       } 
     };
 
@@ -105,21 +77,7 @@ const FirstSection = () => {
       
       
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
-      
+      showErrorToast(error);
     } 
     setLocation(loc.name);
     setShowLocationDropdown(false);

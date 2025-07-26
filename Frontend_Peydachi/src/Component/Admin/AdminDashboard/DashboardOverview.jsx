@@ -1,6 +1,6 @@
 import React, { useState, useEffect }  from 'react';
 import StatsCards from './StatsCards';
-import Swal from "sweetalert2";  
+import showErrorToast from '../../utils/showErrorToast';
 import AnalyticsCharts from './AnalyticsCharts';
 import axiosInstance from '../../axiosInstance';
 import AdminActivity from './RecentActivity';
@@ -8,12 +8,9 @@ const DashboardOverview = () => {
   const [statistics, setStatistics] = useState(null);
   const [cityData, setCityData] = useState([]);
   const [topRatersData, setTopRatersData] = useState({ categories: [], values: [] });
-  const [adminStats, setAdminStats] = useState(null);
   const [adminActivity, setAdminActivity] = useState([]);
 
   const chartsLoading = cityData.length === 0 || topRatersData.categories.length === 0;
-
-  const [productData, setProductData] = useState([]); // در صورت نیاز آینده
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -73,20 +70,7 @@ const DashboardOverview = () => {
         }
   
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(error);
       }
     };
   

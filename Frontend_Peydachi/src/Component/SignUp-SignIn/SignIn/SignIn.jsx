@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../Context/AuthContext';
-
+import showErrorToast from '../../utils/showErrorToast';
 const SignIn= ({showComponent,setshowComponent, setRememberMe,rememberMe, setusername , username }) => {
   const navigate = useNavigate();
   const { login } = useAuth()
@@ -65,20 +65,7 @@ const SignIn= ({showComponent,setshowComponent, setRememberMe,rememberMe, setuse
       }
     }
     catch(error){
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     }
   };
 

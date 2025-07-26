@@ -2,6 +2,7 @@ import axiosInstance from '../../axiosInstance';
 import Swal from 'sweetalert2';
 import React, { useState, useEffect } from 'react';
 import { FaTimes,FaStar,FaSpinner } from 'react-icons/fa';
+import showErrorToast from '../../utils/showErrorToast';
 const ProductReview = ({ closeProductModal, isModalOpen,setIsModalOpen, selectedProduct }) => {
 const [rating, setRating] = useState(0);
 const [hoverRating, setHoverRating] = useState(0);
@@ -28,12 +29,11 @@ useEffect(() => {
 const handleRatingClick = (selectedRating) => {
 setRating(selectedRating);
 };
-// Handle comment input change
+
 const handleCommentChange = (e) => {
 setComment(e.target.value);
 };
 
-// Handle form submission
 const handleSubmit = async (e) => {
 e.preventDefault();
 if (rating === 0 && !comment.trim()) {
@@ -49,7 +49,7 @@ store_id: productData.storeId,
 rating: rating,
 product_id: productData.id
 };
-// Submit rating if provided
+
 if (rating > 0) {
 const ratingPayload = {
 store_id: productData.storeId,
@@ -77,24 +77,10 @@ try {
         setIsModalOpen(false)
     }
   } catch (err) {
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-      showConfirmButton: false,
-      timer: 2000,
-      toast: true,
-      customClass: {
-        popup: 'w-60 h-18 text-sm flex items-center justify-center',
-        title: 'text-xs',
-        content: 'text-xs',
-        icon: 'text-xs mb-2',
-      },
-    });
+    showErrorToast(err);
   } 
 }
 
-// Submit comment if provided
 if (comment.trim()) {
 const commentPayload = {
 product_id: productData.id,
@@ -121,55 +107,26 @@ try {
         setIsModalOpen(false)
     }
   } catch (err) {
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-      showConfirmButton: false,
-      timer: 2000,
-      toast: true,
-      customClass: {
-        popup: 'w-60 h-18 text-sm flex items-center justify-center',
-        title: 'text-xs',
-        content: 'text-xs',
-        icon: 'text-xs mb-2',
-      },
-    });
+    showErrorToast(err);
   } 
 }
 
 
-// Simulate API call delay
 await new Promise(resolve => setTimeout(resolve, 1000));
-setFeedback({ type: 'success', message: 'Thank you for your feedback!' });
-// Reset form after successful submission
+setFeedback({ type: 'success', message: 'از مشارکت شما متشکریم' });
 setTimeout(() => {
 setRating(0);
 setComment('');
 setFeedback(null);
 }, 3000);
 } catch (error) {
-  Swal.fire({
-    position: "top-end",
-    icon: "error",
-    title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-    showConfirmButton: false,
-    timer: 2000,
-    toast: true,
-    customClass: {
-      popup: 'w-60 h-18 text-sm flex items-center justify-center',
-      title: 'text-xs',
-      content: 'text-xs',
-      icon: 'text-xs mb-2',
-    },
-  });
+  showErrorToast(error);
 } finally {
 setIsSubmitting(false);
 }
 };
 
 
-// Handle clicking outside the modal to close it
 const handleOutsideClick = (e) => {
 if (e.target === e.currentTarget) {
     closeProductModal();

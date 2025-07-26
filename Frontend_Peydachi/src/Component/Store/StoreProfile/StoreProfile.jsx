@@ -7,8 +7,8 @@ import { formatDistanceToNow } from 'date-fns';
 import faIR from 'date-fns/locale/fa-IR';
 import ProductReview from './ProductReview';
 import StoreComment from './StoreComment';
-import ProductDetailModal from './ProductModal'; // مسیر دقیق فایل
-
+import ProductDetailModal from './ProductModal'; 
+import showErrorToast from '../../utils/showErrorToast';
 const StoreProfile = () => {
   const { id } = useParams(); 
   const [store, setStore] = useState(null);
@@ -62,20 +62,7 @@ setS(!s)
         });
         setStore(response.data);        
       } catch (err) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(err);
         setError('مشکلی در بارگیری اطلاعات فروشگاه رخ داد.');
       } finally {
         setLoading(false);
@@ -103,20 +90,7 @@ useEffect(() => {
         offset === 1 ? response.data : [...prevProducts, ...response.data]
       );
     } catch (err) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(err);
     } finally {
       setLoading(false);
     }

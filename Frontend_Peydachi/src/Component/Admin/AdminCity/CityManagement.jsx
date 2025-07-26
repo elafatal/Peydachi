@@ -6,8 +6,7 @@ import { FaEdit } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 import { useAuth } from '../../Context/AuthContext'; 
 import UnauthorizedPage from '../../Error/UnauthorizedPage';
-import Swal from "sweetalert2";  
-
+import showErrorToast from '../../utils/showErrorToast';
 const CityManagement = () => {
   const { role } = useAuth();
 
@@ -44,20 +43,7 @@ const CityManagement = () => {
         });
         setRegions(response.data);
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(error);
       } finally {
         setLoadingRegions(false);
       }
@@ -79,20 +65,7 @@ const CityManagement = () => {
           });
           setCities(response.data);
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+          showErrorToast(error);
         } finally {
           setLoadingCities(false); 
         }
@@ -126,20 +99,7 @@ const CityManagement = () => {
                         showNotification('استان اضافه شد', 'success');
                }
               } catch (error) {
-                Swal.fire({
-                  position: "top-end",
-                  icon: "error",
-                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                  showConfirmButton: false,
-                  timer: 2000,
-                  toast: true,
-                  customClass: {
-                    popup: 'text-sm flex items-center justify-center',
-                    title: 'text-xs',
-                    content: 'text-xs',
-                    icon: 'text-xs mb-2',
-                  },
-                });
+                showErrorToast(error);
               }
         }
     };
@@ -166,20 +126,7 @@ const CityManagement = () => {
                     showNotification('تغییرات اعمال شد', 'success');
                }
               } catch (error) {
-                Swal.fire({
-                  position: "top-end",
-                  icon: "error",
-                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                  showConfirmButton: false,
-                  timer: 2000,
-                  toast: true,
-                  customClass: {
-                    popup: 'text-sm flex items-center justify-center',
-                    title: 'text-xs',
-                    content: 'text-xs',
-                    icon: 'text-xs mb-2',
-                  },
-                });
+                showErrorToast(error);
               }
         }
        
@@ -196,20 +143,7 @@ const CityManagement = () => {
                     showNotification('حذف با موفقیت انجام شد', 'success');
                }
               } catch (error) {
-                Swal.fire({
-                  position: "top-end",
-                  icon: "error",
-                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                  showConfirmButton: false,
-                  timer: 2000,
-                  toast: true,
-                  customClass: {
-                    popup: 'text-sm flex items-center justify-center',
-                    title: 'text-xs',
-                    content: 'text-xs',
-                    icon: 'text-xs mb-2',
-                  },
-                });
+                showErrorToast(error);
               }
        
         }
@@ -231,20 +165,8 @@ const CityManagement = () => {
                 showNotification('شهر اضافه شد', 'success');
                }
               } catch (error) {
-                Swal.fire({
-                  position: "top-end",
-                  icon: "error",
-                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                  showConfirmButton: false,
-                  timer: 2000,
-                  toast: true,
-                  customClass: {
-                    popup: 'text-sm flex items-center justify-center',
-                    title: 'text-xs',
-                    content: 'text-xs',
-                    icon: 'text-xs mb-2',
-                  },
-                });              }
+                showErrorToast(error);
+              }
         }
         };
     const handleUpdateCity = async(cityID) => {
@@ -271,20 +193,7 @@ const CityManagement = () => {
             showNotification('شهر با موفقیت به روزرسانی شد', 'success');
        }
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(error);
       }
 
     };
@@ -299,20 +208,7 @@ const CityManagement = () => {
       showNotification('شهر حذف شد', 'success');
      }
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     }
 
   }

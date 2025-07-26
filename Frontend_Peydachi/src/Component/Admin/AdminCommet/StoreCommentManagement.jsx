@@ -1,6 +1,6 @@
 import { FaCheckCircle, FaExclamationCircle, FaUser, FaTrashAlt, FaRegClock, FaRegCommentDots } from 'react-icons/fa';
-import React, { useState, useEffect } from 'react';
-import Swal from "sweetalert2";  
+import React, { useState } from 'react';
+import showErrorToast from '../../utils/showErrorToast';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
 const StoreCommentManagement= () => {
@@ -24,20 +24,7 @@ try {
 setSearchResults(prevResults => prevResults.filter(comment => comment.id !== commentId));
 showNotification('کامنت حذف شد', 'success');
 } catch (error) {
-    Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+    showErrorToast(error);
 } finally {
 setShowDeleteModal(false);
 setCommentToDelete(null);
@@ -49,20 +36,7 @@ const resetStoreRating = async () => {
         console.log(response);
         showNotification('امتیاز فروشگاه پاک شد', 'success');
     } catch (error) {
-        Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+        showErrorToast(error);
     } finally {
         setShowResetModal(false);
     }
@@ -79,20 +53,7 @@ const handleSearch = async() => {
     const data = response.data.filter(item => item.text.toLowerCase().includes(searchQuery.toLowerCase()));
     setSearchResults(data);
     } catch (error) {
-        Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+        showErrorToast(error);
     } finally {
     setIsLoading(false);
     }

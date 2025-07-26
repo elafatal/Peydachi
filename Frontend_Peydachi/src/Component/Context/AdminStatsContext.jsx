@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import Swal from "sweetalert2";  
+import showErrorToast from '../utils/showErrorToast'; 
 import axiosInstance from '../axiosInstance';
 import { useAuth } from './AuthContext';
 const AdminStatsContext = createContext();
@@ -27,20 +27,7 @@ export const AdminStatsProvider = ({ children }) => {
       setStats({ requests, pending, totalAlerts });
       }
     } catch (err) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(err);
     } finally {
       setLoading(false);
     }

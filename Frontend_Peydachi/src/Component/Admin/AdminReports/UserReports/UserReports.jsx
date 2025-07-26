@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import UserReportCard from './UserReportCard';
 import { useAuth } from '../../../Context/AuthContext';
 import Swal from "sweetalert2";  
+import showErrorToast from '../../../utils/showErrorToast';
 import axiosInstance from '../../../axiosInstance'; 
 import DeleteConfirmModal from './DeleteConfirmModal';
 const UserReports = () => {
@@ -47,20 +48,7 @@ const handleRemoveAllReviewed = async () => {
       });
     }
   } catch (error) {
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-      showConfirmButton: false,
-      timer: 2000,
-      toast: true,
-      customClass: {
-        popup: 'text-sm flex items-center justify-center',
-        title: 'text-xs',
-        content: 'text-xs',
-        icon: 'text-xs mb-2',
-      },
-    });
+    showErrorToast(error);
   }
 };
 const handleDeleteConfirm = async () => {
@@ -90,20 +78,7 @@ const handleDeleteConfirm = async () => {
 
     }
   } catch (err) {
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-      showConfirmButton: false,
-      timer: 2000,
-      toast: true,
-      customClass: {
-        popup: 'text-sm flex items-center justify-center',
-        title: 'text-xs',
-        content: 'text-xs',
-        icon: 'text-xs mb-2',
-      },
-    });
+    showErrorToast(err);
   }
 };
 
@@ -139,20 +114,7 @@ const handleCheckClick = async (reportId) => {
     }
 
   } catch (err) {
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-      showConfirmButton: false,
-      timer: 2000,
-      toast: true,
-      customClass: {
-        popup: 'text-sm flex items-center justify-center',
-        title: 'text-xs',
-        content: 'text-xs',
-        icon: 'text-xs mb-2',
-      },
-    });
+    showErrorToast(err);
   }
 };
 
@@ -170,20 +132,8 @@ useEffect(() => {
       setReports(response.data);
       setFiltered(response.data);
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });    } finally {
+      showErrorToast(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -204,20 +154,7 @@ useEffect(() => {
       setReports(res.data);
       setFiltered(res.data);
     } catch (err) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(err);
     } finally {
       setLoading(false);
     }

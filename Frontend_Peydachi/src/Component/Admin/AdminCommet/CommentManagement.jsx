@@ -1,7 +1,6 @@
-import {FaCheckCircle, FaExclamationCircle, FaSearch, FaUser,FaPhone , FaTag ,FaUserSlash , FaTrashAlt,FaRegClock, FaRegCommentDots} from 'react-icons/fa';
+import {FaCheckCircle, FaExclamationCircle, FaUser,FaPhone , FaTag ,FaUserSlash , FaTrashAlt,FaRegClock, FaRegCommentDots} from 'react-icons/fa';
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import Swal from "sweetalert2";  
+import showErrorToast from '../../utils/showErrorToast';
 import axiosInstance from '../../axiosInstance';
 const CommentManagement= () => {
 const [activeTab, setActiveTab] = useState('text');
@@ -18,7 +17,6 @@ show: false,
 message: '',
 type: 'success'
 });
-  const { storeId } = useParams();
 const searchByText = async () => {
     if (!searchQuery.trim()) return;
     setIsLoading(true);
@@ -29,20 +27,7 @@ const searchByText = async () => {
     const data = response.data.filter(item => item.text.toLowerCase().includes(searchQuery.toLowerCase()));
     setSearchResults(data);
     } catch (error) {
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-      showConfirmButton: false,
-      timer: 2000,
-      toast: true,
-      customClass: {
-        popup: 'text-sm flex items-center justify-center',
-        title: 'text-xs',
-        content: 'text-xs',
-        icon: 'text-xs mb-2',
-      },
-    });
+      showErrorToast(error);
     } finally {
     setIsLoading(false);
     }
@@ -58,20 +43,7 @@ const data = response.data.filter(user => user.username.toLowerCase().includes(s
 setSelectedUsers(data);
 setShowUserResults(true);
 } catch (error) {
-  Swal.fire({
-    position: "top-end",
-    icon: "error",
-    title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-    showConfirmButton: false,
-    timer: 2000,
-    toast: true,
-    customClass: {
-      popup: 'text-sm flex items-center justify-center',
-      title: 'text-xs',
-      content: 'text-xs',
-      icon: 'text-xs mb-2',
-    },
-  });
+  showErrorToast(error);
 } finally {
 setIsLoading(false);
 }
@@ -86,20 +58,7 @@ try {
     setSearchResults(response.data);
     setShowUserResults(false);
 } catch (error) {
-  Swal.fire({
-    position: "top-end",
-    icon: "error",
-    title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-    showConfirmButton: false,
-    timer: 2000,
-    toast: true,
-    customClass: {
-      popup: 'text-sm flex items-center justify-center',
-      title: 'text-xs',
-      content: 'text-xs',
-      icon: 'text-xs mb-2',
-    },
-  });
+  showErrorToast(error);
 } finally {
 setIsLoading(false);
 }
@@ -111,20 +70,7 @@ try {
 setSearchResults(prevResults => prevResults.filter(comment => comment.id !== commentId));
 showNotification('کامنت حذف شد', 'success');
 } catch (error) {
-  Swal.fire({
-    position: "top-end",
-    icon: "error",
-    title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-    showConfirmButton: false,
-    timer: 2000,
-    toast: true,
-    customClass: {
-      popup: 'text-sm flex items-center justify-center',
-      title: 'text-xs',
-      content: 'text-xs',
-      icon: 'text-xs mb-2',
-    },
-  });
+  showErrorToast(error);
 } finally {
 setShowDeleteModal(false);
 setCommentToDelete(null);

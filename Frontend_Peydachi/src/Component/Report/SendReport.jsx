@@ -1,6 +1,7 @@
 import axiosInstance from '../axiosInstance';
 import React, { useState, useEffect, useRef } from 'react';
 import Swal from "sweetalert2"; 
+import showErrorToast from '../utils/showErrorToast';
 import { FaCircleNotch, FaChevronDown, FaChevronRight,FaInfoCircle,FaTrash,FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 const SendReport= () => {
   const [title, setTitle] = useState('');
@@ -116,20 +117,7 @@ const SendReport= () => {
       setDrafts(updatedDrafts);
       localStorage.setItem('reportDrafts', JSON.stringify(updatedDrafts));
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     } finally {
       setIsSubmitting(false);
     }

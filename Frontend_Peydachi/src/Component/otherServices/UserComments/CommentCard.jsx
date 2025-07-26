@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import axiosInstance from '../../axiosInstance';
-import Swal from "sweetalert2";  
+import showErrorToast from '../../utils/showErrorToast';
 
 import { MdDelete } from "react-icons/md";
 const ConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
@@ -77,20 +77,7 @@ const CommentCard = ({ item, isStore, onDelete }) => {
           }
           
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+          showErrorToast(error);
         }
       };
       

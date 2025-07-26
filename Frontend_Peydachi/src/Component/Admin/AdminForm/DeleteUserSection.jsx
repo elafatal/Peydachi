@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axiosInstance from '../../axiosInstance';
-import Swal from "sweetalert2";  
+import Swal from "sweetalert2"; 
+import showErrorToast from '../../utils/showErrorToast'; 
 const DeleteUserSection = () => {
   const [searchUsername, setSearchUsername] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -16,20 +17,7 @@ const DeleteUserSection = () => {
         console.log(response);
        setSearchResults(response.data)
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(error);
       }
   };
 
@@ -59,20 +47,7 @@ const DeleteUserSection = () => {
         }
 
     } catch (err) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(err);
     }
   };
   const handlePromote = async () => {
@@ -102,20 +77,7 @@ const DeleteUserSection = () => {
         }
 
     } catch (err) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(err);
     }
   };
   

@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import Swal from "sweetalert2";  
+import showErrorToast from '../../utils/showErrorToast';
 import { FaPlus, FaTimes } from 'react-icons/fa';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import axiosInstance from '../../axiosInstance';
@@ -34,20 +34,7 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
             console.log(response.data);
             setSearchResult(response.data)
           } catch (error) {
-            Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-              showConfirmButton: false,
-              timer: 2000,
-              toast: true,
-              customClass: {
-                popup: 'w-60 h-18 text-sm flex items-center justify-center',
-                title: 'text-xs',
-                content: 'text-xs',
-                icon: 'text-xs mb-2',
-              },
-            });
+            showErrorToast(error);
           }
         }
      }

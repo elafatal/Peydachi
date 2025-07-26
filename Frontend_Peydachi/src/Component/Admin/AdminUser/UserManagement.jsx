@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../axiosInstance';
-import Swal from "sweetalert2"; 
+import Swal from "sweetalert2";
+import showErrorToast from '../../utils/showErrorToast'; 
 import { FaStoreAltSlash } from "react-icons/fa";
 import { FaSearch,FaChevronDown,FaTrash } from "react-icons/fa";
 import { FaUserCheck ,FaUserSlash  } from "react-icons/fa6";
@@ -42,20 +43,7 @@ const UserManagement = () => {
             await handleSearch();
           }
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+          showErrorToast(error);
         }
         break;
       case 'unban':
@@ -66,20 +54,7 @@ const UserManagement = () => {
             await handleSearch();
           }
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+          showErrorToast(error);
         }
         break;
       case 'promote':
@@ -90,20 +65,8 @@ const UserManagement = () => {
             await handleSearch();
           }
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });        }
+          showErrorToast(error);
+        }
         break;
       case 'demote':
         try {
@@ -113,20 +76,8 @@ const UserManagement = () => {
             await handleSearch();
           }
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });        }
+          showErrorToast(error);
+        }
         break;
       case 'delete':
         try {
@@ -137,27 +88,15 @@ const UserManagement = () => {
             await handleSearch();
           }
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });          }
+          showErrorToast(error);
+        }
           break;   
       default:
         break;
     }
     
   }
-  // Filter options
+
   const filterOptions = [
   { id: "username", label: "جستجو با نام کاربری" },
   { id: "phone_number", label: "جستجو با شماره‌ تماس" },
@@ -170,7 +109,7 @@ const UserManagement = () => {
   { id: "banned", label: "کاربران مسدود" },
   { id: "sellers", label: "فروشنده‌ها" },
   ];
-  // Handle search
+
   const handleSearch = async() => {
     setIsLoading(true);
     let filteredUsers = [...users];
@@ -181,20 +120,8 @@ const UserManagement = () => {
         });
         filteredUsers = response.data;
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });      }
+        showErrorToast(error);
+        }
     }else if (searchTerm) {
       if (searchFilter === "username") {
        if (statusFilter === 'sellers') {
@@ -203,20 +130,7 @@ const UserManagement = () => {
             console.log(response);
             filteredUsers=response.data
           } catch (error) {
-            Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-              showConfirmButton: false,
-              timer: 2000,
-              toast: true,
-              customClass: {
-                popup: 'text-sm flex items-center justify-center',
-                title: 'text-xs',
-                content: 'text-xs',
-                icon: 'text-xs mb-2',
-              },
-            });
+            showErrorToast(error);
           }
        }else{
           try {
@@ -224,20 +138,7 @@ const UserManagement = () => {
             console.log(response);
             filteredUsers=response.data
           } catch (error) {
-            Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-              showConfirmButton: false,
-              timer: 2000,
-              toast: true,
-              customClass: {
-                popup: 'text-sm flex items-center justify-center',
-                title: 'text-xs',
-                content: 'text-xs',
-                icon: 'text-xs mb-2',
-              },
-            });
+            showErrorToast(error);
           }
        }
 
@@ -247,20 +148,7 @@ const UserManagement = () => {
             console.log(response);
             filteredUsers=[response.data]
           } catch (error) {
-            Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-              showConfirmButton: false,
-              timer: 2000,
-              toast: true,
-              customClass: {
-                popup: 'text-sm flex items-center justify-center',
-                title: 'text-xs',
-                content: 'text-xs',
-                icon: 'text-xs mb-2',
-              },
-            });
+            showErrorToast(error);
           }
       } else if (searchFilter === "id") {
           try {
@@ -268,20 +156,8 @@ const UserManagement = () => {
             console.log(response);
             filteredUsers=[response.data]
           } catch (error) {
-            Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-              showConfirmButton: false,
-              timer: 2000,
-              toast: true,
-              customClass: {
-                popup: 'text-sm flex items-center justify-center',
-                title: 'text-xs',
-                content: 'text-xs',
-                icon: 'text-xs mb-2',
-              },
-            });          }
+            showErrorToast(error);
+          }
       }
     }
 

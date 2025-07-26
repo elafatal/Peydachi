@@ -4,7 +4,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosNotifications } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from "framer-motion";
-import { isLoggedIn } from '../auth';
+import { isLoggedIn } from '../utils/auth';
 const Notifications=()=>{
     const navigate = useNavigate();
     const [unreadNotif , setUnreadNotif] = useState({})

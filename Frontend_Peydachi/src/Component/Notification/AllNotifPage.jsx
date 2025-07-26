@@ -8,7 +8,7 @@ import {
     FaSearch,
     FaTimes,
   } from 'react-icons/fa';
-  import { isLoggedIn } from '../auth';
+  import { isLoggedIn } from '../utils/auth';
   import { useLocation } from 'react-router-dom';
   import { FaRegFaceRollingEyes } from "react-icons/fa6";
   import axiosInstance from '../axiosInstance';

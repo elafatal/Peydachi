@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Swal from "sweetalert2";  
+import Swal from "sweetalert2"; 
+import showErrorToast from '../../../utils/showErrorToast'; 
 import { useAuth } from '../../../Context/AuthContext';
 import { useAdminStats } from '../../../Context/AdminStatsContext';
 import axiosInstance from '../../../axiosInstance';
@@ -65,20 +66,8 @@ const StoreRequest = () => {
   
         setStoreRequests(response.data);
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });      } finally {
+        showErrorToast(error);
+      } finally {
         setIsLoading(false);
       }
     };
@@ -99,20 +88,7 @@ const StoreRequest = () => {
         setCities(response.data);
         console.log(response);
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(error);
       }
 
       try {
@@ -126,20 +102,7 @@ const StoreRequest = () => {
         console.log(response);
         setIsLoading(false)
       } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(error);
       } 
     };
   
@@ -214,20 +177,7 @@ const StoreRequest = () => {
         });
       }
     } catch (err) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(err);
     }
   };
   
@@ -257,20 +207,7 @@ const StoreRequest = () => {
         await refreshStats();
       }
     } catch (err) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(err);
     }
   };
   
@@ -301,20 +238,7 @@ const StoreRequest = () => {
         });
       }
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     }
   };
   

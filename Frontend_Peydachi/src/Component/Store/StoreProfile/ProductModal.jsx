@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { FaTimes, FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import axiosInstance from "../../axiosInstance";
+import showErrorToast from '../../utils/showErrorToast';
 import * as echarts from 'echarts';
-import Swal from "sweetalert2";  
-
 const ProductDetailModal = ({ productId, isOpen, onClose }) => {
   const [product, setProduct] = useState(null);
   const [comments, setComments] = useState([]);
@@ -65,20 +64,7 @@ const ProductDetailModal = ({ productId, isOpen, onClose }) => {
           const commentRes = await axiosInstance.post("/product_comment/get_product_comments", { product_id: productId });
           commentData = commentRes.data || [];
         } catch (commentErr) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: commentErr.response?.data?.message || commentErr.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'w-60 h-18 text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+          showErrorToast(commentErr);
           commentData = [];
         }
     
@@ -89,20 +75,7 @@ const ProductDetailModal = ({ productId, isOpen, onClose }) => {
         setDistribution(ratingRes.data || []);
         
       } catch (err) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(err);
       } finally {
         setLoading(false);
       }

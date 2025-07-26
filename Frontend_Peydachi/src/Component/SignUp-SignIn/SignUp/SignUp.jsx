@@ -2,7 +2,7 @@ import React, { useState,useRef,useEffect } from 'react';
 import { motion } from "framer-motion";
 import Swal from "sweetalert2"; 
 import axiosInstance from '../../axiosInstance';
-
+import showErrorToast from '../../utils/showErrorToast';
 const SignUp= ({showComponent,setshowComponent, setRememberMe,rememberMe,setPhoneVerificationData}) => {
 
   const [usernameError, setUsernameError] = useState('');
@@ -103,20 +103,7 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
       }
 
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     }
   };
 

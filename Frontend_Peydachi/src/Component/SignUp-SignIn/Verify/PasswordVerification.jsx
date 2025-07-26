@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Cookies from 'js-cookie';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../Context/AuthContext';
+import showErrorToast from '../../utils/showErrorToast';
 const OTPVerification = ({ showComponent, setshowComponent }) => {
   const handleUsernameSubmit = async (e) => {
     e.preventDefault();
@@ -25,18 +26,7 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
 
       setStep(2); 
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        html: `<div class="text-justify">${error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است"}</div>`,
-        showConfirmButton: false,
-        timer: 4000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm px-4 py-3 max-w-md w-full',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
       
       
     }
@@ -149,19 +139,7 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
                 }
         }
       } catch (error) {
-        console.log('Error during verification', error);
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          html: `<div class="text-justify">${error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است"}</div>`,
-          showConfirmButton: false,
-          timer: 4000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm px-4 py-3 max-w-md w-full',
-            icon: 'text-xs mb-2',
-          },
-        });
+        showErrorToast(error);
         
       }
    

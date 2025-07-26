@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { FaPlus,FaTrashAlt,FaSearch,FaFilter,FaChevronDown,FaUser,FaBellSlash,FaRegClock,FaExclamationTriangle,FaCheckCircle, FaExclamationCircle} from 'react-icons/fa';
 import SendNotificationModal from './SendNotificationModal';
+import showErrorToast from '../../utils/showErrorToast';
 import Swal from "sweetalert2";
 const AdminNotification = () => {
   const { role } = useAuth(); 
@@ -34,20 +35,7 @@ const AdminNotification = () => {
           setFilteredNotifications(response.data);
           setIsLoading(false);
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+          showErrorToast(error);
         }  
     };
   
@@ -73,20 +61,8 @@ const AdminNotification = () => {
             } catch (error) {
               if (error.response && error.response.status === 404) {
                 filtered = [];
-              }       Swal.fire({
-                position: "top-end",
-                icon: "error",
-                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                showConfirmButton: false,
-                timer: 2000,
-                toast: true,
-                customClass: {
-                  popup: 'text-sm flex items-center justify-center',
-                  title: 'text-xs',
-                  content: 'text-xs',
-                  icon: 'text-xs mb-2',
-                },
-              });
+              }
+              showErrorToast(error);
             }  
         }else{
             try {
@@ -96,20 +72,7 @@ const AdminNotification = () => {
               if (error.response && error.response.status === 404) {
                 filtered = [];
               }       
-              Swal.fire({
-                position: "top-end",
-                icon: "error",
-                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                showConfirmButton: false,
-                timer: 2000,
-                toast: true,
-                customClass: {
-                  popup: 'text-sm flex items-center justify-center',
-                  title: 'text-xs',
-                  content: 'text-xs',
-                  icon: 'text-xs mb-2',
-                },
-              });
+              showErrorToast(error);
             }  
         }
   
@@ -121,20 +84,8 @@ const AdminNotification = () => {
             } catch (error) {
               if (error.response && error.response.status === 404) {
                 filtered = [];
-              }       Swal.fire({
-                position: "top-end",
-                icon: "error",
-                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                showConfirmButton: false,
-                timer: 2000,
-                toast: true,
-                customClass: {
-                  popup: 'text-sm flex items-center justify-center',
-                  title: 'text-xs',
-                  content: 'text-xs',
-                  icon: 'text-xs mb-2',
-                },
-              });
+              }      
+              showErrorToast(error);
             }  
           }else{
               try {
@@ -144,20 +95,7 @@ const AdminNotification = () => {
                 if (error.response && error.response.status === 404) {
                   filtered = [];
                 }      
-                Swal.fire({
-                  position: "top-end",
-                  icon: "error",
-                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                  showConfirmButton: false,
-                  timer: 2000,
-                  toast: true,
-                  customClass: {
-                    popup: 'text-sm flex items-center justify-center',
-                    title: 'text-xs',
-                    content: 'text-xs',
-                    icon: 'text-xs mb-2',
-                  },
-                });
+                showErrorToast(error);
  
             }  
           }
@@ -170,20 +108,7 @@ const AdminNotification = () => {
                 if (error.response && error.response.status === 404) {
                   filtered = [];
                 }
-                Swal.fire({
-                  position: "top-end",
-                  icon: "error",
-                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                  showConfirmButton: false,
-                  timer: 2000,
-                  toast: true,
-                  customClass: {
-                    popup: 'text-sm flex items-center justify-center',
-                    title: 'text-xs',
-                    content: 'text-xs',
-                    icon: 'text-xs mb-2',
-                  },
-                });
+                showErrorToast(error);
               }  
           }else{
             try {
@@ -193,20 +118,7 @@ const AdminNotification = () => {
               if (error.response && error.response.status === 404) {
                 filtered = [];
               } 
-              Swal.fire({
-                position: "top-end",
-                icon: "error",
-                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                showConfirmButton: false,
-                timer: 2000,
-                toast: true,
-                customClass: {
-                  popup: 'text-sm flex items-center justify-center',
-                  title: 'text-xs',
-                  content: 'text-xs',
-                  icon: 'text-xs mb-2',
-                },
-              });
+              showErrorToast(error);
             }  
           }
         }
@@ -227,20 +139,7 @@ const AdminNotification = () => {
           setIsUserDropdownOpen(true);
           setUserSuggestions(response.data);
         } catch (error) {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            customClass: {
-              popup: 'text-sm flex items-center justify-center',
-              title: 'text-xs',
-              content: 'text-xs',
-              icon: 'text-xs mb-2',
-            },
-          });
+          showErrorToast(error);
         }
       } else {
         setSelectedUser(null);
@@ -273,20 +172,8 @@ const AdminNotification = () => {
       } catch (error) {
         if (error.response && error.response.status === 404) {
           filtered2 = [];
-        }       Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
+        } 
+        showErrorToast(error);
       }  
     }
   setFilteredNotifications(filtered2);
@@ -298,20 +185,7 @@ const AdminNotification = () => {
       const response = await axiosInstance.post('/admin/user/search_users', {username : userSearchQuery});
       setSearchResult(response.data)
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     }
   }
   const handleDeleteNotification = async(id) => {
@@ -325,20 +199,7 @@ const AdminNotification = () => {
       }
       
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     }
   };
 
@@ -358,20 +219,7 @@ const AdminNotification = () => {
       }
       
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     }
 
   };
@@ -412,20 +260,7 @@ const AdminNotification = () => {
       setUserSearchQuery('');
     }
     } catch (error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs',
-          icon: 'text-xs mb-2',
-        },
-      });
+      showErrorToast(error);
     }
   };
 

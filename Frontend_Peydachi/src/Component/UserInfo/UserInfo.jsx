@@ -6,6 +6,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useAuth } from '../Context/AuthContext';
 import { FaRegEdit } from "react-icons/fa";
 import Swal from "sweetalert2";  
+import showErrorToast from '../utils/showErrorToast';
 import UnauthorizedPage from '../Error/UnauthorizedPage';
 const UserInfo = () => {
   const navigate = useNavigate();
@@ -61,20 +62,7 @@ const UserInfo = () => {
         
         
       } catch (error) {
-              Swal.fire({
-                position: "top-end",
-                icon: "error",
-                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                showConfirmButton: false,
-                timer: 2000,
-                toast: true,
-                customClass: {
-                  popup: 'w-60 h-18 text-sm flex items-center justify-center',
-                  title: 'text-xs',
-                  content: 'text-xs',
-                  icon: 'text-xs mb-2',
-                },
-              });
+        showErrorToast(error);
       }
     };
     
@@ -101,7 +89,7 @@ const UserInfo = () => {
           }
         }
       } catch (error) {
-        console.log(error);
+        showErrorToast(error);
       }
     };
     getStoreInfo();
@@ -128,25 +116,7 @@ const UserInfo = () => {
          
         }
       } catch (error) {
-        if (error.response?.status === 422) {
-          console.error('خطا در اعتبارسنجی نام کاربری:', error.response.data);
-        } else {
-          console.error('خطای دیگر:', error);
-        }
-              // Swal.fire({
-              //   position: "top-end",
-              //   icon: "error",
-              //   title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-              //   showConfirmButton: false,
-              //   timer: 2000,
-              //   toast: true,
-              //   customClass: {
-              //     popup: 'w-60 h-18 text-sm flex items-center justify-center',
-              //     title: 'text-xs',
-              //     content: 'text-xs',
-              //     icon: 'text-xs mb-2',
-              //   },
-              // });
+        showErrorToast(error);
         setIsCheckingUsername(false);
       }
     };
@@ -231,24 +201,7 @@ const handleGoSelfStore =()=>{
           }
 
       } catch (error) {
-        if (error.status === 406) {
-         Swal.fire({
-                 position: "top-end",
-                 icon: "error",
-                 title: " شماره قبلا ثبت‌نام شده‌است",
-                 showConfirmButton: false,
-                 timer: 1500,
-                 toast: true,
-                 customClass: {
-                   popup: 'w-3 h-15 text-xs flex items-center justify-center',
-                   title: 'text-xs', 
-                   content: 'text-xs', 
-                   icon : 'text-xs mb-2'
-                 }
-             });
-        }
-        console.log('Error response:', error.response);
-        console.log('Error details:', error.response?.data);
+        showErrorToast(error);
       }
    
   };
@@ -262,25 +215,7 @@ const handleGoSelfStore =()=>{
       });
       console.log('Store deleted successfully');
     } catch (error) {
-      if (error.response?.status === 401) {
-        console.error('Authentication failed. Please login again.');
-      } else {
-        console.log('An error occurred:', error.message);
-      }
-            Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-              showConfirmButton: false,
-              timer: 2000,
-              toast: true,
-              customClass: {
-                popup: 'w-60 h-18 text-sm flex items-center justify-center',
-                title: 'text-xs',
-                content: 'text-xs',
-                icon: 'text-xs mb-2',
-              },
-            });
+      showErrorToast(error);
     }
   };
 
