@@ -23,7 +23,7 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
         }
       });
 
-      setStep(2); // رفتن به مرحله‌ی کد تایید
+      setStep(2); 
     } catch (error) {
       console.error('Error sending verification code:', error);
       Swal.fire('خطا', 'ارسال کد تایید با مشکل مواجه شد', 'error');
@@ -78,7 +78,7 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
   const { login } = useAuth()
   const inputsRef = useRef([]);
   const [verificationCode, setVerificationCode] = useState('');
-  const [step, setStep] = useState(1); // مرحله 1 = وارد کردن یوزرنیم، مرحله 2 = کد تایید
+  const [step, setStep] = useState(1); 
   const [username, setUsername] = useState('');
   const handleKeyDown = (e, index) => {
     const input = e.target;
@@ -127,8 +127,6 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
     updateVerificationCode();
     inputsRef.current[inputsRef.current.length - 1].focus();
   };
-
-  // Function to update the verification code in the state
   const updateVerificationCode = () => {
     const code = inputsRef.current.map(input => input.value).join('');
     setVerificationCode(code);
@@ -146,9 +144,6 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
             'Accept': 'application/json',
           },
         });
-        console.log(response);
-
-        // Handle success
         if (response.status === 200) {
             console.log("yesssssss");
 
@@ -289,7 +284,7 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
         ارسال دوباره
       </a>
     </div>
-    <div onClick={()=>setshowComponent("sign")} className="font-medium pt-2 border-b-2 text-blue-800 text-xs hover:text-blue-600" href="#0">
+    <div onClick={()=>setshowComponent("sign")} className="font-medium pt-2 text-blue-800 text-xs hover:text-blue-600" href="#0">
        بازگشت
       </div>
 
