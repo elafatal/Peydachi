@@ -173,3 +173,15 @@ PHONE_NUMBER_CAN_NOT_BE_EMPTY_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
     detail="Phone number can not be empty."
     )
+
+
+USERNAME_MUST_BE_ENGLISH = HTTPException(
+    status_code=status.HTTP_406_NOT_ACCEPTABLE,
+    detail="Username must be in English."
+    )
+
+
+USERNAME_MUST_BE_SHORTER_THAN_40_CHARACTERS_ERROR = HTTPException(
+    status_code=status.HTTP_406_NOT_ACCEPTABLE,
+    detail="Username must be shorter than 40 characters."
+    )
