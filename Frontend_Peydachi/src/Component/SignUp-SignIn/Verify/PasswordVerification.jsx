@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../Context/AuthContext';
 import showErrorToast from '../../utils/showErrorToast';
-const OTPVerification = ({ showComponent, setshowComponent }) => {
+const OTPVerification = () => {
   const handleUsernameSubmit = async (e) => {
     e.preventDefault();
     if (!username.trim()) {
@@ -187,7 +187,7 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
             قبلاً ثبت‌نام کرده‌اید؟{" "}
             <span
               className="text-blue-500 hover:underline cursor-pointer"
-              onClick={() => setshowComponent("Signin")}
+              onClick={() => navigate('/login/signin')}
             >
               بازگشت به ورود
             </span>
@@ -241,7 +241,7 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
         ارسال دوباره
       </a>
     </div>
-    <div onClick={()=>setshowComponent("sign")} className="font-medium pt-2 text-blue-800 text-xs hover:text-blue-600" href="#0">
+    <div onClick={()=>navigate('/login/signin')} className="font-medium pt-2 text-blue-800 text-xs hover:text-blue-600" href="#0">
        بازگشت
       </div>
 

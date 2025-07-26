@@ -6,10 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../Context/AuthContext';
 import showErrorToast from '../../utils/showErrorToast';
-const SignIn= ({showComponent,setshowComponent, setRememberMe,rememberMe, setusername , username }) => {
+import { useLogin } from '../../Context/LoginContext';
+const SignIn= () => {
   const navigate = useNavigate();
   const { login } = useAuth()
-  
+  const { rememberMe, setRememberMe, username, setusername } = useLogin();
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   
@@ -125,7 +126,7 @@ const SignIn= ({showComponent,setshowComponent, setRememberMe,rememberMe, setuse
           />
           <label htmlFor="remember" className="mr-2 text-[13px] text-gray-600 cursor-pointer">مرا به خاطر بسپار</label></div>
           <div className="cursor-pointer text-xs text-gray-500" onClick={() => {
-            setshowComponent("passVerify");
+            navigate('/login/forgot-password');
           }}>
             فراموشی رمز عبور
           </div>
@@ -142,7 +143,7 @@ const SignIn= ({showComponent,setshowComponent, setRememberMe,rememberMe, setuse
       
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
-          حساب کاربری ندارید؟ <a className="inline text-blue-500 hover:underline cursor-pointer" onClick={() => setshowComponent("Signup")}>ثبت‌نام</a>
+          حساب کاربری ندارید؟ <a className="inline text-blue-500 hover:underline cursor-pointer" onClick={() => navigate('/login/signup')}>ثبت‌نام</a>
         </p>
       </div>
       

@@ -1,14 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react';import { motion } from "framer-motion";
 import Cookies from 'js-cookie';
 import Swal from "sweetalert2"; 
+import { useLogin } from '../../Context/LoginContext';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
 import { useAuth } from '../../Context/AuthContext';
 import showErrorToast from '../../utils/showErrorToast';
-const PhoneVerification= ({ showComponent, setshowComponent,rememberMe, verificationData }) => {
+const PhoneVerification= () => {
   const { login } = useAuth()
-  const { username, phone_number, password } = verificationData || {};
-
+  const { signupData, rememberMe } = useLogin();
+  const { username, phone_number, password } = signupData || {};
   const navigate = useNavigate();
   const isValidUsername = (username) => {
     const regex = /^[a-zA-Z0-9_.-]+$/;
@@ -198,7 +199,7 @@ const PhoneVerification= ({ showComponent, setshowComponent,rememberMe, verifica
         ارسال دوباره
       </a>
     </div>
-    <div onClick={()=>setshowComponent("sign")} className="font-medium pt-2 border-b-2 text-blue-800 text-xs hover:text-blue-600" href="#0">
+    <div onClick={()=>navigate('/login/signup')} className="font-medium pt-2 border-b-2 text-blue-800 text-xs hover:text-blue-600" href="#0">
        بازگشت
       </div>
 

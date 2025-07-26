@@ -3,8 +3,13 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2"; 
 import axiosInstance from '../../axiosInstance';
 import showErrorToast from '../../utils/showErrorToast';
-const SignUp= ({showComponent,setshowComponent, setRememberMe,rememberMe,setPhoneVerificationData}) => {
+import { useLogin } from '../../Context/LoginContext';
+import { useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
+const SignUp= () => {
+    const navigate = useNavigate();
+  const { setRememberMe, rememberMe, setSignupData } = useLogin();
   const [usernameError, setUsernameError] = useState('');
 const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
   const [username, setUsername] = useState('');
@@ -47,7 +52,6 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
           setUsernameError("این نام کاربری قبلاً ثبت شده است.");
         }
       } catch (err) {
-        console.error(err);
         setUsernameError("خطا در ارتباط با سرور.");
       }
     }, 800); 
@@ -90,6 +94,7 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
           icon: 'text-xs mb-2',
         },
       });
+      return;
     }
 
     try {
@@ -98,8 +103,8 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
       });
 
       if (response.status === 200) {
-        setPhoneVerificationData({ username, phone_number, password });
-        setshowComponent('phoneVerify');
+        setSignupData({ username, phone_number, password });
+        navigate('/login/phone-verification');
       }
 
     } catch (error) {
@@ -168,10 +173,13 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
               placeholder="پسورد"
               required
             />
-            <i 
-              className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer`}
+            <span
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
               onClick={() => setShowPassword(!showPassword)}
-            ></i>
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+
           </div>
         </div>
         <div className="mb-6">
@@ -185,10 +193,12 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
               placeholder="تایید پسورد"
               required
             />
-            <i 
-              className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer`}
+            <span 
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
               onClick={() => setShowPassword(!showPassword)}
-            ></i>
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
         </div>
         <div className="flex items-center mb-6">
@@ -212,7 +222,11 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
       
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
-          حساب کاربری دارید؟ <a href="#" className="inline text-blue-500 hover:underline cursor-pointer" onClick={() => setshowComponent("Signin")}>ورود</a>
+          حساب کاربری دارید؟ 
+          <span className="inline text-blue-500 hover:underline cursor-pointer" onClick={() => navigate('/login/signin')}>
+            ورود
+          </span>
+
         </p>
       </div>
       

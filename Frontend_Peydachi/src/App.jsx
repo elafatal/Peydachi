@@ -10,7 +10,7 @@ import Footer from './Component/Footer/footer';
 import ErrorPage from './Component/Error/Error';
 import UserInfo from './Component/UserInfo/UserInfo';
 import { AuthProvider } from './Component/Context/AuthContext';
-import UnauthorizedPage from './Component/Error/UnauthorizedPage';
+import { LoginProvider } from './Component/Context/LoginContext';
 import AdminPage from './Component/Admin/Admin';
 import SearchStore from './Component/otherServices/Store/SearchStore/SearchStore';
 import AddStore from './Component/otherServices/Store/AddStoreRequest/AddStoreRequest';
@@ -37,6 +37,10 @@ import UserReports from './Component/Admin/AdminReports/UserReports/UserReports'
 import CommentManagement from './Component/Admin/AdminCommet/CommentManagement';
 import SelfStore from './Component/Store/SelfStore';
 import CenteredVideo from './Component/Criticism/Criticism';
+import SignIn from './Component/SignUp-SignIn/SignIn/SignIn';
+import SignUp from './Component/SignUp-SignIn/SignUp/SignUp';
+import OTPVerification from './Component/SignUp-SignIn/Verify/PasswordVerification';
+import PhoneVerification from './Component/SignUp-SignIn/Verify/PhoneVerification';
 
 
 function App() {
@@ -67,6 +71,17 @@ function App() {
             <Route path="/storeComments/:storeID" element={<StoreFullComment/>} />
             <Route path="/Report" element={<SendReport/>} />
             <Route path="/Criticism" element={<CenteredVideo/>} />
+            <Route path="/login" element={
+              <LoginProvider>
+                <Login />
+              </LoginProvider>
+            }>
+              <Route index element={<Navigate to="signin" replace />} />
+              <Route path="signin" element={<SignIn />} />
+              <Route path="signup" element={<SignUp />} />
+              <Route path="phone-verification" element={<PhoneVerification />} />
+              <Route path="forgot-password" element={<OTPVerification />} />
+            </Route>
             <Route path="/admin" element={<AdminPage />}>
               <Route index element={<DashboardOverview/>} />
               <Route path="stores" element={<StoreManagement/>} />

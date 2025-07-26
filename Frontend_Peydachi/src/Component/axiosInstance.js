@@ -22,7 +22,6 @@ axiosInstance.interceptors.request.use(
       const parsed = JSON.parse(rawToken);
       token = parsed?.access_token || null;
     } catch (e) {
-      // اگر کوکی رشته‌ای بود و قابل JSON.parse نبود، خودش همون توکن هست
       token = Cookies.get("auth_token");
     }
 
@@ -90,11 +89,18 @@ axiosInstance.interceptors.response.use(
 
 
 function forceLogout() {
+  const currentPath = window.location.pathname;
+  const isAuthPage = currentPath.includes('/login') || currentPath.includes('/signup');
+  if (!isAuthPage) {
+    window.location.href = '/login';
+  }
+
   Cookies.remove('auth_token');
   Cookies.remove('refresh_token');
   localStorage.removeItem('user'); 
   localStorage.removeItem('role');
-  window.location.href = '/login';}
+}
+
 
 
 export default axiosInstance;
