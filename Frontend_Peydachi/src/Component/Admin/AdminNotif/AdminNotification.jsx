@@ -30,7 +30,7 @@ const AdminNotification = () => {
   useEffect(() => {
     const fetchLastNotifSent = async () => {
         try {
-          const response = await axiosInstance.post('/admin/notification/get_last_n_sent_notifications_of_admin?n=12');
+          const response = await axiosInstance.post('/admin/notification/get_last_n_sent_notifications?n=12');
           setNotifications(response.data);
           setFilteredNotifications(response.data);
           setIsLoading(false);
@@ -121,7 +121,7 @@ const AdminNotification = () => {
               }  
           }else{
             try {
-              const response = await axiosInstance.post('/admin/notification/get_last_n_sent_notifications_of_admin?n=12');
+              const response = await axiosInstance.post('/admin/notification/get_last_n_sent_notifications?n=12');
               filtered=response.data
             } catch (error) {
               if (error.response && error.response.status === 404) {
