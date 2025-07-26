@@ -1,10 +1,16 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
-import Swal from 'sweetalert2';
+import showErrorToast from '../utils/showErrorToast';
+
 import AddProduct from '../Store/AddProduct';
 
 // Mock dependencies
+jest.mock('../utils/showErrorToast', () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
+
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
 }));
@@ -193,10 +199,11 @@ describe('AddProduct Component - Tests', () => {
 
   test('handles API submission error', async () => {
     mockAxiosPost.mockRejectedValue(new Error('API error'));
-    global.alert = jest.fn();
+  
     await act(async () => {
       render(<AddProduct />);
     });
+  
     await act(async () => {
       fireEvent.change(screen.getByLabelText(/نام محصول/), { target: { value: 'Test Product' } });
       fireEvent.change(screen.getByLabelText(/توضیحات/), { target: { value: 'Test description' } });
@@ -204,11 +211,13 @@ describe('AddProduct Component - Tests', () => {
       fireEvent.change(screen.getByTestId('file-input'), { target: { files: [mockFile] } });
       fireEvent.click(screen.getByText('اضافه کردن محصول'));
     });
+  
     await waitFor(() => {
       expect(mockAxiosPost).toHaveBeenCalled();
-      expect(global.alert).toHaveBeenCalledWith('خطا در ارسال محصول');
+      expect(showErrorToast).toHaveBeenCalled();
     });
   });
+  
 
 
   test('navigates back when return button is clicked', async () => {

@@ -54,12 +54,19 @@ describe('UserManagement Component - Tests', () => {
     await act(async () => {
       render(<UserManagement />);
     });
+  
+    // تغییر مقدار searchTerm برای نمایش دکمه پاک کردن
+    fireEvent.change(screen.getByPlaceholderText('Search by username...'), { target: { value: 'john' } });
+  
+    // حالا که مقدار هست، باید "پاک کردن" ظاهر بشه
+    expect(await screen.findByText('پاک کردن')).toBeInTheDocument();
+    
     expect(screen.getByRole('button', { name: /جستجو با نام کاربری/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /همه/i })).toBeInTheDocument();
     expect(screen.getByText('جستجو')).toBeInTheDocument();
-    expect(screen.getByText('پاک کردن')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Search by username...')).toBeInTheDocument();
   });
+  
 
 
   test('filters users by banned status', async () => {
@@ -153,7 +160,16 @@ describe('UserManagement Component - Tests', () => {
       expect(axiosInstance.post).toHaveBeenCalledWith('/admin/user/promote_user_to_seller', { user_id: 3 });
     });
   });
-
+  test('shows clear button when filter is active', async () => {
+    await act(async () => {
+      render(<UserManagement />);
+    });
+  
+    fireEvent.change(screen.getByPlaceholderText('Search by username...'), { target: { value: 'test' } });
+  
+    expect(await screen.findByText('پاک کردن')).toBeInTheDocument();
+  });
+  
   test('deletes a user and shows toast', async () => {
     axiosInstance.post.mockResolvedValueOnce({ data: mockUsers });
     axiosInstance.delete.mockResolvedValueOnce({ status: 200 });

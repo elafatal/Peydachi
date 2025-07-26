@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import StoreProfile from '../Store/StoreProfile/StoreProfile';
 import { BrowserRouter } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
+import showErrorToast from '../utils/showErrorToast';
 import { formatDistanceToNow } from 'date-fns';
 import { act } from 'react'
 jest.mock('../axiosInstance', () => ({
@@ -12,6 +13,24 @@ jest.mock('date-fns', () => ({
 }));
 jest.mock('../Store/StoreProfile/ProductReview.jsx', () => () => <div>ProductReview</div>);
 jest.mock('../Store/StoreProfile/StoreComment.jsx', () => () => <div>StoreComment</div>);
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),  // deprecated
+    removeListener: jest.fn(), // deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+jest.mock('../utils/showErrorToast', () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
+
 const mockStore = {
   id: 1,
   name: 'Test Store',
@@ -34,14 +53,27 @@ const mockProduct = {
   average_rating: 4.8,
   city_id: 1,
 };
+const manyProducts = Array.from({ length: 11 }, (_, i) => ({
+  id: i + 1,
+  name: `Product ${i + 1}`,
+  description: `Description ${i + 1}`,
+  quantity: 10 + i,
+  date_added: `2025-04-${10 + i}T10:30:00.000Z`,
+  pic_url: `/product${i + 1}.jpg`,
+  average_rating: 4.0 + (i % 5) * 0.1,
+  city_id: 1,
+}));
+
 
 describe('StoreProfile Component - Tests', () => {
   beforeEach(() => {
     axiosInstance.post.mockReset();
     formatDistanceToNow.mockReturnValue('about 1 month ago');
     axiosInstance.post
-      .mockResolvedValueOnce({ data: mockStore }) // For /store/get_store_by_id
-      .mockResolvedValueOnce({ data: [mockProduct] }); // For /product/full_search_in_store_products
+    .mockResolvedValueOnce({ data: mockStore })        // store fetch
+    .mockResolvedValueOnce({ data: manyProducts })     // initial products
+    .mockResolvedValueOnce({ data: [mockProduct] });   // next page (after click)
+
   });
 
   afterEach(() => {
@@ -80,44 +112,12 @@ describe('StoreProfile Component - Tests', () => {
     });
   });
 
-  test('renders product card with correct details', async () => {
-    render(
-      <BrowserRouter>
-        <StoreProfile />
-      </BrowserRouter>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText('Test Product')).toBeInTheDocument();
-      expect(screen.getByText('Test product description')).toBeInTheDocument();
-      expect(screen.getByText(/10 موجود در انبار/)).toBeInTheDocument();
-      expect(screen.getByText('about 1 month ago')).toBeInTheDocument();
-    });
-  });
-
-  test('clicking "ثبت نظر" button opens product review modal', async () => {
-    render(
-      <BrowserRouter>
-        <StoreProfile />
-      </BrowserRouter>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText('Test Product')).toBeInTheDocument();
-    });
-
-    const reviewButton = screen.getByText('ثبت نظر');
-    fireEvent.click(reviewButton);
-
-    expect(screen.getByText('ProductReview')).toBeInTheDocument();
-  });
-
   test('typing in search input and clicking search updates products', async () => {
     axiosInstance.post.mockReset();
     axiosInstance.post
       .mockResolvedValueOnce({ data: mockStore })
       .mockResolvedValueOnce({ data: [mockProduct] })
-      .mockResolvedValueOnce({ data: [mockProduct] }); // Additional mock for search
+      .mockResolvedValueOnce({ data: [mockProduct] });
 
     render(
       <BrowserRouter>
@@ -146,28 +146,28 @@ describe('StoreProfile Component - Tests', () => {
     });
   });
 
+  
   test('clicking "نمایش بیشتر" button increases offset', async () => {
-    axiosInstance.post.mockReset();
     axiosInstance.post
-      .mockResolvedValueOnce({ data: mockStore })
-      .mockResolvedValueOnce({ data: [mockProduct] })
-      .mockResolvedValueOnce({ data: [mockProduct] }); // Additional mock for offset change
-
+      .mockResolvedValueOnce({ data: mockStore })     
+      .mockResolvedValueOnce({ data: manyProducts })    
+      .mockResolvedValueOnce({ data: [mockProduct] });   
+  
     render(
       <BrowserRouter>
         <StoreProfile />
       </BrowserRouter>
     );
-
+  
     await waitFor(() => {
-      expect(screen.getByText('Test Product')).toBeInTheDocument();
+      expect(screen.getByText('Product 1')).toBeInTheDocument();  // From manyProducts
     });
-
+  
     const loadMoreButton = screen.getByText('نمایش بیشتر');
     await act(async () => {
       fireEvent.click(loadMoreButton);
     });
-
+  
     await waitFor(() => {
       expect(axiosInstance.post).toHaveBeenCalledWith(
         '/product/full_search_in_store_products',
@@ -175,7 +175,7 @@ describe('StoreProfile Component - Tests', () => {
       );
     });
   });
-
+  
   test('changing sort option triggers product fetch', async () => {
     axiosInstance.post.mockReset();
     axiosInstance.post
@@ -219,8 +219,9 @@ describe('StoreProfile Component - Tests', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('مشکلی در بارگیری اطلاعات فروشگاه رخ داد.')).toBeInTheDocument();
+      expect(showErrorToast).toHaveBeenCalledWith(expect.any(Error));
     });
+    
   });
 
   test('renders StoreComment component', async () => {

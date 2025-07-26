@@ -1,7 +1,23 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import SelfProductModal from '../Store/SelfProductModal';
+jest.mock('../axiosInstance', () => ({
+  __esModule: true,
+  default: {
+    post: jest.fn().mockResolvedValue({ data: { name: 'City 1' } }),
+  },
+}));
 
+jest.mock('../utils/formatDate', () => ({
+  __esModule: true,
+  default: jest.fn((date) => {
+    if (date === '2025-04-15T10:30:00.000Z') return 'April 15, 2025';
+    if (date === '2025-04-16T12:00:00.000Z') return 'April 16, 2025';
+    if (date === '2025-04-17T12:00:00.000Z') return 'April 17, 2025';
+    return 'Unknown Date';
+  }),
+}));
 describe('SelfProductModal Component - Tests', () => {
+
   const mockProduct = {
     id: 1,
     name: 'Test Product',
@@ -65,18 +81,23 @@ describe('SelfProductModal Component - Tests', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  test('renders product details correctly', () => {
+  test('renders product details correctly', async () => {
     render(<SelfProductModal {...defaultProps} />);
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByText('Test Product')).toBeInTheDocument();
     expect(screen.getByText('This is a test product description')).toBeInTheDocument();
     expect(screen.getByText('10 موجود')).toBeInTheDocument();
-    expect(screen.getByText('City 1')).toBeInTheDocument();
+  
+    await waitFor(() => {
+      expect(screen.getByText('City 1')).toBeInTheDocument();
+    });
+  
     expect(screen.getByText('April 15, 2025')).toBeInTheDocument();
     expect(screen.getByText('#1')).toBeInTheDocument();
     expect(screen.getByText('4.5')).toBeInTheDocument();
     expect(screen.getByAltText('Test Product')).toBeInTheDocument();
   });
+  
 
   test('renders comments correctly', () => {
     render(<SelfProductModal {...defaultProps} />);
