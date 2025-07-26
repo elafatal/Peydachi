@@ -22,9 +22,21 @@ const Notifications=()=>{
             const response = await axiosInstance.get('/notification/get_notif_count_and_first_three_notifs');
             setUnreadNotif(response.data);
             setisUnreadNotif(true);
-            console.log('✅ Notifs fetched:', response.data);
           } catch (error) {
-            console.log('❌ Error fetching notifications:', error);
+            Swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+              showConfirmButton: false,
+              timer: 2000,
+              toast: true,
+              customClass: {
+                popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                title: 'text-xs',
+                content: 'text-xs',
+                icon: 'text-xs mb-2',
+              },
+            });
           }
         }
       };

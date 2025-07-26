@@ -44,7 +44,20 @@ const AddStore = () => {
         console.log(response);
         
       } catch (error) {
-        console.log(error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
         
       } 
     };
@@ -68,7 +81,20 @@ const AddStore = () => {
         console.log(response);
         
       } catch (error) {
-        console.log(error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
         
       } 
     };
@@ -150,7 +176,20 @@ const AddStore = () => {
             console.log(response);
             
           } catch (error) {
-            console.log(error);
+            Swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+              showConfirmButton: false,
+              timer: 2000,
+              toast: true,
+              customClass: {
+                popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                title: 'text-xs',
+                content: 'text-xs',
+                icon: 'text-xs mb-2',
+              },
+            });
             
           } 
       console.log('Submitted', formData);

@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
 import { useNavigate } from 'react-router-dom';
-
+import Swal from "sweetalert2";  
 const useMainSearchLogic = () => {
   const cityDebounceTimeout = useRef(null);
   const navigate = useNavigate();
@@ -29,7 +29,20 @@ const useMainSearchLogic = () => {
         const res = await axiosInstance.get('/city/get_all_cities');
         setCities(res.data);
       } catch (err) {
-        console.error('❌ خطا در دریافت لیست شهرها:', err);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
       }
     };
   
@@ -194,9 +207,22 @@ const useMainSearchLogic = () => {
     setStores(response.data)
   } catch (error) {
     if (error.response && error.response.status === 404) {
-      console.log('محصول مورد نظر یافت نشد');
       setStores([])
     }
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true,
+      customClass: {
+        popup: 'w-60 h-18 text-sm flex items-center justify-center',
+        title: 'text-xs',
+        content: 'text-xs',
+        icon: 'text-xs mb-2',
+      },
+    });
   }
     console.log('🔍 Searching for:', searchTerm);
     console.log('📍 Location:', location);

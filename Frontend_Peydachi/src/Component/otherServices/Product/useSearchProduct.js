@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom'; 
 import * as echarts from 'echarts';
 import axiosInstance from '../../axiosInstance';
-
+import Swal from "sweetalert2";  
 const useSearchProduct = () => {
   const navigate = useNavigate(); // در بالا
   const location = useLocation();
@@ -131,7 +131,20 @@ const useSearchProduct = () => {
       setRatingDistribution(ratingResponse.data);
       renderChart(ratingResponse.data); 
     } catch (error) {
-      console.error('خطا در دریافت توزیع امتیازات:', error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
       setRatingDistribution([]); 
     }
     
@@ -143,7 +156,20 @@ const useSearchProduct = () => {
       setComments(response.data);
   
     } catch (error) {
-      console.error('خطا در دریافت کامنت‌ها:', error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
       setComments([]); 
     }
   
@@ -174,7 +200,20 @@ const useSearchProduct = () => {
         console.log(response.data);
        
       } catch (err) {
-        console.error('خطا در دریافت اطلاعات محصول:', err);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
       } finally {
         setLoading(false);
       }
@@ -204,6 +243,10 @@ const useSearchProduct = () => {
        }));
      } catch (err) {
        console.error('خطا در دریافت نام شهر:', err);
+       setCityNames(prev => ({
+        ...prev,
+        [city_id]: "نامشخص",
+      }));
      }
    };
 
