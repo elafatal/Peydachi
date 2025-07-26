@@ -4,20 +4,20 @@ from fastapi import status
 
 CATEGORY_NOT_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='Category Not Found.'
+    detail='دسته‌بندی پیدا نشد.'
     )
 
 NO_CATEGORY_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='No Matched Category Was Found'
+    detail='هیچ دسته‌بندی‌ای با این مشخصات پیدا نشد.'
     )
 
 CATEGORY_ALREADY_EXISTS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Category already exists"
+    detail="این دسته‌بندی وجود دارد."
     )
 
 CATEGORY_RELATION_ALREADY_EXISTS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Category Relation already exists"
+    detail="این ارتباط دسته‌بندی وجود دارد."
     )

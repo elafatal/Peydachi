@@ -4,31 +4,31 @@ from fastapi import status
 
 USER_NAME_DUPLICATE_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail='Username Already Exists.'
+    detail='این نام کاربری قبلا ثبت شده است.'
     )
 
 
 EMAIL_DUPLICATE_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail='Email Already Exists.'
+    detail='این ایمیل قبلا ثبت شده است.'
     )
 
 
 PHONE_NUMBER_DUPLICATE_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail='Phone Number Already Exists.'
+    detail='این شماره تلفن قبلا ثبت شده است.'
     )
 
 
 USER_NOT_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='User Not Found.'
+    detail='کاربر پیدا نشد.'
     )
 
 
 ERROR_CREDENTIAL = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail='Invalid Authorization',
+    detail='احراز هویت ناموفق.',
     headers={'WWW-authenticate': 'bearer'}
     )
 
@@ -58,130 +58,106 @@ REFRESH_TOKEN_DEMAND_ERROR = HTTPException(
 
 PROTECTED_ERROR = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail='Protected.'
+    detail='دسترسی غیرمجاز',
     )
 
 
 INVALID_USER_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='Invalid Username.'
+    detail='کابر غیرمجاز'
     )
 
 
 INVALID_PASSWORD_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='Invalid Password.'
+    detail='رمز عبور اشتباه است.'
     )
 
 
 DONT_HAVE_ACCESS_ERROR = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
-    detail='You Are Forbidden To Change Other Users Info.'
+    detail='تغییر اطلاعات دیگر کاربران امکان پذیر نیست.'
     )
 
 
 DONT_HAVE_ACCESS_ADMIN_ERROR = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
-    detail='You Are Forbidden To Remove An Admin.'
+    detail='حذف کردن ادمین‌ها امکان پذیر نیست.'
     )
 
 
 NO_USER_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='No Matched User Was Found'
+    detail='کاربری با این مشخصات پیدا نشد.'
     )
 
 
 USER_IS_BANNED_ERROR = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
-    detail='User Has Been Banned.'
-    )
-
-
-USER_PHONE_VERIFICATION_CODE_ERROR = HTTPException(
-    status_code=status.HTTP_404_NOT_FOUND,
-    detail='User Phone Verification Code Error.'
+    detail='کابر مسدود شده است.'
     )
 
 
 USER_HAS_NO_PHONE_NUMBER_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='User Has No Phone Number.'
-    )
-
-
-SMS_SERVER_ERROR = HTTPException(
-    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    detail='There was an error processing your verification. Try again later.'
-    )
-
-
-USER_VERIFICATION_CODE_EXPIRED_ERROR = HTTPException(
-    status_code=status.HTTP_404_NOT_FOUND,
-    detail='User Verification Code Expired.'
+    detail='شماره همراهی برای این کاربر وجود ندارد.'
     )
 
 USER_IS_ALREADY_SELLER_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="User is already a seller."
-    )
-
-
-USER_NOT_SELLER_ERROR = HTTPException(
-    status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail='Owner not found or not accessible.'
+    detail="کاربر از قبل فروشنده است."
     )
 
 
 USER_ALREADY_HAS_STORE = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail='This user already owns a store.'
+    detail='از قبل فروشگاهی برای این فروشنده ثبت شده است.'
     )
 
 
 USER_IS_NOT_SELLER_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="User is not a seller."
+    detail="کابر فروشنده نیست."
     )
 
 
 USERNAME_CAN_NOT_HAVE_SPACE_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Username can not have space."
+    detail="ماشین نام کاربری نمی تواند شامل فاصله باشد."
     )
 
 
 USERNAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Username must be longer than 3 characters."
+    detail="نام کاربری باید بیشتر از 3 کاراکتر باشد."
     )
 
 
 PASSWORD_MUST_BE_LONGER_THAN_6_CHARACTERS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Password must be longer than 6 characters."
+    detail="رمز عبور باید بیشتر از ۶ کاراکتر باشد."
     )
 
 
 INVALID_PHONE_NUMBER_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Invalid phone number."
+    detail="شماره همراه نامعتبر است."
     )
 
 
 PHONE_NUMBER_CAN_NOT_BE_EMPTY_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Phone number can not be empty."
+    detail="شماره همراه نمی تواند خالی باشد."
     )
 
 
 USERNAME_MUST_BE_ENGLISH = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Username must be in English."
+    detail="نام کاربری فقط باید شامل حروف، اعداد و کاراکترهای انگلیسی باشد."
     )
 
 
 USERNAME_MUST_BE_SHORTER_THAN_40_CHARACTERS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Username must be shorter than 40 characters."
+    detail="نام کاربری حداثر می‌تواند شامل ۴۰ کاراکتر باشد."
     )

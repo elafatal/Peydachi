@@ -11,7 +11,6 @@ import {
     FaPlus,
     FaStar,
     FaStarHalfAlt,
-    FaStar ,
     FaMapMarkerAlt,
   } from 'react-icons/fa';
 import ProductCard from './ProductCard';

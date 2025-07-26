@@ -4,26 +4,26 @@ from fastapi import status
 
 STORE_NOT_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='Store Not Found.'
+    detail='فروشگاه پیدا نشد.'
     )
 
 NO_STORE_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='No Matched Store Was Found'
+    detail='هیچ فروشگاهی با این مشخصات پیدا نشد.'
     )
 
 STORE_ALREADY_EXISTS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Store already exists"
+    detail="فروشگاه وجود دارد."
     )
 
 STORE_ACCESS_ERROR = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
-    detail='You Are Forbidden To Change Other Stores Info.'
+    detail='شما دسترسی تغییر اطلاعات فروشگاه دیگران را ندارید.'
     )
 
 
 STORE_NAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Store name must be longer than 3 characters."
+    detail="نام فروشگاه باید بیشتر از ۳ کاراکتر باشد."
     )

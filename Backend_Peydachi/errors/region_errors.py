@@ -3,15 +3,15 @@ from fastapi import status
 
 REGION_NOT_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='Region Not Found.'
+    detail='استان پیدا نشد.'
     )
 
 NO_REGION_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='No Matched Region Was Found'
+    detail='هیچ استانی با این مشخصات پیدا نشد.'
     )
 
 REGION_ALREADY_EXISTS = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Region already exists"
+    detail="استان وجود دارد."
     )

@@ -6,7 +6,6 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, F
 from errors.user_errors import (
     USERNAME_CAN_NOT_HAVE_SPACE_ERROR, 
     USERNAME_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR,
-    PASSWORD_MUST_BE_LONGER_THAN_6_CHARACTERS_ERROR,
     PHONE_NUMBER_CAN_NOT_BE_EMPTY_ERROR,
     INVALID_PHONE_NUMBER_ERROR,
     USERNAME_MUST_BE_ENGLISH,
@@ -87,13 +86,6 @@ class User(ID, Base):
         if not re.match(r"^[a-zA-Z0-9_]+$", value):
             raise USERNAME_MUST_BE_ENGLISH
 
-        return value
-    
-
-    @validates("password")
-    def validate_password(self, key, value):
-        if not value or len(value) < 6:
-            raise PASSWORD_MUST_BE_LONGER_THAN_6_CHARACTERS_ERROR
         return value
     
     
