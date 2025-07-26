@@ -1,6 +1,4 @@
-// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import AddStoreModal from './AddStoreModal';
-import StoreCommentManagement from '../AdminCommet/StoreCommentManagement'
 import React, { useState, useEffect } from 'react';
 import Swal from "sweetalert2";  
 import { useNavigate } from 'react-router-dom';
@@ -26,7 +24,20 @@ const users=[{id:1 , username:'ali'}]
       const response = await axiosInstance.put('/admin/store/remove_owner_from_store',{store_id: store.id});
       console.log(response.data);
     } catch (error) {
-      console.log('delete owner error:', error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }    
   }
 
@@ -55,7 +66,20 @@ const users=[{id:1 , username:'ali'}]
          setStores((prev) => [...prev, data]);
          setShowAddModal(false);
        } catch (err) {
-         console.log("create_store error:", err);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
        }
      };
 
@@ -88,39 +112,37 @@ const users=[{id:1 , username:'ali'}]
           });
           }
         } catch (error) {
-          console.log('add owner error:', error);
           Swal.fire({
             position: "top-end",
             icon: "error",
-            title: " درخواست انجام نشد",
+            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
             showConfirmButton: false,
-            timer: 1500,
+            timer: 2000,
             toast: true,
             customClass: {
-              popup: 'w-2 h-15 text-sm flex items-center justify-center', 
-              title: 'text-xs', 
+              popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              title: 'text-xs',
               content: 'text-xs',
-              icon : 'text-xs mb-2'
-            }
-        });
+              icon: 'text-xs mb-2',
+            },
+          });
         }
       }
     } catch (error) {
-      console.log('promote to seller error:', error);
       Swal.fire({
         position: "top-end",
         icon: "error",
-        title: " کاربر مالک فروشگاه دیگری‌ست",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
         showConfirmButton: false,
-        timer: 1500,
+        timer: 2000,
         toast: true,
         customClass: {
-          popup: 'w-2 h-15 text-sm flex items-center justify-center', 
-          title: 'text-xs', 
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
           content: 'text-xs',
-          icon : 'text-xs mb-2'
-        }
-    });
+          icon: 'text-xs mb-2',
+        },
+      });
     }
     setShowAddOwnerModal(false);
     setSelectedStore(null);
@@ -179,7 +201,20 @@ const users=[{id:1 , username:'ali'}]
   
       setStores(finalFiltered);
     } catch (error) {
-      console.log('store search error:', error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
       setStores([]);
     }
   
@@ -235,11 +270,19 @@ const users=[{id:1 , username:'ali'}]
           });
         }
       } catch (error) {
-        console.error('خطا در حذف فروشگاه:', error);
         Swal.fire({
-          icon: 'error',
-          title: 'خطا در حذف فروشگاه',
-          text: 'لطفا دوباره تلاش کنید.',
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
         });
       }
     }
@@ -254,7 +297,20 @@ if (store.is_banned) {
     });
     console.log(response);
   } catch (error) {
-    console.log('comment error:', error);
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true,
+      customClass: {
+        popup: 'w-60 h-18 text-sm flex items-center justify-center',
+        title: 'text-xs',
+        content: 'text-xs',
+        icon: 'text-xs mb-2',
+      },
+    });
   }
 }else if (!store.is_banned) {
   try {
@@ -263,7 +319,20 @@ if (store.is_banned) {
     });
     console.log(response);
   } catch (error) {
-    console.log('comment error:', error);
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true,
+      customClass: {
+        popup: 'w-60 h-18 text-sm flex items-center justify-center',
+        title: 'text-xs',
+        content: 'text-xs',
+        icon: 'text-xs mb-2',
+      },
+    });
   }
 }
 
@@ -282,7 +351,20 @@ if (store.is_banned) {
         console.log(response.data);
         setCities(response.data)
       } catch (error) {
-        console.log('comment error:', error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
       }
     }
      getAllStores();

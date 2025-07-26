@@ -1,5 +1,6 @@
 import { FaCheckCircle, FaExclamationCircle, FaUser, FaTrashAlt, FaRegClock, FaRegCommentDots } from 'react-icons/fa';
 import React, { useState, useEffect } from 'react';
+import Swal from "sweetalert2";  
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
 const StoreCommentManagement= () => {
@@ -23,8 +24,20 @@ try {
 setSearchResults(prevResults => prevResults.filter(comment => comment.id !== commentId));
 showNotification('کامنت حذف شد', 'success');
 } catch (error) {
-console.error('Error deleting comment:', error);
-showNotification('کامنت حذف نشد', 'error');
+    Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
 } finally {
 setShowDeleteModal(false);
 setCommentToDelete(null);
@@ -36,8 +49,20 @@ const resetStoreRating = async () => {
         console.log(response);
         showNotification('امتیاز فروشگاه پاک شد', 'success');
     } catch (error) {
-        console.error('Error resetting store rating:', error);
-        showNotification('درخواست انجام نشد', 'error');
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+            showConfirmButton: false,
+            timer: 2000,
+            toast: true,
+            customClass: {
+              popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              title: 'text-xs',
+              content: 'text-xs',
+              icon: 'text-xs mb-2',
+            },
+          });
     } finally {
         setShowResetModal(false);
     }
@@ -54,8 +79,20 @@ const handleSearch = async() => {
     const data = response.data.filter(item => item.text.toLowerCase().includes(searchQuery.toLowerCase()));
     setSearchResults(data);
     } catch (error) {
-    console.error('Error searching comments:', error);
-    showNotification('جستجوی نظرات ناموفق بود', 'error');
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+            showConfirmButton: false,
+            timer: 2000,
+            toast: true,
+            customClass: {
+              popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              title: 'text-xs',
+              content: 'text-xs',
+              icon: 'text-xs mb-2',
+            },
+          });
     } finally {
     setIsLoading(false);
     }

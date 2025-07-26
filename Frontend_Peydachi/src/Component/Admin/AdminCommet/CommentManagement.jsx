@@ -1,6 +1,7 @@
 import {FaCheckCircle, FaExclamationCircle, FaSearch, FaUser,FaPhone , FaTag ,FaUserSlash , FaTrashAlt,FaRegClock, FaRegCommentDots} from 'react-icons/fa';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import Swal from "sweetalert2";  
 import axiosInstance from '../../axiosInstance';
 const CommentManagement= () => {
 const [activeTab, setActiveTab] = useState('text');
@@ -28,8 +29,20 @@ const searchByText = async () => {
     const data = response.data.filter(item => item.text.toLowerCase().includes(searchQuery.toLowerCase()));
     setSearchResults(data);
     } catch (error) {
-    console.error('Error searching comments:', error);
-    showNotification('جستجوی نظرات ناموفق بود', 'error');
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true,
+      customClass: {
+        popup: 'w-60 h-18 text-sm flex items-center justify-center',
+        title: 'text-xs',
+        content: 'text-xs',
+        icon: 'text-xs mb-2',
+      },
+    });
     } finally {
     setIsLoading(false);
     }
@@ -45,8 +58,20 @@ const data = response.data.filter(user => user.username.toLowerCase().includes(s
 setSelectedUsers(data);
 setShowUserResults(true);
 } catch (error) {
-console.error('Error searching users:', error);
-showNotification('جستجوی کاربران ناموفق بود', 'error');
+  Swal.fire({
+    position: "top-end",
+    icon: "error",
+    title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+    showConfirmButton: false,
+    timer: 2000,
+    toast: true,
+    customClass: {
+      popup: 'w-60 h-18 text-sm flex items-center justify-center',
+      title: 'text-xs',
+      content: 'text-xs',
+      icon: 'text-xs mb-2',
+    },
+  });
 } finally {
 setIsLoading(false);
 }
@@ -61,8 +86,20 @@ try {
     setSearchResults(response.data);
     setShowUserResults(false);
 } catch (error) {
-    console.error('Error fetching user comments:', error);
-    showNotification('دریافت نظرات کاربران ناموفق بود', 'error');
+  Swal.fire({
+    position: "top-end",
+    icon: "error",
+    title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+    showConfirmButton: false,
+    timer: 2000,
+    toast: true,
+    customClass: {
+      popup: 'w-60 h-18 text-sm flex items-center justify-center',
+      title: 'text-xs',
+      content: 'text-xs',
+      icon: 'text-xs mb-2',
+    },
+  });
 } finally {
 setIsLoading(false);
 }
@@ -74,8 +111,20 @@ try {
 setSearchResults(prevResults => prevResults.filter(comment => comment.id !== commentId));
 showNotification('کامنت حذف شد', 'success');
 } catch (error) {
-console.error('Error deleting comment:', error);
-showNotification('کامنت حذف نشد', 'error');
+  Swal.fire({
+    position: "top-end",
+    icon: "error",
+    title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+    showConfirmButton: false,
+    timer: 2000,
+    toast: true,
+    customClass: {
+      popup: 'w-60 h-18 text-sm flex items-center justify-center',
+      title: 'text-xs',
+      content: 'text-xs',
+      icon: 'text-xs mb-2',
+    },
+  });
 } finally {
 setShowDeleteModal(false);
 setCommentToDelete(null);
