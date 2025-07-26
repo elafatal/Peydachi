@@ -1,5 +1,5 @@
 from schemas.base_schemas import BaseSchema
-from pydantic import EmailStr
+from pydantic import EmailStr, field_validator
 
 
 
@@ -8,6 +8,14 @@ class UserModel(BaseSchema):
     password: str
     phone_number: str | None = None
     email: EmailStr | None = None
+
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def normalize_empty_email(cls, value):
+        if value == "":
+            return None
+        return value
 
 
 
