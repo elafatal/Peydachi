@@ -6,6 +6,7 @@ import { FaEdit } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 import { useAuth } from '../../Context/AuthContext'; 
 import UnauthorizedPage from '../../Error/UnauthorizedPage';
+import Swal from "sweetalert2";  
 
 const CityManagement = () => {
   const { role } = useAuth();
@@ -43,7 +44,20 @@ const CityManagement = () => {
         });
         setRegions(response.data);
       } catch (error) {
-        console.log(error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
       } finally {
         setLoadingRegions(false);
       }
@@ -65,7 +79,20 @@ const CityManagement = () => {
           });
           setCities(response.data);
         } catch (error) {
-          console.log(error);
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+            showConfirmButton: false,
+            timer: 2000,
+            toast: true,
+            customClass: {
+              popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              title: 'text-xs',
+              content: 'text-xs',
+              icon: 'text-xs mb-2',
+            },
+          });
         } finally {
           setLoadingCities(false); 
         }
@@ -99,7 +126,20 @@ const CityManagement = () => {
                         showNotification('استان اضافه شد', 'success');
                }
               } catch (error) {
-                console.log('add region error:', error);
+                Swal.fire({
+                  position: "top-end",
+                  icon: "error",
+                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                  showConfirmButton: false,
+                  timer: 2000,
+                  toast: true,
+                  customClass: {
+                    popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                    title: 'text-xs',
+                    content: 'text-xs',
+                    icon: 'text-xs mb-2',
+                  },
+                });
               }
         }
     };
@@ -126,7 +166,20 @@ const CityManagement = () => {
                     showNotification('تغییرات اعمال شد', 'success');
                }
               } catch (error) {
-                console.log('update region error:', error);
+                Swal.fire({
+                  position: "top-end",
+                  icon: "error",
+                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                  showConfirmButton: false,
+                  timer: 2000,
+                  toast: true,
+                  customClass: {
+                    popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                    title: 'text-xs',
+                    content: 'text-xs',
+                    icon: 'text-xs mb-2',
+                  },
+                });
               }
         }
        
@@ -143,7 +196,20 @@ const CityManagement = () => {
                     showNotification('حذف با موفقیت انجام شد', 'success');
                }
               } catch (error) {
-                console.log('DELETE region error:', error);
+                Swal.fire({
+                  position: "top-end",
+                  icon: "error",
+                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                  showConfirmButton: false,
+                  timer: 2000,
+                  toast: true,
+                  customClass: {
+                    popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                    title: 'text-xs',
+                    content: 'text-xs',
+                    icon: 'text-xs mb-2',
+                  },
+                });
               }
        
         }
@@ -165,8 +231,20 @@ const CityManagement = () => {
                 showNotification('شهر اضافه شد', 'success');
                }
               } catch (error) {
-                console.log('add region error:', error);
-              }
+                Swal.fire({
+                  position: "top-end",
+                  icon: "error",
+                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                  showConfirmButton: false,
+                  timer: 2000,
+                  toast: true,
+                  customClass: {
+                    popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                    title: 'text-xs',
+                    content: 'text-xs',
+                    icon: 'text-xs mb-2',
+                  },
+                });              }
         }
         };
     const handleUpdateCity = async(cityID) => {
@@ -193,7 +271,20 @@ const CityManagement = () => {
             showNotification('شهر با موفقیت به روزرسانی شد', 'success');
        }
       } catch (error) {
-        console.log('update region error:', error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
       }
 
     };
@@ -208,7 +299,20 @@ const CityManagement = () => {
       showNotification('شهر حذف شد', 'success');
      }
     } catch (error) {
-      console.log('delete city error:', error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
 
   }

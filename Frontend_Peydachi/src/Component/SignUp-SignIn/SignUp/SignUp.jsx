@@ -1,23 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState,useRef,useEffect } from 'react';
 import { motion } from "framer-motion";
-import Cookies from 'js-cookie';
 import Swal from "sweetalert2"; 
-import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
-import { useAuth } from '../../Context/AuthContext';
 
 const SignUp= ({showComponent,setshowComponent, setRememberMe,rememberMe,setPhoneVerificationData}) => {
-  const { login } = useAuth()
+
+  const [usernameError, setUsernameError] = useState('');
+const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
   const [username, setUsername] = useState('');
   const [phone_number, setphone_number] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
+
   const isValidUsername = (username) => {
     const regex = /^[a-zA-Z0-9_.-]+$/;
     return regex.test(username);
   };
+  const lastCheckedUsernameRef = useRef('');
+  const debounceRef = useRef(null);
+  useEffect(() => {
+    setUsernameError('');
+    setIsUsernameAvailable(null);
+    if (!username) return;
+  
+    if (!isValidUsername(username)) {
+      setUsernameError("نام کاربری فقط باید شامل حروف انگلیسی، عدد و _ یا . باشد");
+      return;
+    }
+  
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+  
+    debounceRef.current = setTimeout(async () => {
+      if (username === lastCheckedUsernameRef.current) return;
+      try {
+        const res = await axiosInstance.post('/user/is_username_available', {
+          username,
+        });
+        lastCheckedUsernameRef.current = username;
+        setIsUsernameAvailable(res.data);
+        if (res.data) {
+          setUsernameError('');
+        } else {
+          setUsernameError("این نام کاربری قبلاً ثبت شده است.");
+        }
+      } catch (err) {
+        console.error(err);
+        setUsernameError("خطا در ارتباط با سرور.");
+      }
+    }, 800); 
+  
+    return () => clearTimeout(debounceRef.current);
+  }, [username]);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,7 +103,20 @@ const SignUp= ({showComponent,setshowComponent, setRememberMe,rememberMe,setPhon
       }
 
     } catch (error) {
-      console.log(error)
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
   };
 
@@ -97,6 +146,12 @@ const SignUp= ({showComponent,setshowComponent, setRememberMe,rememberMe,setPhon
               placeholder="نام کاربری"
               required
             />
+            {usernameError && (
+              <p className="text-red-500 text-xs mt-2">{usernameError}</p>
+              )}
+              {isUsernameAvailable && (
+                <p className="text-green-500 text-xs mt-2">نام کاربری در دسترس است</p>
+              )}
             <i className="fas fa-envelope absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"></i>
           </div>
         </div>

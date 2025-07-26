@@ -25,7 +25,20 @@ const [sommentNumber,setCommentNumbers]=useState(4)
       console.log(response);
       setComments(response.data);
     } catch (error) {
-      console.error('Error fetching comments:', error); 
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }   
   };
   fetchComments();
@@ -50,7 +63,20 @@ const [sommentNumber,setCommentNumbers]=useState(4)
           });
           console.log(response.data);
         } catch (error) {
-          console.log('comment error:', error);
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+            showConfirmButton: false,
+            timer: 2000,
+            toast: true,
+            customClass: {
+              popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              title: 'text-xs',
+              content: 'text-xs',
+              icon: 'text-xs mb-2',
+            },
+          });
         }
       }
 
@@ -63,7 +89,20 @@ const [sommentNumber,setCommentNumbers]=useState(4)
           const response = await axiosInstance.post('/store_rating/rate_store', ratingResponse);
           console.log(response.data);
         } catch (error) {
-          console.log('Test error:', error);
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+            showConfirmButton: false,
+            timer: 2000,
+            toast: true,
+            customClass: {
+              popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              title: 'text-xs',
+              content: 'text-xs',
+              icon: 'text-xs mb-2',
+            },
+          });
         }
 
       }
@@ -73,9 +112,19 @@ const [sommentNumber,setCommentNumbers]=useState(4)
         type: "success"
       });
     } catch (error) {
-      setNotification({
-        message: "ارسال بازخورد ناموفق بود. لطفاً دوباره امتحان کنید.",
-        type: "error"
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
       });
     } finally {
       setIsSubmitting(false);

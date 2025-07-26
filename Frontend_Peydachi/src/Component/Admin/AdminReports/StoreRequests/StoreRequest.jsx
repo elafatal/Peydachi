@@ -65,8 +65,20 @@ const StoreRequest = () => {
   
         setStoreRequests(response.data);
       } catch (error) {
-        console.error('خطا در دریافت درخواست‌ها:', error);
-      } finally {
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });      } finally {
         setIsLoading(false);
       }
     };
@@ -87,7 +99,20 @@ const StoreRequest = () => {
         setCities(response.data);
         console.log(response);
       } catch (error) {
-        console.log(error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
       }
 
       try {
@@ -101,15 +126,27 @@ const StoreRequest = () => {
         console.log(response);
         setIsLoading(false)
       } catch (error) {
-        console.log(error);
-        
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
       } 
     };
   
     fetchCities();
 
   }, []);
-  // Format date to a more readable format
+
   const formatDate = (dateString) => {
     const now = new Date();
     const addedDate = new Date(dateString);
@@ -177,12 +214,19 @@ const StoreRequest = () => {
         });
       }
     } catch (err) {
-      console.error('خطا در بررسی درخواست:', err);
       Swal.fire({
         position: "top-end",
-        icon: 'error',
-        title: 'خطا در بررسی',
-        text: 'مشکلی در بررسی این درخواست پیش آمد.',
+        icon: "error",
+        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
       });
     }
   };
@@ -213,7 +257,20 @@ const StoreRequest = () => {
         await refreshStats();
       }
     } catch (err) {
-      console.error('خطا در حذف درخواست فروشگاه:', err);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
   };
   
@@ -244,7 +301,20 @@ const StoreRequest = () => {
         });
       }
     } catch (error) {
-      console.error('خطا در حذف درخواست‌های بررسی‌شده:', error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
   };
   

@@ -1,4 +1,4 @@
-// AdminReports/UserReports/UserReports.jsx
+
 import { useAdminStats } from '../../../Context/AdminStatsContext';
 import UserReportSkeleton from '../../../SkeletionLoading/UserReportSkeleton';
 import React, { useEffect, useState } from 'react';
@@ -47,7 +47,20 @@ const handleRemoveAllReviewed = async () => {
       });
     }
   } catch (error) {
-    console.error('خطا در حذف درخواست‌های بررسی‌شده:', error);
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true,
+      customClass: {
+        popup: 'w-60 h-18 text-sm flex items-center justify-center',
+        title: 'text-xs',
+        content: 'text-xs',
+        icon: 'text-xs mb-2',
+      },
+    });
   }
 };
 const handleDeleteConfirm = async () => {
@@ -77,7 +90,20 @@ const handleDeleteConfirm = async () => {
 
     }
   } catch (err) {
-    console.error('خطا در حذف گزارش:', err);
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true,
+      customClass: {
+        popup: 'w-60 h-18 text-sm flex items-center justify-center',
+        title: 'text-xs',
+        content: 'text-xs',
+        icon: 'text-xs mb-2',
+      },
+    });
   }
 };
 
@@ -113,7 +139,20 @@ const handleCheckClick = async (reportId) => {
     }
 
   } catch (err) {
-    console.error("خطا در بررسی گزارش:", err);
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true,
+      customClass: {
+        popup: 'w-60 h-18 text-sm flex items-center justify-center',
+        title: 'text-xs',
+        content: 'text-xs',
+        icon: 'text-xs mb-2',
+      },
+    });
   }
 };
 
@@ -131,8 +170,20 @@ useEffect(() => {
       setReports(response.data);
       setFiltered(response.data);
     } catch (error) {
-      console.log(error);
-    } finally {
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });    } finally {
       setLoading(false);
     }
   };
@@ -153,7 +204,20 @@ useEffect(() => {
       setReports(res.data);
       setFiltered(res.data);
     } catch (err) {
-      console.error(err);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     } finally {
       setLoading(false);
     }

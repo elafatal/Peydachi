@@ -61,7 +61,20 @@ const UserInfo = () => {
         
         
       } catch (error) {
-        console.log(error);
+              Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                showConfirmButton: false,
+                timer: 2000,
+                toast: true,
+                customClass: {
+                  popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                  title: 'text-xs',
+                  content: 'text-xs',
+                  icon: 'text-xs mb-2',
+                },
+              });
       }
     };
     
@@ -77,8 +90,6 @@ const UserInfo = () => {
           console.log("No auth token found");
           return;
         }
-  
-        // فقط اگر کاربر فروشنده باشد نمایش داده شود
         if (role === 'seller') {
           const response = await axiosInstance.get('/seller/store/get_self_store', {
             headers: {
@@ -87,7 +98,6 @@ const UserInfo = () => {
           });
           if (response.data) {
             setStoreInfo(response.data);
-            console.log(response);
           }
         }
       } catch (error) {
@@ -123,6 +133,20 @@ const UserInfo = () => {
         } else {
           console.error('خطای دیگر:', error);
         }
+              // Swal.fire({
+              //   position: "top-end",
+              //   icon: "error",
+              //   title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+              //   showConfirmButton: false,
+              //   timer: 2000,
+              //   toast: true,
+              //   customClass: {
+              //     popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              //     title: 'text-xs',
+              //     content: 'text-xs',
+              //     icon: 'text-xs mb-2',
+              //   },
+              // });
         setIsCheckingUsername(false);
       }
     };
@@ -243,6 +267,20 @@ const handleGoSelfStore =()=>{
       } else {
         console.log('An error occurred:', error.message);
       }
+            Swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+              showConfirmButton: false,
+              timer: 2000,
+              toast: true,
+              customClass: {
+                popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                title: 'text-xs',
+                content: 'text-xs',
+                icon: 'text-xs mb-2',
+              },
+            });
     }
   };
 

@@ -32,7 +32,20 @@ const CreateAdminSection = () => {
             setFormData({ username: '', password: '', phone_number: '', email: '' });
           }
     } catch (err) {
-      console.error('Create admin failed', err);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
   };
 

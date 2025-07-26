@@ -1,4 +1,3 @@
-// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import axiosInstance from '../../axiosInstance';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../Context/AuthContext';
@@ -30,12 +29,25 @@ const AdminNotification = () => {
   useEffect(() => {
     const fetchLastNotifSent = async () => {
         try {
-          const response = await axiosInstance.post('/admin/notification/get_last_n_sent_notifications_of_admin?n=12');
+          const response = await axiosInstance.post('/admin/notification/get_last_n_sent_notifications?n=12');
           setNotifications(response.data);
           setFilteredNotifications(response.data);
           setIsLoading(false);
         } catch (error) {
-          console.log('last 12 notif sent errors:', error);
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+            showConfirmButton: false,
+            timer: 2000,
+            toast: true,
+            customClass: {
+              popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              title: 'text-xs',
+              content: 'text-xs',
+              icon: 'text-xs mb-2',
+            },
+          });
         }  
     };
   
@@ -61,9 +73,20 @@ const AdminNotification = () => {
             } catch (error) {
               if (error.response && error.response.status === 404) {
                 filtered = [];
-              } else {
-                console.log('search seen notif errors:', error)
-              }
+              }       Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                showConfirmButton: false,
+                timer: 2000,
+                toast: true,
+                customClass: {
+                  popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                  title: 'text-xs',
+                  content: 'text-xs',
+                  icon: 'text-xs mb-2',
+                },
+              });
             }  
         }else{
             try {
@@ -72,13 +95,21 @@ const AdminNotification = () => {
             } catch (error) {
               if (error.response && error.response.status === 404) {
                 filtered = [];
-              } else {
-                if (error.response && error.response.status === 404) {
-                  filtered = [];
-                } else {
-                  console.log('last 12 seen notif errors:', error)
-                }
-              }
+              }       
+              Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                showConfirmButton: false,
+                timer: 2000,
+                toast: true,
+                customClass: {
+                  popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                  title: 'text-xs',
+                  content: 'text-xs',
+                  icon: 'text-xs mb-2',
+                },
+              });
             }  
         }
   
@@ -90,9 +121,20 @@ const AdminNotification = () => {
             } catch (error) {
               if (error.response && error.response.status === 404) {
                 filtered = [];
-              } else {
-                console.log('search unseen notif errors:', error)
-              }
+              }       Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                showConfirmButton: false,
+                timer: 2000,
+                toast: true,
+                customClass: {
+                  popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                  title: 'text-xs',
+                  content: 'text-xs',
+                  icon: 'text-xs mb-2',
+                },
+              });
             }  
           }else{
               try {
@@ -101,9 +143,21 @@ const AdminNotification = () => {
               } catch (error) {
                 if (error.response && error.response.status === 404) {
                   filtered = [];
-                } else {
-                  console.log('last 12 unseen notif errors:', error);
-                }
+                }      
+                Swal.fire({
+                  position: "top-end",
+                  icon: "error",
+                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                  showConfirmButton: false,
+                  timer: 2000,
+                  toast: true,
+                  customClass: {
+                    popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                    title: 'text-xs',
+                    content: 'text-xs',
+                    icon: 'text-xs mb-2',
+                  },
+                });
  
             }  
           }
@@ -115,20 +169,44 @@ const AdminNotification = () => {
               } catch (error) {
                 if (error.response && error.response.status === 404) {
                   filtered = [];
-                } else {
-                  console.log('last notif errors:', error)
                 }
+                Swal.fire({
+                  position: "top-end",
+                  icon: "error",
+                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                  showConfirmButton: false,
+                  timer: 2000,
+                  toast: true,
+                  customClass: {
+                    popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                    title: 'text-xs',
+                    content: 'text-xs',
+                    icon: 'text-xs mb-2',
+                  },
+                });
               }  
           }else{
             try {
-              const response = await axiosInstance.post('/admin/notification/get_last_n_sent_notifications_of_admin?n=12');
+              const response = await axiosInstance.post('/admin/notification/get_last_n_sent_notifications?n=12');
               filtered=response.data
             } catch (error) {
               if (error.response && error.response.status === 404) {
                 filtered = [];
-              } else {
-                console.log('last 12 notif error:', error)
-              }
+              } 
+              Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                showConfirmButton: false,
+                timer: 2000,
+                toast: true,
+                customClass: {
+                  popup: 'w-60 h-18 text-sm flex items-center justify-center',
+                  title: 'text-xs',
+                  content: 'text-xs',
+                  icon: 'text-xs mb-2',
+                },
+              });
             }  
           }
         }
@@ -149,7 +227,20 @@ const AdminNotification = () => {
           setIsUserDropdownOpen(true);
           setUserSuggestions(response.data);
         } catch (error) {
-          console.log('search username error:', error);
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+            showConfirmButton: false,
+            timer: 2000,
+            toast: true,
+            customClass: {
+              popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              title: 'text-xs',
+              content: 'text-xs',
+              icon: 'text-xs mb-2',
+            },
+          });
         }
       } else {
         setSelectedUser(null);
@@ -181,12 +272,21 @@ const AdminNotification = () => {
         filtered2=response.data
       } catch (error) {
         if (error.response && error.response.status === 404) {
-          showToastMessage('اطلاعاتی یافت نشد.', 'error');
           filtered2 = [];
-        } else {
-          console.log('search notif errors:', error);
-          showToastMessage('خطا در جستجو. لطفاً بعداً تلاش کنید.', 'error');
-        }
+        }       Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
       }  
     }
   setFilteredNotifications(filtered2);
@@ -198,7 +298,20 @@ const AdminNotification = () => {
       const response = await axiosInstance.post('/admin/user/search_users', {username : userSearchQuery});
       setSearchResult(response.data)
     } catch (error) {
-      console.log('search username error:', error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
   }
   const handleDeleteNotification = async(id) => {
@@ -212,7 +325,20 @@ const AdminNotification = () => {
       }
       
     } catch (error) {
-      console.log('delete notif error:', error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
   };
 
@@ -232,7 +358,20 @@ const AdminNotification = () => {
       }
       
     } catch (error) {
-      console.log('delete all seen error:', error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
 
   };
@@ -273,20 +412,20 @@ const AdminNotification = () => {
       setUserSearchQuery('');
     }
     } catch (error) {
-       Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: "خطا در ارسال پیغام",
-              showConfirmButton: false,
-              timer: 1500,
-              toast: true,
-              customClass: {
-                popup: 'w-2 h-15 text-sm flex items-center justify-center',
-                title: 'text-xs', 
-                content: 'text-xs', 
-                icon : 'text-xs mb-2'
-              }
-          });
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
   };
 

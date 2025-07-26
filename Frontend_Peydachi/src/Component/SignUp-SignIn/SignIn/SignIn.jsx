@@ -68,17 +68,17 @@ const SignIn= ({showComponent,setshowComponent, setRememberMe,rememberMe, setuse
       Swal.fire({
         position: "top-end",
         icon: "error",
-        title: "نام کاربری یا رمز عبور اشتباه است",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
         showConfirmButton: false,
-        timer: 1500,
+        timer: 2000,
         toast: true,
         customClass: {
-          popup: 'w-2 h-15 text-sm flex items-center justify-center',
-          title: 'text-xs', 
-          content: 'text-xs', 
-          icon : 'text-xs mb-2'
-        }
-    });
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
   };
 

@@ -3,13 +3,13 @@ import axiosInstance from '../../axiosInstance';
 import { FaRegCommentDots, FaRegStar } from 'react-icons/fa';
 import CommentCard from './CommentCard';
 import SkeletonCard from '../../SkeletionLoading/SelfCommentsCards';
-import { IoChevronBackCircle } from "react-icons/io5";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import UnauthorizedPage from '../../Error/UnauthorizedPage';
-import Navbar from '../../landingPage/navbar';
+import Swal from "sweetalert2";  
+
 const UserComment = () => {
   const navigate = useNavigate();
   const [loadingStores, setLoadingStores] = useState(true);
@@ -54,7 +54,20 @@ const itemVariants = {
           setStoreComments(mappedData);
         }
       } catch (error) {
-        console.error(error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
       } finally {
         setLoadingStores(false);
       }
@@ -78,7 +91,20 @@ const itemVariants = {
           setProductComments(mappedData);
         }
       } catch (error) {
-        console.error(error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
       } finally {
         setLoadingProducts(false);
       }

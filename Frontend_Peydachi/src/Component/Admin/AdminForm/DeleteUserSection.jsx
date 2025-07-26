@@ -16,7 +16,20 @@ const DeleteUserSection = () => {
         console.log(response);
        setSearchResults(response.data)
       } catch (error) {
-        console.log('search username error:', error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
       }
   };
 
@@ -46,20 +59,20 @@ const DeleteUserSection = () => {
         }
 
     } catch (err) {
-       Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: "حذف کاربر با خطا مواجه شد",
-              showConfirmButton: false,
-              timer: 1500,
-              toast: true,
-              customClass: {
-                popup: 'w-2 h-15 text-sm flex items-center justify-center',
-                title: 'text-xs', 
-                content: 'text-xs', 
-                icon : 'text-xs mb-2'
-              }
-          });
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
   };
   const handlePromote = async () => {
@@ -92,17 +105,17 @@ const DeleteUserSection = () => {
       Swal.fire({
         position: "top-end",
         icon: "error",
-        title:'ارتقا با خطا مواجه شد',
+        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
         showConfirmButton: false,
-        timer: 1500,
+        timer: 2000,
         toast: true,
         customClass: {
-          popup: 'w-2 h-15 text-sm flex items-center justify-center',
-          title: 'text-xs', 
-          content: 'text-xs', 
-          icon : 'text-xs mb-2'
-        }
-    });
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
     }
   };
   

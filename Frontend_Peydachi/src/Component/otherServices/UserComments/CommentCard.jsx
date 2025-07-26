@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import axiosInstance from '../../axiosInstance';
+import Swal from "sweetalert2";  
+
 import { MdDelete } from "react-icons/md";
 const ConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
   if (!isOpen) return null;
@@ -75,7 +77,20 @@ const CommentCard = ({ item, isStore, onDelete }) => {
           }
           
         } catch (error) {
-          console.error(error);
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+            showConfirmButton: false,
+            timer: 2000,
+            toast: true,
+            customClass: {
+              popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              title: 'text-xs',
+              content: 'text-xs',
+              icon: 'text-xs mb-2',
+            },
+          });
         }
       };
       

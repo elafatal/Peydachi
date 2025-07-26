@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { FaAllergies, FaSearch } from "react-icons/fa";
+import Swal from "sweetalert2";  
+import { FaSearch } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { FaLocationDot } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
@@ -34,7 +35,20 @@ const FirstSection = () => {
         console.log(response);
         
       } catch (error) {
-        console.log(error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
         
       } 
     };
@@ -55,7 +69,20 @@ const FirstSection = () => {
         console.log(response);
         
       } catch (error) {
-        console.log(error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          showConfirmButton: false,
+          timer: 2000,
+          toast: true,
+          customClass: {
+            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            title: 'text-xs',
+            content: 'text-xs',
+            icon: 'text-xs mb-2',
+          },
+        });
         
       } 
     };
@@ -78,7 +105,20 @@ const FirstSection = () => {
       
       
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        showConfirmButton: false,
+        timer: 2000,
+        toast: true,
+        customClass: {
+          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          title: 'text-xs',
+          content: 'text-xs',
+          icon: 'text-xs mb-2',
+        },
+      });
       
     } 
     setLocation(loc.name);
