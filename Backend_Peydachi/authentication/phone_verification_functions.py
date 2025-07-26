@@ -57,6 +57,8 @@ async def user_sign_up_phone_verification(phone_number: str, redis_db: Redis, db
 
 async def user_signup_phone_verification_check(verification_info: PhoneVerifyCheckModel, redis_db: Redis):
     user_verification_code = redis_db.hget(f'phone_verification:{verification_info.phone_number}', 'code').decode('utf-8')
+    if not user_verification_code:
+        raise USER_VERIFICATION_CODE_EXPIRED_ERROR
 
     if user_verification_code == verification_info.code:
         return True

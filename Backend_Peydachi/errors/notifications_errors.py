@@ -4,44 +4,44 @@ from fastapi import status
 
 NOTIFICATION_NOT_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='Notification Not Found.'
+    detail='پیام پیدا نشد.'
     )
 
 NO_NOTIFICATION_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='No Matched Notification Was Found'
+    detail='هیچ پیامی با این مشخصات پیدا نشد.'
     )
 
 NOTIFICATION_ACCESS_ERROR = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
-    detail='You Are Forbidden To Access Other Users Notifications.'
+    detail='شما دسترسی به پیام‌های کاربران دیگر ندارید.'
     )
 
 
 NOTIFICATION_HAS_ALREADY_BEEN_READ_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Notification has already been read"
+    detail="پیام قبلا بخوانده شده است."
     )
 
 
 NOTIFICATION_TITLE_MUST_BE_LONGER_THAN_3_CHARACTERS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Notification must be longer than 3 characters."
+    detail="عنوان پیام باید بیشتر از ۳ کاراکتر باشد."
     )
 
 NOTIFICATION_TITLE_MUST_BE_SHORTER_THAN_200_CHARACTERS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Notification must be shorter than 200 characters."
+    detail="عنوان پیام نمی‌تواند بیشتر از ۲۰۰ کاراکتر باشد."
     )
 
 
 NOTIFICATION_TEXT_MUST_BE_LONGER_THAN_5_CHARACTERS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Notification must be longer than 5 characters."
+    detail="متن پیام باید بیشتر از ۵ کاراکتر باشد."
     )
 
 
 NOTIFICATION_TEXT_MUST_BE_SHORTER_THAN_500_CHARACTERS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="Notification must be shorter than 500 characters."
+    detail="متن پیام نمی‌تواند بیشتر از ۵۰۰ کاراکتر باشد."
     )

@@ -4,15 +4,15 @@ from fastapi import status
 
 CITY_NOT_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='City Not Found.'
+    detail='شهر پیدا نشد.'
     )
 
 NO_CITY_FOUND_ERROR = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
-    detail='No Matched City Was Found'
+    detail='هیچ شهری با این مشخصات پیدا نشد.'
     )
 
 CITY_ALREADY_EXISTS_ERROR = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="City already exists"
+    detail="این شهر وجود دارد."
     )

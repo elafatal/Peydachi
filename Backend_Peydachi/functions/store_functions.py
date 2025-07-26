@@ -10,7 +10,7 @@ from errors.store_errors import (
     STORE_ALREADY_EXISTS_ERROR,
     STORE_ACCESS_ERROR
 )
-from errors.user_errors import USER_NOT_FOUND_ERROR, USER_NOT_SELLER_ERROR, USER_ALREADY_HAS_STORE
+from errors.user_errors import USER_NOT_FOUND_ERROR, USER_IS_NOT_SELLER_ERROR, USER_ALREADY_HAS_STORE
 
 
 async def create_store(request: StoreModel, db: Session):
@@ -20,7 +20,7 @@ async def create_store(request: StoreModel, db: Session):
     if request.owner_id:
         user = db.query(User).filter(User.id == request.owner_id).first()
         if not user or not user.is_seller:
-            raise USER_NOT_SELLER_ERROR
+            raise USER_IS_NOT_SELLER_ERROR
 
         existing_store = db.query(Store).filter(Store.owner_id == user.id).first()
         if existing_store:

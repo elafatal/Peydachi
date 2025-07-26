@@ -11,7 +11,8 @@ from errors.user_errors import (
     NO_USER_FOUND_ERROR,
     DONT_HAVE_ACCESS_ADMIN_ERROR,
     USER_IS_ALREADY_SELLER_ERROR,
-    USER_IS_NOT_SELLER_ERROR
+    USER_IS_NOT_SELLER_ERROR,
+    PASSWORD_MUST_BE_LONGER_THAN_6_CHARACTERS_ERROR
 )
 from functions.general_functions import (
     check_username_duplicate,
@@ -65,6 +66,9 @@ async def create_user(request: UserModel, db: Session):
 
     if request.phone_number and check_phone_number_duplicate(request.phone_number, db):
         raise PHONE_NUMBER_DUPLICATE_ERROR
+    
+    if len(request.password) <= 6:
+        raise PASSWORD_MUST_BE_LONGER_THAN_6_CHARACTERS_ERROR
 
     user = User(
         username=request.username,
