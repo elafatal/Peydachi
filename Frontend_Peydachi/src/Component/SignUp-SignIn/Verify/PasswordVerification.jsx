@@ -25,21 +25,20 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
 
       setStep(2); 
     } catch (error) {
-      console.error('Error sending verification code:', error);
       Swal.fire({
-                position: "top-end",
-                icon: "error",
-                title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                showConfirmButton: false,
-                timer: 2000,
-                toast: true,
-                customClass: {
-                  popup: 'w-60 h-18 text-sm flex items-center justify-center',
-                  title: 'text-xs',
-                  content: 'text-xs',
-                  icon: 'text-xs mb-2',
-                },
-              });
+        position: "top-end",
+        icon: "error",
+        html: `<div class="text-justify">${error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است"}</div>`,
+        showConfirmButton: false,
+        timer: 4000,
+        toast: true,
+        customClass: {
+          popup: 'text-sm px-4 py-3 max-w-md w-full',
+          icon: 'text-xs mb-2',
+        },
+      });
+      
+      
     }
   };
 
@@ -152,19 +151,18 @@ const OTPVerification = ({ showComponent, setshowComponent }) => {
       } catch (error) {
         console.log('Error during verification', error);
         Swal.fire({
-                 position: "top-end",
-                 icon: "error",
-                 title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-                 showConfirmButton: false,
-                 timer: 2000,
-                 toast: true,
-                 customClass: {
-                   popup: 'w-60 h-18 text-sm flex items-center justify-center',
-                   title: 'text-xs',
-                   content: 'text-xs',
-                   icon: 'text-xs mb-2',
-                 },
-               });
+          position: "top-end",
+          icon: "error",
+          html: `<div class="text-justify">${error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است"}</div>`,
+          showConfirmButton: false,
+          timer: 4000,
+          toast: true,
+          customClass: {
+            popup: 'text-sm px-4 py-3 max-w-md w-full',
+            icon: 'text-xs mb-2',
+          },
+        });
+        
       }
    
   };

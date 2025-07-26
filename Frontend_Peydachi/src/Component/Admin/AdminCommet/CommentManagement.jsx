@@ -37,7 +37,7 @@ const searchByText = async () => {
       timer: 2000,
       toast: true,
       customClass: {
-        popup: 'w-60 h-18 text-sm flex items-center justify-center',
+        popup: 'text-sm flex items-center justify-center',
         title: 'text-xs',
         content: 'text-xs',
         icon: 'text-xs mb-2',
@@ -66,7 +66,7 @@ setShowUserResults(true);
     timer: 2000,
     toast: true,
     customClass: {
-      popup: 'w-60 h-18 text-sm flex items-center justify-center',
+      popup: 'text-sm flex items-center justify-center',
       title: 'text-xs',
       content: 'text-xs',
       icon: 'text-xs mb-2',
@@ -94,7 +94,7 @@ try {
     timer: 2000,
     toast: true,
     customClass: {
-      popup: 'w-60 h-18 text-sm flex items-center justify-center',
+      popup: 'text-sm flex items-center justify-center',
       title: 'text-xs',
       content: 'text-xs',
       icon: 'text-xs mb-2',
@@ -119,7 +119,7 @@ showNotification('کامنت حذف شد', 'success');
     timer: 2000,
     toast: true,
     customClass: {
-      popup: 'w-60 h-18 text-sm flex items-center justify-center',
+      popup: 'text-sm flex items-center justify-center',
       title: 'text-xs',
       content: 'text-xs',
       icon: 'text-xs mb-2',

@@ -35,7 +35,7 @@ const AddSuperAdminSection = () => {
       Swal.fire({
         position: "top-end",
         icon: "error",
-        title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+        title: err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
         showConfirmButton: false,
         timer: 2000,
         toast: true,

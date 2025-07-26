@@ -32,7 +32,7 @@ const users=[{id:1 , username:'ali'}]
         timer: 2000,
         toast: true,
         customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          popup: 'text-sm flex items-center justify-center',
           title: 'text-xs',
           content: 'text-xs',
           icon: 'text-xs mb-2',
@@ -74,7 +74,7 @@ const users=[{id:1 , username:'ali'}]
           timer: 2000,
           toast: true,
           customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            popup: 'text-sm flex items-center justify-center',
             title: 'text-xs',
             content: 'text-xs',
             icon: 'text-xs mb-2',
@@ -120,7 +120,7 @@ const users=[{id:1 , username:'ali'}]
             timer: 2000,
             toast: true,
             customClass: {
-              popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              popup: 'text-sm flex items-center justify-center',
               title: 'text-xs',
               content: 'text-xs',
               icon: 'text-xs mb-2',
@@ -137,7 +137,7 @@ const users=[{id:1 , username:'ali'}]
         timer: 2000,
         toast: true,
         customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          popup: 'text-sm flex items-center justify-center',
           title: 'text-xs',
           content: 'text-xs',
           icon: 'text-xs mb-2',
@@ -209,7 +209,7 @@ const users=[{id:1 , username:'ali'}]
         timer: 2000,
         toast: true,
         customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          popup: 'text-sm flex items-center justify-center',
           title: 'text-xs',
           content: 'text-xs',
           icon: 'text-xs mb-2',
@@ -278,7 +278,7 @@ const users=[{id:1 , username:'ali'}]
           timer: 2000,
           toast: true,
           customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            popup: 'text-sm flex items-center justify-center',
             title: 'text-xs',
             content: 'text-xs',
             icon: 'text-xs mb-2',
@@ -305,7 +305,7 @@ if (store.is_banned) {
       timer: 2000,
       toast: true,
       customClass: {
-        popup: 'w-60 h-18 text-sm flex items-center justify-center',
+        popup: 'text-sm flex items-center justify-center',
         title: 'text-xs',
         content: 'text-xs',
         icon: 'text-xs mb-2',
@@ -327,7 +327,7 @@ if (store.is_banned) {
       timer: 2000,
       toast: true,
       customClass: {
-        popup: 'w-60 h-18 text-sm flex items-center justify-center',
+        popup: 'text-sm flex items-center justify-center',
         title: 'text-xs',
         content: 'text-xs',
         icon: 'text-xs mb-2',
@@ -359,7 +359,7 @@ if (store.is_banned) {
           timer: 2000,
           toast: true,
           customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            popup: 'text-sm flex items-center justify-center',
             title: 'text-xs',
             content: 'text-xs',
             icon: 'text-xs mb-2',

@@ -111,7 +111,7 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
         timer: 2000,
         toast: true,
         customClass: {
-          popup: 'w-60 h-18 text-sm flex items-center justify-center',
+          popup: 'text-sm flex items-center justify-center',
           title: 'text-xs',
           content: 'text-xs',
           icon: 'text-xs mb-2',

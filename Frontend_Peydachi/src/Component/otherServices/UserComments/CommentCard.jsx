@@ -85,7 +85,7 @@ const CommentCard = ({ item, isStore, onDelete }) => {
             timer: 2000,
             toast: true,
             customClass: {
-              popup: 'w-60 h-18 text-sm flex items-center justify-center',
+              popup: 'text-sm flex items-center justify-center',
               title: 'text-xs',
               content: 'text-xs',
               icon: 'text-xs mb-2',
@@ -112,7 +112,7 @@ const CommentCard = ({ item, isStore, onDelete }) => {
             src={isStore ? item.storeImage : item.productImage}
             alt={isStore ? item.storeName : item.productName}
             className={`${
-              isStore ? 'w-12 h-12 rounded-full' : 'w-16 h-16 rounded-md'
+              isStore ? 'w-12 h-12' : 'w-16 h-16 rounded-md'
             } object-cover object-top mr-4`}
           />
           <div>
@@ -121,7 +121,7 @@ const CommentCard = ({ item, isStore, onDelete }) => {
               {isStore ? item.storeName : item.productName}
             </h3>
             
-            {!isStore && <p className="text-sm text-gray-600">from {item.storeName}</p>}
+            {!isStore && <p className="text-sm text-gray-600">از {item.storeName}</p>}
             <div className="flex items-center gap-1 mt-1">
               {renderStars(item.rating)}
               <span className="text-xs text-gray-500 mr-2">{timeAgo(item.timestamp)}</span>
@@ -131,8 +131,6 @@ const CommentCard = ({ item, isStore, onDelete }) => {
         <p className="text-gray-700">{item.comment}</p>
         <div className="flex items-center justify-between">
           <div className="flex text-gray-500 text-sm items-center">
-            {/* <FaRegThumbsUp className="mr-1" />
-            {item.likes} */}
           </div>
           <div className="flex space-x-2 text-sm">
           <button

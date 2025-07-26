@@ -128,17 +128,16 @@ const PhoneVerification= ({ showComponent, setshowComponent,rememberMe, verifica
                     Swal.fire({
                       position: "top-end",
                       icon: "error",
-                      title: err.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                      html: `<div class="text-justify">${err.response?.data?.message || err.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است"}</div>`,
                       showConfirmButton: false,
-                      timer: 2000,
+                      timer: 4000,
                       toast: true,
                       customClass: {
-                        popup: 'w-60 h-18 text-sm flex items-center justify-center',
-                        title: 'text-xs',
-                        content: 'text-xs',
+                        popup: 'text-sm px-4 py-3 max-w-md w-full ',
                         icon: 'text-xs mb-2',
                       },
                     });
+                  
                   }
                   Swal.fire({
                     position: "top-end",
@@ -159,30 +158,28 @@ const PhoneVerification= ({ showComponent, setshowComponent,rememberMe, verifica
                 Swal.fire({
                   position: "top-end",
                   icon: "error",
-                  title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+                  html: `<div class="text-justify">${error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است"}</div>`,
                   showConfirmButton: false,
-                  timer: 2000,
+                  timer: 4000,
                   toast: true,
                   customClass: {
-                    popup: 'w-60 h-18 text-sm flex items-center justify-center',
-                    title: 'text-xs',
-                    content: 'text-xs',
+                    popup: 'text-sm px-4 py-3 max-w-md w-full',
                     icon: 'text-xs mb-2',
                   },
                 });
+              
               }
         }
       } catch (error) {
-        console.log('Error during verification', error);
         Swal.fire({
           position: "top-end",
           icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+          html: `<div class="text-justify">${error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است"}</div>`,
           showConfirmButton: false,
           timer: 2000,
           toast: true,
           customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
+            popup: 'text-sm flex items-center justify-center',
             title: 'text-xs',
             content: 'text-xs',
             icon: 'text-xs mb-2',

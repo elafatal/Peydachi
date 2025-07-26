@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useRef} from 'react';
 import axiosInstance from '../../axiosInstance';
 import { FaRegCommentDots, FaRegStar } from 'react-icons/fa';
 import CommentCard from './CommentCard';
@@ -12,6 +12,7 @@ import Swal from "sweetalert2";
 
 const UserComment = () => {
   const navigate = useNavigate();
+  const fetchedRef = useRef(false);
   const [loadingStores, setLoadingStores] = useState(true);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [activeTab, setActiveTab] = useState('stores');
@@ -28,6 +29,85 @@ const UserComment = () => {
     },
   },
 };
+const fetchStoreComments = async () => {
+  try {
+    setLoadingStores(true);
+    const response = await axiosInstance.get('/store_comment/get_self_full_store_comments');
+    if (response.status === 200 && Array.isArray(response.data)) {
+      const mappedData = response.data.map((item) => ({
+        id: item.store_comment.id,
+        storeName: item.store.name,
+        storeImage: 'https://images.vexels.com/media/users/3/223412/isolated/preview/bd3704cf52ba23499660b8bae7221daf-store-icon-flat-design.png?w=360',
+        timestamp: new Date(item.store_comment.date_added).toLocaleString(),
+        rating: item.store.average_rating || 0,
+        comment: item.store_comment.text,
+        likes: 0,
+      }));
+      setStoreComments(mappedData);
+    }
+  } catch (error) {
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true,
+      customClass: {
+        popup: 'text-sm flex items-center justify-center',
+        title: 'text-xs',
+        content: 'text-xs',
+        icon: 'text-xs mb-2',
+      },
+    });
+  } finally {
+    setLoadingStores(false);
+  }
+};
+
+const fetchProductComments = async () => {
+  try {
+    setLoadingProducts(true);
+    const response = await axiosInstance.get('/product_comment/get_self_full_product_comments');
+    if (response.status === 200 && Array.isArray(response.data)) {
+      const mappedData = response.data.map((item) => ({
+        id: item.product_comment.id,
+        productName: item.product.name,
+        productImage: item.product.pic_url || 'https://via.placeholder.com/80',
+        timestamp: new Date(item.product_comment.date_added).toLocaleString(),
+        rating: item.product.average_rating || 0,
+        comment: item.product_comment.text,
+        storeName: item.store.name,
+        likes: 0,
+      }));
+      setProductComments(mappedData);
+    }
+  } catch (error) {
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
+      showConfirmButton: false,
+      timer: 2000,
+      toast: true,
+      customClass: {
+        popup: ' text-sm flex items-center justify-center',
+        title: 'text-xs',
+        content: 'text-xs',
+        icon: 'text-xs mb-2',
+      },
+    });
+  } finally {
+    setLoadingProducts(false);
+  }
+};
+useEffect(() => {
+  if (fetchedRef.current) return;
+  fetchedRef.current = true;
+
+  fetchStoreComments();
+  fetchProductComments();
+}, []);
 
 const itemVariants = {
   hidden: { opacity: 0, height: 0 },
@@ -35,84 +115,7 @@ const itemVariants = {
   exit: { opacity: 0, height: 0, marginBottom: 0 },
 };
 
-  useEffect(() => {
-    const fetchStoreComments = async () => {
-      try {
-        setLoadingStores(true);
-        const response = await axiosInstance.get('/store_comment/get_self_full_store_comments');
-        if (response.status === 200 && Array.isArray(response.data)) {
-          const mappedData = response.data.map((item) => ({
-            id: item.store_comment.id,
-            storeName: item.store.name,
-            storeImage: 
-            'https://vectorloo.com/wp-content/uploads/edd/2023/08/%D9%88%DA%A9%D8%AA%D9%88%D8%B1-%D8%B5%D9%88%D8%B1%D8%AA-%D8%AA%D8%B1%D9%88%D9%84-%D8%A8%D8%A7-%D8%B9%DB%8C%D9%86%DA%A9-%D9%88-%D8%B3%DB%8C%DA%AF%D8%A7%D8%B1-1.webp',
-            timestamp: new Date(item.store_comment.date_added).toLocaleString(),
-            rating: item.store.average_rating || 0,
-            comment: item.store_comment.text,
-            likes: 0,
-          }));
-          setStoreComments(mappedData);
-        }
-      } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
-      } finally {
-        setLoadingStores(false);
-      }
-    };
-  
-    const fetchProductComments = async () => {
-      try {
-        setLoadingProducts(true);
-        const response = await axiosInstance.get('/product_comment/get_self_full_product_comments');
-        if (response.status === 200 && Array.isArray(response.data)) {
-          const mappedData = response.data.map((item) => ({
-            id: item.product_comment.id,
-            productName: item.product.name,
-            productImage: item.product.pic_url || 'https://via.placeholder.com/80',
-            timestamp: new Date(item.product_comment.date_added).toLocaleString(),
-            rating: item.product.average_rating || 0,
-            comment: item.product_comment.text,
-            storeName: item.store.name,
-            likes: 0,
-          }));
-          setProductComments(mappedData);
-        }
-      } catch (error) {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response?.data?.message || error.response?.data?.detail || "خطای ناشناخته‌ای رخ داده است",
-          showConfirmButton: false,
-          timer: 2000,
-          toast: true,
-          customClass: {
-            popup: 'w-60 h-18 text-sm flex items-center justify-center',
-            title: 'text-xs',
-            content: 'text-xs',
-            icon: 'text-xs mb-2',
-          },
-        });
-      } finally {
-        setLoadingProducts(false);
-      }
-    };
-  
-    fetchStoreComments();
-    fetchProductComments();
-  }, []);
+
   
 const goToSearch =()=>{
   navigate('/search', { replace: true });
@@ -125,7 +128,7 @@ const backHome =()=>{
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    setShowAll(false); // Reset when switching tabs
+    setShowAll(false); 
   };
   const handleDeleteComment = (id) => {
     if (activeTab === 'stores') {
