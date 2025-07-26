@@ -43,7 +43,7 @@ const ProductList = ({ stores , onStoreClick }) => {
               <div className="h-16 w-16 rounded-lg overflow-hidden bg-blue-100 flex-shrink-0 mr-4">
                 <img
                   src={item.product.pic_url}
-                  alt={item.store.name}
+                  alt={item.product.name}
                   className="h-full w-full object-cover object-top"
                 />
               </div>
@@ -52,7 +52,7 @@ const ProductList = ({ stores , onStoreClick }) => {
               <div className="flex-1">
                 <div className="flex justify-between">
                   <h3 className="text-lg font-medium text-gray-800">
-                    {item.store.name}
+                    {item.product.name}
                   </h3>
                   <span className="text-sm font-medium text-blue-600">
                     {item.distance} km
@@ -67,9 +67,8 @@ const ProductList = ({ stores , onStoreClick }) => {
                   </span>
                 </div>
 
-                {/* Description */}
                 <p className="text-sm text-gray-600 mt-1">
-                  {item.product.description}
+                  {item.store.name}
                 </p>
 
                 {/* Stock badge */}

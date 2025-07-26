@@ -6,6 +6,7 @@ import showErrorToast from '../utils/showErrorToast';
 const useMainSearchLogic = () => {
   const cityDebounceTimeout = useRef(null);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
@@ -170,9 +171,9 @@ const useMainSearchLogic = () => {
   }, [cityName]);
     
   const handleSearch = async() => {
-  
+    setIsLoading(true);
     const queryParams = new URLSearchParams();
-    queryParams.set('city_id', cityId); // ← اضافه کن
+    queryParams.set('city_id', cityId); 
     queryParams.set('Query', searchTerm);
     queryParams.set('range', range);
     queryParams.set('city_name', cityName);
@@ -196,6 +197,7 @@ const useMainSearchLogic = () => {
     }
     showErrorToast(error);
   }
+  setIsLoading(false);
     console.log('🔍 Searching for:', searchTerm);
     console.log('📍 Location:', location);
     console.log('📏 Range:', range, 'km');
@@ -292,6 +294,7 @@ const handleSearchLocation2 = async () => {
   
 
   return {
+    isLoading,
     searchTerm,
     setSearchTerm,
     location,

@@ -23,6 +23,7 @@ const MainSearch = () => {
   const [mapInstance, setMapInstance] = useState(null);
 
   const {
+    isLoading,
     searchTerm, setSearchTerm,
     location, setLocation,
     mapCenter, setMapCenter,
@@ -84,13 +85,24 @@ const MainSearch = () => {
         {/* ----------------------------------------------------------------
          * Store list
          * -------------------------------------------------------------- */}
-<ProductList
-  stores={stores}
-  onStoreClick={(store) => {
-    console.log('📍 Store clicked:', store);
-    setSelectedStoreLocation(store); 
-  }}
-/>
+{
+  isLoading ? (
+    <div className="flex justify-center items-center h-64">
+    <div className="flex flex-col items-center">
+      <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+      <p className="mt-4 text-sm text-gray-600">در حال بارگذاری فروشگاه‌ها...</p>
+    </div>
+  </div>
+  ) : stores.length === 0 ? (
+    <div className="p-6 text-center text-gray-500">نتیجه‌ای یافت نشد</div>
+  ) : (
+    <ProductList
+      stores={stores}
+      onStoreClick={(store) => setSelectedStoreLocation(store)}
+    />
+  )
+}
+
 
       </div>
         {/* ////map */}
