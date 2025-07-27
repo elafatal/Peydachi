@@ -238,6 +238,7 @@ async def mark_all_notifs_as_seen(user_id: int, db: Session):
     seen_all_notifs = (update(Notification).where(and_(Notification.user_id == user_id, Notification.has_seen == False)).values(has_seen = True).execution_options(synchronize_session='fetch'))
 
     db.execute(seen_all_notifs)
+    db.commit()
 
     return 'All notifications marked as seen'
 

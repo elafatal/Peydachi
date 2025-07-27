@@ -1,0 +1,13 @@
+.venv
+.idea
+.VSCodeCounter
+
+__pycache__
+alembic
+alembic.ini
+
+
+.env
+
+*cache*
+*~
