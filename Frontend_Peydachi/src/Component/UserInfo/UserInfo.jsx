@@ -89,7 +89,6 @@ const UserInfo = () => {
           }
         }
       } catch (error) {
-        setFormData(prev => ({ ...prev, [is_seller]: false }))
         showErrorToast(error);
       }
     };
