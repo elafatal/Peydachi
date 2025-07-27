@@ -1,10 +1,14 @@
 import React, { useState,useEffect } from 'react';
 import axiosInstance from '../../axiosInstance';
 import showErrorToast from '../../utils/showErrorToast';
+import { FaUserShield, FaUserCircle , FaUserTie } from 'react-icons/fa';
+import { FaClipboardUser } from "react-icons/fa6";
+
 const AddOwnerModal = ({ isOpen, onClose, store, onAddOwner }) => {
   const [userQuery, setUserQuery] = useState('');
   const [selectedUserId, setSelectedUserId] = useState(0)
   const [searchResult,setSearchResult]=useState([])
+
   const handleSubmit = () => {
     if (userQuery === 0) return; 
     onAddOwner(selectedUserId);
@@ -19,7 +23,6 @@ const AddOwnerModal = ({ isOpen, onClose, store, onAddOwner }) => {
             const response = await axiosInstance.post('/admin/user/search_users', {
               username: userQuery
             });
-            console.log(response.data);
             setSearchResult(response.data)
           } catch (error) {
             showErrorToast(error);
@@ -29,9 +32,9 @@ const AddOwnerModal = ({ isOpen, onClose, store, onAddOwner }) => {
       searchUsers();
    }, [userQuery]);
 
-   useEffect(() => {
-console.log(selectedUserId)
-   }, [selectedUserId]);
+  //  useEffect(() => {
+  //     console.log(selectedUserId)
+  //  }, [selectedUserId]);
 
  
 
@@ -56,7 +59,14 @@ console.log(selectedUserId)
            {searchResult.length !=0 ?
             <div  className="mt-1 max-h-52 overflow-scroll z-50 block w-4/5  border border-gray-300 rounded-md shadow-sm py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
               {searchResult.map(user => (
-              <span onClick={()=>setSelectedUserId(user.id)} className='cursor-pointer block p-2 hover:bg-blue-100 transition-all duration-300' key={user.id} > {user.username}
+                <span 
+                    onClick={() => setSelectedUserId(user.id)} 
+                    className={`cursor-pointer block p-2 hover:bg-blue-100 transition-all duration-300 ${selectedUserId === user.id ? 'bg-blue-200 border-l-4 border-blue-500' : ''}`} 
+                    key={user.id}
+                  >                 {user.username} {user.is_super_admin ? <FaUserTie title='سوپر ادمین' className='text-indigo-800 inline' /> 
+                  : user.is_admin ? <FaUserShield title='ادمین' className='inline text-indigo-700'/> 
+                  : user.is_seller ? <FaClipboardUser title='فروشنده' className='inline text-indigo-400' />
+                  :  <FaUserCircle title='کاربر' className='inline text-indigo-300' />}
               </span>
               ))}
            </div> : null}

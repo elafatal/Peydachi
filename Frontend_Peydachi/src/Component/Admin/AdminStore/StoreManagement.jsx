@@ -23,7 +23,22 @@ const users=[{id:1 , username:'ali'}]
   const deleteOwner=async(store)=>{
     try {
       const response = await axiosInstance.put('/admin/store/remove_owner_from_store',{store_id: store.id});
-      console.log(response.data);
+      if (response.status === 200) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: " فروشنده حذف شد",
+          showConfirmButton: false,
+          timer: 1500,
+          toast: true,
+          customClass: {
+            popup: 'text-sm flex items-center justify-center', 
+            title: 'text-xs', 
+            content: 'text-xs',
+            icon : 'text-xs mb-2'
+          }
+      });      }
+      handleSearch()
     } catch (error) {
       showErrorToast(error);
     }    
@@ -70,22 +85,22 @@ const users=[{id:1 , username:'ali'}]
           const response = await axiosInstance.put('/admin/store/add_owner_to_store', {
             store_id: selectedStore.id , user_id : userId
           });
-          if (response.data === 200) {
             Swal.fire({
               position: "top-end",
               icon: "success",
-              title: " درخواست انجام شد",
+              title: "فروشنده به فروشگاه اختصاص یافت",
               showConfirmButton: false,
               timer: 1500,
               toast: true,
               customClass: {
-                popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+                popup: ' text-sm flex items-center justify-center', 
                 title: 'text-xs', 
                 content: 'text-xs',
                 icon : 'text-xs mb-2'
               }
           });
-          }
+          handleSearch()
+
         } catch (error) {
           showErrorToast(error);
         }

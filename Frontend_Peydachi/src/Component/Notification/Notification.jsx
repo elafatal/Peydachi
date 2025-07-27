@@ -30,7 +30,7 @@ const Notifications=()=>{
       };
     
       GetUnreadNotif();
-      intervalId = setInterval(GetUnreadNotif, 10000); 
+      intervalId = setInterval(GetUnreadNotif, 50000); 
     
       return () => clearInterval(intervalId);
     }, []);
