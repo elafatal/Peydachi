@@ -274,7 +274,7 @@ useEffect(() => {
               </div>
             </div>
                   )}
-        {sortedProducts && sortedProducts.length > 10 ? <div className="mt-12 flex justify-center">
+        {sortedProducts && sortedProducts.length > 9 ? <div className="mt-12 flex justify-center">
           <button type="button" onClick={handleSetOffset} className="flex items-center bg-white border border-blue-300 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-button transition duration-200 font-medium whitespace-nowrap cursor-pointer">
             نمایش بیشتر <FaChevronDown className="ml-2" />
           </button>
