@@ -1,4 +1,5 @@
 import React , { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import {  FaComments,FaStar, FaHeart, FaSearch, FaChevronDown, FaBox, FaCalendarAlt, FaEye, FaShoppingCart, FaFacebookF, FaInstagram, FaTwitter, FaPinterest, FaDirections } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
@@ -10,6 +11,7 @@ import StoreComment from './StoreComment';
 import ProductDetailModal from './ProductModal'; 
 import showErrorToast from '../../utils/showErrorToast';
 const StoreProfile = () => {
+  const { search } = useLocation();
   const { id } = useParams(); 
   const [store, setStore] = useState(null);
   const [isMore, setIsMore] = useState(true);
@@ -21,7 +23,15 @@ const StoreProfile = () => {
     setSelectedProductId(productId);
     setIsDetailModalOpen(true);
   };
+  useEffect(() => {
+    const params = new URLSearchParams(search);
+    const productNameFromUrl = params.get('product'); 
     
+    if (productNameFromUrl) {
+      setSearchTerm(productNameFromUrl); 
+      setS(!s)
+    }
+  }, [search]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [s, setS] = useState(false);

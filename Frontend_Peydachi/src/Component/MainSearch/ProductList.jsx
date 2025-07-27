@@ -17,9 +17,10 @@ const renderStars = (rating) => {
 
 const ProductList = ({ stores , onStoreClick }) => {
   const navigate = useNavigate();
-  const handleSeeDetail=(item)=>{
-    navigate(`/storeDetail/${item.store.id}`, { replace: false });
-  }
+  const handleSeeDetail = (item) => {
+    navigate(`/storeDetail/${item.store.id}?product=${item.product.name}`, { replace: false });
+  };
+  
   return (
     <div className="flex-1 overflow-auto p-4">
       {stores.length > 0 ? <></> :

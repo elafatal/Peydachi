@@ -12,7 +12,6 @@ const RoutePath = ({ map, from, to }) => {
       Array.isArray(arr) && arr.length === 2 && !isNaN(arr[0]) && !isNaN(arr[1]);
 
     if (!map || !validCoords(from) || !validCoords(to)) {
-      console.warn('⛔ Map or coordinates not ready:', { map, from, to });
       return;
     }
 

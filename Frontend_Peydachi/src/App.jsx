@@ -35,7 +35,7 @@ import AdminReports from './Component/Admin/AdminReports/AdminReports';
 import StoreRequest from './Component/Admin/AdminReports/StoreRequests/StoreRequest';
 import UserReports from './Component/Admin/AdminReports/UserReports/UserReports';
 import CommentManagement from './Component/Admin/AdminCommet/CommentManagement';
-import SelfStore from './Component/Store/SelfStore';
+import SelfStore from './Component/Store/selfStore';
 import CenteredVideo from './Component/Criticism/Criticism';
 import SignIn from './Component/SignUp-SignIn/SignIn/SignIn';
 import SignUp from './Component/SignUp-SignIn/SignUp/SignUp';
