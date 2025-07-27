@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from database import models
 from database.database import Base, engine
@@ -61,10 +62,17 @@ origins = [
 ]
 
 
+ENV = os.getenv("ENV", "development")
+
+
+
 app = FastAPI(
     title="Peydachi",
     version="0.0.1",
-    debug=True
+    debug=False,
+    docs_url=None if ENV == "production" else "/docs",
+    redoc_url=None if ENV == "production" else "/redoc",
+    openapi_url=None if ENV == "production" else "/openapi.json",
 )
 app.add_middleware( 
     CORSMiddleware, 
@@ -136,13 +144,13 @@ if __name__ == "__main__":
     
     import uvicorn
     try:
-        uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True, log_level="debug")
+        uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True, log_level="debug")
 
     except Exception as first_error:
         print(f"Primary host failed: {first_error}")
 
         try:
-            uvicorn.run("main:app", host="127.0.0.1", port=5000, reload=True, log_level="debug")
+            uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True, log_level="debug")
 
         except Exception as fallback_error:
             print(f"Fallback host also failed: {fallback_error}")
