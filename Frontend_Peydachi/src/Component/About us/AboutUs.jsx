@@ -32,15 +32,15 @@ const AboutUs = () => {
             >
               <BiLogoTelegram title='تلگرام' className="opacity-90 transition-opacity hover:opacity-100 text-blue-600 w-8 h-8 cursor-pointer" />
             </a>
-            <a
+            {/* <a
               href="https://github.com/HB2102/Peydachi"
               target="_blank"
               rel="noopener noreferrer"
             >
               <FaGithub title='گیتهاب' className="opacity-90 transition-opacity hover:opacity-100 text-blue-600 w-8 h-8 cursor-pointer" />
-            </a>
+            </a> */}
             <a
-              href="mailto:your.email@example.com" 
+              href="mailto:peydachi.management@gmail.com" 
               target="_blank"
               rel="noopener noreferrer"
             >
