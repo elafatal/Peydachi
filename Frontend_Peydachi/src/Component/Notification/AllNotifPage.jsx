@@ -112,9 +112,6 @@ useEffect(() => {
         const response=await axiosInstance.put('/notification/review_notification', {
           notification_id: id,
         });
-        console.log(`Notification ${id} marked as read on server.`);
-    
-        
         setNotificationsCache((prevCache) => ({
           ...prevCache,
           unread: prevCache.unread
@@ -188,21 +185,34 @@ useEffect(() => {
   const markAllAsRead = async () => {
     try {
        const response =await axiosInstance.put('/notification/mark_all_notifs_as_seen');
-       Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: " انجام شد",
-        showConfirmButton: false,
-        timer: 1500,
-        toast: true,
-        customClass: {
-          popup: 'w-2 h-15 text-sm flex items-center justify-center', 
-          title: 'text-xs', 
-          content: 'text-xs',
-          icon : 'text-xs mb-2'
-        }
-    });
-    } catch (err) {
+       console.log(response);
+      if (response.status === 200) {
+        setNotificationsCache((prevCache) => ({
+          ...prevCache,
+          unread: prevCache.unread
+            ? prevCache.unread.filter((n) => n.id !== id)
+            : null,
+          all: prevCache.all
+            ? prevCache.all.map((n) =>
+                n.id === id ? { ...n, has_seen: true } : n
+              )
+            : null,
+        }));
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: " انجام شد",
+          showConfirmButton: false,
+          timer: 1500,
+          toast: true,
+          customClass: {
+            popup: 'w-2 h-15 text-sm flex items-center justify-center', 
+            title: 'text-xs', 
+            content: 'text-xs',
+            icon : 'text-xs mb-2'
+          }
+      });
+    }} catch (err) {
       showErrorToast(err);
     }
   };
@@ -337,13 +347,13 @@ useEffect(() => {
                         <FaRegFaceRollingEyes className='inline text-md mr-1' />
                       </button>
 
-                          <button 
+                          {/* <button 
                             onClick={(e) => deleteNotification(notification.id, e)}
                             className="text-xs px-2 py-1 rounded bg-gray-100 text-red-600 hover:bg-red-100 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
                           >
                             <FaTrashAlt className='ml-1 inline'/>
                             حذف
-                          </button>
+                          </button> */}
                         </div>
                       </div>
                     </div>

@@ -89,6 +89,7 @@ const UserInfo = () => {
           }
         }
       } catch (error) {
+        setFormData(prev => ({ ...prev, [is_seller]: false }))
         showErrorToast(error);
       }
     };
@@ -158,7 +159,7 @@ const UserInfo = () => {
  
 
     else if (!/^\d{11}$/.test(formData.phone_number.replace(/\D/g, '')) && formData.phone_number.trim()) {
-      newErrors.phone_number = 'Please enter a valid 10-digit phone number';
+      newErrors.phone_number = 'شماره موبایل باید ۱۱ رقم با معنا باشد';
     }
 
 
@@ -191,7 +192,7 @@ const handleGoSelfStore =()=>{
                 timer: 1500,
                 toast: true,
                 customClass: {
-                  popup: 'w-3 h-15 text-xs flex items-center justify-center',
+                  popup: ' text-xs flex items-center justify-center',
                   title: 'text-xs', 
                   content: 'text-xs', 
                   icon : 'text-xs mb-2'
@@ -213,7 +214,21 @@ const handleGoSelfStore =()=>{
           'Content-Type': 'application/json'
         }
       });
-      console.log('Store deleted successfully');
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "فروشگاه حذف شد",
+        showConfirmButton: false,
+        timer: 1500,
+        toast: true,
+        customClass: {
+          popup: 'text-sm flex items-center justify-center', 
+          title: 'text-xs', 
+          content: 'text-xs',
+          icon : 'text-xs mb-2'
+        }
+    });
+    setFormData(prev => ({ ...prev, [is_seller]: false }))
     } catch (error) {
       showErrorToast(error);
     }

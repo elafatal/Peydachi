@@ -90,7 +90,7 @@ const RecentComments = ({storeID}) => {
               )}
               
               {/* Show a partial card to indicate more content */}
-              {!loading && (
+              {!loading && comments.length > 5 && (
                 <div className="min-w-[100px] bg-white/50 rounded-xl shadow-sm flex items-center justify-center cursor-pointer whitespace-nowrap !rounded-button">
                   <button className="text-blue-600 hover:text-blue-800 px-4">
                   <FaEllipsisH />

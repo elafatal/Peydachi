@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import axiosInstance from '../../axiosInstance';
+import { FaUserShield, FaUserCircle , FaUserTie } from 'react-icons/fa';
+import { FaClipboardUser } from "react-icons/fa6";
+
 import Swal from "sweetalert2"; 
 import showErrorToast from '../../utils/showErrorToast'; 
 const DeleteUserSection = () => {
@@ -113,21 +116,14 @@ const DeleteUserSection = () => {
         <div className="space-y-2">
           <p className="text-sm text-gray-700">کاربر مورد نظر را انتخاب کنید:</p>
           <ul className="space-y-1 max-h-40 overflow-y-auto">
-            {searchResults.map((user) => (
-              <li key={user.id} className="hover:bg-blue-50 p-1 flex items-center gap-2">
-                <input
-                  type="radio"
-                  id={`user-${user.id}`}
-                  name="selectedUser"
-                  value={user.id}
-                  checked={selectedUserId === user.id}
-                  onChange={() => setSelectedUserId(user.id)}
-                />
-                <label htmlFor={`user-${user.id}`} className="text-sm text-gray-800">
-                  {user.username}
-                </label>
-              </li>
-            ))}
+            {searchResults.map(user => (
+                          <span onClick={()=>setSelectedUserId(user.id)} className='cursor-pointer block p-2 hover:bg-blue-100 transition-all duration-300' key={user.id} >
+                             {user.username} {user.is_super_admin ? <FaUserTie title='سوپر ادمین' className='text-indigo-800 inline' /> 
+                              : user.is_admin ? <FaUserShield title='ادمین' className='inline text-indigo-700'/> 
+                              : user.is_seller ? <FaClipboardUser title='فروشنده' className='inline text-indigo-400' />
+                              :  <FaUserCircle title='کاربر' className='inline text-indigo-300' />}
+                          </span>
+                          ))}
           </ul>
         </div>
       )}

@@ -57,12 +57,11 @@ const RoutePath = ({ map, from, to }) => {
       const coords = e.routes[0].coordinates;
       if (!coords || coords.length === 0) return;
     
-      // بررسی اینکه مسیر جدید هست یا نه
+
       const currentKey = JSON.stringify([from, to]);
       if (lastCoordsRef.current === currentKey) return;
       lastCoordsRef.current = currentKey;
-    
-      // حالا انیمیشن رو اجرا کن
+
       map.fitBounds(L.latLngBounds(coords));
     
       let index = 0;
@@ -93,7 +92,7 @@ const RoutePath = ({ map, from, to }) => {
         }
         animatedLine.addLatLng(coords[index]);
         vehicleMarker.setLatLng(coords[index]);
-        index ++;
+        index =index+2;
       }, 30);
     
       map._routeElements.push({
