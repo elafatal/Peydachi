@@ -57,8 +57,16 @@ from routers.admin_routers import (
 origins = [
     "http://localhost:*",
     "http://localhost:5173",
-    "http://localhost:5174",
-    "http://127.0.0.1:8000"
+    "https://peydachi-frontend.liara.run",
+    "https://peydachi-frontend.liara.run/",
+    "https://peydachi-backend.liara.run/",
+    "https://peydachi-backend.liara.run",
+    "https://peydachi.liara.run",
+    "https://peydachi.liara.run/",
+    "http://peydachi.ir",
+    "http://peydachi.ir/",
+    "https://peydachi.ir",
+    "https://peydachi.ir/",
 ]
 
 
