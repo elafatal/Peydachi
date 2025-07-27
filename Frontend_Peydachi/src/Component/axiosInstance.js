@@ -3,7 +3,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 
-const BASE_URL = "http://127.0.0.1:8000";
+// const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = "https://peydachi-backend.liara.run";
+
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
