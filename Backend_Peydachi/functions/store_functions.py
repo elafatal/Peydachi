@@ -136,6 +136,12 @@ async def delete_store(user_id: int, db: Session):
     db.execute(product_comments)
     db.execute(store_category)
 
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise USER_NOT_FOUND_ERROR
+
+    user.is_seller = False
+
     db.delete(store)
     db.commit()
 
@@ -163,6 +169,12 @@ async def delete_store_admin(store_id: int, db: Session):
     db.execute(store_comments)
     db.execute(product_ratings)
     db.execute(product_comments)
+
+    user = db.query(User).filter(User.id == store.owner_id).first()
+    if not user:
+        raise USER_NOT_FOUND_ERROR
+
+    user.is_seller = False
 
     db.delete(store)
     db.commit()
