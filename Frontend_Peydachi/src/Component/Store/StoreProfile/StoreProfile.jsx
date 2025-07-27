@@ -12,6 +12,8 @@ import showErrorToast from '../../utils/showErrorToast';
 const StoreProfile = () => {
   const { id } = useParams(); 
   const [store, setStore] = useState(null);
+  const [isMore, setIsMore] = useState(true);
+  const [lastResponseCount, setlastResponseCount] = useState(0);
   const [products, setProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -85,12 +87,15 @@ useEffect(() => {
         page: offset,
         order: sortBy === 'newest' ? 'newest' : sortBy === 'rating' ? 'favorite' : null,
       });
-
+      setlastResponseCount(response.data)
       setProducts((prevProducts) =>
         offset === 1 ? response.data : [...prevProducts, ...response.data]
       );
     } catch (err) {
       showErrorToast(err);
+      if (err.response && err.response.status === 404) {
+        setIsMore(false)
+      }
     } finally {
       setLoading(false);
     }
@@ -274,7 +279,7 @@ useEffect(() => {
               </div>
             </div>
                   )}
-        {sortedProducts && sortedProducts.length > 9 ? <div className="mt-12 flex justify-center">
+        {sortedProducts && lastResponseCount.length > 9 && isMore ? <div className="mt-12 flex justify-center">
           <button type="button" onClick={handleSetOffset} className="flex items-center bg-white border border-blue-300 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-button transition duration-200 font-medium whitespace-nowrap cursor-pointer">
             نمایش بیشتر <FaChevronDown className="ml-2" />
           </button>

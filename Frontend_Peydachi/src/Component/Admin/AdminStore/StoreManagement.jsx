@@ -396,7 +396,7 @@ if (store.is_banned) {
             <tbody className="bg-white divide-y divide-gray-200">
               {stores.length > 0 ? (
                 stores.map(store => (
-                  <tr key={store.id} className="hover:bg-gray-50">
+                  <tr key={store.id} className="hover:bg-gray-50" onClick={()=>navigate(`/storeDetail/${store.id}`, { replace: false })}>
                     <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{store.id}</td>
                     <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">{store.name}</td>
                     <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">{store.owner_id}</td>
