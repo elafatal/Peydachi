@@ -34,14 +34,14 @@ async def user_sign_up_phone_verification(phone_number: str, redis_db: Redis, db
 
 
     # It should be a sms service, but we don't have money so we just show a log message
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        datefmt='%Y/%m/%d %H:%M:%S',
-        filename=os.path.join('logs', 'signup_verification_logs', 'signup_verification_code_logs.log'),
-        filemode='a'
-    )
-    logging.info("%s >>> Welocme to Peydachi. Your verification code is %s.", phone_number, code)
+    # logging.basicConfig(
+    #     level=logging.INFO,
+    #     format='%(asctime)s - %(levelname)s - %(message)s',
+    #     datefmt='%Y/%m/%d %H:%M:%S',
+    #     filename=os.path.join('logs', 'signup_verification_logs', 'signup_verification_code_logs.log'),
+    #     filemode='a'
+    # )
+    # logging.info("%s >>> Welocme to Peydachi. Your verification code is %s.", phone_number, code)
 
 
     try: 
@@ -86,14 +86,14 @@ async def user_forget_password(username: str, redis_db: Redis, db: Session, sms_
     redis_db.expire(f'phone_verification:{phone_number}', VERIFICATION_CODE_TIME_LIMIT_SECONDS)
 
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        datefmt='%Y/%m/%d %H:%M:%S',
-        filename=os.path.join('logs', 'forget_password_verification_logs', 'forget_password_verification_code_logs.log'),
-        filemode='a'
-    )
-    logging.info("%s >>> Hi %s Did you forget your password? Your verification code is %s.", phone_number, username, code)
+    # logging.basicConfig(
+    #     level=logging.INFO,
+    #     format='%(asctime)s - %(levelname)s - %(message)s',
+    #     datefmt='%Y/%m/%d %H:%M:%S',
+    #     filename=os.path.join('logs', 'forget_password_verification_logs', 'forget_password_verification_code_logs.log'),
+    #     filemode='a'
+    # )
+    # logging.info("%s >>> Hi %s Did you forget your password? Your verification code is %s.", phone_number, username, code)
 
 
     try: 
