@@ -7,15 +7,16 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { useAuth } from '../../Context/AuthContext'; 
 import UnauthorizedPage from '../../Error/UnauthorizedPage';
 import showErrorToast from '../../utils/showErrorToast';
+import { useCityContext } from '../../Context/CityContext';
+
 const CityManagement = () => {
   const { role } = useAuth();
+  const { cities, loadingCities, getCityName,refreshCities  } = useCityContext();
 
-  const [loadingCities, setLoadingCities] = useState(true);
   const [loadingRegions, setLoadingRegions] = useState(true);
   const [regionSearchText, setRegionSearchText] = useState('');
   // State for regions and cities
   const [regions, setRegions] = useState([]);
-  const [cities, setCities] = useState([]);
   // State for form inputs
   const [newRegionName, setNewRegionName] = useState('');
   const [newCityName, setNewCityName] = useState('');
@@ -52,29 +53,6 @@ const CityManagement = () => {
     handleRegions();
   }, []);
   
-
-    useEffect(() => {
-      const handleAllCities = async () => {
-        try {
-          setLoadingCities(true); 
-          const response = await axiosInstance.get('/city/get_all_cities', {
-            headers: {
-              Authorization: null,
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-          setCities(response.data);
-        } catch (error) {
-          showErrorToast(error);
-        } finally {
-          setLoadingCities(false); 
-        }
-      };
-    
-      handleAllCities();
-    }, []);
-    
-
     const filteredCities = selectedRegionForCities
     ? cities.filter(city => city.region_id === selectedRegionForCities)
     : cities;
@@ -150,9 +128,9 @@ const CityManagement = () => {
         };
 
         const handleAddCity = async() => {
-        if (!newCityName.trim() || selectedRegionId === null) {
-        showNotification('شهر و استان را انتخاب کنید', 'error');
-        return;
+         if (!newCityName.trim() || !selectedRegionId) {
+          showNotification('شهر و استان را انتخاب کنید', 'error');
+          return;
         }else{
             try {
                 const response = await axiosInstance.post('/super_admin/city/add_city', {
@@ -163,6 +141,8 @@ const CityManagement = () => {
                if (response.status === 201 ) {
                 setNewCityName('');
                 showNotification('شهر اضافه شد', 'success');
+                await refreshCities();
+
                }
               } catch (error) {
                 showErrorToast(error);
@@ -182,15 +162,12 @@ const CityManagement = () => {
         });
         console.log(response.data);
        if (response.status === 200 ) {
-            setCities(cities.map(city =>
-            city.id === editingCityId
-            ? { ...city, name: editingCityName.trim(), region_id: editingCityRegionId }
-            : city
-            ));
             setEditingCityId(null);
             setEditingCityName('');
             setEditingCityRegionId(null);
             showNotification('شهر با موفقیت به روزرسانی شد', 'success');
+            await refreshCities();
+
        }
       } catch (error) {
         showErrorToast(error);

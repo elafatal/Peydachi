@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Navigate } from 'react-router-dom';
 import { AdminStatsProvider } from './Component/Context/AdminStatsContext'; 
 import './App.css'
+import { CityProvider } from './Component/Context/CityContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AboutUs from './Component/About us/AboutUs';
 import Login from './Component/SignUp-SignIn/Login';
@@ -46,6 +47,7 @@ import PhoneVerification from './Component/SignUp-SignIn/Verify/PhoneVerificatio
 function App() {
   return (
     <AuthProvider>
+      <CityProvider>
        <AdminStatsProvider>
       <Router>
         <ScrollToTop/>
@@ -103,6 +105,7 @@ function App() {
         </div>
       </Router>
       </AdminStatsProvider>
+      </CityProvider>
     </AuthProvider>
   )
 }

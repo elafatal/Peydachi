@@ -3,6 +3,7 @@ import { FaStar, FaRegStar, FaStarHalfAlt, FaTimes } from 'react-icons/fa';
 import axiosInstance from "../axiosInstance";
 import React, { useEffect, useState } from "react";
 import formatDate from '../utils/formatDate';
+import { useCityContext } from '../Context/CityContext';
 
 const SelfProductModal = ({
   selectedProduct,
@@ -14,22 +15,8 @@ const SelfProductModal = ({
 }) => {
   if (!isModalOpen || !selectedProduct) return null;
   const [cityName, setCityName] = useState('');
-  const [cities, setCities] = useState([]);
+  const { cities, getCityName } = useCityContext();
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const res = await axiosInstance.get('/city/get_all_cities');
-        setCities(res.data); 
-      } catch (err) {
-        console.error('خطا در دریافت لیست شهرها:', err);
-      }
-    };
-    
-    if (!cities.length) { 
-      fetchCities();
-    }
-  }, [cities]);
 
   useEffect(() => {
     const findCityName = () => {

@@ -5,10 +5,12 @@ import showErrorToast from '../../utils/showErrorToast';
 import { useNavigate } from 'react-router-dom';
 import AddOwnerModal from './AddOwnerModal';
 import axiosInstance from '../../axiosInstance';
+import { useCityContext } from '../../Context/CityContext';
 import {FaTrash, FaShieldAlt,FaBan ,FaUserPlus,FaStar,FaPlus,FaSearch ,FaTimes,FaComment   } from 'react-icons/fa';
 import { FaUserSlash } from "react-icons/fa";
 const StoreManagement= () => {
   const navigate = useNavigate();
+  const { cities, getCityName } = useCityContext();
   const [stores, setStores] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCity, setFilterCity] = useState('');
@@ -268,27 +270,6 @@ if (store.is_banned) {
     setStores(updatedStores);
   };
 
-  const [cities,setCities] = useState([]);
-  useEffect(() => {
-    const getAllStores = async()=>{
-      try {
-        const response = await axiosInstance.get('/city/get_all_cities');
-        console.log(response.data);
-        setCities(response.data)
-      } catch (error) {
-        showErrorToast(error);
-      }
-    }
-     getAllStores();
-   }, []);
-
-
-
-
-  const getCityName = (cityId) => {
-    const city = cities.find(c => c.id === cityId);
-    return city ? city.name : 'Unknown';
-  };
 
 
   return (    <div className="max-h-screen bg-gray-50" dir='ltr'>

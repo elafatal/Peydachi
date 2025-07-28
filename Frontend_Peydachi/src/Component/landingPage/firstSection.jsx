@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { FaLocationDot } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
 import axiosInstance from '../axiosInstance';
+import { useCityContext } from '../Context/CityContext';
+import Swal from 'sweetalert2';
+
 const FirstSection = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,7 +24,9 @@ const FirstSection = () => {
     visible: { opacity: 1, height: "auto", transition: { duration: 0.3 } },
     exit: { opacity: 0, height: 0, transition: { duration: 0.2 } },
   };
-  
+  const { cities: allGlobalCities } = useCityContext(); 
+  const citySource = allCities.length > 0 ? allCities : allGlobalCities;
+
   useEffect(() => {
     const handleRegions = async () => {
       try {
@@ -42,25 +47,6 @@ const FirstSection = () => {
     handleRegions();
   }, []);
 
-  useEffect(() => {
-    const handleAllCities = async () => {
-      try {
-        const response = await axiosInstance.get('/city/get_all_cities', {
-          headers: {
-            Authorization: null,
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        setAllCities(response.data);
-        console.log(response);
-        
-      } catch (error) {
-        showErrorToast(error);
-      } 
-    };
-
-    handleAllCities();
-  }, []);
 
   
 
@@ -88,9 +74,9 @@ const FirstSection = () => {
     setShowLocationDropdown(prev => !prev);    
   if (!showLocationDropdown) setFilteredRegions(regions); 
     
-  }else if(target === 'city'){
-    setShowLocationDropdown2(!showLocationDropdown2)
-    if (!showLocationDropdown2) setFilteredCities(allCities)
+  }else if (target === 'city') {
+    setShowLocationDropdown2(!showLocationDropdown2);
+    if (!showLocationDropdown2) setFilteredCities(citySource);
   }
 
   }
@@ -106,7 +92,18 @@ const FirstSection = () => {
     const selectedCity = allCities.find((c) => c.name === city);
     const cityId = selectedCity?.id;
     if (!searchQuery.trim()) {
-      alert('لطفاً نام محصول را وارد کنید');
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: 'لطفاً نام محصول را وارد کنید',
+        showConfirmButton: false,
+        timer: 2500,
+        toast: true,
+        customClass: {
+          popup: 'text-sm px-4 py-3 max-w-md w-full',
+          icon: 'text-xs mb-2',
+        },
+      });
       return;
     }
     
@@ -117,10 +114,12 @@ const FirstSection = () => {
     setFilteredRegions(regions.filter((w) => w.name.includes(e.target.value)).slice(0, 8));
   }
 
-  const handleCityInput =(e)=>{
+  const handleCityInput = (e) => {
     setcity(e.target.value);
-    setFilteredCities(allCities.filter((w) => w.name.includes(e.target.value)).slice(0, 8));
-  }
+    const source = allCities.length > 0 ? allCities : allGlobalCities;
+    setFilteredCities(source.filter((w) => w.name.includes(e.target.value)).slice(0, 8));
+  };
+  
 
 
 

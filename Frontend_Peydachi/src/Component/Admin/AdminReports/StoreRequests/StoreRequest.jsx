@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Swal from "sweetalert2"; 
 import showErrorToast from '../../../utils/showErrorToast'; 
+import { useCityContext } from '../../../Context/CityContext';
 import { useAuth } from '../../../Context/AuthContext';
 import { useAdminStats } from '../../../Context/AdminStatsContext';
 import axiosInstance from '../../../axiosInstance';
@@ -9,11 +10,11 @@ import SearchFilters from './SearchFilters';
 import StoreRequestCard from './StoreRequestCard'
 const StoreRequest = () => {
   const { role } = useAuth(); 
+  const { cities, getCityName } = useCityContext();
   const { refreshStats } = useAdminStats();
   const [activeTab, setActiveTab] = useState('pending');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCity, setSelectedCity] = useState(null);
-  const [cities, setCities] = useState([]);
   const [storeRequests, setStoreRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRequest, setSelectedRequest] = useState(null);
@@ -77,44 +78,21 @@ const StoreRequest = () => {
   
 
   useEffect(() => {
-    const fetchCities = async () => {
+    const fetchInitialRequests = async () => {
       try {
-        const response = await axiosInstance.get('/city/get_all_cities', {
-          headers: {
-            Authorization: null,
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        setCities(response.data);
-        console.log(response);
+        const response = await axiosInstance.get('/admin/add_store_request/get_requests_to_review');
+        setStoreRequests(response.data);
       } catch (error) {
         showErrorToast(error);
+      } finally {
+        setIsLoading(false);
       }
-
-      try {
-        const response = await axiosInstance.get('/admin/add_store_request/get_requests_to_review', {
-          headers: {
-            Authorization: null,
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        setStoreRequests(response.data)
-        console.log(response);
-        setIsLoading(false)
-      } catch (error) {
-        showErrorToast(error);
-      } 
     };
   
-    fetchCities();
-
+    fetchInitialRequests();
   }, []);
+  
 
-  // Get city name by ID
-  const getCityName = (cityId) => {
-    const city = cities.find(city => city.id === cityId);
-    return city ? city.name : 'نامشخص';
-  };
 
   // Handle review action
   const handleReview = (request) => {

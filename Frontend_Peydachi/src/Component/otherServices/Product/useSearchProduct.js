@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom'; 
 import * as echarts from 'echarts';
 import axiosInstance from '../../axiosInstance';
+import { useCityContext } from '../../Context/CityContext';
 import showErrorToast from '../../utils/showErrorToast';
 const useSearchProduct = () => {
   const navigate = useNavigate(); 
@@ -23,7 +24,7 @@ const useSearchProduct = () => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [ratingDistribution, setRatingDistribution] = useState([]);
   const chartRef = useRef(null);
-
+  const { cities, getCityName } = useCityContext();
   useEffect(() => {
     const stored = localStorage.getItem('favorites');
     if (stored) {
@@ -183,29 +184,6 @@ const useSearchProduct = () => {
  }, [searchTerm]);
 
 
- const [cityNames, setCityNames] = useState({});
-
- const getCityName = (id) => {
-   return cityNames[id] ?? '...';
- };
- 
-
-   useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const response = await axiosInstance.get('/city/get_all_cities');
-        const cityMap = response.data.reduce((acc, city) => {
-          acc[city.id] = city.name;
-          return acc;
-        }, {});
-        setCityNames(cityMap);
-      } catch (err) {
-        showErrorToast(err);
-      }
-    };
-
-    fetchCities();
-  }, []);
 
   const clearFilters = () => {
     setSearchTerm('');

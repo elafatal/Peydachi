@@ -3,6 +3,7 @@ import { FaTimes, FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import axiosInstance from "../../axiosInstance";
 import showErrorToast from '../../utils/showErrorToast';
 import formatDate from '../../utils/formatDate';
+import { useCityContext } from '../../Context/CityContext';
 import * as echarts from 'echarts';
 const ProductDetailModal = ({ productId, isOpen, onClose }) => {
   const [product, setProduct] = useState(null);
@@ -10,22 +11,8 @@ const ProductDetailModal = ({ productId, isOpen, onClose }) => {
   const [distribution, setDistribution] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cityName, setCityName] = useState('');
-  const [cities, setCities] = useState([]);
+  const { cities, getCityName } = useCityContext();
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const res = await axiosInstance.get('/city/get_all_cities');
-        setCities(res.data); 
-      } catch (err) {
-        console.error('خطا در دریافت لیست شهرها:', err);
-      }
-    };
-    
-    if (!cities.length) { 
-      fetchCities();
-    }
-  }, [cities]);
 
   useEffect(() => {
     const findCityName = () => {
