@@ -17,7 +17,9 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
+  const [passwordError, setPasswordError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  
   const isValidUsername = (username) => {
     const regex = /^[a-zA-Z0-9_.-]+$/;
     return regex.test(username);
@@ -31,6 +33,11 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
   
     if (!isValidUsername(username)) {
       setUsernameError("نام کاربری فقط باید شامل حروف انگلیسی، عدد و _ یا . باشد");
+      return;
+    }
+  
+    if (username.length < 4) {
+      setUsernameError("نام کاربری باید حداقل ۴ کاراکتر باشد");
       return;
     }
   
@@ -54,31 +61,62 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
       } catch (err) {
         setUsernameError("خطا در ارتباط با سرور.");
       }
-    }, 800); 
+    }, 800);
   
     return () => clearTimeout(debounceRef.current);
   }, [username]);
   
+
+  useEffect(() => {
+    setPhoneError('');
+    if (!phone_number) return;
+  
+    const trimmedPhone = phone_number.trim();
+    const phoneRegex = /^[0-9]+$/;
+    if (!phoneRegex.test(trimmedPhone)) {
+      setPhoneError("شماره موبایل فقط باید شامل اعداد باشد و نباید فاصله داشته باشد.");
+    } else {
+      setPhoneError('');
+    }
+
+  }, [phone_number]);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isValidUsername(username)) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: "نام کاربری فقط باید شامل حروف انگلیسی، عدد و _ یا . باشد",
-        showConfirmButton: false,
-        timer: 2000,
-        toast: true,
-        customClass: {
-          popup: 'w-2 h-20 text-sm flex items-center justify-center',
-          title: 'text-xs',
-          content: 'text-xs pb-2 mb-2',
-          icon: 'text-xs mb-2',
-        },
-      });
-      return;
+    let isValid = true;
+  
+    const trimmedPhone = phone_number.trim();
+    const phoneRegex = /^[0-9]+$/;
+  
+    if (!phoneRegex.test(trimmedPhone)) {
+      setPhoneError("شماره موبایل فقط باید شامل اعداد باشد و نباید فاصله داشته باشد.");
+      isValid = false;
+    } else {
+      setPhoneError('');
     }
-    
+  
+    if (!isValidUsername(username)) {
+      setUsernameError("نام کاربری فقط باید شامل حروف انگلیسی، عدد و _ یا . باشد");
+      isValid = false;
+    } else if (username.length < 3) {
+      setUsernameError("نام کاربری باید حداقل ۳ کاراکتر باشد");
+      isValid = false;
+    } else {
+      setUsernameError('');
+    }
+  
+    if (isUsernameAvailable === false) {
+      setUsernameError("این نام کاربری قبلاً ثبت شده است.");
+      isValid = false;
+    }
+  
+    if (password.length < 7) {
+      setPasswordError("پسورد باید حداقل ۶ کاراکتر باشد");
+      isValid = false;
+    } else {
+      setPasswordError('');
+    }
+  
     if (password !== password2) {
       Swal.fire({
         position: "top-end",
@@ -94,23 +132,25 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
           icon: 'text-xs mb-2',
         },
       });
-      return;
+      isValid = false; 
     }
-
+  
+    if (!isValid) return;
+  
     try {
       const response = await axiosInstance.post('/phone_verification/user_sign_up_phone_verification', {
         phone_number,
       });
-
+  
       if (response.status === 200) {
         setSignupData({ username, phone_number, password });
         navigate('/login/phone-verification');
       }
-
     } catch (error) {
       showErrorToast(error);
     }
   };
+  
 
 
   return (
@@ -159,7 +199,12 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
               placeholder="شماره موبایل"
             />
             <i className="fas fa-envelope absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"></i>
+
           </div>
+          {phoneError && (
+            <p className="text-red-500 text-xs mt-2">{phoneError}</p>
+          )}
+
         </div>
         {/* paasword */}
         <div className="mb-6">
@@ -180,8 +225,13 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
 
+
           </div>
+          {passwordError && (
+  <p className="text-red-500 text-xs mt-2">{passwordError}</p>
+)}
         </div>
+        
         <div className="mb-6">
           <div className="relative">
             <input 
