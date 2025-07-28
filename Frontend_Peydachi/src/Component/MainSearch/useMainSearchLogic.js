@@ -40,6 +40,7 @@ const useMainSearchLogic = () => {
   const [stores,setStores] = useState([]);
   const [cityId, setCityId] = useState(searchParams.get('city_id') || '');
   const [cityName, setCityName] = useState(searchParams.get('city_name') || '');
+
   const firstLoad = useRef(true);
   const cityRef = useRef(cityName);
   useEffect(() => {
@@ -125,10 +126,18 @@ const useMainSearchLogic = () => {
     const allReady = name && city_id && location_latitude && location_longitude && range_km;
   
     if (allReady) {
-      // فقط بار اول به‌صورت خودکار سرچ کن
       if (firstLoad.current) {
         firstLoad.current = false;
-        handleSearch();
+          if (
+            cityName &&
+            cityId &&
+            cityName !== 'null' &&
+            cityId !== 'null' &&
+            cityName !== undefined &&
+            cityId !== undefined
+          ) {
+            handleSearch();
+          }
       }
     }
   }, [searchPayload]);
@@ -138,10 +147,18 @@ const useMainSearchLogic = () => {
     const cityNameFromParams = searchParams.get('city_name');
     const query = searchParams.get('Query');
     const rangeFromParams = searchParams.get('range');
+    if (
+      cityIdFromParams === 'null' ||
+      cityNameFromParams === 'null' ||
+      query === 'null'
+    ) {
+      console.warn('⛔ پارامترهای نامعتبر: city_id یا city_name یا Query برابر null هستند.');
+      return;
+    }
   
     if (cityIdFromParams !== cityId) setCityId(cityIdFromParams);
     if (cityNameFromParams !== cityName) setCityName(cityNameFromParams);
-    if (query !== searchTerm) setSearchTerm(query);
+    if (query && query !== searchTerm) setSearchTerm(query);
     if (rangeFromParams && Number(rangeFromParams) !== range) {
       setRange(Number(rangeFromParams));
     }
@@ -158,18 +175,7 @@ const useMainSearchLogic = () => {
     });
   }, [searchParams]);
   
-  
-  useEffect(() => {
-    if (!cityName) return;
-  
-    geocodeLocation(cityName).then((coords) => {
-      if (coords) {
-        setMapCenter([coords.lat, coords.lng]);
-        setLocation(`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`);
-      }
-    });
-  }, [cityName]);
-    
+
   const handleSearch = async() => {
     setIsLoading(true);
     const queryParams = new URLSearchParams();
@@ -195,44 +201,48 @@ const useMainSearchLogic = () => {
     if (error.response && error.response.status === 404) {
       setStores([])
     }
-    showErrorToast(error);
+    if (error.response && error.response.status === 422) {
+      console.warn('❗ درخواست ناقص یا نامعتبر ارسال شد (422)');
+      return;
+    }
+    if (error.response && error.response.status != 422) {
+      showErrorToast(error);
+    }
+    
   }
   setIsLoading(false);
     console.log('🔍 Searching for:', searchTerm);
     console.log('📍 Location:', location);
     console.log('📏 Range:', range, 'km');
   };
-  useEffect(() => {
-    if (!cityName || cities.length === 0) return;
+  // useEffect(() => {
+  //   if (!cityName || cities.length === 0) return;
   
-    // اگر تایمر قبلی هنوز فعال بود، پاکش کن
-    if (cityDebounceTimeout.current) {
-      clearTimeout(cityDebounceTimeout.current);
-    }
+  //   if (cityDebounceTimeout.current) {
+  //     clearTimeout(cityDebounceTimeout.current);
+  //   }
   
-    // یه تایمر جدید راه بنداز که بعد از 700 میلی‌ثانیه اجرا شه
-    cityDebounceTimeout.current = setTimeout(() => {
-      const matchedCity = cities.find(c => c.name.trim() === cityName.trim());
-      if (matchedCity) {
-        setCityId(matchedCity.id);
+  //   cityDebounceTimeout.current = setTimeout(() => {
+  //     const matchedCity = cities.find(c => c.name.trim() === cityName.trim());
+  //     if (matchedCity) {
+  //       setCityId(matchedCity.id);
   
-        geocodeLocation(cityName).then((coords) => {
-          if (coords) {
-            const newLocation = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
-            setMapCenter([coords.lat, coords.lng]);
-            setLocation(newLocation);
-          }
-        });
-      } else {
-        setCityId(null);
-      }
-    }, 700); // ← اجرا فقط وقتی کاربر تایپش متوقف شد
-  
-    // اگر cityName عوض شد قبل از اجرا، این cleanup اجرا میشه
-    return () => {
-      clearTimeout(cityDebounceTimeout.current);
-    };
-  }, [cityName, cities]);
+  //       // geocodeLocation(cityName).then((coords) => {
+  //       //   if (coords) {
+  //       //     const newLocation = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
+  //       //     setMapCenter([coords.lat, coords.lng]);
+  //       //     setLocation(newLocation);
+  //       //   }
+  //       // });
+  //     } else {
+  //       setCityId(null);
+  //     }
+  //   }, 700);
+
+  //   return () => {
+  //     clearTimeout(cityDebounceTimeout.current);
+  //   };
+  // }, [cityName, cities]);
   
   
   const handleSearchLocation = async () => {
@@ -268,6 +278,8 @@ const useMainSearchLogic = () => {
   };
 
 const handleSearchLocation2 = async () => {
+  setStores([]);
+  setSelectedStoreLocation(null);
   if (!cityName || cityName.trim().length < 2) {
     alert('نام شهر را کامل وارد کنید.');
     return;
@@ -289,9 +301,22 @@ const handleSearchLocation2 = async () => {
   } else {
     alert('مکان شهر پیدا نشد.');
   }
+
+
 };
 
-  
+useEffect(() => {
+  const shouldTrigger =
+    searchTerm?.trim() &&
+    location?.includes(',') &&
+    cityId &&
+    mapCenter &&
+    !firstLoad.current;
+
+  if (shouldTrigger) {
+    handleSearch();
+  }
+}, [cityId]);
 
   return {
     isLoading,

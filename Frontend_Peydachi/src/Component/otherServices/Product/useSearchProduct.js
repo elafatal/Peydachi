@@ -59,7 +59,7 @@ const useSearchProduct = () => {
     } else {
       params.delete('q');
     }
-    navigate({ search: params.toString() }, { replace: true }); // URL رو آپدیت کن
+    navigate({ search: params.toString() }, { replace: true }); 
   };
   
   const handleCityChange = (e) => {
@@ -94,7 +94,7 @@ const useSearchProduct = () => {
   
     chart.setOption({
       animation: false,
-      title: { text: 'Rating Distribution', left: 'center', textStyle: { fontSize: 14 } },
+      title: { text: 'فراوانی امتیازات', left: 'center', textStyle: { fontSize: 14 } },
       tooltip: { trigger: 'item' },
       series: [{
         name: 'Ratings',
@@ -189,31 +189,24 @@ const useSearchProduct = () => {
    return cityNames[id] ?? '...';
  };
  
- useEffect(() => {
-   const fetchCityName = async (city_id) => {
-     if (cityNames[city_id]) return;
-     try {
-       const response = await axiosInstance.post('/city/get_city_by_id', {
-         city_id: city_id,
-       });
-       setCityNames(prev => ({
-         ...prev,
-         [city_id]: response.data.name,
-       }));
-     } catch (err) {
-      showErrorToast(err);
-       setCityNames(prev => ({
-        ...prev,
-        [city_id]: "نامشخص",
-      }));
-     }
-   };
 
-   products.forEach(p => {
-     fetchCityName(p.city_id);
-   });
- }, [products]);
- 
+   useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await axiosInstance.get('/city/get_all_cities');
+        const cityMap = response.data.reduce((acc, city) => {
+          acc[city.id] = city.name;
+          return acc;
+        }, {});
+        setCityNames(cityMap);
+      } catch (err) {
+        showErrorToast(err);
+      }
+    };
+
+    fetchCities();
+  }, []);
+
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedCity(null);

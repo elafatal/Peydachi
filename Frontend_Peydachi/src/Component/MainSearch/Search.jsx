@@ -51,6 +51,13 @@ const MainSearch = () => {
       sessionStorage.removeItem('mainSearchState');
     };
   }, []);
+  useEffect(() => {
+    if (mapInstance && !sidebarOpen) {
+      setTimeout(() => {
+        mapInstance.invalidateSize();
+      }, 300); 
+    }
+  }, [sidebarOpen, mapInstance]);
   
   /* -------------------------------------------------------------------
    * JSX
@@ -108,14 +115,7 @@ const MainSearch = () => {
         {/* ////map */}
 
         <div className={`relative ${sidebarOpen ? 'hidden md:block md:w-2/3' : 'w-full'}`}>
-            {!sidebarOpen && (
-              <button
-                onClick={toggleSidebar}
-                className="absolute top-4 left-4 z-10 bg-white p-2 rounded-full shadow-md text-gray-700 hover:text-blue-500"
-              >
-                <FaChevronRight />
-              </button>
-            )}
+
         {mapCenter && (<MapContainer
           center={mapCenter}
             zoom={15}
@@ -124,6 +124,12 @@ const MainSearch = () => {
            
           >
             <MapProvider setMap={setMapInstance}/>
+            <button
+              onClick={toggleSidebar}
+              className="absolute top-1/2 left-4 z-[1000] bg-white p-2 rounded-full shadow-md text-gray-700 hover:text-blue-500 transform -translate-y-1/2"
+            >
+              {sidebarOpen ? <FaChevronLeft /> : <FaChevronRight />}
+            </button>
 
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -188,7 +194,7 @@ const MainSearch = () => {
             }`}
           >
             <FaMapMarkedAlt className="text-lg" />
-            <span className="text-xs mt-1">Map</span>
+            <span className="text-xs mt-1">نقشه</span>
           </button>
         </div>
       </div>

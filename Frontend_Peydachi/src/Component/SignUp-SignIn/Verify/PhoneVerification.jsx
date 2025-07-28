@@ -199,7 +199,7 @@ const PhoneVerification= () => {
         ارسال دوباره
       </a>
     </div>
-    <div onClick={()=>navigate('/login/signup')} className="font-medium pt-2 border-b-2 text-blue-800 text-xs hover:text-blue-600" href="#0">
+    <div onClick={()=>navigate('/login/signup')} className="font-medium pt-2 text-blue-800 text-xs hover:text-blue-600" >
        بازگشت
       </div>
 

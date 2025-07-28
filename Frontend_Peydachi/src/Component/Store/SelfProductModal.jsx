@@ -14,23 +14,33 @@ const SelfProductModal = ({
 }) => {
   if (!isModalOpen || !selectedProduct) return null;
   const [cityName, setCityName] = useState('');
+  const [cities, setCities] = useState([]);
+
   useEffect(() => {
-    const fetchCityName = async () => {
-      if (selectedProduct?.city_id) {
-        try {
-          const res = await axiosInstance.post('/city/get_city_by_id', {
-            city_id: selectedProduct.city_id
-          });
-          setCityName(res.data.name);
-        } catch (err) {
-          console.error('خطا در دریافت نام شهر:', err);
-          setCityName('نامشخص');
-        }
+    const fetchCities = async () => {
+      try {
+        const res = await axiosInstance.get('/city/get_all_cities');
+        setCities(res.data); 
+      } catch (err) {
+        console.error('خطا در دریافت لیست شهرها:', err);
       }
     };
-  
-    fetchCityName();
-  }, [selectedProduct]);
+    
+    if (!cities.length) { 
+      fetchCities();
+    }
+  }, [cities]);
+
+  useEffect(() => {
+    const findCityName = () => {
+      if (selectedProduct?.city_id) {
+        const city = cities.find(c => c.id === selectedProduct.city_id); 
+        setCityName(city ? city.name : 'نامشخص');
+      }
+    };
+    
+    findCityName();
+  }, [selectedProduct, cities]);
   
  const renderStars = (rating) => {
      const stars = [];

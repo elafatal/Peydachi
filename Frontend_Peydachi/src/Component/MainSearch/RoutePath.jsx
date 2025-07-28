@@ -15,13 +15,11 @@ const RoutePath = ({ map, from, to }) => {
       return;
     }
 
-    // 💣 پاک‌سازی کامل تمام مسیرها و مارکرهای قبلی
     if (map._routeElements) {
       map._routeElements.forEach(el => map.removeLayer(el));
     }
     map._routeElements = [];
 
-    // 🧭 کنترل مسیر جدید
     const control = L.Routing.control({
       waypoints: [L.latLng(from[0], from[1]), L.latLng(to[0], to[1])],
       routeWhileDragging: false,
@@ -76,9 +74,9 @@ const RoutePath = ({ map, from, to }) => {
     
       const vehicleMarker = L.marker(coords[0], {
         icon: L.icon({
-          iconUrl: 'https://cdn-icons-png.flaticon.com/512/2972/2972185.png',
+          iconUrl: 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png',
 
-          iconSize: [32, 32],
+          iconSize: [27, 27],
           iconAnchor: [16, 32],
         }),
       }).addTo(map);

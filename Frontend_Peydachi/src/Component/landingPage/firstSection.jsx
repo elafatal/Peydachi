@@ -105,7 +105,11 @@ const FirstSection = () => {
 
     const selectedCity = allCities.find((c) => c.name === city);
     const cityId = selectedCity?.id;
-
+    if (!searchQuery.trim()) {
+      alert('لطفاً نام محصول را وارد کنید');
+      return;
+    }
+    
     navigate(`/Search?city_id=${cityId}&city_name=${encodeURIComponent(city)}&Query=${encodeURIComponent(searchQuery)}`);
   };
   const handleRegionsInput =(e)=>{
@@ -210,7 +214,8 @@ const handleCityKeyDown = (e) => {
                       onKeyDown={handleRegionKeyDown} 
                     />
                     <AnimatePresence>
-                      {showLocationDropdown && (
+                      {showLocationDropdown && filteredRegions.length > 0 && (
+
                         <motion.div
                           key="regionDropdown"
                           initial="hidden"
@@ -231,9 +236,10 @@ const handleCityKeyDown = (e) => {
                             ))}
                           </div>
                         </motion.div>
+                        
                       )}
+                    
                     </AnimatePresence>
-
                   </div>
 
                   {/* City */}
@@ -250,7 +256,7 @@ const handleCityKeyDown = (e) => {
                       onKeyDown={handleCityKeyDown}
                     />
                          <AnimatePresence>
-                            {showLocationDropdown2 && (
+                            {showLocationDropdown2 && filteredCities.length > 0 && (
                               <motion.div
                                 key="cityDropdown"
                                 initial="hidden"
