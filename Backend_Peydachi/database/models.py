@@ -83,7 +83,7 @@ class User(ID, Base):
         if len(value) > 40:
             raise USERNAME_MUST_BE_SHORTER_THAN_40_CHARACTERS_ERROR
         
-        if not re.match(r"^[a-zA-Z0-9_]+$", value):
+        if not re.match(r"^[a-zA-Z0-9_.-]+$", value):
             raise USERNAME_MUST_BE_ENGLISH
 
         return value

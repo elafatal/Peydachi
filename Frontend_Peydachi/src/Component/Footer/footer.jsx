@@ -50,7 +50,7 @@ switch (link) {
             <FaGithub className="text-xl" />
           </a>
         </div>
-        <p className="text-gray-500 text-xs">© {new Date().getFullYear()} پیداچی | ساخته‌شده با ❤️ توسط فتل و بهزادی</p>
+        <p className="text-gray-500 text-xs">© {new Date().getFullYear()} پیداچی | ساخته‌ شده با ❤️ توسط فتل و بهزادی</p>
       </div>
     </div>
   </div>
