@@ -5,9 +5,11 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import FlyToLocation from './FlyToLocation';
 import axiosInstance from '../../axiosInstance';
 import L from 'leaflet';
+import { useCityContext } from '../../Context/CityContext';
+
 import { AnimatePresence, motion } from 'framer-motion';
 import { v4 as uuidv4 } from 'uuid';
-const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] }) => {
+const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [] }) => {
   const initialStore = {
     name: '',
     owner_id: 0,
@@ -16,6 +18,8 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
     location_latitude: '',
     city_id: 0,
   };
+  const { cities} = useCityContext();
+
   const mapRef = useRef(null);
   const [mapReady, setMapReady] = useState(false);
   const [pendingCoords, setPendingCoords] = useState(null);
@@ -79,10 +83,9 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
   };
   
   const handleCityFocus = () => {
-    setFilteredCities(cities); 
+    setFilteredCities(cities);
     setShowCityDropdown(true);
   };
-  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (cityRef.current && !cityRef.current.contains(event.target)) {
@@ -135,7 +138,6 @@ console.log(newStore);
     }));
     
   }
-  
   /* ------------------------- map ------------------------- */
   const [mapCenter, setMapCenter] = useState([35.6892, 51.3890]); // پیش‌فرض: تهران
   const [markerPos, setMarkerPos]   = useState(null);
@@ -194,13 +196,13 @@ console.log(newStore);
 
   return (
     <div className={`${isOpen ? '' : 'hidden'}`}>
-  <div className="fixed bg-black/40 backdrop-blur-sm inset-0 flex items-center justify-center overflow-y-auto z-50 ">
-      <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-        <div className="absolute inset-0  opacity-75" />
-      </div>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div className="absolute inset-0  opacity-75" />
+          </div>
 
-      <div className="overflow-scroll relative inline-block align-bottom m-5 bg-white rounded-lg text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl w-full">
-        {/* Body */}
+      <div className="relative w-full max-w-3xl max-h-screen overflow-y-auto m-5 rounded-lg shadow-xl  bg-white">
+      {/* Body */}
         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4" dir='rtl'>
           <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">افزودن فروشگاه</h3>
 
@@ -268,7 +270,7 @@ console.log(newStore);
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute z-10 w-full bg-white rounded-md shadow-md mt-1 max-h-60 overflow-y-auto border border-gray-200"
+                            className="absolute z-10 w-full bg-white rounded-md shadow-md mt-1 max-h-30 overflow-y-auto border border-gray-200"
                           >
                             {filteredCities.map((city, idx) => (
                               <div

@@ -1,5 +1,5 @@
 import AddStoreModal from './AddStoreModal';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import Swal from "sweetalert2";  
 import showErrorToast from '../../utils/showErrorToast';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,27 @@ const StoreManagement= () => {
   const [showAddOwnerModal, setShowAddOwnerModal] = useState(false);
   const [selectedStore, setSelectedStore] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const cityFilterRef = useRef(null);
+  const [cityInput, setCityInput] = useState('');
+  const [filteredCities, setFilteredCities] = useState(cities);
+  const [cityDropdownVisible, setCityDropdownVisible] = useState(false);
+  const [cityIndex, setCityIndex] = useState(-1);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        cityFilterRef.current &&
+        !cityFilterRef.current.contains(event.target)
+      ) {
+        setCityDropdownVisible(false);
+      }
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
 const users=[{id:1 , username:'ali'}]
 
   const deleteOwner=async(store)=>{
@@ -183,10 +203,17 @@ const users=[{id:1 , username:'ali'}]
   const resetSearch = () => {
     setSearchTerm('');
     setFilterCity('');
+    setCityInput('');
     setFilterStatus('');
     setStores([]);
   };
-
+  useEffect(() => {
+    if (filterCity && cities.length > 0) {
+      const match = cities.find(c => c.id.toString() === filterCity);
+      if (match) setCityInput(match.name);
+    }
+  }, [filterCity, cities]);
+  
   const handleDeleteStore = async (storeId) => {
     const result = await Swal.fire({
       title: 'حذف فروشگاه',
@@ -317,16 +344,67 @@ if (store.is_banned) {
    </div>
         {/* فیلترها و دکمه */}
         <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-wrap gap-3 mt-3" dir='rtl'>
-          <select
-            className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
-            value={filterCity}
-            onChange={(e) => setFilterCity(e.target.value)}
-          >
-            <option value="">همه‌ی شهرها</option>
-            {cities.map(city => (
-              <option key={city.id} value={city.id.toString()}>{city.name}</option>
-            ))}
-          </select>
+        <div className="relative w-full sm:w-64" ref={cityFilterRef}>
+  <input
+    type="text"
+    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
+    placeholder="فیلتر شهر..."
+    value={cityInput}
+    onChange={(e) => {
+      const val = e.target.value;
+      setCityInput(val);
+      const filtered = cities.filter((city) =>
+        city.name.toLowerCase().includes(val.toLowerCase())
+      );
+      setFilteredCities(filtered);
+      setCityDropdownVisible(true);
+      setCityIndex(-1);
+    }}
+    onFocus={() => {
+      setFilteredCities(cities);
+      setCityDropdownVisible(true);
+    }}
+    onKeyDown={(e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setCityIndex((prev) =>
+          prev < filteredCities.length - 1 ? prev + 1 : 0
+        );
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setCityIndex((prev) =>
+          prev > 0 ? prev - 1 : filteredCities.length - 1
+        );
+      } else if (e.key === 'Enter' && filteredCities[cityIndex]) {
+        const selected = filteredCities[cityIndex];
+        setFilterCity(selected.id.toString());
+        setCityInput(selected.name);
+        setCityDropdownVisible(false);
+      }
+    }}
+  />
+
+  {cityDropdownVisible && filteredCities.length > 0 && (
+    <div className="absolute z-20 w-full bg-white mt-1 border border-gray-300 rounded-md shadow max-h-60 overflow-y-auto text-right">
+      {filteredCities.map((city, idx) => (
+        <div
+          key={city.id}
+          onClick={() => {
+            setFilterCity(city.id.toString());
+            setCityInput(city.name);
+            setCityDropdownVisible(false);
+          }}
+          className={`px-3 py-2 cursor-pointer hover:bg-blue-100 ${
+            idx === cityIndex ? 'bg-blue-100' : ''
+          }`}
+        >
+          {city.name}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
 
           <select
             className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 sm:text-sm text-right"
