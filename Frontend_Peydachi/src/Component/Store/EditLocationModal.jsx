@@ -1,8 +1,9 @@
-// components/EditLocationModal.jsx
+
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import { FaTimes } from 'react-icons/fa';
+import FlyToLocation from '../Admin/AdminStore/FlyToLocation';
 
 const EditLocationModal = ({ isOpen, onClose, currentLocation, onSave }) => {
     const [markerPos, setMarkerPos] = useState(
@@ -60,6 +61,8 @@ const EditLocationModal = ({ isOpen, onClose, currentLocation, onSave }) => {
               attribution="&copy; OpenStreetMap contributors"
             />
             <LocationSelector />
+            <FlyToLocation center={markerPos} />
+
             {markerPos && (
               <Marker
                 position={markerPos}

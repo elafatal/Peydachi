@@ -1,11 +1,15 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useRef  } from 'react';
 import showErrorToast from '../../utils/showErrorToast';
 import { FaPlus, FaTimes } from 'react-icons/fa';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import FlyToLocation from './FlyToLocation';
 import axiosInstance from '../../axiosInstance';
 import L from 'leaflet';
+import { useCityContext } from '../../Context/CityContext';
+
+import { AnimatePresence, motion } from 'framer-motion';
 import { v4 as uuidv4 } from 'uuid';
-const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] }) => {
+const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [] }) => {
   const initialStore = {
     name: '',
     owner_id: 0,
@@ -14,7 +18,87 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [], cities = [] })
     location_latitude: '',
     city_id: 0,
   };
- 
+  const { cities} = useCityContext();
+
+  const mapRef = useRef(null);
+  const [mapReady, setMapReady] = useState(false);
+  const [pendingCoords, setPendingCoords] = useState(null);
+  const cityRef = useRef(null);
+  const [cityInput, setCityInput] = useState('');
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
+  const [filteredCities, setFilteredCities] = useState(cities);
+  const [cityIndex, setCityIndex] = useState(-1);
+  const handleCityInput = (e) => {
+    const value = e.target.value;
+    setCityInput(value);
+    const filtered = cities.filter((city) =>
+      city.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredCities(filtered);
+    setShowCityDropdown(true);
+    setCityIndex(-1);
+  };
+  const geocodeCity = async (cityName) => {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cityName)}`
+    );
+    const data = await response.json();
+    if (data && data.length > 0) {
+      const { lat, lon } = data[0];
+      return [parseFloat(lat), parseFloat(lon)];
+    }
+    return null;
+  };
+  
+  const handleCitySelect = async (city) => {
+    setCityInput(city.name);
+    setNewStore((prev) => ({ ...prev, city_id: city.id }));
+    setShowCityDropdown(false);
+  
+    const coords = await geocodeCity(city.name);
+    console.log('Coords for city:', city.name, coords);
+  
+    if (coords) {
+      setMapCenter(coords); 
+    }
+  };
+  
+  useEffect(() => {
+    if (mapReady && pendingCoords && mapRef.current) {
+      console.log('Fly to pendingCoords:', pendingCoords);
+      mapRef.current.flyTo(pendingCoords, 13);
+      setPendingCoords(null);
+    }
+  }, [mapReady, pendingCoords]);
+  
+  
+  const handleCityKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      setCityIndex((prev) => (prev < filteredCities.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      setCityIndex((prev) => (prev > 0 ? prev - 1 : prev));
+    } else if (e.key === 'Enter' && filteredCities[cityIndex]) {
+      handleCitySelect(filteredCities[cityIndex]);
+    }
+  };
+  
+  const handleCityFocus = () => {
+    setFilteredCities(cities);
+    setShowCityDropdown(true);
+  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (cityRef.current && !cityRef.current.contains(event.target)) {
+        setShowCityDropdown(false);
+      }
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
   const [newStore, setNewStore] = useState(initialStore);
   const [contactProperties, setContactProperties] = useState([
     { id: uuidv4(), key: '', value: '' }
@@ -109,16 +193,16 @@ console.log(newStore);
     onClose();
   };
 
-  if (!isOpen) return null;
 
   return (
-    <div className="fixed bg-black/40 backdrop-blur-sm inset-0 flex items-center justify-center overflow-y-auto z-50 ">
-      <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-        <div className="absolute inset-0  opacity-75" />
-      </div>
+    <div className={`${isOpen ? '' : 'hidden'}`}>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div className="absolute inset-0  opacity-75" />
+          </div>
 
-      <div className="relative inline-block align-bottom m-5 bg-white rounded-lg text-left overflow-scroll shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl w-full">
-        {/* Body */}
+      <div className="relative w-full max-w-3xl max-h-screen overflow-y-auto m-5 rounded-lg shadow-xl  bg-white">
+      {/* Body */}
         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4" dir='rtl'>
           <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">افزودن فروشگاه</h3>
 
@@ -164,20 +248,47 @@ console.log(newStore);
                     />
                     </div>
                     {/* city */}
-                    <div>
-                    <label htmlFor="city-id" className="text-start block text-sm font-medium text-gray-700">شهر</label>
-                    <select
-                        id="city-id"
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        value={newStore.city_id}
-                        onChange={(e) => setNewStore({ ...newStore, city_id: Number(e.target.value) })}
-                    >
-                        <option value={0}>شهر را انتخاب کنید</option>
-                        {cities.map((city) => (
-                        <option key={city.id} value={city.id}>{city.name}</option>
-                        ))}
-                    </select>
+                    <div className="relative" ref={cityRef}>
+                      <label htmlFor="city-id" className="text-start block text-sm font-medium text-gray-700">شهر</label>
+                      <input
+                        dir="rtl"
+                        className="w-full bg-white px-3 py-2 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        placeholder="نام شهر را وارد کنید"
+                        value={cityInput}
+                        onClick={(e) => {
+                          e.stopPropagation(); 
+                          setShowCityDropdown((prev) => !prev);
+                        }}
+                        onChange={handleCityInput}
+                        onFocus={handleCityFocus}
+                        onKeyDown={handleCityKeyDown}
+                      />
+                      <AnimatePresence>
+                        {showCityDropdown && filteredCities.length > 0 && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute z-10 w-full bg-white rounded-md shadow-md mt-1 max-h-30 overflow-y-auto border border-gray-200"
+                          >
+                            {filteredCities.map((city, idx) => (
+                              <div
+                                key={city.id}
+                                className={`px-4 py-2 cursor-pointer text-start ${
+                                  idx === cityIndex ? 'bg-blue-100' : 'hover:bg-gray-100'
+                                }`}
+                                onClick={() => handleCitySelect(city)}
+                              >
+                                {city.name}
+                              </div>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
+
+
 
                     {/* contact */}
                     <div>
@@ -229,31 +340,36 @@ console.log(newStore);
                     </label>
 
                     <div className="w-full h-64 rounded-md overflow-hidden border border-gray-300">
-                        <MapContainer
+                    <MapContainer
                         center={mapCenter}
-                        zoom={12}
+                        zoom={15}
                         style={{ height: '100%', width: '100%' }}
-                        whenCreated={(map) => setMapCenter(map.getCenter())}
+                        whenCreated={(mapInstance) => {
+                          mapRef.current = mapInstance;
+                          setMapReady(true);
+                        }}
                         scrollWheelZoom={true}
-                        >
+                      >
                         <TileLayer
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            attribution="&copy; OpenStreetMap contributors"
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          attribution="&copy; OpenStreetMap contributors"
                         />
 
                         <LocationSelector onSelect={handleMapClick} />
 
+                        <FlyToLocation center={mapCenter} />
+
                         {markerPos && (
-                            <Marker
+                          <Marker
                             position={markerPos}
                             icon={L.icon({
-                                iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-                                iconSize: [30, 30],
-                                iconAnchor: [15, 30],
+                              iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+                              iconSize: [30, 30],
+                              iconAnchor: [15, 30],
                             })}
-                            />
+                          />
                         )}
-                        </MapContainer>
+                      </MapContainer>
                     </div>
 
                     <p className="text-xs text-gray-500 mt-1">
@@ -289,6 +405,9 @@ console.log(newStore);
         </div>
       </div>
     </div>
+</div>
+
+    
   );
 };
 

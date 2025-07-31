@@ -1,11 +1,14 @@
 // useSearchStore.js
 import { useState, useEffect, useCallback } from 'react';
+import { useCityContext } from '../../../Context/CityContext';
+
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../axiosInstance';
 import Swal from "sweetalert2";  
 import showErrorToast from '../../../utils/showErrorToast';
 const useSearchStore = () => {
   const navigate = useNavigate();
+  const { cities: allCities } = useCityContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +18,6 @@ const useSearchStore = () => {
   const [selectedCity, setSelectedCity] = useState(null);
   const [City, setCity] = useState('');
   const [showCityDropdown, setShowCityDropdown] = useState(false);
-  const [allCities, setAllCities] = useState([]);
   const [filteredCities, setFilteredCities] = useState([]);
   const [cityIndex, setCityIndex] = useState(-1);
 
@@ -26,23 +28,10 @@ const useSearchStore = () => {
     }
   }, [showDetail, selectedItem]);
 
-  // Load all cities
   useEffect(() => {
-    const handleAllCities = async () => {
-      try {
-        const response = await axiosInstance.get('/city/get_all_cities', {
-          headers: {
-            Authorization: null,
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        setAllCities(response.data);
-      } catch (error) {
-        showErrorToast(error);
-      } 
-    };
-    handleAllCities();
-  }, []);
+    setFilteredCities(allCities);
+  }, [allCities]);
+  
 
   const handleCityInput = (e) => {
     const value = e.target.value;
