@@ -47,10 +47,9 @@ async def send_verification_sms(phone_number: str, code: int, sms_service: Clien
     return True
 
 
-async def send_forget_password_sms(phone_number: str, code: int, username: str, sms_service: Client):
+async def send_forget_password_sms(phone_number: str, code: int, sms_service: Client):
     pattern_values = {
             'verification-code': code,
-            'username': username
         }
 
 
