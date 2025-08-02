@@ -5,6 +5,8 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import FlyToLocation from './FlyToLocation';
 import axiosInstance from '../../axiosInstance';
 import L from 'leaflet';
+import { FaUserShield, FaUserCircle , FaUserTie } from 'react-icons/fa';
+import { FaClipboardUser } from "react-icons/fa6";
 import { useCityContext } from '../../Context/CityContext';
 
 import { AnimatePresence, motion } from 'framer-motion';
@@ -130,16 +132,9 @@ console.log(newStore);
 
    }, [selectedUserId]);
 
-  const selectedOwner=(ownerId)=>{
-    setSelectedUserId(ownerId)
-    setNewStore((prev) => ({
-      ...prev,
-    owner_id : Number(ownerId)
-    }));
-    
-  }
+
   /* ------------------------- map ------------------------- */
-  const [mapCenter, setMapCenter] = useState([35.6892, 51.3890]); // پیش‌فرض: تهران
+  const [mapCenter, setMapCenter] = useState([35.6892, 51.3890]); 
   const [markerPos, setMarkerPos]   = useState(null);
   const LocationSelector = ({ onSelect }) => {
     useMapEvents({
@@ -201,7 +196,7 @@ console.log(newStore);
             <div className="absolute inset-0  opacity-75" />
           </div>
 
-      <div className="relative w-full max-w-3xl max-h-screen overflow-y-auto m-5 rounded-lg shadow-xl  bg-white">
+      <div className="relative w-full max-w-3xl max-h-screen overflow-y-auto rounded-lg shadow-xl  bg-white">
       {/* Body */}
         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4" dir='rtl'>
           <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">افزودن فروشگاه</h3>
@@ -228,11 +223,19 @@ console.log(newStore);
                         onChange={(e) => setUserQuery(e.target.value)}
                         className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'></input>
                       {searchResult.length !=0 ?
-                        <div  className="mt-1 max-h-52 overflow-scroll z-50 block w-4/5  border border-gray-300 rounded-md shadow-sm py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                          {searchResult.map(user => (
-                          <span onClick={()=>selectedOwner(user.id)} className='block p-2 hover:bg-blue-100 transition-all duration-300' key={user.id} > {user.username}
-                          </span>
-                          ))}
+                        <div  className="mt-1 max-h-52 overflow-scroll z-50 block w-full  border border-gray-300 rounded-md shadow-sm py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            {searchResult.map(user => (
+                                        <span 
+                                            onClick={() => setSelectedUserId(user.id)} 
+                                            className={`cursor-pointer block p-2 hover:bg-blue-100 transition-all duration-300 ${selectedUserId === user.id ? 'bg-blue-200 border-l-4 border-blue-500' : ''}`} 
+                                            key={user.id}
+                                          >                 {user.username} {user.is_super_admin ? <FaUserTie title='سوپر ادمین' className='text-indigo-800 inline' /> 
+                                          : user.is_admin ? <FaUserShield title='ادمین' className='inline text-indigo-700'/> 
+                                          : user.is_seller ? <FaClipboardUser title='فروشنده' className='inline text-indigo-400' />
+                                          :  <FaUserCircle title='کاربر' className='inline text-indigo-300' />}
+                                      </span>
+                              ))}
+                                       
                       </div> : null}
                     </div>
 

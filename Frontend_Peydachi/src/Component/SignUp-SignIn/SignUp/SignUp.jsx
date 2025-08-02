@@ -89,7 +89,7 @@ const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
     const phoneRegex = /^[0-9]+$/;
   
     if (!phoneRegex.test(trimmedPhone)) {
-      setPhoneError("شماره موبایل فقط باید شامل اعداد باشد و نباید فاصله داشته باشد.");
+      setPhoneError("شماره موبایل فقط باید شامل اعداد انگلیسی باشد و نباید فاصله داشته باشد.");
       isValid = false;
     } else {
       setPhoneError('');

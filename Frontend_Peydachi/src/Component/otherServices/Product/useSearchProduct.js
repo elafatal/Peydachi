@@ -7,6 +7,7 @@ import showErrorToast from '../../utils/showErrorToast';
 const useSearchProduct = () => {
   const navigate = useNavigate(); 
   const location = useLocation();
+  const debounceRef = useRef(null);
   const queryParams = new URLSearchParams(location.search);
   const initialSearch = queryParams.get('q') || '';
   const [searchTerm, setSearchTerm] = useState(initialSearch);
@@ -161,28 +162,54 @@ const useSearchProduct = () => {
   };
   
 
- useEffect(() => {
-  const handleSearch = async()=>{
-    if (searchTerm != '') {
-      try {
-        setLoading(true)
-        const response = await axiosInstance.post('/product/search_all_products', {
-          name: searchTerm,
-        });
-        setProducts(response.data);
-        console.log(response.data);
+//  useEffect(() => {
+//   const handleSearch = async()=>{
+//     if (searchTerm != '') {
+//       try {
+//         setLoading(true)
+//         const response = await axiosInstance.post('/product/search_all_products', {
+//           name: searchTerm,
+//         });
+//         setProducts(response.data);
+//         console.log(response.data);
        
-      } catch (err) {
-        showErrorToast(err);
-      } finally {
-        setLoading(false);
-      }
+//       } catch (err) {
+//         showErrorToast(err);
+//       } finally {
+//         setLoading(false);
+//       }
       
-    }
-  }
-   handleSearch();
- }, [searchTerm]);
+//     }
+//   }
+//    handleSearch();
+//  }, [searchTerm]);
 
+useEffect(() => {
+  if (debounceRef.current) {
+    clearTimeout(debounceRef.current);
+  }
+
+  if (!searchTerm.trim()) {
+    setProducts([]);
+    return;
+  }
+
+  debounceRef.current = setTimeout(async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.post('/product/search_all_products', {
+        name: searchTerm,
+      });
+      setProducts(response.data);
+    } catch (err) {
+      showErrorToast(err);
+    } finally {
+      setLoading(false);
+    }
+  }, 600); 
+
+  return () => clearTimeout(debounceRef.current);
+}, [searchTerm]);
 
 
   const clearFilters = () => {

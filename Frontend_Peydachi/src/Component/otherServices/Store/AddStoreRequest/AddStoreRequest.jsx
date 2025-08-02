@@ -96,9 +96,9 @@ const AddStore = () => {
     if (!formData.address) errs.address = 'این فیلد اجباری است';
     if (!formData.store_name) errs.store_name = 'این فیلد اجباری است';
     if (!formData.phone_number) errs.phone_number = 'این فیلد اجباری است';
-    else if (!/^09\d{9}$/.test(formData.phone_number)) errs.phone_number = 'شماره باید ۱۱ رقم باشد';
-    if (!formData.region_id) errs.region_id = 'انتخاب استان الزامی است';
-    if (!formData.city_id) errs.city_id = 'انتخاب شهر الزامی است';
+    else if (!/^[0-9]+$/.test(formData.phone_number)) {
+      errs.phone_number = 'شماره فقط باید شامل اعداد انگلیسی باشد';
+    }
     if (!formData.description) errs.description = 'این فیلد اجباری است';
     else if (formData.description.length < 20) errs.description = 'حداقل 20 کاراکتر';
     setErrors(errs);
@@ -176,7 +176,9 @@ const AddStore = () => {
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-6" dir='rtl'>
           <div>
-            <label className="block text-sm font-medium text-gray-700"> نام فروشگاه <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-gray-700"> نام فروشگاه <span className="text-red-500">*</span>
+            <span className=" text-xs text-gray-500 mt-1 mr-1">نام کامل فروشگاه</span>
+            </label>
             <div className="relative">
               <input
                 type="text"
@@ -195,7 +197,9 @@ const AddStore = () => {
             {errors.store_name && <p className="text-sm text-red-500 mt-1">{errors.store_name}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">شماره موبایل <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-gray-700">شماره موبایل <span className="text-red-500">*</span>
+                        <span className="text-xs text-gray-500 mt-1 mr-1">شماره تماس در دسترس. ادمین ها با استفاده از این شماره تماس با شما ارتباط برقرار خواهند کرد</span>
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <FaPhone className="text-gray-400" />
@@ -218,7 +222,7 @@ const AddStore = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">استان <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700">استان </label>
               <div className="relative" dir='ltr'>
                 <select
                   name="region_id"
@@ -238,7 +242,7 @@ const AddStore = () => {
               {errors.region_id && <p className="text-sm text-red-500 mt-1">{errors.region_id}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">شهر <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700">شهر </label>
               <div className="relative" dir='ltr'>
                 <select
                   name="city_id"
@@ -260,7 +264,9 @@ const AddStore = () => {
             </div>
           </div>
           <div>
-          <label className="block text-sm font-medium text-gray-700">آدرس فروشگاه <span className="text-red-500">*</span></label>
+          <label className="block text-sm font-medium text-gray-700">آدرس فروشگاه <span className="text-red-500">*</span>
+          <span className=" text-xs text-gray-500 mt-1 mr-1">اگر شهر یا استان شما تحت پوشش پیداچی نبود، نام آن را در بخش آدرس بنویسید</span>
+          </label>
           <div className="relative">
             <input
               type="text"
@@ -276,9 +282,7 @@ const AddStore = () => {
               </div>
             )}
           </div>
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>اگر شهر یا استان شما تحت پوشش پیداچی نبود، نام آن را در بخش آدرس بنویسید</span>
-            </div>
+ 
           {errors.address && <p className="text-sm text-red-500 mt-1">{errors.address}</p>}
         </div>
 
@@ -299,7 +303,7 @@ const AddStore = () => {
             </div>
             {errors.description && <p className="text-sm text-red-500 mt-1">{errors.description}</p>}
           </div>
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700">زمان ثبت درخواست</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -313,7 +317,7 @@ const AddStore = () => {
                 className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2 pl-10 bg-gray-100 cursor-not-allowed"
               />
             </div>
-          </div>
+          </div> */}
           <div className="flex sm:flex-row justify-between flex-col gap-2 items-center pt-4">
      
             <button

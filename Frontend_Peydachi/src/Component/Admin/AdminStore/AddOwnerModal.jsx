@@ -57,7 +57,7 @@ const AddOwnerModal = ({ isOpen, onClose, store, onAddOwner }) => {
             onChange={(e) => setUserQuery(e.target.value)}
             className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'></input>
            {searchResult.length !=0 ?
-            <div  className="mt-1 max-h-52 overflow-scroll z-50 block w-4/5  border border-gray-300 rounded-md shadow-sm py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <div  className="mt-1 max-h-52 overflow-scroll z-50 block w-full  border border-gray-300 rounded-md shadow-sm py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
               {searchResult.map(user => (
                 <span 
                     onClick={() => setSelectedUserId(user.id)} 
