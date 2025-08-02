@@ -11,6 +11,13 @@ jest.mock('../axiosInstance', () => ({
 jest.mock('date-fns', () => ({
   formatDistanceToNow: jest.fn(),
 }));
+jest.mock('../Context/CityContext.jsx', () => ({
+  __esModule: true,
+  useCityContext: jest.fn(() => ({
+    cities: [{ id: 1, name: 'City 1' }],
+    getCityName: (id) => `City ${id}`,
+  })),
+}));
 jest.mock('../Store/StoreProfile/ProductReview.jsx', () => () => <div>ProductReview</div>);
 jest.mock('../Store/StoreProfile/StoreComment.jsx', () => () => <div>StoreComment</div>);
 Object.defineProperty(window, 'matchMedia', {

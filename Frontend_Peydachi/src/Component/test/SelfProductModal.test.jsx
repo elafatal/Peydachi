@@ -6,6 +6,13 @@ jest.mock('../axiosInstance', () => ({
     post: jest.fn().mockResolvedValue({ data: { name: 'City 1' } }),
   },
 }));
+jest.mock('../Context/CityContext.jsx', () => ({
+  __esModule: true,
+  useCityContext: jest.fn(() => ({
+    cities: [{ id: 1, name: 'City 1' }],
+    getCityName: (id) => `City ${id}`,
+  })),
+}));
 
 jest.mock('../utils/formatDate', () => ({
   __esModule: true,

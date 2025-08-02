@@ -9,7 +9,13 @@ jest.mock('../axiosInstance', () => ({
   get: jest.fn(),
   post: jest.fn(),
 }));
-
+jest.mock('../Context/CityContext.jsx', () => ({
+  __esModule: true,
+  useCityContext: jest.fn(() => ({
+    cities: [{ id: 1, name: 'City 1' }],
+    getCityName: (id) => `City ${id}`,
+  })),
+}));
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => jest.fn(),
