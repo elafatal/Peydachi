@@ -217,19 +217,23 @@ const users=[{id:1 , username:'ali'}]
   const handleDeleteStore = async (storeId) => {
     const result = await Swal.fire({
       title: 'حذف فروشگاه',
-      text: 'آیا مطمئن هستید که می‌خواهید این فروشگاه را حذف کنید؟ این عمل قابل بازگشت نیست.',
+      text: ' این عمل تنها برای فروشگاه‌های دارای فروشنده ممکن است. از انجام آن مطمئن هستید؟',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'بله، حذف کن',
-      cancelButtonText: 'انصراف',
+      confirmButtonText: 'تایید',
+      cancelButtonText: 'لغو',
       reverseButtons: true,
       customClass: {
-        title: 'text-sm',
-        htmlContainer: 'text-sm',
-        confirmButton: 'text-xs bg-red-600 hover:bg-red-700',
-        cancelButton: 'text-xs bg-gray-300 hover:bg-gray-400 text-black',
-      }
+        popup: 'rounded-2xl shadow-xl font-iran max-w-sm',
+        title: 'text-lg font-bold text-gray-800',
+        htmlContainer: 'text-gray-600 text-sm mb-6',
+        confirmButton: 'px-4 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700 focus:outline-none',
+        cancelButton: 'px-4 py-2 text-sm rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 focus:outline-none',
+        actions: 'flex justify-end gap-3 px-6',
+      },
+      buttonsStyling: false,
     });
+    
   
     if (result.isConfirmed) {
       try {

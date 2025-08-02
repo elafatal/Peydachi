@@ -11,7 +11,7 @@ import { useCityContext } from '../../Context/CityContext';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { v4 as uuidv4 } from 'uuid';
-const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [] }) => {
+const AddStoreModal = ({ isOpen, onClose, onAddStore }) => {
   const initialStore = {
     name: '',
     owner_id: 0,
@@ -40,6 +40,7 @@ const AddStoreModal = ({ isOpen, onClose, onAddStore, users = [] }) => {
     setShowCityDropdown(true);
     setCityIndex(-1);
   };
+
   const geocodeCity = async (cityName) => {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cityName)}`
@@ -226,7 +227,10 @@ console.log(newStore);
                         <div  className="mt-1 max-h-52 overflow-scroll z-50 block w-full  border border-gray-300 rounded-md shadow-sm py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             {searchResult.map(user => (
                                         <span 
-                                            onClick={() => setSelectedUserId(user.id)} 
+                                        onClick={() => {
+                                          setSelectedUserId(user.id);
+                                          setNewStore((prev) => ({ ...prev, owner_id: user.id }));
+                                        }}                                        
                                             className={`cursor-pointer block p-2 hover:bg-blue-100 transition-all duration-300 ${selectedUserId === user.id ? 'bg-blue-200 border-l-4 border-blue-500' : ''}`} 
                                             key={user.id}
                                           >                 {user.username} {user.is_super_admin ? <FaUserTie title='سوپر ادمین' className='text-indigo-800 inline' /> 
