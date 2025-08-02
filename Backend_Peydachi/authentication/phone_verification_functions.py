@@ -97,7 +97,7 @@ async def user_forget_password(username: str, redis_db: Redis, db: Session, sms_
 
 
     try: 
-        await send_forget_password_sms(phone_number=phone_number, code=code, username=username, sms_service=sms_service)
+        await send_forget_password_sms(phone_number=phone_number, code=code, sms_service=sms_service)
     except:
         raise SMS_SERVICE_ERROR
     
